@@ -7,122 +7,71 @@ import {
   Phone,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import "./Footer.css";
 
 export default function Footer() {
   return (
-    // <>
-    //   <div>
-    //     <div className="displayRow">
-    //       <div className="dispalycolumn">
-    //         <img></img>
-    //         <p>
-    //           Mohammad & Ahmad Lutfi Al-Quraan – Al-Mersal Housing Company – is
-    //           one of the leading Jordanian companies specializing in the
-    //           development of modern residential projects. The company strives to
-    //           provide integrated housing environments that combine high quality,
-    //           contemporary design, and affordable prices. Al-Mersal is committed
-    //           to offering housing solutions that meet the needs of individuals
-    //           and families, with a strong focus on credibility, on-time project
-    //           delivery, and after-sales service.
-    //         </p>
-    //       </div>
-
-    //       <div className="dispalycolumn">
-    //         <h1>Services</h1> <p></p>
-    //         <p></p>
-    //         <p></p>
-    //         <p></p>
-    //         <p></p>
-    //       </div>
-    //       <div className="dispalycolumn">
-    //         <h1>Quick Links</h1>
-    //         <p></p>
-    //         <p></p>
-    //         <p></p>
-    //         <p></p>
-    //         <p></p>
-    //       </div>
-    //       <div className="dispalycolumn">
-    //         <h1>Contact Details</h1>
-    //         <p></p>
-    //         <p></p>
-    //         <p></p>
-    //         <p></p>
-    //         <p></p>
-    //       </div>
-    //     </div>
-
-    //     <hr />
-
-    //     <div>
-    //       <div>
-    //         {" "}
-    //         <div>facebook Icon</div>
-    //         <div>Linked iN ICON </div>
-    //       </div>
-
-    //       <div>Copyright © 2025 . OmarEssam AlQuraan </div>
-    //     </div>
-    //   </div>
-    // </>
-    <div className="footer">
-      <div className="footerContent">
+    <div className="bg-[#0a1931] text-white py-12 px-4 md:px-8 lg:px-16">
+      <div className="max-w-7xl mx-auto grid gap-8 md:grid-cols-2 lg:grid-cols-4">
         {/* Column 1: Logo and Description */}
-        <div className="column">
-          <div className="logoContainer">
+        <div className="flex flex-col gap-6">
+          <div className="flex items-center">
             <img
               src="/images/logoM.png"
-              alt="Al-Mersal Housing Company Logo"
+              alt="A"
               width={200}
               height={100}
               className="logo"
             />
           </div>
-          <p className="description">
-            Mohammad & Ahmad Lutfi Al-Quraan – Al-Mersal Housing Company – is
-            one of the leading Jordanian companies specializing in the
-            development of modern residential projects. The company strives to
-            provide integrated housing environments that combine high quality,
-            contemporary design, and affordable prices. Al-Mersal is committed
-            to offering housing solutions that meet the needs of individuals and
-            families, with a strong focus on credibility, on-time project
-            delivery, and after-sales service.
+          <p className="text-sm leading-relaxed text-gray-300">
+            We are a platform dedicated to empowering skilled professionals and
+            artisans to showcase their products and services effectively, while
+            making it easy for users to access custom-made offerings. We support
+            direct communication between customers and service providers, and
+            provide marketing tools such as promotions, ratings, and reviews.
+            Our mission is to promote remote work and stimulate the local
+            economy, fostering a more connected and thriving community.
           </p>
         </div>
 
         {/* Column 2: Services */}
         <div>
-          <h1 className="heading">Services</h1>
-          <ul className="linkList">
-            <li className="linkItem">
-              <Link href="#">
-                <span className="linkPrefix">»»</span> Services Overview
+          <h1 className="text-[10px] font-semibold mb-4">Services</h1>
+          <ul className="flex flex-col gap-3 text-gray-300">
+            <li>
+              <Link
+                to="#"
+                className="flex items-center transition-colors duration-150 hover:text-white"
+              >
+                <span className="mr-2 text-blue-400 font-bold text-sm">»»</span>{" "}
+                Services Overview
               </Link>
             </li>
-            <li className="linkItem">
-              <Link href="#">
-                <span className="linkPrefix">»»</span>OMAR
+            <li>
+              <Link
+                to="#"
+                className="flex items-center transition-colors duration-150 hover:text-white"
+              >
+                <span className="mr-2 text-blue-400 font-bold text-sm">»»</span>{" "}
+                OMARs
               </Link>
             </li>
-            <li className="linkItem">
-              <Link href="#">
-                <span className="linkPrefix">»»</span>OMAR
+            <li>
+              <Link
+                to="#"
+                className="flex items-center transition-colors duration-150 hover:text-white"
+              >
+                <span className="mr-2 text-blue-400 font-bold text-sm">»»</span>{" "}
+                OMARs
               </Link>
             </li>
-            <li className="linkItem">
-              <Link href="#">
-                <span className="linkPrefix">»»</span>OMAR
-              </Link>
-            </li>
-            <li className="linkItem">
-              <Link href="#">
-                <span className="linkPrefix">»»</span> OMAR
-              </Link>
-            </li>
-            <li className="linkItem">
-              <Link href="#">
-                <span className="linkPrefix">»»</span> OMAR
+            <li>
+              <Link
+                to="#"
+                className="flex items-center transition-colors duration-150 hover:text-white"
+              >
+                <span className="mr-2 text-blue-400 font-bold text-sm">»»</span>{" "}
+                OMARs
               </Link>
             </li>
           </ul>
@@ -130,84 +79,79 @@ export default function Footer() {
 
         {/* Column 3: Quick Links */}
         <div>
-          <h1 className="heading">Quick Links</h1>
-          <ul className="linkList">
-            <li className="linkItem">
-              <Link href="#">
-                <span className="linkPrefix">»»</span> Home
-              </Link>
-            </li>
-            <li className="linkItem">
-              <Link href="#">
-                <span className="linkPrefix">»»</span> About Us
-              </Link>
-            </li>
-            <li className="linkItem">
-              <Link href="#">
-                <span className="linkPrefix">»»</span> Solutions
-              </Link>
-            </li>
-            <li className="linkItem">
-              <Link href="#">
-                <span className="linkPrefix">»»</span> Contact
-              </Link>
-            </li>
+          <h1 className="text-lg font-semibold mb-4">Quick Links</h1>
+          <ul className="flex flex-col gap-3 text-gray-300">
+            {["Home", "About Us", "Solutions", "Contact"].map((item) => (
+              <li key={item}>
+                <Link
+                  to="#"
+                  className="flex items-center transition-colors duration-150 hover:text-white"
+                >
+                  <span className="mr-2 text-blue-400 font-bold text-sm">
+                    »»
+                  </span>{" "}
+                  {item}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
 
         {/* Column 4: Contact Details */}
         <div>
-          <h1 className="heading">Contact Details</h1>
-          <ul className="linkList">
-            <li className="contactItem">
-              <Phone className="contactIcon" />
+          <h1 className="text-lg font-semibold mb-4">Contact Details</h1>
+          <ul className="flex flex-col gap-3 text-gray-300">
+            <li className="flex items-center">
+              <Phone className="w-4 h-4 mr-2 text-blue-400" />
               <span>+96200000000</span>
             </li>
-            <li className="contactItem">
-              <Building className="contactIcon" />
-              <span>+96000000000</span>
+            <li className="flex items-center">
+              <Building className="w-4 h-4 mr-2 text-blue-400" />
+              <span>Amman, Jordan</span>
             </li>
-            <li className="contactItem">
-              <Mail className="contactIcon" />
-              <span>info@0</span>
+            <li className="flex items-center">
+              <Mail className="w-4 h-4 mr-2 text-blue-400" />
+              <span>oquraan52@gmails.com</span>
             </li>
-            <li className="contactItem">
-              <Facebook className="contactIcon" />
-              <span>info@0</span>
+            <li className="flex items-center">
+              <Facebook className="w-4 h-4 mr-2 text-blue-400" />
+              <span>@AlQuraan</span>
             </li>
-            <li className="contactItem">
-              <Instagram className="contactIcon" />
-              <span>info@0</span>
+            <li className="flex items-center">
+              <Instagram className="w-4 h-4 mr-2 text-blue-400" />
+              <span>@AlQuraan</span>
             </li>
-            <li className="contactItem">
-              <Linkedin className="contactIcon" />
-              <span>info@0</span>
+            <li className="flex items-center">
+              <Linkedin className="w-4 h-4 mr-2 text-blue-400" />
+              <span>@AlQuraan</span>
             </li>
           </ul>
         </div>
       </div>
 
-      <hr />
-
-      {/* Footer Bottom Section */}
-      <div className="footerBottom">
-        <div className="socialLinks">
-          <Link
-            href="#"
-            className="socialButton facebook"
-            aria-label="Facebook"
-          >
-            <Facebook className="socialIcon" />
-          </Link>
-          <Link
-            href="#"
-            className={`socialButton linkedin`}
-            aria-label="LinkedIn"
-          >
-            <Linkedin className="socialIcon" />
-          </Link>
+      {/* Footer Bottom */}
+      <div className="mt-12 pt-8 border-t border-gray-700">
+        <div className="max-w-7xl mx-auto flex flex-col items-center text-sm text-gray-400 md:flex-row md:justify-between">
+          <div className="flex gap-4 md:mb-0">
+            <a
+              href="#"
+              className="w-9 h-9 flex items-center justify-center rounded-full bg-[#1877f2] hover:bg-[#145cb3] transition-colors duration-150"
+              aria-label="Facebook"
+            >
+              <Facebook className="w-5 h-5" />
+            </a>
+            <a
+              href="#"
+              className="w-9 h-9 flex items-center justify-center rounded-full bg-[#0077b5] hover:bg-[#005582] transition-colors duration-150"
+              aria-label="LinkedIn"
+            >
+              <Linkedin className="w-5 h-5" />
+            </a>
+          </div>
+          <p className="md:text-right">
+            © 2025 Omar Essam Al-Quraan. All Rights Reserved.
+          </p>
         </div>
-        <p className="copyright">{"Copyright © 2025 . Omar Essam AlQuraan"}</p>
       </div>
     </div>
   );

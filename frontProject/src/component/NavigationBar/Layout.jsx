@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
+import NavigationBar from "./NavigationBar";
 
 export default function Layout({ children }) {
   const OurValue = useRef(null);
@@ -12,10 +13,10 @@ export default function Layout({ children }) {
   };
   const location = useLocation();
 
-  const hideNavRoutes = ["/login", "/register"];
+  const hideNavRoutes = ["/login", "/register", "/mainDashBoard"];
 
   const shouldHideNav = hideNavRoutes.includes(location.pathname.toLowerCase());
-  const [admin, setAdmin] = useState (
+  const [admin, setAdmin] = useState(
     localStorage.getItem("typeOfUser") === "Admin"
   );
 
@@ -34,7 +35,7 @@ export default function Layout({ children }) {
   return (
     <>
       {!shouldHideNav && (
-        <Navigation
+        <NavigationBar
           onScroll={(section) => {
             if (section === "Partner") scrollToComponent(Partner);
             else if (section === "Client") scrollToComponent(Client);
@@ -43,7 +44,7 @@ export default function Layout({ children }) {
             else if (section === "AboutCompany ")
               scrollToComponent(AboutCompany);
           }}
-        ></Navigation>
+        ></NavigationBar>
       )}
       {children}
       {/* <Footer /> */}
