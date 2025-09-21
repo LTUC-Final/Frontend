@@ -3,6 +3,8 @@ import "./App.css";
 import Layout from "./component/NavigationBar/Layout";
 import NotFoundPage from "./component/notFoundPage";
 import LoginPage from "./pages/login";
+import CustomerProfile from "./pages/customerProfile";
+import ProviderProfile from "./pages/providerProfile";
 
 function App() {
   return (
@@ -12,9 +14,9 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/" element={<h1>Alquraan </h1>} />
 
-          <Route path="/register" element={<LoginPage />} />
-          <Route path="/providerProfile" element={<h1>yaaaaa mar7aba </h1>} />
-          <Route path="/providerProfile" element={<h1>يا اهلا </h1>} />
+        <Route path="/register" element={<LoginPage />} />
+        <Route path="/customerProfile" element={<CustomerProfile/>} />
+        <Route path="/providerProfile" element={<ProviderProfile/>} />
 
           <Route path="/providerDashboard" element={<h1>شد حالك </h1>} />
           <Route path="/userDashboard" element={<h1>كفووو </h1>} />
