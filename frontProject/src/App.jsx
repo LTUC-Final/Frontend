@@ -1,32 +1,50 @@
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
-import LoginPage from "./pages/login";
+import Footer from "./component/NavigationBar/Footer/Footer";
+import Layout from "./component/NavigationBar/Layout";
+import NotFoundPage from "./component/notFoundPage";
 import CustomerProfile from "./pages/customerProfile";
+import LoginPage from "./pages/login";
+import Logout from "./pages/logout";
 import ProviderProfile from "./pages/providerProfile";
 
 function App() {
   return (
-    <>
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/" element={<h1>Alquraan </h1>} />
+    <div>
+      <Layout>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/" element={<h1>Alquraan </h1>} />
+          <Route path="/logout" element={<Logout />} />
 
-        <Route path="/register" element={<LoginPage />} />
-        <Route path="/customerProfile" element={<CustomerProfile/>} />
-        <Route path="/providerProfile" element={<ProviderProfile/>} />
+          <Route path="/register" element={<LoginPage />} />
+          <Route path="/customerProfile" element={<CustomerProfile />} />
+          <Route path="/providerProfile" element={<ProviderProfile />} />
 
-        <Route path="/providerDashboard" element={<h1>شد حالك </h1>} />
-        <Route path="/userDashboard" element={<h1>كفووو </h1>} />
-        <Route path="/mainDashBoard" element={<h1>محدا اخذها هاي </h1>} />
-        <Route path="/favorite" element={<h1>اويلييييييييييييييي </h1>} />
-        <Route path="/cart" element={<h1>Alquraan </h1>} />
-        <Route path="/payments" element={<h1>ييييييييييييييييييييي </h1>} />
-        <Route
-          path="/prodactInfo/:prodactId"
-          element={<h1>sssssssssssss</h1>}
-        ></Route>
-      </Routes>
-    </>
+          <Route
+            path="/providerDashboard"
+            element={<h1>شد حالك providerDashboard</h1>}
+          />
+          <Route path="/userDashboard" element={<h1>كفووو userDashboard</h1>} />
+          <Route
+            path="/mainDashBoard"
+            element={<h1> ????????محدا اخذها هاي mainDashBoard</h1>}
+          />
+          <Route
+            path="/favorite"
+            element={<h1>اويلييييييييييييييي favorite</h1>}
+          />
+          <Route path="/cart" element={<h1>Alquraan cart</h1>} />
+          <Route path="/payments" element={<h1>ييييييييييييييييييييي </h1>} />
+          <Route
+            path="/prodactInfo/:prodactId"
+            element={<h1>sssssssssssss</h1>}
+          ></Route>
+          <Route path="*" element={<NotFoundPage></NotFoundPage>}></Route>
+        </Routes>
+      </Layout>
+      <Footer></Footer>
+    </div>
   );
 }
 

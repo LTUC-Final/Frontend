@@ -23,8 +23,14 @@ export default function LoginPage() {
       console.log(response.data.user);
       // localStorage.setItem("typeOfUser", response.data.data.role);
       // localStorage.setItem("token", response.data.token);
-      dispatch(setUserInfo({ ...response.data.user }));
-      navigate("/");
+      // dispatch(setUserInfo({ ...response.data.user }));
+      dispatch(
+        setUserInfo({
+          user: response.data.user,
+          token: response.data.token,
+        })
+      );
+      navigate("/mainDashBoard");
     } catch (err) {
       console.error("Login error:", err);
       setErrorMsg("An error occurred. Please try again.");
