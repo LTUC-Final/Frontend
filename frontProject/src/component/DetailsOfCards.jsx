@@ -1,0 +1,44 @@
+import axios from "axios";
+import { useEffect, useState } from "react"
+import AddTOFav from "./AddToFav";
+import AddToCart from "./AddToCart";
+import { data } from "react-router-dom";
+
+export default function DetailsOfCards({ Id }) {
+    const port = import.meta.env.VITE_PORT;
+    console.log(Id);
+
+    const [dataCard, setDataCard] = useState("");
+
+    useEffect(() => {
+        const gitdetails = async () => {
+            const data = await axios.get(`http://localhost:${port}/api/DetailsOfCardInfo/${Id}`)
+
+            console.log("this is data", data.data);
+
+            setDataCard(data.data);
+        }
+        gitdetails();
+    }, [])
+
+    return (<div>
+        <img src={dataCard.image}></img>
+        <h3>{dataCard.name}</h3>
+        <p>{dataCard.description}</p>
+        <p>{dataCard.location}</p>
+        <p>{dataCard.type_of_product}</p>
+        <p>{dataCard.price}</p>
+        <div>
+            <button onClick={() => {
+                AddTOFav(dataCard)
+            }}>addFav</button>
+            <button onClick={() => {
+                AddToCart(dataCard)
+            }}>addcart</button>
+
+            <img src={dataCard.image}></img>
+            <h3>{dataCard.firstname}{dataCard.lastname}</h3>
+        </div>
+
+    </div>)
+}
