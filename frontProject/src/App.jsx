@@ -40,6 +40,11 @@ function App() {
             path="/prodactInfo/:prodactId"
             element={<h1>sssssssssssss</h1>}
           ></Route>
+          <Route
+            path="/requestProvider"
+            element={<h1>sssssssssssss</h1>}
+          ></Route>
+          <Route path="/orderCustomer" element={<h1>sssssssssssss</h1>}></Route>
           <Route path="*" element={<NotFoundPage></NotFoundPage>}></Route>
         </Routes>
       </Layout>

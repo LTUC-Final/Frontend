@@ -34,7 +34,7 @@ export default function NavigationBar({ onScroll }) {
     {
       name: "Dashboard",
       href: "/providerDashboard",
-      roles: ["provider"],
+      // roles: ["provider"],
 
       // subItems: [
       //   { name: "Our Value", href: "/dashboard/OurValue", section: "OurValue" },
@@ -51,12 +51,21 @@ export default function NavigationBar({ onScroll }) {
       //   { name: "Partner", href: "/dashboard/Partner", section: "Partner" },
       // ],
 
-      roles: ["customer"],
+      // roles: ["customer"],
     },
+    {
+      name: "ReqProvider",
+      href: "/requestProvider",
+    },
+    {
+      name: "Order",
+      href: "/orderCustomer",
+    },
+
     {
       name: "Favorite",
       href: "/favorite",
-      roles: ["customer"],
+      // roles: ["customer"],
 
       // subItems: [
       //   { name: "Owners ", href: "/about/owners", section: "Owners" },
@@ -70,7 +79,7 @@ export default function NavigationBar({ onScroll }) {
     {
       name: "Cart",
       href: "/cart",
-      roles: ["customer"],
+      // roles: ["customer"],
       // subItems: [
       //   { name: "Owners ", href: "/about/owners", section: "Owners" },
       //   {
