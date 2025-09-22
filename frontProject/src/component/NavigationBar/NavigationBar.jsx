@@ -25,10 +25,11 @@ export default function NavigationBar({ onScroll }) {
     { name: "Home", href: "/mainDashBoard" },
     {
       name: "Profile",
-      href: "/profile",
+      // href: "/profile",
       subItems: [
-        { name: "About ALmersal", hrsef: "/profile/edit" },
-        { name: "Settings", href: "/profile/settings" },
+        { name: "ProviderProfile", href: "/providerProfile" },
+
+        { name: "CustomerProfile", href: "/customerProfile" },
       ],
     },
     {
