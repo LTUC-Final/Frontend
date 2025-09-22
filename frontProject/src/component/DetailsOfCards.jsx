@@ -3,12 +3,14 @@ import { useEffect, useState } from "react"
 import AddTOFav from "./AddToFav";
 import AddToCart from "./AddToCart";
 import { data } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export default function DetailsOfCards({ Id }) {
     const port = import.meta.env.VITE_PORT;
     console.log(Id);
-
     const [dataCard, setDataCard] = useState("");
+    const CusData = useSelector((state) => state.UserInfo)
+
 
     useEffect(() => {
         const gitdetails = async () => {
@@ -29,15 +31,18 @@ export default function DetailsOfCards({ Id }) {
         <p>{dataCard.type_of_product}</p>
         <p>{dataCard.price}</p>
         <div>
-            <button onClick={() => {
-                AddTOFav(dataCard)
-            }}>addFav</button>
-            <button onClick={() => {
-                AddToCart(dataCard)
-            }}>addcart</button>
+            {CusData.user.role === "customer" ? (
+                <div>
+                    <button onClick={() => {
+                        AddTOFav(card, CusData)
+                    }}>addFav</button>
+                    <button onClick={() => {
+                        AddToCart(card, CusData)
+                    }}>addcart</button></div>
+            ) : (<div></div>)}
 
-            {/* <img src={dataCard.image}></img> */}
-            {/* <h3>{dataCard.firstname}{dataCard.lastname}</h3> */}
+            <img src={dataCard.image}></img>
+            <h3>{dataCard.firstname}{dataCard.lastname}</h3>
         </div>
 
     </div>)
