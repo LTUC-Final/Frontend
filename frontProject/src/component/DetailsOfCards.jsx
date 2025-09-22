@@ -36,8 +36,8 @@ export default function DetailsOfCards({ Id }) {
                 AddToCart(dataCard)
             }}>addcart</button>
 
-            <img src={dataCard.image}></img>
-            <h3>{dataCard.firstname}{dataCard.lastname}</h3>
+            {/* <img src={dataCard.image}></img> */}
+            {/* <h3>{dataCard.firstname}{dataCard.lastname}</h3> */}
         </div>
 
     </div>)
