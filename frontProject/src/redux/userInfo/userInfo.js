@@ -1,3 +1,4 @@
+// src/redux/userInfo/userInfo.js
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = { user: null };

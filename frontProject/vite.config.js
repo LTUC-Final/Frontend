@@ -1,12 +1,18 @@
-import tailwindcss from "@tailwindcss/vite";
-import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
-const port = parseInt(process.env.VITE_PORT) || 5173; // eslint-disable-line no-undef
+import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
-    port: port,
+    port: 5173,
+    open: true,
+    // 👇 هنا الحل
+    historyApiFallback: true,
+  },
+  preview: {
+    port: 4173,
+    open: true,
+    historyApiFallback: true,
   },
 });

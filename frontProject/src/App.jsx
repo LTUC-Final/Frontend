@@ -1,30 +1,79 @@
+// src/App.jsx
+// src/App.jsx
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
+
+import Footer from "./component/NavigationBar/Footer/Footer";
+import Layout from "./component/NavigationBar/Layout";
+import NotFoundPage from "./component/notFoundPage";
+
 import LoginPage from "./pages/login";
+import Logout from "./pages/logout";
+import ProviderProfile from "./pages/providerProfile";
+import CartPage from "./pages/CartPage";
+import ProtectedRoute from "./component/ProtectedRoute.jsx";
+
+import PaymentsPage from "./pages/PaymentsPage";
+import SuccessPage from "./pages/SuccessPage";
+import CancelPage from "./pages/CancelPage";
+
+// import CustomerProfile from "./pages/customerProfile"; // إذا جاهزة عندك
 
 function App() {
   return (
-    <>
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/" element={<h1>Alquraan </h1>} />
+    <div>
+      <Layout>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<LoginPage />} />
+          <Route path="/logout" element={<Logout />} />
+          <Route path="/cart" element={<CartPage />} />
+          <Route path="/payments" element={<PaymentsPage />} />
+          <Route path="/success" element={<SuccessPage />} />
+          <Route path="/cancel" element={<CancelPage />} />
 
-        <Route path="/register" element={<LoginPage />} />
-        <Route path="/providerProfile" element={<h1>yaaaaa mar7aba </h1>} />
-        <Route path="/providerProfile" element={<h1>يا اهلا </h1>} />
+          {/* Protected Routes */}
+          <Route element={<ProtectedRoute />}>
+            {/* <Route path="/customerProfile" element={<CustomerProfile />} /> */}
+            <Route path="/providerProfile" element={<ProviderProfile />} />
+          </Route>
 
-        <Route path="/providerDashboard" element={<h1>شد حالك </h1>} />
-        <Route path="/userDashboard" element={<h1>كفووو </h1>} />
-        <Route path="/mainDashBoard" element={<h1>محدا اخذها هاي </h1>} />
-        <Route path="/favorite" element={<h1>اويلييييييييييييييي </h1>} />
-        <Route path="/cart" element={<h1>Alquraan </h1>} />
-        <Route path="/payments" element={<h1>ييييييييييييييييييييي </h1>} />
-        <Route
-          path="/prodactInfo/:prodactId"
-          element={<h1>sssssssssssss</h1>}
-        ></Route>
-      </Routes>
-    </>
+          {/* Other Routes */}
+          <Route path="/" element={<h1>Alquraan</h1>} />
+          <Route
+            path="/providerDashboard"
+            element={<h1>شد حالك providerDashboard</h1>}
+          />
+          <Route
+            path="/userDashboard"
+            element={<h1>كفووو userDashboard</h1>}
+          />
+          <Route
+            path="/mainDashBoard"
+            element={<h1>محدا اخذها هاي mainDashBoard</h1>}
+          />
+          <Route
+            path="/favorite"
+            element={<h1>اويلييييييييييييييي favorite</h1>}
+          />
+          <Route
+            path="/prodactInfo/:prodactId"
+            element={<h1>sssssssssssss</h1>}
+          />
+          <Route
+            path="/requestProvider"
+            element={<h1>sssssssssssss</h1>}
+          />
+          <Route
+            path="/orderCustomer"
+            element={<h1>sssssssssssss</h1>}
+          />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </Layout>
+      <Footer />
+    </div>
   );
 }
 
