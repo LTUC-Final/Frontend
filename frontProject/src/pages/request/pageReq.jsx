@@ -12,7 +12,6 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import FeedbackCard from "../../component/ratingAndFeedback";
 
 // Sample data
 const sampleOrders = [
@@ -311,33 +310,12 @@ function OrdersManagementProvider() {
                         </span>
                       </div>
                     </div>
-                    {order.status === "completed" &&
-                    order.viewFedbackPost &&
-                    !order.add_customer_review ? (
-                      <FeedbackCard
-                        orderInfo={order}
-                        onSubmit={() => {
-                          setOrders((prev) =>
-                            prev.map((o) =>
-                              o.id === order.id
-                                ? {
-                                    ...o,
-                                    viewFedbackPost: false,
-                                  }
-                                : o
-                            )
-                          );
-                        }}
-                      ></FeedbackCard>
-                    ) : (
-                      <></>
-                    )}
                   </div>
 
                   <div className="flex items-center space-x-2 ml-4">
                     <button
                       onClick={() => {
-                        navigate(`/profile/${order.provider_id}`);
+                        navigate(`/profile/${order.customer_id}`);
                       }}
                       className="p-2 text-muted-foreground hover:text-primary hover:bg-secondary rounded-lg transition-colors"
                     >

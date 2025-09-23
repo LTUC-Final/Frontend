@@ -1,19 +1,17 @@
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
+import GitAllProduct from "./component/GitAllProduct";
 import Footer from "./component/NavigationBar/Footer/Footer";
 import Layout from "./component/NavigationBar/Layout";
 import NotFoundPage from "./component/notFoundPage";
 import CustomerProfile from "./pages/customerProfile";
 import LoginPage from "./pages/login";
-import GitAllProduct from "./component/GitAllProduct";
-import AddToCart from "./component/AddToCart";
 // import GitReviews from "./component/GitReviews";
+import CardDeatils from "./component/CardDetails";
 import Logout from "./pages/logout";
 import OrdersManagementCustomer from "./pages/order/order";
 import ProviderProfile from "./pages/providerProfile";
-import OrdersManagement from "./pages/request/pageReq";
 import OrdersManagementProvider from "./pages/request/pageReq";
-import CardDeatils from "./component/CardDetails";
 function App() {
   return (
     <div>
@@ -26,7 +24,6 @@ function App() {
           <Route path="/register" element={<LoginPage />} />
           <Route path="/customerProfile" element={<CustomerProfile />} />
           <Route path="/providerProfile" element={<ProviderProfile />} />
-
 
           <Route
             path="/providerDashboard"
@@ -41,9 +38,8 @@ function App() {
             path="/favorite"
             element={<h1>اويلييييييييييييييي favorite</h1>}
           />
-        <Route path="/productdatails" element={<CardDeatils/>} />
-        <Route path="/userDashboard" element={<GitAllProduct/>} />
-
+          <Route path="/productdatails" element={<CardDeatils />} />
+          <Route path="/userDashboard" element={<GitAllProduct />} />
 
           <Route path="/cart" element={<h1>Alquraan cart</h1>} />
           <Route path="/payments" element={<h1>ييييييييييييييييييييي </h1>} />
