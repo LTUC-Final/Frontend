@@ -1,4 +1,3 @@
-//src/component/NavigationBar/Footer/Footer.jsx
 import {
   Building,
   Facebook,
@@ -11,7 +10,7 @@ import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
-          <div className="bg-[#0a1931] text-white py-6 px-4 md:px-8 lg:px-16">
+    <div className="bg-[#0a1931] text-white py-12 px-4 md:px-8 lg:px-16">
       <div className="max-w-7xl mx-auto grid gap-8 md:grid-cols-2 lg:grid-cols-4">
         {/* Column 1: Logo and Description */}
         <div className="flex flex-col gap-6">
@@ -157,3 +156,4 @@ export default function Footer() {
     </div>
   );
 }
+  

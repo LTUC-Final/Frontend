@@ -1,4 +1,3 @@
-// src/component/NavigationBar/Layout.jsx
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import NavigationBar from "./NavigationBar";

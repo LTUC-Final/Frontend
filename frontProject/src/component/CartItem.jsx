@@ -1,5 +1,4 @@
 // src/component/CartItem.jsx
-// src/component/CartItem.jsx
 import { useState } from "react";
 import {
   updateCustomReqAndToOrder,

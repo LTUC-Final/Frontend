@@ -1,4 +1,3 @@
-// src/component/NavigationBar/NavigationBar.jsx
 "use client";
 import { useState } from "react";
 import { useSelector } from "react-redux";
