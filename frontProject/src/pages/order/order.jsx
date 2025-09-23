@@ -19,8 +19,8 @@ const statusClasses = {
   "In Progress": "text-blue-600 bg-blue-50 border border-blue-200",
   "Ready for Delivery": "text-purple-600 bg-purple-50 border border-purple-200",
   completed: "text-green-600 bg-green-50 border border-green-200",
-  awaiting_approval: "text-orange-600 bg-orange-50 border border-orange-200", 
-  on_progress: "text-indigo-600 bg-indigo-50 border border-indigo-200", 
+  awaiting_approval: "text-orange-600 bg-orange-50 border border-orange-200",
+  on_progress: "text-indigo-600 bg-indigo-50 border border-indigo-200",
 };
 
 const statusDotClasses = {
@@ -28,8 +28,8 @@ const statusDotClasses = {
   "In Progress": "bg-blue-500",
   "Ready for Delivery": "bg-purple-500",
   completed: "bg-green-500",
-  awaiting_approval: "bg-orange-500", 
-  on_progress: "bg-indigo-500", 
+  awaiting_approval: "bg-orange-500",
+  on_progress: "bg-indigo-500",
 };
 
 const paymentStatusClasses = {
@@ -298,7 +298,7 @@ function OrdersManagementCustomer() {
                         }}
                       ></FeedbackCard>
                     ) : (
-                      <></>
+                      <div></div>
                     )}
                   </div>
 
