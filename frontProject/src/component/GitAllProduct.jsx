@@ -16,6 +16,8 @@ export default function GitAllProduct() {
     const [selectore, setSelectore] = useState("");
 
     console.log(selectore);
+    console.log(selectore);
+    
 
 
     console.log(CusData);
