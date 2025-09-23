@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import AddToCart from "./AddToCart";
 import AddTOFav from "./AddToFav";
-// import GitReviews from "./GitReviews";
+// import GitReviews fro./CardDetailsews";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
