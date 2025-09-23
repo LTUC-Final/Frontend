@@ -3,16 +3,18 @@ import { useEffect, useState } from "react";
 import AddTOFav from "./AddToFav";
 import AddToCart from "./AddToCart";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 export default function DetailsOfCards({ Id }) {
   const port = import.meta.env.VITE_PORT;
   const [dataCard, setDataCard] = useState(null);
   const CusData = useSelector((state) => state.UserInfo);
+  const navigate = useNavigate();
 
   console.log(CusData);
-  console.log(dataCard);
-  
-  
+  console.log("data", dataCard);
+
+
 
   useEffect(() => {
     const gitdetails = async () => {
@@ -20,11 +22,18 @@ export default function DetailsOfCards({ Id }) {
         const res = await axios.get(
           `http://localhost:${port}/api/DetailsOfCardInfo/${Id}`
         );
+
+         console.log("Full response:", res.data);
+         
         setDataCard(res.data);
+       
+        
+        
       } catch (error) {
         console.error(error);
       }
     };
+    
     gitdetails();
   }, [Id, port]);
 
@@ -42,11 +51,12 @@ export default function DetailsOfCards({ Id }) {
         <img
           src={dataCard.image}
           alt={dataCard.name}
+          
           className="w-full md:w-1/2 h-80 object-cover rounded-xl shadow"
         />
 
         <div className="flex-1">
-          <h3 className="text-2xl font-bold text-gray-800 mb-2">
+          <h3 className="text-2xl font-bold text-gray-800 mb-2" >
             {dataCard.name}
           </h3>
           <p className="text-gray-600 mb-2">{dataCard.description}</p>
@@ -87,9 +97,10 @@ export default function DetailsOfCards({ Id }) {
           <img
             src={dataCard.image}
             alt="seller"
+            onClick={() => navigate(`/profile/${dataCard.provider_id}/${dataCard.role}`)}
             className="w-16 h-16 object-cover rounded-full border"
           />
-          <p className="text-gray-700 font-medium">
+          <p className="text-gray-700 font-medium" onClick={() => navigate(`/profile/${dataCard.provider_id}/${dataCard.role}`)}>
             {dataCard.firstname} {dataCard.lastname}
           </p>
         </div>

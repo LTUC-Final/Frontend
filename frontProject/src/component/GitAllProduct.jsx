@@ -14,14 +14,14 @@ export default function GitAllProduct() {
     const [textSearch, setTextSearch] = useState("");
     const [selectore, setSelectore] = useState("");
 
+    console.log("sss",selectore);
     console.log(selectore);
-    console.log(selectore);
 
 
 
-    console.log(CusData);
+    console.log("ccc",CusData);
 
-    console.log(cards);
+    console.log("card",cards);
     console.log(textSearch);
 
     const resultOfFilter = cards.filter((card) => {
@@ -96,7 +96,7 @@ export default function GitAllProduct() {
                             }}
                         />
                         <h3 className="text-lg font-semibold text-gray-800">{card.name}</h3>
-                        <p className="text-gray-600">{card.firstname} {card.lastname}</p>
+                        <p className="text-gray-600" onClick={() => navigate(`/profile/${card.provider_id}/${card.role}`)} >{card.firstname} {card.lastname}</p>
                         <p className="text-blue-600 font-bold">${card.price}</p>
                         <p className="text-sm text-gray-500">{card.location}</p>
 
