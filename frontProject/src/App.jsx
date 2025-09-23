@@ -4,13 +4,14 @@ import GitAllProduct from "./component/GitAllProduct";
 import Footer from "./component/NavigationBar/Footer/Footer";
 import Layout from "./component/NavigationBar/Layout";
 import NotFoundPage from "./component/notFoundPage";
-import CustomerProfile from "./pages/customerProfile";
 import LoginPage from "./pages/login";
 // import GitReviews from "./component/GitReviews";
 import CardDeatils from "./component/CardDetails";
 import Logout from "./pages/logout";
+import Profile from "./pages/Profile";
+
 import OrdersManagementCustomer from "./pages/order/order";
-import ProviderProfile from "./pages/providerProfile";
+
 import OrdersManagementProvider from "./pages/request/pageReq";
 function App() {
   return (
@@ -22,8 +23,7 @@ function App() {
           <Route path="/logout" element={<Logout />} />
 
           <Route path="/register" element={<LoginPage />} />
-          <Route path="/customerProfile" element={<CustomerProfile />} />
-          <Route path="/providerProfile" element={<ProviderProfile />} />
+          <Route path="/profile/:user_id" element={<Profile/>} />
 
           <Route
             path="/providerDashboard"
