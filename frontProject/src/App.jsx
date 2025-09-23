@@ -9,8 +9,10 @@ import GitAllProduct from "./component/GitAllProduct";
 import AddToCart from "./component/AddToCart";
 import GitReviews from "./component/GitReviews";
 import Logout from "./pages/logout";
+import OrdersManagementCustomer from "./pages/order/order";
 import ProviderProfile from "./pages/providerProfile";
-
+import OrdersManagement from "./pages/request/pageReq";
+import OrdersManagementProvider from "./pages/request/pageReq";
 function App() {
   return (
     <div>
@@ -50,9 +52,12 @@ function App() {
           ></Route>
           <Route
             path="/requestProvider"
-            element={<h1>sssssssssssss</h1>}
+            element={<OrdersManagementProvider></OrdersManagementProvider>}
           ></Route>
-          <Route path="/orderCustomer" element={<h1>sssssssssssss</h1>}></Route>
+          <Route
+            path="/orderCustomer"
+            element={<OrdersManagementCustomer></OrdersManagementCustomer>}
+          ></Route>
           <Route path="*" element={<NotFoundPage></NotFoundPage>}></Route>
         </Routes>
       </Layout>
