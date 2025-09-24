@@ -12,49 +12,16 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-
-// Sample data
-const sampleOrders = [
-  {
-    id: "ORD-2024-001",
-    status: "Pending",
-    productName: "Premium Web Design Package",
-    serviceDetails:
-      "Custom website with 5 pages, responsive design, SEO optimization",
-    customNotes: "Please include contact form and blog section",
-    basePrice: 1200,
-    additionalServices: 300,
-    totalAmount: 1500,
-    estimatedDelivery: "2024-01-15",
-    orderDate: "2024-01-01",
-    paymentStatus: "Paid",
-    category: "Web Design",
-  },
-  {
-    id: "ORD-2024-002",
-    status: "In Progress",
-    productName: "Mobile App Development",
-    serviceDetails:
-      "iOS and Android app with user authentication and payment integration",
-    customNotes: "Focus on user-friendly interface",
-    basePrice: 3500,
-    additionalServices: 500,
-    totalAmount: 4000,
-    estimatedDelivery: "2024-02-20",
-    orderDate: "2024-01-05",
-    paymentStatus: "Partially Paid",
-    category: "Development",
-  },
-  // باقي البيانات
-];
-
+import ApprovalForm from "./approvalForm";
+import ButtonStatus from "./ButtonStatues";
 const statusClasses = {
   pending: "text-yellow-600 bg-yellow-50 border border-yellow-200",
   "In Progress": "text-blue-600 bg-blue-50 border border-blue-200",
   "Ready for Delivery": "text-purple-600 bg-purple-50 border border-purple-200",
   completed: "text-green-600 bg-green-50 border border-green-200",
-  awaiting_approval: "text-orange-600 bg-orange-50 border border-orange-200", // new
-  on_progress: "text-indigo-600 bg-indigo-50 border border-indigo-200", // new
+  awaiting_approval: "text-orange-600 bg-orange-50 border border-orange-200",
+  on_progress: "text-indigo-600 bg-indigo-50 border border-indigo-200",
+  rejected: "text-red-600 bg-red-50 border border-red-200",
 };
 
 const statusDotClasses = {
@@ -62,8 +29,9 @@ const statusDotClasses = {
   "In Progress": "bg-blue-500",
   "Ready for Delivery": "bg-purple-500",
   completed: "bg-green-500",
-  awaiting_approval: "bg-orange-500", // new
-  on_progress: "bg-indigo-500", // new
+  awaiting_approval: "bg-orange-500",
+  on_progress: "bg-indigo-500",
+  rejected: "bg-red-500",
 };
 
 const paymentStatusClasses = {
@@ -79,6 +47,8 @@ function OrdersManagementProvider() {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [orders, setOrders] = useState([]);
+  const [sortOrder, setSortOrder] = useState("newest");
+
   const { user } = useSelector((state) => state.UserInfo);
   const userId = user?.user_id;
   const port = import.meta.env.VITE_PORT;
@@ -89,13 +59,13 @@ function OrdersManagementProvider() {
         const response = await axios.get(
           `http://localhost:${port}/getAllOrderInCustomer/${userId}`
         );
-        console.log("jjjjjjjjjjjjjjjj" + response.data[0]);
+        console.log(response.data[0]);
         const mappedOrders = response.data.map((order) => ({
           order_id: order.order_id,
           status: order.status,
           productName: order.product_name,
           serviceDetails: order.product_description,
-          customNotes: order.response_from_provider || "",
+          customNotes: order.details_order_user || "",
           basePrice: order.base_price || 0,
           additionalServices: order.additional_services || 0,
           totalAmount: order.original_price || 0,
@@ -110,6 +80,12 @@ function OrdersManagementProvider() {
           customer_id: order.customer_user_id,
           viewFedbackPost: true,
           add_customer_review: order.add_customer_review,
+          provider_firstname: order.provider_firstname,
+          provider_lastname: order.provider_lastname,
+          provider_profile_image: order.provider_profile_image,
+          customer_firstname: order.customer_firstname,
+          customer_lastname: order.customer_lastname,
+          response_from_provider: order.response_from_provider,
         }));
 
         setOrders(mappedOrders);
@@ -121,11 +97,12 @@ function OrdersManagementProvider() {
 
     fetchOrders();
   }, [userId]);
-
   const filteredOrders = useMemo(() => {
-    return orders.filter((order) => {
+    const filtered = orders.filter((order) => {
       const matchesSearch =
-        String(order.id).toLowerCase().includes(searchTerm.toLowerCase()) ||
+        String(order.order_id)
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
         order.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         order.serviceDetails.toLowerCase().includes(searchTerm.toLowerCase());
 
@@ -136,13 +113,40 @@ function OrdersManagementProvider() {
 
       return matchesSearch && matchesStatus && matchesCategory;
     });
-  }, [orders, searchTerm, statusFilter, categoryFilter]);
+
+    const sorted = [...filtered].sort((a, b) => {
+      const dateA = new Date(a.orderDate);
+      const dateB = new Date(b.orderDate);
+      return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
+    });
+
+    return sorted;
+  }, [orders, searchTerm, statusFilter, categoryFilter, sortOrder]);
 
   const categories = [...new Set(orders.map((order) => order.category))];
   const statuses = [...new Set(orders.map((order) => order.status))];
 
+  function deleteOrder(order_id) {
+    try {
+      console.log(order_id);
+      const response = axios.put(
+        `http://localhost:${port}/updateStatusOrder/rejected/${order_id}`
+      );
+      console.log("responseeeeeeeeeeeeeeeeeeeeeeeeeeee");
+      setOrders((prevOrders) =>
+        prevOrders.map((order) =>
+          order.order_id === order_id ? { ...order, status: "rejected" } : order
+        )
+      );
+      console.log(response.data);
+      console.log("responseeeeeeeeeeeeeeeeeeeeeeeeeeee");
+    } catch (error) {
+      console.error(" Unexpected error:", error);
+    }
+  }
   return (
     <div className="flex h-screen bg-background">
+      {/* Overlay */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
@@ -150,7 +154,9 @@ function OrdersManagementProvider() {
         />
       )}
 
+      {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Header */}
         <header className="bg-card border-b border-border px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
@@ -216,6 +222,14 @@ function OrdersManagementProvider() {
                 </option>
               ))}
             </select>
+            <select
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
+              className="px-3 py-1 bg-input border border-border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+            >
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
+            </select>
           </div>
         </div>
 
@@ -277,9 +291,59 @@ function OrdersManagementProvider() {
                     </p>
                     {order.customNotes && (
                       <p className="text-sm text-muted-foreground mb-4 italic">
-                        Note: {order.customNotes}
+                        Note Customer: {order.customNotes}
                       </p>
                     )}
+
+                    {/* {order.status === "awaiting_approval" ? (
+                      order.customNotes !== null &&  order.customNotes !== ""&&
+                      order.response_from_provider === null ? (
+                        <ApprovalForm orderId={order.order_id} port={port} />
+                      ) : (
+                        <p>Already send Messag and Update your price</p>
+                      )
+                    ) : (
+                      <p></p>
+                    )} */}
+
+                    {order.status === "awaiting_approval" &&
+                      order.customNotes !== null &&
+                      order.customNotes !== "" &&
+                      order.response_from_provider === null && (
+                        // <ApprovalForm orderId={order.order_id} port={port} />
+                        <div>
+                          <ApprovalForm
+                            orderId={order.order_id}
+                            port={port}
+                            onSuccess={(updatedOrder) => {
+                              // تحديث الطلب مباشرة في الحالة
+                              setOrders((prevOrders) =>
+                                prevOrders.map((o) =>
+                                  o.order_id === updatedOrder.order_id
+                                    ? { ...o, ...updatedOrder } // دمج الحقول الجديدة
+                                    : o
+                                )
+                              );
+                            }}
+                          />{" "}
+                          <button
+                            className="flex-1 sm:flex-auto bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                            onClick={() => {
+                              deleteOrder(order.order_id);
+                            }}
+                          >
+                            Reject{" "}
+                          </button>
+                        </div>
+                      )}
+                    {/* Buttons to update order status */}
+
+                    {order.status === "awaiting_approval" &&
+                      order.response_from_provider !== null && (
+                        <p className="text-sm text-red-500 font-medium">
+                          Already sent message and updated your price
+                        </p>
+                      )}
 
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                       <div className="flex items-center space-x-2">
@@ -310,8 +374,36 @@ function OrdersManagementProvider() {
                         </span>
                       </div>
                     </div>
+                    {/* {order.status === "completed" || */
+                    order.status === "on_progress" ||
+                    order.status === "pending" ? (
+                      <ButtonStatus
+                        orderId={order.order_id}
+                        setOrders={setOrders}
+                        port={port}
+                      ></ButtonStatus>
+                    ) : (
+                      <></>
+                    )}
                   </div>
 
+                  <div></div>
+                  <div className="flex flex-col items-center mt-2">
+                    <img
+                      src={
+                        order.provider_profile_image ||
+                        "../src/assets/default-avatar.png"
+                      }
+                      onClick={() => {
+                        navigate(`/profile/${order.customer_id}`);
+                      }}
+                      alt={`${order.customer_firstname} ${order.customer_lastname}`}
+                      className="w-10 h-10 rounded-full border border-border object-cover"
+                    />
+                    <span className="text-sm font-medium text-card-foreground mt-1">
+                      {order.customer_firstname} {order.customer_lastname}
+                    </span>
+                  </div>
                   <div className="flex items-center space-x-2 ml-4">
                     <button
                       onClick={() => {
@@ -319,7 +411,7 @@ function OrdersManagementProvider() {
                       }}
                       className="p-2 text-muted-foreground hover:text-primary hover:bg-secondary rounded-lg transition-colors"
                     >
-                      View Provider
+                      View Customer
                     </button>
                     <button className="p-2 text-muted-foreground hover:text-primary hover:bg-secondary rounded-lg transition-colors">
                       <MessageCircle className="h-4 w-4" />

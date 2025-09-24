@@ -45,6 +45,8 @@ function OrdersManagementCustomer() {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [orders, setOrders] = useState([]);
+  const [sortOrder, setSortOrder] = useState("newest");
+
   const { user } = useSelector((state) => state.UserInfo);
   const userId = user?.user_id;
   const port = import.meta.env.VITE_PORT;
@@ -55,7 +57,7 @@ function OrdersManagementCustomer() {
         const response = await axios.get(
           `http://localhost:${port}/getAllOrderInCustomer/${userId}`
         );
-        console.log("jjjjjjjjjjjjjjjj" + response.data[0]);
+        console.log(response.data[0]);
         const mappedOrders = response.data.map((order) => ({
           order_id: order.order_id,
           status: order.status,
@@ -65,7 +67,7 @@ function OrdersManagementCustomer() {
           basePrice: order.base_price || 0,
           additionalServices: order.additional_services || 0,
           totalAmount: order.original_price || 0,
-          estimatedDelivery: order.estimated_delivery,
+          estimatedDelivery: order.datedelivery||"",
           orderDate: order.created_at
             ? new Date(order.created_at).toISOString().split("T")[0]
             : "",
@@ -76,6 +78,13 @@ function OrdersManagementCustomer() {
           customer_id: order.customer_user_id,
           viewFedbackPost: true,
           add_customer_review: order.add_customer_review,
+          provider_firstname: order.provider_firstname,
+          provider_lastname: order.provider_lastname,
+          provider_profile_image: order.provider_profile_image,
+          provider_user_id: order.provider_user_id,
+          datedelivery: order.datedelivery
+            ? new Date(order.created_at).toISOString().split("T")[0]
+            : "",
         }));
 
         setOrders(mappedOrders);
@@ -87,11 +96,12 @@ function OrdersManagementCustomer() {
 
     fetchOrders();
   }, [userId]);
-
   const filteredOrders = useMemo(() => {
-    return orders.filter((order) => {
+    const filtered = orders.filter((order) => {
       const matchesSearch =
-        String(order.id).toLowerCase().includes(searchTerm.toLowerCase()) ||
+        String(order.order_id)
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
         order.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         order.serviceDetails.toLowerCase().includes(searchTerm.toLowerCase());
 
@@ -102,14 +112,20 @@ function OrdersManagementCustomer() {
 
       return matchesSearch && matchesStatus && matchesCategory;
     });
-  }, [orders, searchTerm, statusFilter, categoryFilter]);
 
+    const sorted = [...filtered].sort((a, b) => {
+      const dateA = new Date(a.orderDate);
+      const dateB = new Date(b.orderDate);
+      return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
+    });
+
+    return sorted;
+  }, [orders, searchTerm, statusFilter, categoryFilter, sortOrder]);
   const categories = [...new Set(orders.map((order) => order.category))];
   const statuses = [...new Set(orders.map((order) => order.status))];
 
   return (
     <div className="flex h-screen bg-background">
-      {/* Overlay */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
@@ -117,9 +133,7 @@ function OrdersManagementCustomer() {
         />
       )}
 
-      {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Header */}
         <header className="bg-card border-b border-border px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
@@ -184,6 +198,14 @@ function OrdersManagementCustomer() {
                   {category}
                 </option>
               ))}
+            </select>
+            <select
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
+              className="px-3 py-1 bg-input border border-border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+            >
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
             </select>
           </div>
         </div>
@@ -301,11 +323,26 @@ function OrdersManagementCustomer() {
                       <div></div>
                     )}
                   </div>
-
+                  <div className="flex flex-col items-center mt-2">
+                    <img
+                      src={
+                        order.provider_profile_image ||
+                        "../src/assets/default-avatar.png"
+                      }
+                      onClick={() => {
+                        navigate(`/profile/${order.provider_user_id}`);
+                      }}
+                      alt={`${order.provider_firstname} ${order.provider_lastname}`}
+                      className="w-10 h-10 rounded-full border border-border object-cover"
+                    />
+                    <span className="text-sm font-medium text-card-foreground mt-1">
+                      {order.provider_firstname} {order.provider_lastname}
+                    </span>
+                  </div>
                   <div className="flex items-center space-x-2 ml-4">
                     <button
                       onClick={() => {
-                        navigate(`/profile/${order.provider_id}`);
+                        navigate(`/profile/${order.provider_user_id}`);
                       }}
                       className="p-2 text-muted-foreground hover:text-primary hover:bg-secondary rounded-lg transition-colors"
                     >
