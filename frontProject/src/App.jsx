@@ -5,7 +5,7 @@ import Footer from "./component/NavigationBar/Footer/Footer";
 import Layout from "./component/NavigationBar/Layout";
 import NotFoundPage from "./component/notFoundPage";
 import LoginPage from "./pages/login";
-// import GitReviews from "./component/GitReviews";
+import GitAllProduct from "./component/GitAllProduct";;
 import CardDeatils from "./component/CardDetails";
 import Logout from "./pages/logout";
 import Profile from "./pages/Profile";

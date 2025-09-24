@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import DetailsOfCards from "./DetailsOfCards";
 
 export default function CardDeatils() {
@@ -9,8 +9,9 @@ export default function CardDeatils() {
     const card = location.state;
     console.log(location);
     const [cardRev, setCardRev] = useState([]);
+    const navigate=useNavigate();
 
-    console.log(cardRev);
+    console.log("cus", cardRev);
 
 
     useEffect(() => {
@@ -45,13 +46,16 @@ export default function CardDeatils() {
                             >
                                 <img
                                     src={review.customer_profile_image}
+                                    onClick={() => navigate(`/profile/${review.customer_id}/${review.role}`)}
                                     alt={review.customer_name}
                                     className="w-16 h-16 object-cover rounded-full border"
                                 />
 
                                 <div className="flex-1">
                                     <div className="flex items-center justify-between mb-2">
-                                        <p className="font-semibold text-gray-700">
+                                        <p className="font-semibold text-gray-700"
+                                        onClick={() => navigate(`/profile/${review.customer_id}/${review.role}`)}
+                                        >
                                             {review.customer_name}
                                         </p>
                                         <p className="text-yellow-500 font-bold">{review.rating} ★</p>
