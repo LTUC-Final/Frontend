@@ -54,9 +54,9 @@ export default function CartItem({ item, onIncrement, onDecrement, onRemove, rel
 
       {/* أزرار الكمية */}
       <div className="flex items-center gap-3">
-        <button onClick={onDecrement} className="bg-gray-200 px-3 py-1 rounded hover:bg-gray-300">-</button>
+        <button onClick={onDecrement} className="bg-indigo-900 text-white px-3 py-1 rounded hover:bg-green-600">-</button>
         <span className="font-semibold">{item.quantity}</span>
-        <button onClick={onIncrement} className="bg-gray-200 px-3 py-1 rounded hover:bg-gray-300">+</button>
+        <button onClick={onIncrement} className="bg-indigo-900 text-white px-3 py-1 rounded hover:bg-green-600">+</button>
       </div>
 
       {/* زر حذف */}
@@ -64,7 +64,7 @@ export default function CartItem({ item, onIncrement, onDecrement, onRemove, rel
         حذف
       </button>
 
-      {/* ✅ إضافة طلب مخصص */}
+      {/*  إضافة طلب مخصص */}
       <div className="mt-2">
         {!showBox ? (
           <button
