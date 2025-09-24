@@ -100,10 +100,10 @@ export default function DetailsOfCards({ Id }) {
           <img
             src={dataCard.image}
             alt="seller"
-            onClick={() => navigate(`/profile/${dataCard.provider_id}/${dataCard.role}`)}
+            onClick={() => navigate(`/profile/${dataCard.provider_id}`)}
             className="w-16 h-16 object-cover rounded-full border"
           />
-          <p className="text-gray-700 font-medium" onClick={() => navigate(`/profile/${dataCard.provider_id}/${dataCard.role}`)}>
+          <p className="text-gray-700 font-medium" onClick={() => navigate(`/profile/${dataCard.provider_id}`)}>
             {dataCard.firstname} {dataCard.lastname}
           </p>
         </div>
