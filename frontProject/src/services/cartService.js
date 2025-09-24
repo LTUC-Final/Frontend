@@ -2,7 +2,10 @@
 //src/services/cartService.js
 import axios from "axios";
 
-const API_BASE = "http://localhost:4000/api/carts"; // عدّل إذا السيرفر على دومين آخر
+  const port = import.meta.env.VITE_PORT;
+
+
+const API_BASE = `http://localhost:${port}/api/carts`; // عدّل إذا السيرفر على دومين آخر
 
 //  Get all cart products for a specific user
 export const getCartProducts = (userId) =>

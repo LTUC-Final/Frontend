@@ -1,7 +1,10 @@
 // src/services/paymentService.js
 import axios from "axios";
 
-const API_BASE = "http://localhost:4000/api/payments";
+
+  const port = import.meta.env.VITE_PORT;
+
+const API_BASE = `http://localhost:${port}/api/payments`;
 
 // ✅ Stripe checkout
 export const createCheckoutSession = (cart_id) =>
