@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 
-export default function ButtonStatus({ orderId, setOrders, port }) {
+export default function ButtonStatus({ orderId, setOrders, port, onSuccess }) {
   const [selectedDate, setSelectedDate] = useState("");
 
   function updateOrderStatus(order_id, newStatus) {
@@ -18,6 +18,7 @@ export default function ButtonStatus({ orderId, setOrders, port }) {
               : order
           )
         );
+        if (onSuccess) onSuccess();
       })
       .catch((error) => console.error("Error updating status:", error));
   }
@@ -34,6 +35,7 @@ export default function ButtonStatus({ orderId, setOrders, port }) {
               : order
           )
         );
+        if (onSuccess) onSuccess();
       })
       .catch((error) => console.error("Error updating status:", error));
   }
