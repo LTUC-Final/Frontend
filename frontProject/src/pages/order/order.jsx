@@ -51,6 +51,7 @@ function OrdersManagementCustomer() {
   const userId = user?.user_id;
   const port = import.meta.env.VITE_PORT;
   const navigate = useNavigate();
+  console.log("ssssssssssss");
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -67,7 +68,7 @@ function OrdersManagementCustomer() {
           basePrice: order.base_price || 0,
           additionalServices: order.additional_services || 0,
           totalAmount: order.original_price || 0,
-          estimatedDelivery: order.datedelivery||"",
+          estimatedDelivery: order.datedelivery || "",
           orderDate: order.created_at
             ? new Date(order.created_at).toISOString().split("T")[0]
             : "",

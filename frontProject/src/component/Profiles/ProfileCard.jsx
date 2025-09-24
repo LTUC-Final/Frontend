@@ -21,7 +21,7 @@ console.log("prof",profile);
 
   return (
     <>
-      <h1 className="flex justify-center">Profile Overview</h1>
+      <h1 className="flex justify-center mt-15">Profile Overview</h1>
 
       <div className="bg-white p-6 rounded-lg shadow-md w-full flex justify-center">
         <div className="flex items-center gap-6 max-w-4xl w-full">
@@ -32,13 +32,13 @@ console.log("prof",profile);
                 `https://ui-avatars.com/api/?name=${profile.firstname}+${profile.lastname}&background=random&color=fff`
               }
               alt={`${profile.firstname || "User"} ${profile.lastname || ""}`}
-              className="w-32 h-32 rounded-full object-cover flex-shrink-0"
+              className="w-32 h-32  mb-4 rounded-full object-cover flex-shrink-0"
             />
             {user.email === profile.email?
             (
                <button
               onClick={onEditImage}
-              className="mt-2 px-4 py-1 bg-gray-300 rounded hover:bg-gray-400"
+              className="mt-10 px-4 py-1 bg-gray-300 rounded hover:bg-gray-400"
             >
               Edit Image
             </button>
@@ -81,7 +81,7 @@ console.log("prof",profile);
 ):(<div></div>)}
       {user.email === profile.email?(<button
                   onClick={() => setIsEditing(true)}
-                  className="mt-10 ml-80 px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+                  className="mt-9 ml-80 px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
                 >
                   Edit Profile
                 </button>):(<div></div>)}

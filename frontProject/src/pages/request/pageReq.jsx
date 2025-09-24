@@ -86,6 +86,7 @@ function OrdersManagementProvider() {
           customer_firstname: order.customer_firstname,
           customer_lastname: order.customer_lastname,
           response_from_provider: order.response_from_provider,
+          cart_id: order.cart_id,
         }));
 
         setOrders(mappedOrders);
@@ -374,17 +375,19 @@ function OrdersManagementProvider() {
                         </span>
                       </div>
                     </div>
-                    {/* {order.status === "completed" || */
-                    order.status === "on_progress" ||
-                    order.status === "pending" ? (
-                      <ButtonStatus
-                        orderId={order.order_id}
-                        setOrders={setOrders}
-                        port={port}
-                      ></ButtonStatus>
-                    ) : (
-                      <></>
-                    )}
+                    {
+                      /* {order.status === "completed" || */
+                      order.status === "on_progress" ||
+                      order.status === "pending" ? (
+                        <ButtonStatus
+                          orderId={order.order_id}
+                          setOrders={setOrders}
+                          port={port}
+                        ></ButtonStatus>
+                      ) : (
+                        <></>
+                      )
+                    }
                   </div>
 
                   <div></div>

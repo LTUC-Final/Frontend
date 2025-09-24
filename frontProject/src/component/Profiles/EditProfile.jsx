@@ -64,7 +64,7 @@ const [form, setForm] = useState({
     }
 
     try {
-      const port = import.meta.env.VITE_PORT || 5000;
+      const port = import.meta.env.VITE_PORT;
       let endpoint = "";
       let payload = {
         firstname: form.firstname,
@@ -80,7 +80,7 @@ const [form, setForm] = useState({
         payload.skills = form.skills;
         endpoint = `http://localhost:${port}/api/provider/updateProviderProfile/${profile.user_id}`;
       } else {
-        // Customer endpoint
+    
         endpoint = `http://localhost:${port}/api/user/updateUserProfile/${profile.user_id}`;
       }
 
@@ -90,7 +90,7 @@ const [form, setForm] = useState({
      
       onUpdate({ ...profile, ...updatedProfile.updated });
 
-      // onUpdate(updatedProfile.updated);
+   
       Swal.fire("Saved!", "", "success");
     } catch (err) {
       console.error("Error updating profile:", err);

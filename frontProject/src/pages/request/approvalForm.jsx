@@ -22,6 +22,12 @@ export default function ApprovalForm({ orderId, port, onSuccess }) {
           price: priceValue,
         }
       );
+
+      const response1 = await axios.put(`/sendResponseProviderToCart`, {
+        response_from_provider: textValue,
+        price: priceValue,
+      });
+
       if (onSuccess)
         onSuccess({
           order_id: orderId,
@@ -32,7 +38,7 @@ export default function ApprovalForm({ orderId, port, onSuccess }) {
       console.log(" Server response:", response.data);
 
       e.target.reset();
-      setSubmitted(true); 
+      setSubmitted(true);
       if (onSuccess) onSuccess(response.data);
     } catch (err) {
       console.error(" Error updating:", err);
