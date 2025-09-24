@@ -41,6 +41,8 @@ export default function GitAllProduct() {
                     `http://localhost:${port}/api/ShowCardInUserDashboard`
                 );
                 setCards(res.data);
+                    console.log("gggg",res.data);
+
             } catch (error) {
                 console.log(error);
             }
