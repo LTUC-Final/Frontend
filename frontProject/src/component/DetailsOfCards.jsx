@@ -4,6 +4,7 @@ import AddTOFav from "./AddToFav";
 import AddToCart from "./AddToCart";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { Heart, ShoppingCart } from "lucide-react";
 
 export default function DetailsOfCards({ Id }) {
   const port = import.meta.env.VITE_PORT;
@@ -23,17 +24,17 @@ export default function DetailsOfCards({ Id }) {
           `http://localhost:${port}/api/DetailsOfCardInfo/${Id}`
         );
 
-         console.log("Full response:", res.data);
-         
+        console.log("Full response:", res.data);
+
         setDataCard(res.data);
-       
-        
-        
+
+
+
       } catch (error) {
         console.error(error);
       }
     };
-    
+
     gitdetails();
   }, [Id, port]);
 
@@ -51,7 +52,7 @@ export default function DetailsOfCards({ Id }) {
         <img
           src={dataCard.image}
           alt={dataCard.name}
-          
+
           className="w-full md:w-1/2 h-80 object-cover rounded-xl shadow"
         />
 
@@ -71,19 +72,21 @@ export default function DetailsOfCards({ Id }) {
           </p>
 
           {CusData.user.role === "customer" && (
-            <div className="flex gap-4 mt-4">
+            <div className="flex gap-3 mt-4">
               <button
-                onClick={() => AddTOFav(dataCard, CusData)}
-                className="flex-1 px-4 py-2 bg-pink-500 text-white rounded-lg shadow hover:bg-pink-600 transition"
+                onClick={() => AddTOFav(card, CusData)}
+                className="flex items-center justify-center gap-2 flex-1 px-4 py-2 border-2 border-pink-500 text-pink-500 rounded-xl hover:bg-pink-500 hover:text-white transition-all duration-300 shadow-sm"
               >
-                Add to Favorites
+                <Heart className="w-5 h-5" />
               </button>
+
               <button
-                onClick={() => AddToCart(dataCard, CusData)}
-                className="flex-1 px-4 py-2 bg-green-500 text-white rounded-lg shadow hover:bg-green-600 transition"
+                onClick={() => AddToCart(card, CusData)}
+                className="flex items-center justify-center gap-2 flex-1 px-4 py-2 border-2 border-green-500 text-green-500 rounded-xl hover:bg-green-500 hover:text-white transition-all duration-300 shadow-sm"
               >
-                Add to Cart
+                <ShoppingCart className="w-5 h-5" />
               </button>
+
             </div>
           )}
         </div>
