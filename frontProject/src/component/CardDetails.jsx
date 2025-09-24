@@ -46,7 +46,7 @@ export default function CardDeatils() {
                             >
                                 <img
                                     src={review.customer_profile_image}
-                                    onClick={() => navigate(`/profile/${review.customer_id}/${review.role}`)}
+                                    onClick={() => navigate(`/profile/${review.customer_id}`)}
                                     alt={review.customer_name}
                                     className="w-16 h-16 object-cover rounded-full border"
                                 />
@@ -54,7 +54,7 @@ export default function CardDeatils() {
                                 <div className="flex-1">
                                     <div className="flex items-center justify-between mb-2">
                                         <p className="font-semibold text-gray-700"
-                                        onClick={() => navigate(`/profile/${review.customer_id}/${review.role}`)}
+                                        onClick={() => navigate(`/profile/${review.customer_id}`)}
                                         >
                                             {review.customer_name}
                                         </p>
