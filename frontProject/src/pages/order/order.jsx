@@ -21,6 +21,7 @@ const statusClasses = {
   completed: "text-green-600 bg-green-50 border border-green-200",
   awaiting_approval: "text-orange-600 bg-orange-50 border border-orange-200",
   on_progress: "text-indigo-600 bg-indigo-50 border border-indigo-200",
+  rejected: "text-red-600 bg-red-50 border border-red-200",
 };
 
 const statusDotClasses = {
@@ -30,6 +31,7 @@ const statusDotClasses = {
   completed: "bg-green-500",
   awaiting_approval: "bg-orange-500",
   on_progress: "bg-indigo-500",
+  rejected: "bg-red-500",
 };
 
 const paymentStatusClasses = {
