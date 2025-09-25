@@ -13,6 +13,7 @@ import Register from "./pages/register/register";
 
 import OrdersManagementCustomer from "./pages/order/order";
 
+import ProductForm from "./pages/ProviderDashBoard/providerDashboard";
 import OrdersManagementProvider from "./pages/request/pageReq";
 function App() {
   return (
@@ -24,11 +25,11 @@ function App() {
           <Route path="/logout" element={<Logout />} />
 
           <Route path="/register" element={<Register />} />
-          <Route path="/profile/:user_id" element={<Profile/>} />
+          <Route path="/profile/:user_id" element={<Profile />} />
 
           <Route
             path="/providerDashboard"
-            element={<h1>شد حالك providerDashboard</h1>}
+            element={<ProductForm></ProductForm>}
           />
           {/* <Route path="/userDashboard" element={<h1>كفووو userDashboard</h1>} /> */}
           <Route

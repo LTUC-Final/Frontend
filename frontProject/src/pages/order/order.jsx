@@ -329,14 +329,15 @@ function OrdersManagementCustomer() {
                   <div className="flex flex-col items-center mt-2">
                     <img
                       src={
-                        order.provider_profile_image ||
-                        "../src/assets/default-avatar.png"
+                        order.provider_profile_image
+                          ? `http://localhost:${port}${order.provider_profile_image}`
+                          : `https://ui-avatars.com/api/?name=${order.provider_firstname}+${order.provider_lastname}&background=random&color=fff`
                       }
                       onClick={() => {
                         navigate(`/profile/${order.provider_user_id}`);
                       }}
                       alt={`${order.provider_firstname} ${order.provider_lastname}`}
-                      className="w-10 h-10 rounded-full border border-border object-cover"
+                      className="w-25 h-25 rounded-full border border-border object-cover"
                     />
                     <span className="text-sm font-medium text-card-foreground mt-1">
                       {order.provider_firstname} {order.provider_lastname}
