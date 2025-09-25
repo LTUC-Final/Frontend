@@ -2,10 +2,9 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import AddToCart from "./AddToCart";
 import AddTOFav from "./AddToFav";
-// import GitReviews fro./CardDetailsews";
+// import GitReviews from "./GitReviews";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Heart, ShoppingCart } from "lucide-react";
 
 export default function GitAllProduct() {
     const navigate = useNavigate();
@@ -15,14 +14,14 @@ export default function GitAllProduct() {
     const [textSearch, setTextSearch] = useState("");
     const [selectore, setSelectore] = useState("");
 
-    console.log("sss", selectore);
+    console.log(selectore);
     console.log(selectore);
 
 
 
-    console.log("ccc", CusData);
+    console.log(CusData);
 
-    console.log("card", cards);
+    console.log(cards);
     console.log(textSearch);
 
     const resultOfFilter = cards.filter((card) => {
@@ -42,8 +41,6 @@ export default function GitAllProduct() {
                     `http://localhost:${port}/api/ShowCardInUserDashboard`
                 );
                 setCards(res.data);
-                    console.log("gggg",res.data);
-
             } catch (error) {
                 console.log(error);
             }
@@ -54,8 +51,7 @@ export default function GitAllProduct() {
 
     return (
         <div className="p-6 bg-gray-50 min-h-screen">
-
-
+            {/* Search and Filter Section */}
             <div className="flex flex-col md:flex-row items-center gap-4 mb-6">
                 <input
                     type="text"
@@ -84,6 +80,7 @@ export default function GitAllProduct() {
                 </div>
             </div>
 
+            {/* Product Cards Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {resultOfFilter.map((card, idx) => (
                     <div
@@ -99,7 +96,7 @@ export default function GitAllProduct() {
                             }}
                         />
                         <h3 className="text-lg font-semibold text-gray-800">{card.name}</h3>
-                        <p className="text-gray-600" onClick={() => navigate(`/profile/${card.provider_id}`)} >{card.firstname} {card.lastname}</p>
+                        <p className="text-gray-600">{card.firstname} {card.lastname}</p>
                         <p className="text-blue-600 font-bold">${card.price}</p>
                         <p className="text-sm text-gray-500">{card.location}</p>
 
@@ -107,18 +104,16 @@ export default function GitAllProduct() {
                             <div className="flex gap-3 mt-4">
                                 <button
                                     onClick={() => AddTOFav(card, CusData)}
-                                    className="flex items-center justify-center gap-2 flex-1 px-4 py-2 border-2 border-pink-500 text-pink-500 rounded-xl hover:bg-pink-500 hover:text-white transition-all duration-300 shadow-sm"
+                                    className="flex-1 px-4 py-2 bg-pink-500 text-white rounded-lg shadow hover:bg-pink-600 transition"
                                 >
-                                    <Heart className="w-5 h-5" />
+                                    Add to Favorites
                                 </button>
-
                                 <button
                                     onClick={() => AddToCart(card, CusData)}
-                                    className="flex items-center justify-center gap-2 flex-1 px-4 py-2 border-2 border-green-500 text-green-500 rounded-xl hover:bg-green-500 hover:text-white transition-all duration-300 shadow-sm"
+                                    className="flex-1 px-4 py-2 bg-green-500 text-white rounded-lg shadow hover:bg-green-600 transition"
                                 >
-                                    <ShoppingCart className="w-5 h-5" />
+                                    Add to Cart
                                 </button>
-
                             </div>
                         )}
                     </div>

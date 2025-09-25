@@ -88,6 +88,7 @@ function OrdersManagementProvider() {
         provider_profile_image: order.provider_profile_image,
         customer_firstname: order.customer_firstname,
         customer_lastname: order.customer_lastname,
+        customer_profile_image: order.customer_profile_image,
         response_from_provider: order.response_from_provider,
         cart_id: order.cart_id,
       }));
@@ -394,9 +395,15 @@ function OrdersManagementProvider() {
                   <div></div>
                   <div className="flex flex-col items-center mt-2">
                     <img
+                      // src={
+                      //   order.provider_profile_image ||
+                      //   "../src/assets/default-avatar.png"
+                      // }
+
                       src={
-                        order.provider_profile_image ||
-                        "../src/assets/default-avatar.png"
+                        order.customer_profile_image
+                          ? `http://localhost:${port}${order.customer_profile_image}`
+                          : `https://ui-avatars.com/api/?name=${order.customer_firstname}+${order.customer_lastname}&background=random&color=fff`
                       }
                       onClick={() => {
                         navigate(`/profile/${order.customer_id}`);
