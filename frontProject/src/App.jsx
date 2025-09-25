@@ -4,10 +4,12 @@ import GitAllProduct from "./component/GitAllProduct";
 import Footer from "./component/NavigationBar/Footer/Footer";
 import Layout from "./component/NavigationBar/Layout";
 import NotFoundPage from "./component/notFoundPage";
-import LoginPage from "./pages/login";
+import LoginPage from "./pages/login/login";
+// import GitReviews from "./component/GitReviews";
 import CardDeatils from "./component/CardDetails";
-import Logout from "./pages/logout";
+import Logout from "./pages/login/logout";
 import Profile from "./pages/Profile";
+import Register from "./pages/register/register";
 
 import OrdersManagementCustomer from "./pages/order/order";
 
@@ -21,7 +23,7 @@ function App() {
           <Route path="/" element={<h1>Alquraan </h1>} />
           <Route path="/logout" element={<Logout />} />
 
-          <Route path="/register" element={<LoginPage />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/profile/:user_id" element={<Profile/>} />
 
           <Route
