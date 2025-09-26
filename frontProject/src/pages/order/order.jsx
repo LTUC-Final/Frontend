@@ -13,6 +13,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import FeedbackCard from "../../component/ratingAndFeedback";
+import ChatBox from "../../component/Ai/chatBox";
 
 const statusClasses = {
   pending: "text-yellow-600 bg-yellow-50 border border-yellow-200",
@@ -126,9 +127,21 @@ function OrdersManagementCustomer() {
   }, [orders, searchTerm, statusFilter, categoryFilter, sortOrder]);
   const categories = [...new Set(orders.map((order) => order.category))];
   const statuses = [...new Set(orders.map((order) => order.status))];
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div className="flex h-screen bg-background">
+      <button
+        onClick={() => setIsOpen(true)}
+        className={`fixed bottom-6 right-6 h-14 w-14 rounded-full bg-blue-600 text-white shadow-lg flex items-center justify-center transition-transform duration-300 ${
+          isOpen ? "scale-0 opacity-0" : "scale-100 opacity-100"
+        }`}
+      >
+        <MessageCircle size={24} />
+      </button>
+
+      <ChatBox isOpen={isOpen} setIsOpen={setIsOpen} />
+
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
