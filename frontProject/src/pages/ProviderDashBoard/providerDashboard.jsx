@@ -9,7 +9,7 @@ export default function ProductForm() {
 
   const providerId = user?.provider?.provider_id;
   const [formData, setFormData] = useState({
-    type: null,
+    type: "product",
     name: "",
     price: "",
     description: "",
@@ -96,7 +96,7 @@ export default function ProductForm() {
       console.log("formData");
       const response = await axios.post(
         `http://localhost:${port}/postItem`,
-        formData,
+        submitData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
@@ -106,12 +106,14 @@ export default function ProductForm() {
 
       if (response.status === 200) {
         setFormData({
-          type: "",
+          type: "product",
           name: "",
           price: "",
           description: "",
           category_id: "",
           image: null,
+          provider_id: providerId,
+          location: "",
         });
         setImagePreview(null);
         Swal.fire({
@@ -146,7 +148,7 @@ export default function ProductForm() {
                 Type
               </label>
               <select
-                value={formData.type || "product"}
+                value={formData.type}
                 onChange={(e) => handleInputChange("type", e.target.value)}
                 className="w-full border-2 border-blue-600 rounded-lg p-2 bg-white"
               >
