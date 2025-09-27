@@ -45,8 +45,6 @@ function App() {
           <Route path="/productdatails" element={<CardDeatils />} />
           <Route path="/userDashboard" element={<GitAllProduct />} />
 
-          <Route path="/cart" element={<h1>Alquraan cart</h1>} />
-          <Route path="/payments" element={<h1>ييييييييييييييييييييي </h1>} />
           <Route
             path="/prodactInfo/:prodactId"
             element={<h1>sssssssssssss</h1>}
