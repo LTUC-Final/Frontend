@@ -1,7 +1,7 @@
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
 import axios from "axios";
-
+import { Trash2 } from "lucide-react";
 export default function DeleteProduct({ productId, providerId, productName, onDelete }) {
   const token = useSelector((state) => state.UserInfo.token);
 
@@ -50,7 +50,7 @@ export default function DeleteProduct({ productId, providerId, productName, onDe
       onClick={handleDelete}
       className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
     >
-      Delete
+       <Trash2 size={20} />
     </button>
   );
 }
