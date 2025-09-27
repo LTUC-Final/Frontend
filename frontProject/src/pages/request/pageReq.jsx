@@ -99,6 +99,7 @@ function OrdersManagementProvider() {
       console.error("Error fetching orders:", error);
     }
   };
+
   const filteredOrders = useMemo(() => {
     const filtered = orders.filter((order) => {
       const matchesSearch =

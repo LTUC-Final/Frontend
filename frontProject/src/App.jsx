@@ -20,7 +20,6 @@ import OrdersManagementCustomer from "./pages/order/order";
 
 import OrdersManagementProvider from "./pages/request/pageReq";
 
-import CardDeatils from "./component/CardDetails";
 
 import CartPage from "./pages/CartPage";
 import PaymentsPage from "./pages/PaymentsPage";
@@ -30,7 +29,7 @@ import CancelPage from "./pages/CancelPage";
 
 
 import ProductForm from "./pages/ProviderDashBoard/providerDashboard";
-import OrdersManagementProvider from "./pages/request/pageReq";
+
 
 function App() {
   return (
@@ -43,7 +42,6 @@ function App() {
 
           <Route path="/register" element={<Register />} />
           <Route path="/profile/:user_id" element={<Profile />} />
-
 
            <Route path="/cart" element={<CartPage />} />
           <Route path="/payments" element={<PaymentsPage />} />
@@ -67,6 +65,7 @@ function App() {
           />
           <Route path="/productdatails" element={<CardDeatils />} />
           <Route path="/userDashboard" element={<GitAllProduct />} />
+
 
           <Route
             path="/prodactInfo/:prodactId"
