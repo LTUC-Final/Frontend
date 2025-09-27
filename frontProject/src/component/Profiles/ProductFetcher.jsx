@@ -3,7 +3,7 @@ import axios from "axios";
 import ProductCard from "./ProductCard";
 import { useSelector } from "react-redux";
 
-export default function ProductFetcher({ profile }) {
+export default function ProductFetcher({ profile ,refreshTrigger}) {
   const [product, setProduct] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -30,12 +30,18 @@ export default function ProductFetcher({ profile }) {
     };
 
     fetchProduct();
-  }, [profile]);
+  }, [profile,refreshTrigger]);
 
-  // Remove deleted product from state
   const handleDeleteProduct = (deletedProductId) => {
     setProduct((prev) => prev.filter((p) => p.product_id !== deletedProductId));
   };
+  const handleUpdate = (updatedProduct) => {
+  setProduct((prev) =>
+    prev.map((p) =>
+      p.product_id === updatedProduct.product_id ? updatedProduct : p
+    )
+  );
+};
 
   return (
     <div>
@@ -51,6 +57,7 @@ export default function ProductFetcher({ profile }) {
             profile={profile}
             user={user}
             onDelete={handleDeleteProduct}
+             onUpdate={handleUpdate}
           />
         ))}
       </div>
