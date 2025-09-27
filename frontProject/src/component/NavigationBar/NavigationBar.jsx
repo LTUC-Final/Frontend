@@ -9,6 +9,8 @@ export default function NavigationBar({ onScroll }) {
   // const persisted = localStorage.getItem("persist:UserInfo");
   const { user } = useSelector((state) => state.UserInfo);
   const userRole = user?.role;
+
+  const userId = user?.user_id;
   // let userRole = null;
 
   // if (persisted) {
@@ -24,6 +26,10 @@ export default function NavigationBar({ onScroll }) {
   const navItems = [
     { name: "Home", href: "/mainDashBoard" },
     {
+      name: "My Profile",
+      href: `/profile/${userId}`,
+    },
+    {
       name: "Profile",
       // href: "/profile",
       subItems: [
@@ -35,7 +41,7 @@ export default function NavigationBar({ onScroll }) {
     {
       name: "Dashboard",
       href: "/providerDashboard",
-      // roles: ["provider"],
+      roles: ["provider"],
 
       // subItems: [
       //   { name: "Our Value", href: "/dashboard/OurValue", section: "OurValue" },
@@ -52,21 +58,23 @@ export default function NavigationBar({ onScroll }) {
       //   { name: "Partner", href: "/dashboard/Partner", section: "Partner" },
       // ],
 
-      // roles: ["customer"],
+      roles: ["customer"],
     },
     {
       name: "ReqProvider",
       href: "/requestProvider",
+      roles: ["provider"],
     },
     {
       name: "Order",
       href: "/orderCustomer",
+      roles: ["customer"],
     },
 
     {
       name: "Favorite",
       href: "/favorite",
-      // roles: ["customer"],
+      roles: ["customer"],
 
       // subItems: [
       //   { name: "Owners ", href: "/about/owners", section: "Owners" },
@@ -80,7 +88,7 @@ export default function NavigationBar({ onScroll }) {
     {
       name: "Cart",
       href: "/cart",
-      // roles: ["customer"],
+      roles: ["customer"],
       // subItems: [
       //   { name: "Owners ", href: "/about/owners", section: "Owners" },
       //   {

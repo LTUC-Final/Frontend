@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 
-export default function ButtonStatus({ orderId, setOrders, port }) {
+export default function ButtonStatus({ orderId, setOrders, port, onSuccess }) {
   const [selectedDate, setSelectedDate] = useState("");
 
   function updateOrderStatus(order_id, newStatus) {
@@ -18,24 +18,24 @@ export default function ButtonStatus({ orderId, setOrders, port }) {
               : order
           )
         );
+        if (onSuccess) onSuccess();
       })
       .catch((error) => console.error("Error updating status:", error));
   }
 
-  function updateOrderDilvary(order_id, newStatus) {
+  function updateOrderDilvary(order_id, selectedDate) {
     axios
-      .put(
-        `http://localhost:${port}/updateStatusOrder/${newStatus}/${order_id}`
-      )
+      .put(`http://localhost:${port}/delivary/${selectedDate}/${order_id}`)
       .then((response) => {
         console.log(response.data);
         setOrders((prevOrders) =>
           prevOrders.map((order) =>
             order.order_id === order_id
-              ? { ...order, status: newStatus }
+              ? { ...order, datedelivery: selectedDate }
               : order
           )
         );
+        if (onSuccess) onSuccess();
       })
       .catch((error) => console.error("Error updating status:", error));
   }
@@ -80,6 +80,12 @@ export default function ButtonStatus({ orderId, setOrders, port }) {
           onChange={(e) => setSelectedDate(e.target.value)}
           className="border rounded px-2 py-1"
         />
+        <button
+          className="flex-1 sm:flex-auto bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+          onClick={() => updateOrderDilvary(orderId, selectedDate)}
+        >
+          SET DATE
+        </button>
       </div>
     </div>
   );

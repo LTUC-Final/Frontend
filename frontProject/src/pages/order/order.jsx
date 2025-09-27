@@ -13,6 +13,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import FeedbackCard from "../../component/ratingAndFeedback";
+import ChatBox from "../../component/Ai/chatBox";
 
 const statusClasses = {
   pending: "text-yellow-600 bg-yellow-50 border border-yellow-200",
@@ -21,6 +22,7 @@ const statusClasses = {
   completed: "text-green-600 bg-green-50 border border-green-200",
   awaiting_approval: "text-orange-600 bg-orange-50 border border-orange-200",
   on_progress: "text-indigo-600 bg-indigo-50 border border-indigo-200",
+  rejected: "text-red-600 bg-red-50 border border-red-200",
 };
 
 const statusDotClasses = {
@@ -30,6 +32,7 @@ const statusDotClasses = {
   completed: "bg-green-500",
   awaiting_approval: "bg-orange-500",
   on_progress: "bg-indigo-500",
+  rejected: "bg-red-500",
 };
 
 const paymentStatusClasses = {
@@ -51,6 +54,7 @@ function OrdersManagementCustomer() {
   const userId = user?.user_id;
   const port = import.meta.env.VITE_PORT;
   const navigate = useNavigate();
+  console.log("ssssssssssss");
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -67,7 +71,8 @@ function OrdersManagementCustomer() {
           basePrice: order.base_price || 0,
           additionalServices: order.additional_services || 0,
           totalAmount: order.original_price || 0,
-          estimatedDelivery: order.datedelivery||"",
+
+          estimatedDelivery: order.datedelivery || "",
           orderDate: order.created_at
             ? new Date(order.created_at).toISOString().split("T")[0]
             : "",
@@ -123,9 +128,22 @@ function OrdersManagementCustomer() {
   }, [orders, searchTerm, statusFilter, categoryFilter, sortOrder]);
   const categories = [...new Set(orders.map((order) => order.category))];
   const statuses = [...new Set(orders.map((order) => order.status))];
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div className="flex h-screen bg-background">
+
+      <button
+        onClick={() => setIsOpen(true)}
+        className={`fixed bottom-6 right-6 h-14 w-14 rounded-full bg-blue-600 text-white shadow-lg flex items-center justify-center transition-transform duration-300 ${
+          isOpen ? "scale-0 opacity-0" : "scale-100 opacity-100"
+        }`}
+      >
+        <MessageCircle size={24} />
+      </button>
+
+      <ChatBox isOpen={isOpen} setIsOpen={setIsOpen} />
+
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
@@ -326,14 +344,17 @@ function OrdersManagementCustomer() {
                   <div className="flex flex-col items-center mt-2">
                     <img
                       src={
-                        order.provider_profile_image ||
-                        "../src/assets/default-avatar.png"
+
+                        order.provider_profile_image
+                          ? `http://localhost:${port}${order.provider_profile_image}`
+                          : `https://ui-avatars.com/api/?name=${order.provider_firstname}+${order.provider_lastname}&background=random&color=fff`
                       }
                       onClick={() => {
                         navigate(`/profile/${order.provider_user_id}`);
                       }}
                       alt={`${order.provider_firstname} ${order.provider_lastname}`}
-                      className="w-10 h-10 rounded-full border border-border object-cover"
+
+                      className="w-25 h-25 rounded-full border border-border object-cover"
                     />
                     <span className="text-sm font-medium text-card-foreground mt-1">
                       {order.provider_firstname} {order.provider_lastname}

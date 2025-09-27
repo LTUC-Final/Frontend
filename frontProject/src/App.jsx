@@ -5,12 +5,18 @@ import GitAllProduct from "./component/GitAllProduct";
 import Footer from "./component/NavigationBar/Footer/Footer";
 import Layout from "./component/NavigationBar/Layout";
 import NotFoundPage from "./component/notFoundPage";
-import LoginPage from "./pages/login";
+
+import LoginPage from "./pages/login/login";
 // import GitReviews from "./component/GitReviews";
-import Logout from "./pages/logout";
+import CardDeatils from "./component/CardDetails";
+import Logout from "./pages/login/logout";
 import Profile from "./pages/Profile";
+import Register from "./pages/register/register";
+import WishList from "./pages/wishlist/wishlist";
+import MainDashBoard from "./pages/mainDashBoard/mainDashBoard"
 
 import OrdersManagementCustomer from "./pages/order/order";
+
 
 import OrdersManagementProvider from "./pages/request/pageReq";
 
@@ -22,6 +28,10 @@ import SuccessPage from "./pages/SuccessPage";
 import CancelPage from "./pages/CancelPage";
 
 
+
+import ProductForm from "./pages/ProviderDashBoard/providerDashboard";
+import OrdersManagementProvider from "./pages/request/pageReq";
+
 function App() {
   return (
     <div>
@@ -31,9 +41,8 @@ function App() {
           <Route path="/" element={<h1>Alquraan </h1>} />
           <Route path="/logout" element={<Logout />} />
 
-          <Route path="/register" element={<LoginPage />} />
-          <Route path="/profile/:user_id" element={<Profile/>} />
-
+          <Route path="/register" element={<Register />} />
+          <Route path="/profile/:user_id" element={<Profile />} />
 
 
            <Route path="/cart" element={<CartPage />} />
@@ -45,21 +54,20 @@ function App() {
         
           <Route
             path="/providerDashboard"
-            element={<h1>شد حالك providerDashboard</h1>}
+            element={<ProductForm></ProductForm>}
           />
           {/* <Route path="/userDashboard" element={<h1>كفووو userDashboard</h1>} /> */}
           <Route
             path="/mainDashBoard"
-            element={<h1> ????????محدا اخذها هاي mainDashBoard</h1>}
+            element={<MainDashBoard/>}
           />
           <Route
             path="/favorite"
-            element={<h1>اويلييييييييييييييي favorite</h1>}
+            element={<WishList/>}
           />
           <Route path="/productdatails" element={<CardDeatils />} />
           <Route path="/userDashboard" element={<GitAllProduct />} />
 
-         
           <Route
             path="/prodactInfo/:prodactId"
             element={<h1>sssssssssssss</h1>}

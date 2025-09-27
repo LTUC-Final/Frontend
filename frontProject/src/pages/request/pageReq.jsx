@@ -54,49 +54,51 @@ function OrdersManagementProvider() {
   const port = import.meta.env.VITE_PORT;
   const navigate = useNavigate();
   useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:${port}/getAllOrderInCustomer/${userId}`
-        );
-        console.log(response.data[0]);
-        const mappedOrders = response.data.map((order) => ({
-          order_id: order.order_id,
-          status: order.status,
-          productName: order.product_name,
-          serviceDetails: order.product_description,
-          customNotes: order.details_order_user || "",
-          basePrice: order.base_price || 0,
-          additionalServices: order.additional_services || 0,
-          totalAmount: order.original_price || 0,
-          estimatedDelivery: order.estimated_delivery,
-          orderDate: order.created_at
-            ? new Date(order.created_at).toISOString().split("T")[0]
-            : "",
-          paymentStatus: order.payment_status,
-          category: order.categories_name,
-          provider_id: order.provider_id,
-          product_id: order.product_id,
-          customer_id: order.customer_user_id,
-          viewFedbackPost: true,
-          add_customer_review: order.add_customer_review,
-          provider_firstname: order.provider_firstname,
-          provider_lastname: order.provider_lastname,
-          provider_profile_image: order.provider_profile_image,
-          customer_firstname: order.customer_firstname,
-          customer_lastname: order.customer_lastname,
-          response_from_provider: order.response_from_provider,
-        }));
-
-        setOrders(mappedOrders);
-        console.log("saaaaaaaaaa" + orders);
-      } catch (error) {
-        console.error("Error fetching orders:", error);
-      }
-    };
 
     fetchOrders();
   }, [userId]);
+
+  const fetchOrders = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:${port}/getAllOrderInCustomer/${userId}`
+      );
+
+      const mappedOrders = response.data.map((order) => ({
+        order_id: order.order_id,
+        status: order.status,
+        productName: order.product_name,
+        serviceDetails: order.product_description,
+        customNotes: order.details_order_user || "",
+        basePrice: order.base_price || 0,
+        additionalServices: order.additional_services || 0,
+        totalAmount: order.original_price || 0,
+        estimatedDelivery: order.datedelivery || "",
+        orderDate: order.created_at
+          ? new Date(order.created_at).toISOString().split("T")[0]
+          : "",
+        paymentStatus: order.payment_status,
+        category: order.categories_name,
+        provider_id: order.provider_id,
+        product_id: order.product_id,
+        customer_id: order.customer_user_id,
+        viewFedbackPost: true,
+        add_customer_review: order.add_customer_review,
+        provider_firstname: order.provider_firstname,
+        provider_lastname: order.provider_lastname,
+        provider_profile_image: order.provider_profile_image,
+        customer_firstname: order.customer_firstname,
+        customer_lastname: order.customer_lastname,
+        customer_profile_image: order.customer_profile_image,
+        response_from_provider: order.response_from_provider,
+        cart_id: order.cart_id,
+      }));
+
+      setOrders(mappedOrders);
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+    }
+  };
   const filteredOrders = useMemo(() => {
     const filtered = orders.filter((order) => {
       const matchesSearch =
@@ -314,13 +316,14 @@ function OrdersManagementProvider() {
                         <div>
                           <ApprovalForm
                             orderId={order.order_id}
+
+                            cart_id={order.cart_id}
                             port={port}
                             onSuccess={(updatedOrder) => {
-                              // تحديث الطلب مباشرة في الحالة
                               setOrders((prevOrders) =>
                                 prevOrders.map((o) =>
                                   o.order_id === updatedOrder.order_id
-                                    ? { ...o, ...updatedOrder } // دمج الحقول الجديدة
+                                    ? { ...o, ...updatedOrder }
                                     : o
                                 )
                               );
@@ -374,25 +377,36 @@ function OrdersManagementProvider() {
                         </span>
                       </div>
                     </div>
-                    {/* {order.status === "completed" || */
-                    order.status === "on_progress" ||
-                    order.status === "pending" ? (
-                      <ButtonStatus
-                        orderId={order.order_id}
-                        setOrders={setOrders}
-                        port={port}
-                      ></ButtonStatus>
-                    ) : (
-                      <></>
-                    )}
+
+                    {
+                      /* {order.status === "completed" || */
+                      order.status === "on_progress" ||
+                      order.status === "pending" ? (
+                        <ButtonStatus
+                          onSuccess={fetchOrders}
+                          orderId={order.order_id}
+                          setOrders={setOrders}
+                          port={port}
+                        ></ButtonStatus>
+                      ) : (
+                        <></>
+                      )
+                    }
                   </div>
 
                   <div></div>
                   <div className="flex flex-col items-center mt-2">
                     <img
+
+                      // src={
+                      //   order.provider_profile_image ||
+                      //   "../src/assets/default-avatar.png"
+                      // }
+
                       src={
-                        order.provider_profile_image ||
-                        "../src/assets/default-avatar.png"
+                        order.customer_profile_image
+                          ? `http://localhost:${port}${order.customer_profile_image}`
+                          : `https://ui-avatars.com/api/?name=${order.customer_firstname}+${order.customer_lastname}&background=random&color=fff`
                       }
                       onClick={() => {
                         navigate(`/profile/${order.customer_id}`);
