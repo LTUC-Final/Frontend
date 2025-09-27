@@ -12,6 +12,7 @@ export default function CartItem({ item, onIncrement, onDecrement, onRemove, rel
   const [customReq, setCustomReq] = useState("");
   const [showBox, setShowBox] = useState(false);
 
+   console.log(item);
   //  إرسال الطلب المخصص
   const handleAddCustomReq = async () => {
     if (!customReq.trim()) return alert("⚠️ اكتب الطلب المخصص أولاً");
@@ -77,7 +78,7 @@ export default function CartItem({ item, onIncrement, onDecrement, onRemove, rel
         />
         <div>
           <h3 className="text-lg font-semibold text-amber-800">{item.product_name}</h3>
-          <p className="text-gray-600 text-sm">{item.details_order_user || "—"}</p>
+          <p className="text-gray-600 text-sm">{item.provider_response || "—"}</p>
           <p className="font-bold text-green-600 mt-1">
             {parseFloat(item.cart_price).toFixed(2)} $
           </p>
