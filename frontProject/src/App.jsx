@@ -10,6 +10,8 @@ import CardDeatils from "./component/CardDetails";
 import Logout from "./pages/login/logout";
 import Profile from "./pages/Profile";
 import Register from "./pages/register/register";
+import WishList from "./pages/wishlist/wishlist";
+import MainDashBoard from "./pages/mainDashBoard/mainDashBoard"
 
 import OrdersManagementCustomer from "./pages/order/order";
 
@@ -34,11 +36,11 @@ function App() {
           {/* <Route path="/userDashboard" element={<h1>كفووو userDashboard</h1>} /> */}
           <Route
             path="/mainDashBoard"
-            element={<h1> ????????محدا اخذها هاي mainDashBoard</h1>}
+            element={<MainDashBoard/>}
           />
           <Route
             path="/favorite"
-            element={<h1>اويلييييييييييييييي favorite</h1>}
+            element={<WishList/>}
           />
           <Route path="/productdatails" element={<CardDeatils />} />
           <Route path="/userDashboard" element={<GitAllProduct />} />
