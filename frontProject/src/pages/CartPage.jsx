@@ -12,21 +12,21 @@ import CartSummary from "../component/CartSummary";
 import { useSelector } from "react-redux";
 
 export default function CartPage() {
-  const { user } = useSelector((state) => state.UserInfo);
-  const userId = user?.user_id || 1; // مؤقت للتجربة
+  const { user, token } = useSelector((state) => state.UserInfo);
+  const userId = user?.user_id;
 
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!userId) return;
+    if (!userId || !token) return;
     loadCart();
-  }, [userId]);
+  }, [userId, token]);
 
   const loadCart = async () => {
     try {
       setLoading(true);
-      const { data } = await getCartProducts(userId);
+      const { data } = await getCartProducts(userId, token);
       setCartItems(data);
     } catch (err) {
       console.error("Error loading cart:", err);
@@ -36,17 +36,17 @@ export default function CartPage() {
   };
 
   const handleIncrement = async (cart_id) => {
-    await incrementQuantity(cart_id, userId);
+    await incrementQuantity(cart_id, userId, token);
     loadCart();
   };
 
   const handleDecrement = async (cart_id) => {
-    await decrementQuantity(cart_id, userId);
+    await decrementQuantity(cart_id, userId, token);
     loadCart();
   };
 
   const handleRemove = async (cart_id) => {
-    await removeFromCart(cart_id, userId);
+    await removeFromCart(cart_id, userId, token);
     loadCart();
   };
 
@@ -60,7 +60,6 @@ export default function CartPage() {
         <p className="text-center text-gray-500">السلة فارغة</p>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* ✅ المنتجات */}
           <div className="lg:col-span-2 flex flex-col gap-4">
             {cartItems.map((item) => (
               <CartItem
@@ -69,15 +68,14 @@ export default function CartPage() {
                 onIncrement={() => handleIncrement(item.cart_id)}
                 onDecrement={() => handleDecrement(item.cart_id)}
                 onRemove={() => handleRemove(item.cart_id)}
-                reloadCart={loadCart}   // 🔑 تحديث بعد أي تعديل
-                userId={userId}         // 🔑 تمرير الـ userId للباكند
+                reloadCart={loadCart}
+                userId={userId}
+                token={token}
               />
             ))}
           </div>
-
-          {/* ✅ ملخص الدفع */}
           <div>
-            <CartSummary items={cartItems} />
+            <CartSummary items={cartItems} token={token} />
           </div>
         </div>
       )}
