@@ -110,7 +110,7 @@ export default function ProductForm() {
           name: "",
           price: "",
           description: "",
-          category_id: "",
+          category_id: formData.category_id,
           image: null,
           provider_id: providerId,
           location: "",
