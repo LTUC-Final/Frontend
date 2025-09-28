@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 
-export default function ApprovalForm({ orderId, port, onSuccess }) {
+export default function ApprovalForm({ cart_id, orderId, port, onSuccess }) {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   console.log(port);
@@ -22,6 +22,18 @@ export default function ApprovalForm({ orderId, port, onSuccess }) {
           price: priceValue,
         }
       );
+
+      console.log(textValue + priceValue + cart_id);
+      const response1 = await axios.put(
+        `http://localhost:${port}/sendResponseProviderToCart`,
+        {
+          response_from_provider: textValue,
+          price: priceValue,
+          cart_id: cart_id,
+        }
+      );
+      console.log(textValue + priceValue + cart_id);
+
       if (onSuccess)
         onSuccess({
           order_id: orderId,
@@ -32,7 +44,7 @@ export default function ApprovalForm({ orderId, port, onSuccess }) {
       console.log(" Server response:", response.data);
 
       e.target.reset();
-      setSubmitted(true); 
+      setSubmitted(true);
       if (onSuccess) onSuccess(response.data);
     } catch (err) {
       console.error(" Error updating:", err);
