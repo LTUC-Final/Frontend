@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-export default function MainDashboard() {
+export default function MainDashBoard() {
   const token = useSelector((s) => s.UserInfo?.token);
   const isLogged = Boolean(token);
   const navigate = useNavigate();
@@ -96,13 +96,16 @@ export default function MainDashboard() {
     };
   }, [apiBase]);
 
-  const handleAnyClick = () => {
+  const handlePageClick = () => {
     if (!isLogged) navigate("/login");
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* HERO */}
+    <div
+      className="min-h-screen bg-gray-50"
+      onClick={handlePageClick}
+      style={isLogged ? { pointerEvents: "none" } : {}}
+    >
       <section className="relative h-[360px] md:h-[480px] overflow-hidden">
         {heroSlides.map((s, i) => (
           <div
@@ -122,12 +125,7 @@ export default function MainDashboard() {
               <h1 className="text-white text-2xl md:text-4xl font-bold">
                 {s.caption}
               </h1>
-              <button
-                onClick={handleAnyClick}
-                className={`mt-4 rounded-xl bg-white px-5 py-2 text-gray-900 font-semibold shadow hover:shadow-md ${
-                  isLogged ? "pointer-events-none" : ""
-                }`}
-              >
+              <button className="mt-4 rounded-xl bg-white px-5 py-2 text-gray-900 font-semibold shadow hover:shadow-md">
                 استكشف الخدمات
               </button>
             </div>
@@ -147,16 +145,10 @@ export default function MainDashboard() {
         </div>
       </section>
 
-      {/* CATEGORIES */}
       <section className="mx-auto max-w-6xl px-4 py-10">
         <div className="mb-6 flex items-center justify-between">
           <h2 className="text-xl md:text-2xl font-bold">الفئات</h2>
-          <button
-            onClick={handleAnyClick}
-            className={`text-sm text-blue-600 hover:underline ${
-              isLogged ? "pointer-events-none" : ""
-            }`}
-          >
+          <button className="text-sm text-blue-600 hover:underline">
             عرض الكل
           </button>
         </div>
@@ -165,10 +157,7 @@ export default function MainDashboard() {
           {categories.map((c) => (
             <button
               key={c.key}
-              onClick={handleAnyClick}
-              className={`group overflow-hidden rounded-2xl bg-white shadow-sm hover:shadow-lg transition ${
-                isLogged ? "pointer-events-none cursor-default" : ""
-              }`}
+              className="group overflow-hidden rounded-2xl bg-white shadow-sm hover:shadow-lg transition"
             >
               <div className="relative h-40">
                 <img
@@ -186,8 +175,7 @@ export default function MainDashboard() {
         </div>
       </section>
 
-      {/* TOP ORDERED */}
-      <section className="mx-auto max-w-6xl px-4 pb-16">
+      <section className="mx-auto max-w-6xl px-4 pb-12">
         <div className="mb-6 flex items-center justify-between">
           <h2 className="text-xl md:text-2xl font-bold">الأكثر طلبًا</h2>
         </div>
@@ -212,34 +200,127 @@ export default function MainDashboard() {
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {topOrders.map((p) => (
-              <button
+              <div
                 key={p.product_id}
-                onClick={handleAnyClick}
-                className={`group rounded-2xl bg-white shadow-sm hover:shadow-lg overflow-hidden text-left transition ${
-                  isLogged ? "pointer-events-none cursor-default" : ""
-                }`}
+                className="group rounded-2xl bg-white shadow-sm hover:shadow-lg overflow-hidden text-left transition"
               >
                 <div className="relative h-48">
                   <img
-                    src={p.image_url || p.image || "https://via.placeholder.com/800x600"}
+                    src={
+                      p.image_url ||
+                      p.image ||
+                      "https://via.placeholder.com/800x600"
+                    }
                     alt={p.name || `#${p.product_id}`}
                     className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                    onError={(e) => {
+                      e.currentTarget.src =
+                        "https://via.placeholder.com/800x600";
+                    }}
                   />
                   <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/70 via-black/30 to-transparent text-white">
                     <div className="font-semibold line-clamp-1">
                       {p.name || `#${p.product_id}`}
                     </div>
-                    {typeof p.price !== "undefined" && p.price !== null && (
+                    {p.price !== undefined && p.price !== null && (
                       <div className="text-sm opacity-90 mt-0.5">
-                        {Number(p.price).toLocaleString("en-US")} JOD
+                        {Number(p.price).toLocaleString("en-US")} JD
                       </div>
                     )}
                   </div>
                 </div>
-              </button>
+              </div>
             ))}
           </div>
         )}
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 pb-16">
+        <div className="grid gap-6 md:grid-cols-3">
+          <div className="rounded-2xl bg-[#e7eedf] shadow-sm overflow-hidden">
+            <div className="h-52 w-full">
+              <img
+                src="https://images.unsplash.com/photo-1505238680356-667803448bb6?q=80&w=1200"
+                alt="Photography session"
+                className="h-full w-full object-cover"
+                onError={(e) => {
+                  e.currentTarget.src = "https://via.placeholder.com/800x600";
+                }}
+              />
+            </div>
+            <div className="p-4">
+              <div className="border-b border-gray-300 pb-2 mb-3">
+                <h3 className="font-semibold text-gray-800 truncate">
+                  جلسة تصوير فوتوغرافي
+                </h3>
+              </div>
+              <div className="flex items-center justify-between text-gray-700">
+                <span>Amman</span>
+                <span className="font-semibold">50 JD</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-2xl bg-[#e7eedf] shadow-sm overflow-hidden">
+            <div className="h-52 w-full">
+              <img
+                src="https://images.unsplash.com/photo-1599848294391-d13afb0db2ae?q=80&w=1200"
+                alt="Handmade accessories"
+                className="h-full w-full object-cover"
+                onError={(e) => {
+                  e.currentTarget.src = "https://via.placeholder.com/800x600";
+                }}
+              />
+            </div>
+            <div className="p-4">
+              <div className="border-b border-gray-300 pb-2 mb-3">
+                <h3 className="font-semibold text-gray-800 truncate">
+                  إكسسوارات يدوية
+                </h3>
+              </div>
+              <div className="flex items-center justify-between text-gray-700">
+                <span>Irbid</span>
+                <span className="font-semibold">15 JD</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-2xl bg-[#e7eedf] shadow-sm overflow-hidden">
+            <div className="h-52 w-full">
+              <img
+                src="https://images.unsplash.com/photo-1607083206968-13611e3c3b62?q=80&w=1200"
+                alt="Event makeup"
+                className="h-full w-full object-cover"
+                onError={(e) => {
+                  e.currentTarget.src = "https://via.placeholder.com/800x600";
+                }}
+              />
+            </div>
+            <div className="p-4">
+              <div className="border-b border-gray-300 pb-2 mb-3">
+                <h3 className="font-semibold text-gray-800 truncate">
+                  مكياج مناسبات
+                </h3>
+              </div>
+              <div className="flex items-center justify-between text-gray-700">
+                <span>Zarqa</span>
+                <span className="font-semibold">30 JD</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-8 grid gap-4 md:grid-cols-3">
+          <button className="rounded-xl bg-[#5b8ff1] text-white py-4 font-semibold shadow hover:shadow-md">
+            10M+ Active Provider
+          </button>
+          <button className="rounded-xl bg-[#5b8ff1] text-white py-4 font-semibold shadow hover:shadow-md">
+            100M+ Order Completed
+          </button>
+          <button className="rounded-xl bg-[#5b8ff1] text-white py-4 font-semibold shadow hover:shadow-md">
+            50M+ Happy Customer
+          </button>
+        </div>
       </section>
     </div>
   );
