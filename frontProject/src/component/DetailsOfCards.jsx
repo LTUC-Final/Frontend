@@ -1,10 +1,10 @@
 import axios from "axios";
+import { Heart, ShoppingCart } from "lucide-react";
 import { useEffect, useState } from "react";
-import AddTOFav from "./AddToFav";
-import AddToCart from "./AddToCart";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Heart, ShoppingCart } from "lucide-react";
+import AddToCart from "./AddToCart";
+import AddTOFav from "./AddToFav";
 
 export default function DetailsOfCards({ Id }) {
   const port = import.meta.env.VITE_PORT;
@@ -14,8 +14,6 @@ export default function DetailsOfCards({ Id }) {
 
   console.log(CusData);
   console.log("data", dataCard);
-
-
 
   useEffect(() => {
     const gitdetails = async () => {
@@ -27,9 +25,6 @@ export default function DetailsOfCards({ Id }) {
         console.log("Full response:", res.data);
 
         setDataCard(res.data);
-
-
-
       } catch (error) {
         console.error(error);
       }
@@ -52,12 +47,11 @@ export default function DetailsOfCards({ Id }) {
         <img
           src={dataCard.image}
           alt={dataCard.name}
-
           className="w-full md:w-1/2 h-80 object-cover rounded-xl shadow"
         />
 
         <div className="flex-1">
-          <h3 className="text-2xl font-bold text-gray-800 mb-2" >
+          <h3 className="text-2xl font-bold text-gray-800 mb-2">
             {dataCard.name}
           </h3>
           <p className="text-gray-600 mb-2">{dataCard.description}</p>
@@ -86,7 +80,6 @@ export default function DetailsOfCards({ Id }) {
               >
                 <ShoppingCart className="w-5 h-5" />
               </button>
-
             </div>
           )}
         </div>
@@ -100,10 +93,13 @@ export default function DetailsOfCards({ Id }) {
           <img
             src={dataCard.image}
             alt="seller"
-            onClick={() => navigate(`/profile/${dataCard.provider_id}`)}
+            onClick={() => navigate(`/profile/${dataCard.user_id}`)}
             className="w-16 h-16 object-cover rounded-full border"
           />
-          <p className="text-gray-700 font-medium" onClick={() => navigate(`/profile/${dataCard.provider_id}`)}>
+          <p
+            className="text-gray-700 font-medium"
+            onClick={() => navigate(`/profile/${dataCard.user_id}`)}
+          >
             {dataCard.firstname} {dataCard.lastname}
           </p>
         </div>
