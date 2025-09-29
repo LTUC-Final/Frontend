@@ -5,7 +5,6 @@ import { Minus, Plus, ShoppingCart } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-// Simple Button
 function Button({ children, onClick, className = "", variant, size }) {
   let base = "px-4 py-2 rounded-md font-medium focus:outline-none transition ";
   if (variant === "outline")
@@ -25,7 +24,6 @@ function Button({ children, onClick, className = "", variant, size }) {
   );
 }
 
-// Simple Card components
 function Card({ children, className = "" }) {
   return (
     <div className={"bg-white rounded-lg shadow-md " + className}>
@@ -43,7 +41,6 @@ function CardContent({ children, className = "" }) {
   return <div className={"p-4 " + className}>{children}</div>;
 }
 
-// Simple Textarea
 function Textarea({ className = "", ...props }) {
   return (
     <textarea
@@ -56,7 +53,6 @@ function Textarea({ className = "", ...props }) {
   );
 }
 
-// Main CartPage
 export default function CartPage() {
   const [products, setProducts] = useState([
     {
@@ -233,15 +229,43 @@ export default function CartPage() {
     }
     setCart((prevCart) => prevCart.filter((p) => p.cart_id !== cart_id));
   };
+  const deleteItemCart = async (cart_id) => {
+    const port = import.meta.env.VITE_PORT; 
+    try {
+      const res = await axios.delete(
+        `http://localhost:${port}/deleteCard/${cart_id}`
+      );
+
+      console.log(res.data);
+
+      setCart((prevCart) =>
+        prevCart.filter((item) => item.cart_id !== cart_id)
+      );
+    } catch (error) {
+      console.error("Error deleting cart item:", error);
+    }
+  };
 
   const subtotal = cart.reduce((sum, p) => sum + p.cart_price * p.quantity, 0);
   const tax = subtotal * 0.08;
   const total = subtotal + tax;
 
   const handleCheckout = () => setShowCheckout(true);
-  const completePayment = () => {
+  const completePayment = async () => {
     alert("Payment completed successfully!");
     setShowCheckout(false);
+    try {
+      let res = await axios.post(
+        `http://localhost:${port}/moveApprovedCartToOrders/${CusData.user.user_id}`
+      );
+      console.log(res.data);
+      let res12 = await axios.get(
+        `http://localhost:${port}/api/carts/products/${CusData.user.user_id}`
+      );
+      setCart(res12.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -266,7 +290,7 @@ export default function CartPage() {
                       />
                     </div>
 
-                    <div className="flex-1 space-y-4">
+                    <div className="flex-1 space-y-4 relative">
                       <div>
                         <h3 className="text-xl font-semibold">
                           {product.product_name}
@@ -275,28 +299,44 @@ export default function CartPage() {
                           ${product.cart_price}
                         </p>
                       </div>
-
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        className="absolute top-0 right-0"
+                        onClick={() => deleteItemCart(product.cart_id)}
+                      >
+                        Delete
+                      </Button>
                       <div className="flex items-center gap-3">
                         <span className="text-sm">Quantity:</span>
-                        <div className="flex items-center gap-2">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => updateQuantity(product.cart_id, -1)}
-                          >
-                            <Minus className="h-4 w-4" />
-                          </Button>
+                        {product.provider_response &&
+                        product.status_pay !== "Approve" ? (
                           <span className="w-8 text-center font-medium">
                             {product.quantity}
                           </span>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => updateQuantity(product.cart_id, 1)}
-                          >
-                            <Plus className="h-4 w-4" />
-                          </Button>
-                        </div>
+                        ) : (
+                          <div className="flex items-center gap-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() =>
+                                updateQuantity(product.cart_id, -1)
+                              }
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <span className="w-8 text-center font-medium">
+                              {product.quantity}
+                            </span>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => updateQuantity(product.cart_id, 1)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        )}{" "}
                       </div>
                       {product.provider_response &&
                       product.status_pay !== "Approve" ? (
@@ -328,6 +368,11 @@ export default function CartPage() {
                             REJECT{" "}
                           </Button>
                         </div>
+                      ) : product.custom_requirement &&
+                        product.provider_response === null ? (
+                        <p className="text-green-600 font-medium">
+                          Wating provider response
+                        </p>
                       ) : (
                         <div>
                           {" "}
@@ -450,7 +495,7 @@ export default function CartPage() {
               <CardContent className="space-y-4">
                 <div className="text-center">
                   <p className="text-lg font-semibold">Total Amount</p>
-                  <p className="text-3xl font-bold">${total}</p>
+                  <p className="text-3xl font-bold">${subtotal}</p>
                 </div>
 
                 <div className="space-y-2 text-sm">
