@@ -291,11 +291,16 @@ function OrdersManagementProvider() {
                       {order.productName}
                     </h4>
                     <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
-                      {order.serviceDetails}
+                       {order.serviceDetails}
                     </p>
+                      {order.response_from_provider && (
+                      <p className="text-sm text-muted-foreground mb-4 italic">
+                        Provider  Response: {order.response_from_provider}
+                      </p>
+                    )}
                     {order.customNotes && (
                       <p className="text-sm text-muted-foreground mb-4 italic">
-                        Note Customer: {order.customNotes}
+                        Note Customer: {order.customNotes}ddddddddddddddddddddd
                       </p>
                     )}
                     <span className="text-sm">Quantity:</span>

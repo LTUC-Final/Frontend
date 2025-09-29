@@ -12,8 +12,8 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import FeedbackCard from "../../component/ratingAndFeedback";
 import ChatBox from "../../component/Ai/chatBox";
+import FeedbackCard from "../../component/ratingAndFeedback";
 
 const statusClasses = {
   pending: "text-yellow-600 bg-yellow-50 border border-yellow-200",
@@ -86,6 +86,7 @@ function OrdersManagementCustomer() {
           provider_lastname: order.provider_lastname,
           provider_profile_image: order.provider_profile_image,
           provider_user_id: order.provider_user_id,
+          quantity: order.quantity,
           datedelivery: order.datedelivery
             ? new Date(order.created_at).toISOString().split("T")[0]
             : "",
@@ -282,9 +283,14 @@ function OrdersManagementCustomer() {
                     <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
                       {order.serviceDetails}
                     </p>
+                    {order.response_from_provider && (
+                      <p className="text-sm text-muted-foreground mb-4 italic">
+                        Provider Response: {order.response_from_provider}
+                      </p>
+                    )}
                     {order.customNotes && (
                       <p className="text-sm text-muted-foreground mb-4 italic">
-                        Note: {order.customNotes}
+                        Customer Note: {order.customNotes}
                       </p>
                     )}
 
@@ -292,7 +298,10 @@ function OrdersManagementCustomer() {
                       <div className="flex items-center space-x-2">
                         <DollarSign className="h-4 w-4 text-muted-foreground" />
                         <span className="text-card-foreground font-medium">
-                          ${order.totalAmount.toLocaleString()}
+                          $
+                          {(
+                            order.totalAmount * order.quantity
+                          ).toLocaleString()}
                         </span>
                       </div>
 
