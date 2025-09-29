@@ -12,6 +12,8 @@ export default function MainDashboard() {
     import.meta.env.VITE_API ||
     `http://localhost:${import.meta.env.VITE_PORT}/api`;
 
+    console.log("asdasd",apiBase);
+    
   const [slideIndex, setSlideIndex] = useState(0);
   const [topOrders, setTopOrders] = useState([]);
   const [loadingTop, setLoadingTop] = useState(true);

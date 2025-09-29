@@ -1,15 +1,22 @@
-import { useState } from "react";
+import { use, useState } from "react";
 import EditProfile from "./EditProfile";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 export default function ProfileCard({ data, onEditImage }) {
   const [isEditing, setIsEditing] = useState(false);
-    const user = useSelector((state) => state.UserInfo.user);
+  const user = useSelector((state) => state.UserInfo.user);
+  const navigate = useNavigate();
 
-const [profile, setProfile] = useState({
-  ...data
+  const [profile, setProfile] = useState({
+    ...data
 
-});
+  });
+  console.log("dadada", data);
+  console.log("data local", user);
+
+
+
   if (!profile) {
     return (
       <div className="bg-white p-6 rounded-lg shadow-md w-full flex justify-center">
@@ -17,7 +24,7 @@ const [profile, setProfile] = useState({
       </div>
     );
   }
-console.log("prof",profile);
+  console.log("prof", profile);
 
   return (
     <>
@@ -34,28 +41,40 @@ console.log("prof",profile);
               alt={`${profile.firstname || "User"} ${profile.lastname || ""}`}
               className="w-32 h-32  mb-4 rounded-full object-cover flex-shrink-0"
             />
-            {user.email === profile.email?
-            (
-               <button
-              onClick={onEditImage}
-              className="mt-10 px-4 py-1 bg-gray-300 rounded hover:bg-gray-400"
-            >
-              Edit Image
-            </button>
-            ):(<div></div>)}
-           
+            <div>
+              <button
+                onClick={() => {
+                  navigate("/LiveChat", {state:{ sender: user , reciver : data }})
+
+                }}
+                className="mt-9 ml-80 px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+              >
+                send message
+              </button></div>
+            {user.email === profile.email ?
+              (<div>
+                <button
+                  onClick={onEditImage}
+                  className="mt-10 px-4 py-1 bg-gray-300 rounded hover:bg-gray-400"
+                >
+                  Edit Image
+                </button>
+
+              </div>
+              ) : (<div></div>)}
+
           </div>
 
           <div className="flex-1">
             {isEditing ? (
-             <EditProfile
-             profile={profile}
-             onUpdate={(updatedProfile) => {
-             setProfile(updatedProfile);
-              setIsEditing(false);
-            }}
-  onCancel={() => setIsEditing(false)}
-/>
+              <EditProfile
+                profile={profile}
+                onUpdate={(updatedProfile) => {
+                  setProfile(updatedProfile);
+                  setIsEditing(false);
+                }}
+                onCancel={() => setIsEditing(false)}
+              />
             ) : (
               <>
                 <h2 className="text-2xl font-bold text-gray-800">
@@ -68,29 +87,37 @@ console.log("prof",profile);
                   Phone: {profile.phone || "Not provided"}
                 </p>
 
-               {profile.role === "provider" ? (
-  <div className="mt-4">
-    <p className="text-gray-700">
-      <strong>Bio:</strong> {profile.bio || "Not provided"}
-    </p>
-    <p className="text-gray-700 mt-1">
-      <strong>Skills:</strong> {profile.skills || "Not provided"}
-    </p>
-  
-  </div>
-):(<div></div>)}
-      {user.email === profile.email?(<button
-                  onClick={() => setIsEditing(true)}
-                  className="mt-9 ml-80 px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
-                >
-                  Edit Profile
-                </button>):(<div></div>)}
-                
+                {profile.role === "provider" ? (
+                  <div className="mt-4">
+                    <p className="text-gray-700">
+                      <strong>Bio:</strong> {profile.bio || "Not provided"}
+                    </p>
+                    <p className="text-gray-700 mt-1">
+                      <strong>Skills:</strong> {profile.skills || "Not provided"}
+                    </p>
+
+                  </div>
+                ) : (<div></div>)}
+                {user.email === profile.email ? (
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="mt-9 ml-80 px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+                  >
+                    Edit Profile
+                  </button>
+
+                ) : (<div></div>)}
+
+
               </>
+
             )}
           </div>
         </div>
+
+
       </div>
+
     </>
   );
 }

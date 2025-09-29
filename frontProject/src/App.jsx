@@ -18,6 +18,7 @@ import OrdersManagementCustomer from "./pages/order/order";
 
 import ProductForm from "./pages/ProviderDashBoard/providerDashboard";
 import OrdersManagementProvider from "./pages/request/pageReq";
+import LiveChat from "./component/LiveChat/LiveChat";
 function App() {
   return (
     <div>
@@ -29,6 +30,8 @@ function App() {
 
           <Route path="/register" element={<Register />} />
           <Route path="/profile/:user_id" element={<Profile />} />
+          <Route path="/LiveChat" element={<LiveChat />} />
+
 
           <Route
             path="/providerDashboard"
