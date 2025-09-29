@@ -230,7 +230,7 @@ export default function CartPage() {
     setCart((prevCart) => prevCart.filter((p) => p.cart_id !== cart_id));
   };
   const deleteItemCart = async (cart_id) => {
-    const port = import.meta.env.VITE_PORT; 
+    const port = import.meta.env.VITE_PORT;
     try {
       const res = await axios.delete(
         `http://localhost:${port}/deleteCard/${cart_id}`
@@ -309,8 +309,7 @@ export default function CartPage() {
                       </Button>
                       <div className="flex items-center gap-3">
                         <span className="text-sm">Quantity:</span>
-                        {product.provider_response &&
-                        product.status_pay !== "Approve" ? (
+                        {product.provider_response ? (
                           <span className="w-8 text-center font-medium">
                             {product.quantity}
                           </span>

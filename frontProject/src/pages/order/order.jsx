@@ -129,9 +129,58 @@ function OrdersManagementCustomer() {
   const categories = [...new Set(orders.map((order) => order.category))];
   const statuses = [...new Set(orders.map((order) => order.status))];
   const [isOpen, setIsOpen] = useState(false);
+  /////////////////ai/////////////////////////
 
+  const [input, setInput] = useState("");
+  const [reply, setReply] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSend = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.post(`http://localhost:${port}/ai2`, {
+        input: {
+          instruction:
+            "Analyze the following orders and give me insights (summary, trends, and recommendations):",
+          data: orders,
+        },
+      });
+      setReply(res.data.reply);
+    } catch (error) {
+      console.error("Error:", error);
+      setReply("Something went wrong ❌");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  ////////////////////////////////
   return (
     <div className="flex h-screen bg-background">
+      <div className="p-4">
+        <h1 className="text-xl font-bold mb-2">Talk to AI 🤖</h1>
+
+        <textarea
+          className="border rounded p-2 w-full mb-2"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Ask me anything..."
+        />
+
+        <button
+          onClick={handleSend}
+          disabled={loading}
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          {loading ? "Loading..." : "Send"}
+        </button>
+
+        {reply && (
+          <div className="mt-4 p-2 border rounded bg-gray-100">
+            <strong>AI Reply:</strong> {reply}
+          </div>
+        )}
+      </div>
       <button
         onClick={() => setIsOpen(true)}
         className={`fixed bottom-6 right-6 h-14 w-14 rounded-full bg-blue-600 text-white shadow-lg flex items-center justify-center transition-transform duration-300 ${
