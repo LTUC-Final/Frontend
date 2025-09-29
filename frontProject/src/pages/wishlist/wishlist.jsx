@@ -1,16 +1,18 @@
 import { useEffect, useMemo, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import AddTOFav from "../../component/AddToFav.jsx";
 import AddToCart from "../../component/AddToCart.jsx";
+
+import AddTOFav from "../../component/AddToFav.jsx";
+import axios from "axios";
 
 export default function WishList() {
   const token = useSelector((s) => s.UserInfo.token);
   const user = useSelector((s) => s.UserInfo.user);
   const userId = user?.user_id;
   const navigate = useNavigate();
-
+  
+ 
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
@@ -22,10 +24,10 @@ export default function WishList() {
     setSnacks((s) => [...s, { id, text, type }]);
     setTimeout(() => setSnacks((s) => s.filter((n) => n.id !== id)), 4000);
   }, []);
-
+ 
   const port = import.meta.env.VITE_PORT;
   const apiBase = useMemo(() => `http://localhost:${port}/api`, [port]);
-
+ 
   const load = useCallback(async () => {
     try {
       setLoading(true);
@@ -44,7 +46,7 @@ export default function WishList() {
       setLoading(false);
     }
   }, [apiBase, token, pushSnack]);
-
+ 
   useEffect(() => {
     if (!token || !userId) {
       navigate("/login");
@@ -52,7 +54,7 @@ export default function WishList() {
     }
     load();
   }, [token, userId, load, navigate]);
-
+ 
   const onToggleFav = async (p) => {
    
     const prev = items;
@@ -68,7 +70,7 @@ export default function WishList() {
       pushSnack(m, "error");
     }
   };
-
+ 
   const onAddToCart = async (p) => {
     try {
       if (p.provider_id == null) {
@@ -92,7 +94,7 @@ export default function WishList() {
       pushSnack(m, "error");
     }
   };
-
+ 
   if (!token) return null;
   if (loading) return <div className="p-6">Loading…</div>;
   if (items.length === 0) return <div className="p-6">Your wishlist is empty.</div>;
@@ -111,7 +113,7 @@ export default function WishList() {
           </div>
         ))}
       </div>
-
+ 
       {/* Optional error banner (close it if you prefer only snackbars) */}
       {err && (
         <div className="max-w-3xl mx-auto mt-2">
@@ -123,7 +125,7 @@ export default function WishList() {
           </div>
         </div>
       )}
-
+ 
       <div className="p-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {items.map((p) => (
           <div key={p.wishlist_id} className="rounded-2xl shadow p-4">
@@ -146,3 +148,5 @@ export default function WishList() {
     </>
   );
 }
+
+//test
