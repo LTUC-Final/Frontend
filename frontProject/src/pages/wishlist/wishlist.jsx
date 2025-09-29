@@ -1,9 +1,11 @@
+import axios from "axios";
 import { useEffect, useMemo, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import AddToCart from "../../component/AddToCart.jsx";
-
 import AddTOFav from "../../component/AddToFav.jsx";
+
+
 export default function WishList() {
   const token = useSelector((s) => s.UserInfo.token);
   const user = useSelector((s) => s.UserInfo.user);
