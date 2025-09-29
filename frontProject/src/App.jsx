@@ -4,6 +4,7 @@ import GitAllProduct from "./component/GitAllProduct";
 import Footer from "./component/NavigationBar/Footer/Footer";
 import Layout from "./component/NavigationBar/Layout";
 import NotFoundPage from "./component/notFoundPage";
+
 import LoginPage from "./pages/login/login";
 // import GitReviews from "./component/GitReviews";
 import CardDeatils from "./component/CardDetails";
@@ -17,6 +18,7 @@ import OrdersManagementCustomer from "./pages/order/order";
 
 import ProductForm from "./pages/ProviderDashBoard/providerDashboard";
 import OrdersManagementProvider from "./pages/request/pageReq";
+import LiveChat from "./component/LiveChat/LiveChat";
 import CartPage from "./pages/cart/page";
 function App() {
   return (
@@ -29,6 +31,8 @@ function App() {
 
           <Route path="/register" element={<Register />} />
           <Route path="/profile/:user_id" element={<Profile />} />
+          <Route path="/LiveChat" element={<LiveChat />} />
+
 
           <Route
             path="/providerDashboard"
