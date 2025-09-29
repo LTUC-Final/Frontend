@@ -50,17 +50,17 @@ function OrdersManagementProvider() {
   const [sortOrder, setSortOrder] = useState("newest");
 
   const { user } = useSelector((state) => state.UserInfo);
-  const userId = user?.user_id;
+  const provider_id = user?.provider?.provider_id;
   const port = import.meta.env.VITE_PORT;
   const navigate = useNavigate();
   useEffect(() => {
     fetchOrders();
-  }, [userId]);
+  }, [provider_id]);
 
   const fetchOrders = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:${port}/getAllOrderInCustomer/${userId}`
+        `http://localhost:${port}/getAllOrderProvider/${provider_id}`
       );
 
       const mappedOrders = response.data.map((order) => ({
@@ -91,9 +91,11 @@ function OrdersManagementProvider() {
         customer_profile_image: order.customer_profile_image,
         response_from_provider: order.response_from_provider,
         cart_id: order.cart_id,
+        quantity: order.quantity,
       }));
 
       setOrders(mappedOrders);
+      console.log(mappedOrders);
     } catch (error) {
       console.error("Error fetching orders:", error);
     }
@@ -296,6 +298,10 @@ function OrdersManagementProvider() {
                         Note Customer: {order.customNotes}
                       </p>
                     )}
+                    <span className="text-sm">Quantity:</span>
+                    <span className="w-8 text-center font-medium">
+                      {order.quantity}
+                    </span>
 
                     {/* {order.status === "awaiting_approval" ? (
                       order.customNotes !== null &&  order.customNotes !== ""&&
@@ -351,7 +357,9 @@ function OrdersManagementProvider() {
                       <div className="flex items-center space-x-2">
                         <DollarSign className="h-4 w-4 text-muted-foreground" />
                         <span className="text-card-foreground font-medium">
-                          ${order.totalAmount.toLocaleString()}
+                          {(
+                            order.totalAmount * order.quantity
+                          ).toLocaleString()}
                         </span>
                       </div>
 

@@ -9,16 +9,17 @@ import LoginPage from "./pages/login/login";
 // import GitReviews from "./component/GitReviews";
 import CardDeatils from "./component/CardDetails";
 import Logout from "./pages/login/logout";
+import MainDashBoard from "./pages/mainDashBoard/mainDashBoard";
 import Profile from "./pages/Profile";
 import Register from "./pages/register/register";
 import WishList from "./pages/wishlist/wishlist";
-import MainDashBoard from "./pages/mainDashBoard/mainDashBoard"
 
 import OrdersManagementCustomer from "./pages/order/order";
 
 import ProductForm from "./pages/ProviderDashBoard/providerDashboard";
 import OrdersManagementProvider from "./pages/request/pageReq";
 import LiveChat from "./component/LiveChat/LiveChat";
+import CartPage from "./pages/cart/page";
 function App() {
   return (
     <div>
@@ -38,18 +39,12 @@ function App() {
             element={<ProductForm></ProductForm>}
           />
           {/* <Route path="/userDashboard" element={<h1>كفووو userDashboard</h1>} /> */}
-          <Route
-            path="/mainDashBoard"
-            element={<MainDashBoard/>}
-          />
-          <Route
-            path="/favorite"
-            element={<WishList/>}
-          />
+          <Route path="/mainDashBoard" element={<MainDashBoard />} />
+          <Route path="/favorite" element={<WishList />} />
           <Route path="/productdatails" element={<CardDeatils />} />
           <Route path="/userDashboard" element={<GitAllProduct />} />
 
-          <Route path="/cart" element={<h1>Alquraan cart</h1>} />
+          <Route path="/cart" element={<CartPage></CartPage>} />
           <Route path="/payments" element={<h1>ييييييييييييييييييييي </h1>} />
           <Route
             path="/prodactInfo/:prodactId"
