@@ -44,7 +44,7 @@ export default function ProfileCard({ data, onEditImage }) {
             <div>
               <button
                 onClick={() => {
-                  navigate("/LiveChat", {state:{ sender: user , reciver : data }})
+                  navigate("/LiveChat", { state: { sender: user, reciver: data } })
 
                 }}
                 className="mt-9 ml-80 px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
