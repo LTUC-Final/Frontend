@@ -91,6 +91,7 @@ function OrdersManagementProvider() {
         customer_profile_image: order.customer_profile_image,
         response_from_provider: order.response_from_provider,
         cart_id: order.cart_id,
+        quantity: order.quantity,
       }));
 
       setOrders(mappedOrders);
@@ -297,6 +298,10 @@ function OrdersManagementProvider() {
                         Note Customer: {order.customNotes}
                       </p>
                     )}
+                    <span className="text-sm">Quantity:</span>
+                    <span className="w-8 text-center font-medium">
+                      {order.quantity}
+                    </span>
 
                     {/* {order.status === "awaiting_approval" ? (
                       order.customNotes !== null &&  order.customNotes !== ""&&
@@ -312,8 +317,7 @@ function OrdersManagementProvider() {
                     {order.status === "awaiting_approval" &&
                       order.customNotes !== null &&
                       order.customNotes !== "" &&
-                      order.response_from_provider === null &&
-                       (
+                      order.response_from_provider === null && (
                         // <ApprovalForm orderId={order.order_id} port={port} />
                         <div>
                           <ApprovalForm
@@ -353,7 +357,9 @@ function OrdersManagementProvider() {
                       <div className="flex items-center space-x-2">
                         <DollarSign className="h-4 w-4 text-muted-foreground" />
                         <span className="text-card-foreground font-medium">
-                          ${order.totalAmount.toLocaleString()}
+                          {(
+                            order.totalAmount * order.quantity
+                          ).toLocaleString()}
                         </span>
                       </div>
 

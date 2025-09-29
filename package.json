@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@stripe/stripe-js": "^7.9.0",
     "openai": "^5.23.0",
     "sweetalert2": "^11.23.0"
   }
