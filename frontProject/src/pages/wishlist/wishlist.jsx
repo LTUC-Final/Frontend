@@ -1,10 +1,10 @@
-import axios from "axios";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import AddToCart from "../../component/AddToCart.jsx";
 
 import AddTOFav from "../../component/AddToFav.jsx";
+import axios from "axios";
 
 export default function WishList() {
   const token = useSelector((s) => s.UserInfo.token);
@@ -16,6 +16,7 @@ export default function WishList() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
+
 
   const [snacks, setSnacks] = useState([]);
   const pushSnack = useCallback((text, type = "success") => {
@@ -31,15 +32,14 @@ export default function WishList() {
     try {
       setLoading(true);
       const { data } = await axios.get(`${apiBase}/wishlist`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${token}` }
       });
-      console.log(data);
+      console.log(data)
       setItems(Array.isArray(data?.items) ? data.items : []);
-      console.log(items);
+      console.log()
       setErr("");
     } catch (e) {
-      const m =
-        e?.response?.data?.error || e?.message || "Failed to load wishlist";
+      const m = e?.response?.data?.error || e?.message || "Failed to load wishlist";
       setErr(m);
       pushSnack(m, "error");
     } finally {
@@ -56,6 +56,7 @@ export default function WishList() {
   }, [token, userId, load, navigate]);
  
   const onToggleFav = async (p) => {
+   
     const prev = items;
     setItems((list) => list.filter((x) => x.wishlist_id !== p.wishlist_id));
     try {
@@ -64,8 +65,7 @@ export default function WishList() {
       setTimeout(load, 250);
     } catch (e) {
       setItems(prev);
-      const m =
-        e?.response?.data?.error || e?.message || "Failed to toggle favorite";
+      const m = e?.response?.data?.error || e?.message || "Failed to toggle favorite";
       setErr(m);
       pushSnack(m, "error");
     }
@@ -84,13 +84,12 @@ export default function WishList() {
         product_id: p.product_id,
         quantity: 1,
         details_order_user: "",
-        price: p.price,
+        price: p.price
       };
       await AddToCart(card, { user });
       pushSnack("Added to cart", "success");
     } catch (e) {
-      const m =
-        e?.response?.data?.error || e?.message || "Failed to add to cart";
+      const m = e?.response?.data?.error || e?.message || "Failed to add to cart";
       setErr(m);
       pushSnack(m, "error");
     }
@@ -120,10 +119,7 @@ export default function WishList() {
         <div className="max-w-3xl mx-auto mt-2">
           <div className="bg-rose-600 text-white shadow rounded-xl px-4 py-3 flex items-center justify-between">
             <span className="text-sm sm:text-base">{err}</span>
-            <button
-              onClick={() => setErr("")}
-              className="ml-4 px-3 py-1 rounded-md bg-white/20 hover:bg-white/30"
-            >
+            <button onClick={() => setErr("")} className="ml-4 px-3 py-1 rounded-md bg-white/20 hover:bg-white/30">
               Close
             </button>
           </div>
@@ -134,28 +130,15 @@ export default function WishList() {
         {items.map((p) => (
           <div key={p.wishlist_id} className="rounded-2xl shadow p-4">
             <div className="aspect-[4/3] overflow-hidden rounded-xl mb-3 bg-gray-100">
-              <img
-                src={p.image || ""}
-                alt={p.name}
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
+              <img src={p.image || ""} alt={p.name} className="w-full h-full object-cover" loading="lazy" />
             </div>
             <div className="font-medium">{p.name}</div>
-            <div className="opacity-70 mb-3">
-              {Number(p.price).toFixed(2)} JOD
-            </div>
+            <div className="opacity-70 mb-3">{Number(p.price).toFixed(2)} JOD</div>
             <div className="flex gap-2">
-              <button
-                onClick={() => onToggleFav(p)}
-                className="px-4 py-2 rounded-xl bg-gray-900 text-white"
-              >
+              <button onClick={() => onToggleFav(p)} className="px-4 py-2 rounded-xl bg-gray-900 text-white">
                 Remove
               </button>
-              <button
-                onClick={() => onAddToCart(p)}
-                className="px-4 py-2 rounded-xl bg-gray-200"
-              >
+              <button onClick={() => onAddToCart(p)} className="px-4 py-2 rounded-xl bg-gray-200">
                 Add to Cart
               </button>
             </div>
