@@ -23,7 +23,7 @@ export default function ProfileCard({ data, refreshTrigger }) {
 
 
 
-}
+
 const port = import.meta.env.VITE_PORT;
 useEffect(() => {
   setProfile({ ...data });
@@ -136,3 +136,4 @@ return (
     </>
   );
 
+}

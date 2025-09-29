@@ -9,9 +9,14 @@ export default function LiveChat() {
     const location = useLocation();
     const port = import.meta.env.VITE_PORT;
     const socketRef = useRef(null);
+    const MessageEndRef = useRef(null);
 
     const { sender, reciver } = location.state || {};
 
+    useEffect(() => {
+        MessageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+
+    },[messages])
     useEffect(() => {
         if (!sender || !reciver) return;
 
@@ -52,14 +57,14 @@ export default function LiveChat() {
 
         };
         const newMessage = { ...messageData, time: new Date() }
-        setMessages((prev)=>[...prev , newMessage])
+        setMessages((prev) => [...prev, newMessage])
         if (socketRef.current) {
             socketRef.current.emit("send-message", messageData);
 
             // setMessages(prev => [...prev, messageData]);
         }
         try {
-            await axios.post("http://localhost:3001/api/send-messages",messageData );
+            await axios.post("http://localhost:3001/api/send-messages", messageData);
             setTextMessage("");
         } catch (error) {
             console.log(error);
@@ -91,9 +96,13 @@ export default function LiveChat() {
                         <div className="text-base">{msg.text}</div>
                         <div className="text-xs text-gray-500 mt-1">
                             {new Date(msg.created_at).toLocaleTimeString()}
+            <div ref={MessageEndRef} />
+
                         </div>
+                        
                     </div>
                 ))}
+
             </div>
 
             <div className="flex gap-2">
