@@ -87,7 +87,15 @@ export default function GitAllProduct() {
             className="bg-white rounded-2xl shadow-md hover:shadow-xl transition p-4"
           >
             <img
-              src={card.image}
+              // src={card.image}
+
+              src={
+                card.image
+                  ? card.image.startsWith("http")
+                    ? card.image
+                    : `http://localhost:${port}${card.image}`
+                  : `../src/assets/cupcakes-1283247__340.jpg`
+              }
               alt={card.name}
               className="w-full h-48 object-cover rounded-lg mb-4 cursor-pointer"
               onClick={() => {

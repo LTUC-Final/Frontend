@@ -12,8 +12,14 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import useSummary from "../../hooks/useAnaliasisOrder";
+import useLastDate from "../../hooks/useLastDate";
+import useSupportProvider from "../../hooks/useSupportProvider";
+import OrdersSummary from "../order/aiComponent";
 import ApprovalForm from "./approvalForm";
 import ButtonStatus from "./ButtonStatues";
+import DownLoadAllOrder from "./downLoadAllOrders";
+import PrintInvoiceButton from "./printInvoice";
 const statusClasses = {
   pending: "text-yellow-600 bg-yellow-50 border border-yellow-200",
   "In Progress": "text-blue-600 bg-blue-50 border border-blue-200",
@@ -48,7 +54,17 @@ function OrdersManagementProvider() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [orders, setOrders] = useState([]);
   const [sortOrder, setSortOrder] = useState("newest");
+  const { messages, sendMessage } = useSummary();
+  const { messagesSupportProvider, sendMessageSupportProvider } =
+    useSupportProvider();
+  // const { messagesSupport, generateMessage } = useSupport();
+  const { messagesss, sendMessagess, report, formatDateLocal } = useLastDate();
+  const [buttonAi, setButtonAi] = useState(false);
 
+  const assistantMessages = messages.filter((msg) => msg.role === "assistant");
+  const assistantMessagesSupport = messagesSupportProvider.filter(
+    (msg) => msg.role === "assistant"
+  );
   const { user } = useSelector((state) => state.UserInfo);
   const provider_id = user?.provider?.provider_id;
   const port = import.meta.env.VITE_PORT;
@@ -92,9 +108,14 @@ function OrdersManagementProvider() {
         response_from_provider: order.response_from_provider,
         cart_id: order.cart_id,
         quantity: order.quantity,
+        product_image: order.product_image,
+        location: order.location,
       }));
-
       setOrders(mappedOrders);
+
+      sendMessage(mappedOrders);
+      sendMessageSupportProvider();
+      sendMessagess(mappedOrders);
       console.log(mappedOrders);
     } catch (error) {
       console.error("Error fetching orders:", error);
@@ -148,6 +169,39 @@ function OrdersManagementProvider() {
       console.error(" Unexpected error:", error);
     }
   }
+  function summarizeOrdersByStatus(orders) {
+    const summary = {};
+    console.log(orders);
+    orders.forEach((order) => {
+      const status = order.status;
+      const priceString = order.totalAmount;
+      const price = parseFloat(priceString) || 0;
+      const totalPrice = price * (order.quantity || 1);
+      if (!summary[status]) {
+        summary[status] = { count: 0, totalPrice: 0 };
+      }
+
+      summary[status].count += 1;
+      summary[status].totalPrice += totalPrice;
+    });
+    return summary;
+  }
+  // Import EasyInvoice
+
+  const summary = summarizeOrdersByStatus(orders);
+  // sendMessage(summary);
+  console.log(summary);
+  const data = Object.entries(summary).map(([status, values]) => ({
+    name: status,
+    value: values.totalPrice,
+  }));
+  const data2 = Object.entries(summary).map(([status, values]) => ({
+    name: status,
+    value: values.count,
+  }));
+
+  const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#A020F0"];
+
   return (
     <div className="flex h-screen bg-background">
       {/* Overlay */}
@@ -234,12 +288,47 @@ function OrdersManagementProvider() {
               <option value="newest">Newest First</option>
               <option value="oldest">Oldest First</option>
             </select>
+              <div className="flex items-center space-x-2">
+                    
+                          <DownLoadAllOrder order={orders} />
+                      
+                      </div>
           </div>
         </div>
 
         {/* Orders List */}
         <div className="flex-1 overflow-auto p-6">
           <div className="grid gap-4">
+            {" "}
+            {/* //////////////
+            ////////////////
+            /////////////
+            /////////// */}
+            <button
+              onClick={() => {
+                setButtonAi(!buttonAi);
+              }}
+              className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+            >
+              {buttonAi ? "Hide" : "Analyze using AI"}
+            </button>
+            {buttonAi ? (
+              <OrdersSummary
+                data={data}
+                بهة
+                data2={data2}
+                COLORS={COLORS}
+                report={report}
+                assistantMessagesSupport={assistantMessagesSupport}
+                formatDateLocal={formatDateLocal}
+              />
+            ) : (
+              <></>
+            )}
+            {/* /////////
+            //////////
+            //////
+            //// */}
             {filteredOrders.map((order) => (
               <div
                 key={order.id}
@@ -250,14 +339,25 @@ function OrdersManagementProvider() {
                   <div className="flex-shrink-0">
                     <img
                       src={
-                        order.productImage ||
-                        "../src/assets/cupcakes-1283247__340.jpg"
+                        order.product_image
+                          ? order.product_image.startsWith("http")
+                            ? order.product_image
+                            : `http://localhost:${port}${order.product_image}`
+                          : `../src/assets/cupcakes-1283247__340.jpg`
                       }
                       alt={order.productName}
-                      className="m-8 w-20 h-20 rounded-lg object-cover border border-border"
+                      className="m-8 w-50 h-50 rounded-lg object-cover border border-border"
                     />
                   </div>
-
+                  <div>
+                    {/* <button
+                      onClick={() => {
+                        printInvoice(order);
+                      }}
+                    >
+                      aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                    </button> */}
+                  </div>
                   <div className="flex-1">
                     <div className="flex items-center space-x-3 mb-3">
                       <h3 className="text-lg font-montserrat font-semibold text-card-foreground">
@@ -293,6 +393,11 @@ function OrdersManagementProvider() {
                     <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
                       {order.serviceDetails}
                     </p>
+                    {order.response_from_provider && (
+                      <p className="text-sm text-muted-foreground mb-4 italic">
+                        Provider Response: {order.response_from_provider}
+                      </p>
+                    )}
                     {order.customNotes && (
                       <p className="text-sm text-muted-foreground mb-4 italic">
                         Note Customer: {order.customNotes}
@@ -353,7 +458,8 @@ function OrdersManagementProvider() {
                         </p>
                       )}
 
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                    <div className="grid grid-cols-2 md:grid-cols-5 gap-6 text-sm">
+                      {/* السعر */}
                       <div className="flex items-center space-x-2">
                         <DollarSign className="h-4 w-4 text-muted-foreground" />
                         <span className="text-card-foreground font-medium">
@@ -362,14 +468,14 @@ function OrdersManagementProvider() {
                           ).toLocaleString()}
                         </span>
                       </div>
-
+                      {/* تاريخ الطلب */}
                       <div className="flex items-center space-x-2">
                         <Calendar className="h-4 w-4 text-muted-foreground" />
                         <span className="text-muted-foreground">
                           {new Date(order.orderDate).toLocaleDateString()}
                         </span>
                       </div>
-
+                      {/* تاريخ التوصيل */}
                       <div className="flex items-center space-x-2">
                         <Truck className="h-4 w-4 text-muted-foreground" />
                         <span className="text-muted-foreground">
@@ -378,12 +484,23 @@ function OrdersManagementProvider() {
                           ).toLocaleDateString()}
                         </span>
                       </div>
+                      {/* التصنيف */}
                       <div className="flex items-center space-x-2">
-                        <span className="text-xs px-2 py-1 bg-secondary text-secondary-foreground rounded">
+                        <span className="text-xs px-3 py-1 bg-secondary text-secondary-foreground rounded">
                           {order.category}
                         </span>
                       </div>
+                      {/* زر الطباعة */}
+                      <div className="flex items-center space-x-2">
+                        {order.status === "completed" ? (
+                          <PrintInvoiceButton order={order} />
+                        ) : (
+                          <></>
+                        )}
+                      </div>{" "}
+                    
                     </div>
+
                     {
                       /* {order.status === "completed" || */
                       order.status === "on_progress" ||
