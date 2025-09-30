@@ -90,7 +90,10 @@ export default function CartPage() {
           `http://localhost:${port}/api/carts/products/${CusData.user.user_id}`
         );
         setCart(res.data);
-        console.log(res.data);
+        console.log("sssssssssssssssssssss");
+
+        console.log(res.data, "Sssssssssssssssssssssss");
+        console.log("sssssssssssssssssssss");
       } catch (error) {
         console.log(error);
       }
@@ -230,7 +233,7 @@ export default function CartPage() {
     setCart((prevCart) => prevCart.filter((p) => p.cart_id !== cart_id));
   };
   const deleteItemCart = async (cart_id) => {
-    const port = import.meta.env.VITE_PORT; 
+    const port = import.meta.env.VITE_PORT;
     try {
       const res = await axios.delete(
         `http://localhost:${port}/deleteCard/${cart_id}`
@@ -284,7 +287,15 @@ export default function CartPage() {
                   <div className="flex flex-col md:flex-row gap-6">
                     <div className="flex-shrink-0">
                       <img
-                        src={product.product_image || "/placeholder.svg"}
+                        // src={product.product_image || "/placeholder.svg"}
+
+                        src={
+                          product.product_image
+                            ? product.product_image.startsWith("http")
+                              ? product.product_image
+                              : `http://localhost:${port}${product.product_image}`
+                            : `../src/assets/cupcakes-1283247__340.jpg`
+                        }
                         alt={product.product_name}
                         className="w-48 h-48 object-cover rounded-lg"
                       />
@@ -309,8 +320,7 @@ export default function CartPage() {
                       </Button>
                       <div className="flex items-center gap-3">
                         <span className="text-sm">Quantity:</span>
-                        {product.provider_response &&
-                        product.status_pay !== "Approve" ? (
+                        {product.provider_response ? (
                           <span className="w-8 text-center font-medium">
                             {product.quantity}
                           </span>
