@@ -9,11 +9,16 @@ import {
   Search,
   Truck,
 } from "lucide-react";
+
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ChatBox from "../../component/Ai/chatBox";
 import FeedbackCard from "../../component/ratingAndFeedback";
+import useSummary from "../../hooks/useAnaliasisOrder";
+import useLastDate from "../../hooks/useLastDate";
+import useSupport from "../../hooks/useSupport";
+import OrdersSummary from "./aiComponent";
 
 const statusClasses = {
   pending: "text-yellow-600 bg-yellow-50 border border-yellow-200",
@@ -49,19 +54,35 @@ function OrdersManagementCustomer() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [orders, setOrders] = useState([]);
   const [sortOrder, setSortOrder] = useState("newest");
+  const { messages, sendMessage } = useSummary();
+  const { messagesSuport, sendMessageSupport } = useSupport();
+  // const { messagesSupport, generateMessage } = useSupport();
+  const { messagesss, sendMessagess, report, formatDateLocal } = useLastDate();
+  const [buttonAi, setButtonAi] = useState(false);
+
+  console.log("77777777777777777777777");
+
+  console.log(report);
+  console.log("77777777777777777777777");
+
+  const assistantMessages = messages.filter((msg) => msg.role === "assistant");
+  const assistantMessagesSupport = messagesSuport.filter(
+    (msg) => msg.role === "assistant"
+  );
 
   const { user } = useSelector((state) => state.UserInfo);
   const userId = user?.user_id;
   const port = import.meta.env.VITE_PORT;
   const navigate = useNavigate();
   console.log("ssssssssssss");
+
   useEffect(() => {
     const fetchOrders = async () => {
       try {
         const response = await axios.get(
           `http://localhost:${port}/getAllOrderInCustomer/${userId}`
         );
-        console.log(response.data[0]);
+        console.log(response.data);
         const mappedOrders = response.data.map((order) => ({
           order_id: order.order_id,
           status: order.status,
@@ -87,12 +108,15 @@ function OrdersManagementCustomer() {
           provider_profile_image: order.provider_profile_image,
           provider_user_id: order.provider_user_id,
           quantity: order.quantity,
+          product_image: order.product_image,
           datedelivery: order.datedelivery
             ? new Date(order.created_at).toISOString().split("T")[0]
             : "",
         }));
-
+        sendMessage(mappedOrders);
         setOrders(mappedOrders);
+        sendMessageSupport();
+        sendMessagess(mappedOrders);
         console.log("saaaaaaaaaa" + orders);
       } catch (error) {
         console.error("Error fetching orders:", error);
@@ -101,6 +125,7 @@ function OrdersManagementCustomer() {
 
     fetchOrders();
   }, [userId]);
+
   const filteredOrders = useMemo(() => {
     const filtered = orders.filter((order) => {
       const matchesSearch =
@@ -139,13 +164,11 @@ function OrdersManagementCustomer() {
     try {
       setLoading(true);
       const res = await axios.post(`http://localhost:${port}/ai2`, {
-        input: {
-          instruction:
-            "Analyze the following orders and give me insights (summary, trends, and recommendations):",
-          data: orders,
-        },
+        input: orders,
       });
-      setReply(res.data.reply);
+
+      setReply(res.data.result);
+      console.log(res.data.result);
     } catch (error) {
       console.error("Error:", error);
       setReply("Something went wrong ❌");
@@ -155,9 +178,42 @@ function OrdersManagementCustomer() {
   };
 
   ////////////////////////////////
+
+  function summarizeOrdersByStatus(orders) {
+    const summary = {};
+    console.log(orders);
+    orders.forEach((order) => {
+      const status = order.status;
+      const priceString = order.totalAmount;
+      const price = parseFloat(priceString) || 0;
+      const totalPrice = price * (order.quantity || 1);
+      if (!summary[status]) {
+        summary[status] = { count: 0, totalPrice: 0 };
+      }
+
+      summary[status].count += 1;
+      summary[status].totalPrice += totalPrice;
+    });
+    return summary;
+  }
+
+  const summary = summarizeOrdersByStatus(orders);
+  // sendMessage(summary);
+  console.log(summary);
+  const data = Object.entries(summary).map(([status, values]) => ({
+    name: status,
+    value: values.totalPrice,
+  }));
+  const data2 = Object.entries(summary).map(([status, values]) => ({
+    name: status,
+    value: values.count,
+  }));
+
+  const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#A020F0"];
+
   return (
     <div className="flex h-screen bg-background">
-      <div className="p-4">
+      {/* <div className="p-4">
         <h1 className="text-xl font-bold mb-2">Talk to AI 🤖</h1>
 
         <textarea
@@ -180,7 +236,7 @@ function OrdersManagementCustomer() {
             <strong>AI Reply:</strong> {reply}
           </div>
         )}
-      </div>
+      </div> */}
       <button
         onClick={() => setIsOpen(true)}
         className={`fixed bottom-6 right-6 h-14 w-14 rounded-full bg-blue-600 text-white shadow-lg flex items-center justify-center transition-transform duration-300 ${
@@ -279,6 +335,36 @@ function OrdersManagementCustomer() {
         {/* Orders List */}
         <div className="flex-1 overflow-auto p-6">
           <div className="grid gap-4">
+            {" "}
+            {/* //////////////
+            ////////////////
+            /////////////
+            /////////// */}
+            <button
+              onClick={() => {
+                setButtonAi(!buttonAi);
+              }}
+              className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+            >
+              {buttonAi ? "Hide" : "Analyze using AI"}
+            </button>
+            {buttonAi ? (
+              <OrdersSummary
+                data={data}
+                بهة
+                data2={data2}
+                COLORS={COLORS}
+                report={report}
+                assistantMessagesSupport={assistantMessagesSupport}
+                formatDateLocal={formatDateLocal}
+              />
+            ) : (
+              <></>
+            )}
+            {/* /////////
+            //////////
+            //////
+            //// */}
             {filteredOrders.map((order) => (
               <div
                 key={order.id}
@@ -289,11 +375,14 @@ function OrdersManagementCustomer() {
                   <div className="flex-shrink-0">
                     <img
                       src={
-                        order.productImage ||
-                        "../src/assets/cupcakes-1283247__340.jpg"
+                        order.product_image
+                          ? order.product_image.startsWith("http")
+                            ? order.product_image
+                            : `http://localhost:${port}${order.product_image}`
+                          : `../src/assets/cupcakes-1283247__340.jpg`
                       }
                       alt={order.productName}
-                      className="m-8 w-20 h-20 rounded-lg object-cover border border-border"
+                      className="m-8 w-50 h-50 rounded-lg object-cover border border-border"
                     />
                   </div>
 
