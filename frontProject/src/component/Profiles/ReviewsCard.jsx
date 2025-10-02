@@ -5,20 +5,24 @@ export default function ReviewCard({ review }) {
 
   return (
     <div className="p-4 bg-white rounded-xl shadow-md mb-4 hover:shadow-lg transition m-5">
-
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-3">
-          
           {/* review.profile_image */}
-         <img
-  src={
-    review.profile_image
-      ? `http://localhost:${port}${review.profile_image}`
-      : `https://ui-avatars.com/api/?name=${review.customer_firstname}+${review.customer_lastname ?? ""}&background=random&color=fff`
-  }
-  alt={`${review.customer_firstname} ${review.customer_lastname ?? ""}`}
-  className="w-10 h-10 rounded-full object-cover"
-/>
+          <img
+            src={
+              review.profile_image
+                ? `http://localhost:${port}${review.profile_image}`
+                : `https://ui-avatars.com/api/?name=${
+                    review.customer_firstname
+                  }+${
+                    review.customer_lastname ?? ""
+                  }&background=random&color=fff`
+            }
+            alt={`${review.customer_firstname} ${
+              review.customer_lastname ?? ""
+            }`}
+            className="w-10 h-10 rounded-full object-cover"
+          />
           <div>
             <h3 className="font-semibold text-gray-800">
               {review.customer_firstname} {review.customer_lastname ?? ""}
@@ -31,7 +35,6 @@ export default function ReviewCard({ review }) {
               })}
             </span>
 
-        
             <div className="flex items-center mt-1">
               {[...Array(5)].map((_, i) => (
                 <Star
@@ -49,7 +52,6 @@ export default function ReviewCard({ review }) {
         </div>
       </div>
 
- 
       <p className="text-gray-700 text-sm flex items-start gap-1">
         <MessageSquare size={16} className="text-blue-500 mt-0.5" />
         {review.review_text}
