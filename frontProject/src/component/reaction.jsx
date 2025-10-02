@@ -71,7 +71,6 @@ export default function ReactionPicker({
     setTimeout(() => setIsAnimating(false), 600);
   };
 
-  // ✅ تعديل هون : حذف count واعتماد على السيرفر
   const onReact = async (product_id, reactionType) => {
     try {
       const { data } = await axios.post(
@@ -85,14 +84,12 @@ export default function ReactionPicker({
 
       setSelectedReaction(data.selectedReaction);
 
-      // ✅ تعديل هون : نبعث كل البيانات
       onReactionUpdate(product_id, data.reactionCounts, data.selectedReaction);
     } catch (error) {
       console.error("Reaction error:", error);
     }
   };
 
-  // ✅ تعديل هون : نحسب التوتال من السيرفر بس
   const totalReactions =
     (card.reaction_counts?.love || 0) +
     (card.reaction_counts?.proud || 0) +
