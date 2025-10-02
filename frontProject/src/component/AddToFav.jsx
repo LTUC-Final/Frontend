@@ -5,7 +5,7 @@ export default async function AddTOFav(card, CusData) {
     console.log(card);
 
     try {
-        axios.post(`http://localhost:${port}/api/addfav`, {
+       await axios.post(`http://localhost:${port}/api/addfav`, {
             customer_id:  Number(CusData.user.user_id),
             product_id: card.product_id,
         })

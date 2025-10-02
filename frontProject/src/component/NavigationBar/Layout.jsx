@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import NavigationBar from "./NavigationBar";
 
-export default function Layout({ children }) {
+export default function Layout({ children , cartCount  }) {
   const OurValue = useRef(null);
   const Client = useRef(null);
   const Partner = useRef(null);
@@ -12,6 +12,10 @@ export default function Layout({ children }) {
     ref.current.scrollIntoView({ behavior: "smooth" });
   };
   const location = useLocation();
+    useEffect(() => {
+    console.log("Cart count in Layout:", cartCount);
+  }, [cartCount]);
+  
 
   const hideNavRoutes = ["/login", "/register", "/mainDashBoard"];
 
@@ -36,6 +40,7 @@ export default function Layout({ children }) {
     <>
       {!shouldHideNav && (
         <NavigationBar
+        cartCount={cartCount}
           onScroll={(section) => {
             if (section === "Partner") scrollToComponent(Partner);
             else if (section === "Client") scrollToComponent(Client);
