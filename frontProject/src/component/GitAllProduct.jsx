@@ -5,6 +5,7 @@ import AddTOFav from "./AddToFav";
 // import GitReviews from "./GitReviews";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import ReactionPicker from "./reaction";
 
 export default function GitAllProduct() {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ export default function GitAllProduct() {
   const CusData = useSelector((state) => state.UserInfo);
   const [textSearch, setTextSearch] = useState("");
   const [selectore, setSelectore] = useState("");
+  
 
   console.log(selectore);
   console.log(selectore);
@@ -32,12 +34,16 @@ export default function GitAllProduct() {
 
     return FilterByName && FilterBySelete;
   });
+  console.log("resultOfFilter");
+
+  console.log(resultOfFilter);
+  console.log("resultOfFilter");
 
   useEffect(() => {
     const feactData = async () => {
       try {
         let res = await axios.get(
-          `http://localhost:${port}/api/ShowCardInUserDashboard`
+          `http://localhost:${port}/api/ShowCardInUserDashboard/${CusData.user.user_id}`
         );
         setCards(res.data);
       } catch (error) {
@@ -107,8 +113,8 @@ export default function GitAllProduct() {
               {card.firstname} {card.lastname}
             </p>
             <p className="text-blue-600 font-bold">${card.price}</p>
-            <p className="text-sm text-gray-500">{card.location}</p>
-
+            <p className="text-sm text-gray-500">{card.location}</p>{" "}
+            {/* <p>ssssssss{card.reaction_counts.like}</p> */}
             {CusData.user.role === "customer" && (
               <div className="flex gap-3 mt-4">
                 <button
@@ -125,6 +131,25 @@ export default function GitAllProduct() {
                 </button>
               </div>
             )}
+            {/* <ReactionPicker
+              card={card}
+              product_id={card.product_id}
+              userId={CusData.user.user_id}
+            ></ReactionPicker> */}
+            <ReactionPicker
+              card={card}
+              product_id={card.product_id}
+              userId={CusData.user.user_id}
+              onReactionUpdate={(updatedReaction) => {
+                setCards((prevCards) =>
+                  prevCards.map((c) =>
+                    c.product_id === card.product_id
+                      ? { ...c, selectedReaction: updatedReaction }
+                      : c
+                  )
+                );
+              }}
+            />
           </div>
         ))}
       </div>
