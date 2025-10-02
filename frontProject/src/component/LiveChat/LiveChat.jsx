@@ -12,30 +12,27 @@ export default function LiveChat() {
   const MessageEndRef = useRef(null);
 
   const { sender, reciver } = location.state || {};
+useEffect(() => {
+  if (!sender || !reciver) return;
 
-  useEffect(() => {
-    MessageEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-  useEffect(() => {
-    if (!sender || !reciver) return;
+  const fetchMessages = async () => {
+    try {
+      const res = await axios.get(`http://localhost:${port}/api/getmessages`, {
+        params: { senderId: sender.user_id, receiveId: reciver.user_id },
+      });
+      setMessages(res.data);
+      console.log("Fetched messages:", res.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-    const fetchMessages = async () => {
-      try {
-        const res = await axios.get(
-          `http://localhost:${port}/api/getmessages`,
-          {
-            params: { senderId: sender.user_id, receiveId: reciver.user_id },
-          }
-        );
-        setMessages(res.data);
-        console.log("rees", res.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+  fetchMessages();
 
-    fetchMessages();
-  }, [textMessage]);
+  const interval = setInterval(fetchMessages, 5000); 
+
+  return () => clearInterval(interval); 
+}, [sender, reciver]);
 
   useEffect(() => {
     if (!sender) return;

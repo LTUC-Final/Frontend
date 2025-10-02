@@ -16,6 +16,8 @@ export default function GitAllProduct() {
   const [selectore, setSelectore] = useState("");
   
 
+  const number = 0;
+
   console.log(selectore);
   console.log(selectore);
 
@@ -35,6 +37,7 @@ export default function GitAllProduct() {
     return FilterByName && FilterBySelete;
   });
   console.log("resultOfFilter");
+console.log("asdas",number);
 
   console.log(resultOfFilter);
   console.log("resultOfFilter");

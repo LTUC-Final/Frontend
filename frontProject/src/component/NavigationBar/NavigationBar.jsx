@@ -3,7 +3,9 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 
-export default function NavigationBar({ onScroll }) {
+export default function NavigationBar({ onScroll, cartCount }) {
+  console.log("asdasdasd", cartCount);
+
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   // const persisted = localStorage.getItem("persist:UserInfo");
@@ -131,14 +133,18 @@ export default function NavigationBar({ onScroll }) {
                   bg-white/10 backdrop-blur-[10px] border border-white/20
                   hover:-translate-y-0.5 hover:shadow-[0_10px_25px_rgba(19,246,238,0.3)] 
                   hover:border-[#13f6ee] hover:text-[#13f6ee]
-                  ${
-                    location.pathname === item.href
-                      ? "bg-gradient-to-r from-[rgba(19,246,238,0.2)] to-[rgba(0,212,255,0.2)] text-[#13f6ee] border-[#13f6ee] shadow-[0_0_20px_rgba(19,246,238,0.4)]"
-                      : ""
+                  ${location.pathname === item.href
+                    ? "bg-gradient-to-r from-[rgba(19,246,238,0.2)] to-[rgba(0,212,255,0.2)] text-[#13f6ee] border-[#13f6ee] shadow-[0_0_20px_rgba(19,246,238,0.4)]"
+                    : ""
                   }
                 `}
               >
                 <span className="relative z-[2]">{item.name}</span>
+                {item.name === "Cart" && cartCount > 0 && (
+                  <span className="absolute top-1/4 right-1/5 transform translate-x-1/2 -translate-y-1/2 w-7 h-7 bg-red-500 rounded-full flex items-center justify-center text-white text-sm">
+                    {cartCount}
+                  </span>
+                )}
                 <div className="absolute top-0 -left-full w-full h-full bg-gradient-to-r from-transparent via-[rgba(19,246,238,0.4)] to-transparent transition-[left] duration-500 group-hover:left-full"></div>
 
                 {/* Active state glow effect */}
@@ -175,23 +181,20 @@ export default function NavigationBar({ onScroll }) {
         >
           <div className="flex flex-col gap-1">
             <span
-              className={`w-5 h-0.5 bg-white transition-all duration-300 rounded-sm ${
-                isMenuOpen
-                  ? "rotate-45 translate-x-[5px] translate-y-[5px]"
-                  : ""
-              }`}
+              className={`w-5 h-0.5 bg-white transition-all duration-300 rounded-sm ${isMenuOpen
+                ? "rotate-45 translate-x-[5px] translate-y-[5px]"
+                : ""
+                }`}
             ></span>
             <span
-              className={`w-5 h-0.5 bg-white transition-all duration-300 rounded-sm ${
-                isMenuOpen ? "opacity-0" : ""
-              }`}
+              className={`w-5 h-0.5 bg-white transition-all duration-300 rounded-sm ${isMenuOpen ? "opacity-0" : ""
+                }`}
             ></span>
             <span
-              className={`w-5 h-0.5 bg-white transition-all duration-300 rounded-sm ${
-                isMenuOpen
-                  ? "-rotate-45 translate-x-[7px] -translate-y-[6px]"
-                  : ""
-              }`}
+              className={`w-5 h-0.5 bg-white transition-all duration-300 rounded-sm ${isMenuOpen
+                ? "-rotate-45 translate-x-[7px] -translate-y-[6px]"
+                : ""
+                }`}
             ></span>
           </div>
         </button>
@@ -199,22 +202,25 @@ export default function NavigationBar({ onScroll }) {
 
       {/* Mobile Navigation */}
       <div
-        className={`md:hidden flex flex-col bg-[rgba(102,126,234,0.95)] backdrop-blur-[10px] border-t border-white/10 overflow-hidden transition-[max-height] duration-300 ${
-          isMenuOpen ? "max-h-[300px]" : "max-h-0"
-        }`}
+        className={`md:hidden flex flex-col bg-[rgba(102,126,234,0.95)] backdrop-blur-[10px] border-t border-white/10 overflow-hidden transition-[max-height] duration-300 ${isMenuOpen ? "max-h-[300px]" : "max-h-0"
+          }`}
       >
         {navItem.map((item, index) => (
           <Link
             key={index}
             to={item.href}
-            className={`block px-8 py-4 text-white no-underline font-medium transition-all duration-300 border-b border-white/10 hover:bg-[rgba(19,246,238,0.2)] hover:text-[#13f6ee] hover:pl-10 ${
-              location.pathname === item.href
-                ? "bg-[rgba(19,246,238,0.2)] text-[#13f6ee] pl-10"
-                : ""
-            }`}
+            className={`block px-8 py-4 text-white no-underline font-medium transition-all duration-300 border-b border-white/10 hover:bg-[rgba(19,246,238,0.2)] hover:text-[#13f6ee] hover:pl-10 ${location.pathname === item.href
+              ? "bg-[rgba(19,246,238,0.2)] text-[#13f6ee] pl-10"
+              : ""
+              }`}
             onClick={() => setIsMenuOpen(false)}
           >
             {item.name}
+            {item.name === "Cart" && cartCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 rounded-full w-5 h-5 text-center text-white text-xs">
+                {cartCount}
+              </span>
+            )}
           </Link>
         ))}
       </div>
