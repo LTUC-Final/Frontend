@@ -89,10 +89,10 @@ export default function CartPage() {
         let res = await axios.get(
           `http://localhost:${port}/api/carts/products/${CusData.user.user_id}`
         );
-        setCart(res.data.cards);
+        setCart(res.data);
         console.log("sssssssssssssssssssss");
 
-        console.log(res.data.length, "Sssssssssssssssssssssss");
+        console.log(res.data, "Sssssssssssssssssssssss");
         console.log("sssssssssssssssssssss");
       } catch (error) {
         console.log(error);

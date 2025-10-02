@@ -139,15 +139,19 @@ console.log("asdas",number);
               product_id={card.product_id}
               userId={CusData.user.user_id}
             ></ReactionPicker> */}
-            <ReactionPicker
+          <ReactionPicker
               card={card}
               product_id={card.product_id}
               userId={CusData.user.user_id}
-              onReactionUpdate={(updatedReaction) => {
+              onReactionUpdate={(product_id, reactionCounts, selectedReaction) => {
                 setCards((prevCards) =>
                   prevCards.map((c) =>
-                    c.product_id === card.product_id
-                      ? { ...c, selectedReaction: updatedReaction }
+                    c.product_id === product_id
+                      ? {
+                          ...c,
+                          reaction_counts: reactionCounts,
+                          selectedReaction: selectedReaction,
+                        }
                       : c
                   )
                 );
