@@ -15,7 +15,7 @@ export default function LiveChat() {
 
   useEffect(() => {
     MessageEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [textMessage]);
   useEffect(() => {
     if (!sender || !reciver) return;
 
@@ -35,7 +35,7 @@ export default function LiveChat() {
     };
 
     fetchMessages();
-  }, [textMessage]);
+  }, [messages]);
 
   useEffect(() => {
     if (!sender) return;
