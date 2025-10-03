@@ -29,15 +29,15 @@ export default function NavigationBar({ onScroll }) {
       name: "My Profile",
       href: `/profile/${userId}`,
     },
-    {
-      name: "Profile",
-      // href: "/profile",
-      subItems: [
-        { name: "ProviderProfile", href: "/providerProfile" },
+    // {
+    //   name: "Profile",
+    //   // href: "/profile",
+    //   subItems: [
+    //     { name: "ProviderProfile", href: "/providerProfile" },
 
-        { name: "CustomerProfile", href: "/customerProfile" },
-      ],
-    },
+    //     { name: "CustomerProfile", href: "/customerProfile" },
+    //   ],
+    // },
     {
       name: "Dashboard",
       href: "/providerDashboard",
@@ -104,8 +104,9 @@ export default function NavigationBar({ onScroll }) {
   const navItem = navItems.filter(
     (item) => !item.roles || item.roles.includes(userRole)
   );
+
   return (
-    <nav className="sticky top-0 z-[1000] bg-[#0a1931] backdrop-blur-[10px] border-b border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.1)]">
+    <nav className="sticky top-0 z-[1000] bg-[#102E50] border-b-[1px] border-[#0f2b44] shadow-[0_8px_32px_rgba(0,0,0,0.12)]">
       <div className="flex items-center justify-between px-8 py-4 max-w-[1200px] mx-auto">
         {/* Logo Section */}
         <div className="flex items-center gap-4">
@@ -113,59 +114,46 @@ export default function NavigationBar({ onScroll }) {
             <img
               src="/images/logoM.png"
               alt="Logo"
-              className="w-full h-full object-cover animate-[spinY_5s_linear_infinite] origin-center"
+              className="w-full h-full object-cover origin-center"
             />
           </div>
         </div>
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-8">
-          {navItem.map((item, index) => (
-            <div className="relative group" key={index}>
-              <Link
-                onClick={() => onScroll?.(item.section)}
-                to={item.href}
-                className={`
-                  relative flex items-center px-6 py-3 text-white no-underline text-base font-medium 
-                  rounded-full transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] overflow-hidden
-                  bg-white/10 backdrop-blur-[10px] border border-white/20
-                  hover:-translate-y-0.5 hover:shadow-[0_10px_25px_rgba(19,246,238,0.3)] 
-                  hover:border-[#13f6ee] hover:text-[#13f6ee]
-                  ${
-                    location.pathname === item.href
-                      ? "bg-gradient-to-r from-[rgba(19,246,238,0.2)] to-[rgba(0,212,255,0.2)] text-[#13f6ee] border-[#13f6ee] shadow-[0_0_20px_rgba(19,246,238,0.4)]"
-                      : ""
-                  }
-                `}
-              >
-                <span className="relative z-[2]">{item.name}</span>
-                <div className="absolute top-0 -left-full w-full h-full bg-gradient-to-r from-transparent via-[rgba(19,246,238,0.4)] to-transparent transition-[left] duration-500 group-hover:left-full"></div>
+          {navItem.map((item, index) => {
+            const isActive = location.pathname === item.href;
+            const baseClasses = `relative flex items-center px-6 py-3 text-base font-medium rounded-full transition-all duration-300 overflow-hidden`;
+            const activeClasses = `bg-[#F5C45E] text-[#FFF6E9] border-transparent shadow-lg`;
+            const inactiveClasses = `text-[#FFF6E9] hover:text-[#F5C45E] hover:bg-[#102E50]/30 border border-transparent`;
+            const linkClasses = `${baseClasses} ${isActive ? activeClasses : inactiveClasses}`;
 
-                {/* Active state glow effect */}
-                {location.pathname === item.href && (
-                  <div className="absolute -top-0.5 -left-0.5 -right-0.5 -bottom-0.5 bg-gradient-to-r from-[#13f6ee] via-[#00d4ff] to-[#13f6ee] rounded-full -z-[1] opacity-70 blur-[8px]"></div>
-                )}
+            return (
+              <div className="relative group" key={index}>
+                <Link
+                  onClick={() => onScroll?.(item.section)}
+                  to={item.href}
+                  className={linkClasses}
+                >
+                  <span className="relative z-[2]">{item.name}</span>
 
-                {/* Hover overlay */}
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[rgba(19,246,238,0.1)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full"></div>
-              </Link>
+                  {/* preserved child elements (kept structure, made non-visual) */}
+                  <div className="absolute top-0 -left-full w-full h-full transition-[left] duration-500 pointer-events-none opacity-0"></div>
 
-              {/* Dropdown Menu */}
-              {item.subItems && (
-                <div className="absolute left-0 hidden group-hover:block bg-[#faf9fc] backdrop-blur-[12px] border border-[rgba(226,213,235,0.15)] shadow-[0_4px_20px_rgba(0,0,0,0.2)] rounded-xl py-2 min-w-[180px] z-[999] transition-all duration-500">
-                  {item.subItems.map((subItem, index) => (
-                    <Link
-                      key={index}
-                      to={subItem.href}
-                      className="block px-6 py-3 text-[rgb(68,41,117)] no-underline text-[0.95rem] transition-all duration-[0.9s] hover:bg-[rgba(101,74,163)] hover:text-white hover:pl-8"
-                    >
-                      {subItem.name}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
+                  {/* active state kept via parent classes (no layered glow) */}
+                  {isActive && (
+                    <div className="absolute inset-0 rounded-full -z-[1] opacity-0"></div>
+                  )}
+
+                  {/* hover overlay (kept but invisible; visual handled by parent classes) */}
+                  <div className="absolute inset-0 opacity-0 pointer-events-none"></div>
+                </Link>
+
+              
+              
+              </div>
+            );
+          })}
         </div>
 
         {/* Mobile Menu Button */}
@@ -175,22 +163,18 @@ export default function NavigationBar({ onScroll }) {
         >
           <div className="flex flex-col gap-1">
             <span
-              className={`w-5 h-0.5 bg-white transition-all duration-300 rounded-sm ${
-                isMenuOpen
-                  ? "rotate-45 translate-x-[5px] translate-y-[5px]"
-                  : ""
+              className={`w-5 h-0.5 bg-[#FFF6E9] transition-all duration-300 rounded-sm ${
+                isMenuOpen ? "rotate-45 translate-x-[5px] translate-y-[5px]" : ""
               }`}
             ></span>
             <span
-              className={`w-5 h-0.5 bg-white transition-all duration-300 rounded-sm ${
+              className={`w-5 h-0.5 bg-[#FFF6E9] transition-all duration-300 rounded-sm ${
                 isMenuOpen ? "opacity-0" : ""
               }`}
             ></span>
             <span
-              className={`w-5 h-0.5 bg-white transition-all duration-300 rounded-sm ${
-                isMenuOpen
-                  ? "-rotate-45 translate-x-[7px] -translate-y-[6px]"
-                  : ""
+              className={`w-5 h-0.5 bg-[#FFF6E9] transition-all duration-300 rounded-sm ${
+                isMenuOpen ? "-rotate-45 translate-x-[7px] -translate-y-[6px]" : ""
               }`}
             ></span>
           </div>
@@ -203,20 +187,23 @@ export default function NavigationBar({ onScroll }) {
           isMenuOpen ? "max-h-[300px]" : "max-h-0"
         }`}
       >
-        {navItem.map((item, index) => (
-          <Link
-            key={index}
-            to={item.href}
-            className={`block px-8 py-4 text-white no-underline font-medium transition-all duration-300 border-b border-white/10 hover:bg-[rgba(19,246,238,0.2)] hover:text-[#13f6ee] hover:pl-10 ${
-              location.pathname === item.href
-                ? "bg-[rgba(19,246,238,0.2)] text-[#13f6ee] pl-10"
-                : ""
-            }`}
-            onClick={() => setIsMenuOpen(false)}
-          >
-            {item.name}
-          </Link>
-        ))}
+        {navItem.map((item, index) => {
+          const isActive = location.pathname === item.href;
+          return (
+            <Link
+              key={index}
+              to={item.href}
+              className={`block px-8 py-4 text-white no-underline font-medium transition-all duration-300 border-b border-white/10 hover:bg-[rgba(19,246,238,0.2)] hover:text-[#13f6ee] hover:pl-10 ${
+                isActive
+                  ? "bg-[rgba(245,196,94,0.9)] text-[#FFF6E9] pl-10"
+                  : "text-[#FFF6E9]"
+              }`}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              {item.name}
+            </Link>
+          );
+        })}
       </div>
     </nav>
   );

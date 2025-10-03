@@ -1,31 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Quicksand', sans-serif;
+}
+:root {
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  /* background-color: #242424; */
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+:root {
+  --navy: #102E50;
+  --cream: #FFF6E9;
+  --gold: #F5C45E;
+  --orange: #E78B48;
+  --red: #BE3D2A;
+}
 
-a {
+/* a {
   font-weight: 500;
   color: #646cff;
   text-decoration: inherit;
 }
 a:hover {
   color: #535bf2;
-}
+} */
 
 body {
   margin: 0;
+    background-color: #FFF6E9;
   display: flex;
   place-items: center;
+    font-family: 'Quicksand', 'Ubuntu';
+
   min-width: 320px;
   min-height: 100vh;
 }
@@ -57,12 +71,54 @@ button:focus-visible {
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
-    background-color: #ffffff;
+    /* background-color: #ffffff; */
   }
-  a:hover {
+  /* a:hover {
     color: #747bff;
-  }
+  } */
   /* button {
     background-color: #f9f9f9;
   } */
 }
+/* @keyframes colorPulse {
+  0% {
+    background: radial-gradient(circle at center, #F5C45E, transparent 70%);
+  }
+  25% {
+    background: radial-gradient(circle at center, #E78B48, transparent 70%);
+  }
+  50% {
+    background: radial-gradient(circle at center, #BE3D2A, transparent 60%);
+  }
+  75% {
+    background: radial-gradient(circle at center, #E78B48, transparent 70%);
+  }
+  100% {
+    background: radial-gradient(circle at center, #F5C45E, transparent 70%);
+  }
+}
+
+.bg-pulsing-circle {
+  animation: colorPulse 7s ease-in-out infinite;
+  border-radius: 2rem;
+  pointer-events: none;
+} */
+@keyframes colorPulse {
+  0% {
+    background: radial-gradient(circle at center, #E78B48 0%, transparent 70%);
+  }
+  50% {
+    background: radial-gradient(circle at center, #F5C45E 40%, transparent 70%);
+  }
+  100% {
+    background: radial-gradient(circle at center, #E78B48 0%, transparent 70%);
+  }
+}
+
+.bg-pulsing-circle {
+  animation: colorPulse 4s ease-in-out infinite;
+  border-radius: 2rem;
+  pointer-events: none;
+}
+
+
