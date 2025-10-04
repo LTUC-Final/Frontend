@@ -80,7 +80,6 @@ export default function CartPage() {
     },
   ]);
   const CusData = useSelector((state) => state.UserInfo);
-
   const [cart, setCart] = useState([]);
   const port = import.meta.env.VITE_PORT;
 
@@ -94,7 +93,7 @@ export default function CartPage() {
         setCart(res.data);
         console.log("sssssssssssssssssssss");
 
-        console.log(res.data, "Sssssssssssssssssssssss");
+        console.log(res.data, "Ssssssssssسسسسسسسسسسسسسسsssssssssssss");
         console.log("sssssssssssssssssssss");
       } catch (error) {
         console.log(error);
