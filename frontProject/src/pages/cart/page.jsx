@@ -5,8 +5,6 @@ import { Minus, Plus, ShoppingCart } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-
-
 function Button({ children, onClick, className = "", variant, size }) {
   let base = "px-4 py-2 rounded-md font-medium focus:outline-none transition ";
   if (variant === "outline")
@@ -93,7 +91,10 @@ export default function CartPage() {
         setCart(res.data);
         console.log("sssssssssssssssssssss");
 
-        console.log(res.data, "Ssssssssssسسسسسسسسسسسسسسsssssssssssss");
+        console.log(
+          res.data,
+          "Ssssssssssسسسسسسسسسسسسسسsppppppppppssssssssssss"
+        );
         console.log("sssssssssssssssssssss");
       } catch (error) {
         console.log(error);
