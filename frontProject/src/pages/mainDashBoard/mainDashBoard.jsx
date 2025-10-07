@@ -102,11 +102,11 @@ export default function MainDashBoard() {
 
   return (
     <div
-      className="min-h-screen bg-gray-50"
+      className="min-h-screen bg-[#FFF6E9]"
       onClick={handlePageClick}
       style={isLogged ? { pointerEvents: "none" } : {}}
     >
-      <section className="relative h-[360px] md:h-[480px] overflow-hidden">
+      <section className="relative h-[360px] md:h-[480px] overflow-hidden rounded-b-3xl shadow-lg">
         {heroSlides.map((s, i) => (
           <div
             key={i}
@@ -120,12 +120,12 @@ export default function MainDashBoard() {
               alt={s.caption}
               className="h-full w-full object-cover"
             />
-            <div className="absolute inset-0 bg-black/40" />
+            <div className="absolute inset-0 bg-[#102E50]/60" />
             <div className="absolute inset-x-0 bottom-10 mx-auto max-w-6xl px-4">
-              <h1 className="text-white text-2xl md:text-4xl font-bold">
+              <h1 className="text-[#FFF6E9] text-2xl md:text-4xl font-extrabold">
                 {s.caption}
               </h1>
-              <button className="mt-4 rounded-xl bg-white px-5 py-2 text-gray-900 font-semibold shadow hover:shadow-md">
+              <button className="mt-4 rounded-xl bg-[#F5C45E] px-5 py-2 text-[#102E50] font-semibold shadow hover:shadow-lg">
                 استكشف الخدمات
               </button>
             </div>
@@ -136,8 +136,8 @@ export default function MainDashBoard() {
             <button
               key={i}
               onClick={() => setSlideIndex(i)}
-              className={`h-2 w-2 rounded-full ${
-                i === slideIndex ? "bg-white" : "bg-white/50"
+              className={`h-2.5 w-2.5 rounded-full ring-2 ring-[#FFF6E9]/70 transition ${
+                i === slideIndex ? "bg-[#F5C45E]" : "bg-[#FFF6E9]/50"
               }`}
               aria-label={`go to slide ${i + 1}`}
             />
@@ -147,17 +147,15 @@ export default function MainDashBoard() {
 
       <section className="mx-auto max-w-6xl px-4 py-10">
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-xl md:text-2xl font-bold">الفئات</h2>
-          <button className="text-sm text-blue-600 hover:underline">
-            عرض الكل
-          </button>
+          <h2 className="text-xl md:text-2xl font-bold text-[#102E50]">الفئات</h2>
+          <button className="text-sm text-[#BE3D2A] hover:underline">عرض الكل</button>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           {categories.map((c) => (
             <button
               key={c.key}
-              className="group overflow-hidden rounded-2xl bg-white shadow-sm hover:shadow-lg transition"
+              className="group overflow-hidden rounded-2xl bg-[#FFF6E9] shadow-sm hover:shadow-xl ring-1 ring-[#102E50]/10 hover:ring-[#F5C45E] transition"
             >
               <div className="relative h-40">
                 <img
@@ -165,9 +163,12 @@ export default function MainDashBoard() {
                   alt={c.name}
                   className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
                 />
-                <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/60 to-transparent" />
-                <div className="absolute bottom-3 left-3 right-3 text-white">
-                  <h3 className="font-semibold">{c.name}</h3>
+                <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#102E50]/80 to-transparent" />
+                <div className="absolute bottom-3 left-3 right-3 text-[#FFF6E9]">
+                  <h3 className="font-semibold tracking-wide">{c.name}</h3>
+                </div>
+                <div className="absolute top-3 left-3 rounded-full px-2.5 py-1 text-xs font-semibold bg-[#E78B48] text-[#102E50] shadow">
+                  جديد
                 </div>
               </div>
             </button>
@@ -177,7 +178,7 @@ export default function MainDashBoard() {
 
       <section className="mx-auto max-w-6xl px-4 pb-12">
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-xl md:text-2xl font-bold">الأكثر طلبًا</h2>
+          <h2 className="text-xl md:text-2xl font-bold text-[#102E50]">الأكثر طلبًا</h2>
         </div>
 
         {loadingTop ? (
@@ -185,24 +186,24 @@ export default function MainDashBoard() {
             {[...Array(4)].map((_, i) => (
               <div
                 key={i}
-                className="rounded-2xl bg-white shadow-sm overflow-hidden animate-pulse"
+                className="rounded-2xl bg-[#FFF6E9] shadow-sm overflow-hidden animate-pulse ring-1 ring-[#102E50]/10"
               >
-                <div className="h-40 bg-gray-200" />
+                <div className="h-40 bg-[#102E50]/10" />
                 <div className="p-4 space-y-2">
-                  <div className="h-4 bg-gray-200 rounded w-3/4" />
-                  <div className="h-3 bg-gray-100 rounded w-1/3" />
+                  <div className="h-4 bg-[#102E50]/10 rounded w-3/4" />
+                  <div className="h-3 bg-[#102E50]/5 rounded w-1/3" />
                 </div>
               </div>
             ))}
           </div>
         ) : topOrders.length === 0 ? (
-          <div className="text-gray-500">لا توجد بيانات حتى الآن.</div>
+          <div className="text-[#102E50]/70">لا توجد بيانات حتى الآن.</div>
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {topOrders.map((p) => (
               <div
                 key={p.product_id}
-                className="group rounded-2xl bg-white shadow-sm hover:shadow-lg overflow-hidden text-left transition"
+                className="group rounded-2xl bg-[#FFF6E9] shadow-sm hover:shadow-xl overflow-hidden text-left transition ring-1 ring-[#102E50]/10 hover:ring-[#F5C45E]"
               >
                 <div className="relative h-48">
                   <img
@@ -218,13 +219,18 @@ export default function MainDashBoard() {
                         "https://via.placeholder.com/800x600";
                     }}
                   />
-                  <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/70 via-black/30 to-transparent text-white">
+                  <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-[#102E50]/80 via-[#102E50]/40 to-transparent text-[#FFF6E9]">
                     <div className="font-semibold line-clamp-1">
                       {p.name || `#${p.product_id}`}
                     </div>
                     {p.price !== undefined && p.price !== null && (
-                      <div className="text-sm opacity-90 mt-0.5">
-                        {Number(p.price).toLocaleString("en-US")} JD
+                      <div className="text-sm mt-1 inline-flex items-center gap-2">
+                        <span className="rounded-md bg-[#F5C45E] px-2 py-0.5 text-[#102E50] font-semibold">
+                          {Number(p.price).toLocaleString("en-US")} JD
+                        </span>
+                        <span className="text-xs opacity-90 bg-[#BE3D2A] px-2 py-0.5 rounded-md text-white">
+                          Top
+                        </span>
                       </div>
                     )}
                   </div>
@@ -237,7 +243,7 @@ export default function MainDashBoard() {
 
       <section className="mx-auto max-w-6xl px-4 pb-16">
         <div className="grid gap-6 md:grid-cols-3">
-          <div className="rounded-2xl bg-[#e7eedf] shadow-sm overflow-hidden">
+          <div className="rounded-2xl bg-[#FFF6E9] shadow-sm overflow-hidden ring-1 ring-[#102E50]/10">
             <div className="h-52 w-full">
               <img
                 src="https://images.unsplash.com/photo-1505238680356-667803448bb6?q=80&w=1200"
@@ -249,19 +255,19 @@ export default function MainDashBoard() {
               />
             </div>
             <div className="p-4">
-              <div className="border-b border-gray-300 pb-2 mb-3">
-                <h3 className="font-semibold text-gray-800 truncate">
+              <div className="border-b border-[#102E50]/15 pb-2 mb-3">
+                <h3 className="font-semibold text-[#102E50] truncate">
                   جلسة تصوير فوتوغرافي
                 </h3>
               </div>
-              <div className="flex items-center justify-between text-gray-700">
+              <div className="flex items-center justify-between text-[#102E50]/80">
                 <span>Amman</span>
-                <span className="font-semibold">50 JD</span>
+                <span className="font-semibold text-[#BE3D2A]">50 JD</span>
               </div>
             </div>
           </div>
 
-          <div className="rounded-2xl bg-[#e7eedf] shadow-sm overflow-hidden">
+          <div className="rounded-2xl bg-[#FFF6E9] shadow-sm overflow-hidden ring-1 ring-[#102E50]/10">
             <div className="h-52 w-full">
               <img
                 src="https://images.unsplash.com/photo-1599848294391-d13afb0db2ae?q=80&w=1200"
@@ -273,19 +279,19 @@ export default function MainDashBoard() {
               />
             </div>
             <div className="p-4">
-              <div className="border-b border-gray-300 pb-2 mb-3">
-                <h3 className="font-semibold text-gray-800 truncate">
+              <div className="border-b border-[#102E50]/15 pb-2 mb-3">
+                <h3 className="font-semibold text-[#102E50] truncate">
                   إكسسوارات يدوية
                 </h3>
               </div>
-              <div className="flex items-center justify-between text-gray-700">
+              <div className="flex items-center justify-between text-[#102E50]/80">
                 <span>Irbid</span>
-                <span className="font-semibold">15 JD</span>
+                <span className="font-semibold text-[#BE3D2A]">15 JD</span>
               </div>
             </div>
           </div>
 
-          <div className="rounded-2xl bg-[#e7eedf] shadow-sm overflow-hidden">
+          <div className="rounded-2xl bg-[#FFF6E9] shadow-sm overflow-hidden ring-1 ring-[#102E50]/10">
             <div className="h-52 w-full">
               <img
                 src="https://images.unsplash.com/photo-1607083206968-13611e3c3b62?q=80&w=1200"
@@ -297,27 +303,27 @@ export default function MainDashBoard() {
               />
             </div>
             <div className="p-4">
-              <div className="border-b border-gray-300 pb-2 mb-3">
-                <h3 className="font-semibold text-gray-800 truncate">
+              <div className="border-b border-[#102E50]/15 pb-2 mb-3">
+                <h3 className="font-semibold text-[#102E50] truncate">
                   مكياج مناسبات
                 </h3>
               </div>
-              <div className="flex items-center justify-between text-gray-700">
+              <div className="flex items-center justify-between text-[#102E50]/80">
                 <span>Zarqa</span>
-                <span className="font-semibold">30 JD</span>
+                <span className="font-semibold text-[#BE3D2A]">30 JD</span>
               </div>
             </div>
           </div>
         </div>
 
         <div className="mt-8 grid gap-4 md:grid-cols-3">
-          <button className="rounded-xl bg-[#5b8ff1] text-white py-4 font-semibold shadow hover:shadow-md">
+          <button className="rounded-xl bg-[#102E50] text-[#FFF6E9] py-4 font-semibold shadow hover:shadow-lg">
             10M+ Active Provider
           </button>
-          <button className="rounded-xl bg-[#5b8ff1] text-white py-4 font-semibold shadow hover:shadow-md">
+          <button className="rounded-xl bg-[#E78B48] text-[#102E50] py-4 font-semibold shadow hover:shadow-lg">
             100M+ Order Completed
           </button>
-          <button className="rounded-xl bg-[#5b8ff1] text-white py-4 font-semibold shadow hover:shadow-md">
+          <button className="rounded-xl bg-[#F5C45E] text-[#102E50] py-4 font-semibold shadow hover:shadow-lg">
             50M+ Happy Customer
           </button>
         </div>
