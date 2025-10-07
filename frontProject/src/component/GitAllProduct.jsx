@@ -5,6 +5,7 @@ import AddTOFav from "./AddToFav";
 // import GitReviews from "./GitReviews";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import ReactionPicker from "./reaction";
 
 export default function GitAllProduct() {
   const navigate = useNavigate();
@@ -13,6 +14,9 @@ export default function GitAllProduct() {
   const CusData = useSelector((state) => state.UserInfo);
   const [textSearch, setTextSearch] = useState("");
   const [selectore, setSelectore] = useState("");
+  
+
+  const number = 0;
 
   console.log(selectore);
   console.log(selectore);
@@ -32,12 +36,17 @@ export default function GitAllProduct() {
 
     return FilterByName && FilterBySelete;
   });
+  console.log("resultOfFilter");
+console.log("asdas",number);
+
+  console.log(resultOfFilter);
+  console.log("resultOfFilter");
 
   useEffect(() => {
     const feactData = async () => {
       try {
         let res = await axios.get(
-          `http://localhost:${port}/api/ShowCardInUserDashboard`
+          `http://localhost:${port}/api/ShowCardInUserDashboard/${CusData.user.user_id}`
         );
         setCards(res.data);
       } catch (error) {
@@ -87,7 +96,15 @@ export default function GitAllProduct() {
             className="bg-white rounded-2xl shadow-md hover:shadow-xl transition p-4"
           >
             <img
-              src={card.image}
+              // src={card.image}
+
+              src={
+                card.image
+                  ? card.image.startsWith("http")
+                    ? card.image
+                    : `http://localhost:${port}${card.image}`
+                  : `../src/assets/cupcakes-1283247__340.jpg`
+              }
               alt={card.name}
               className="w-full h-48 object-cover rounded-lg mb-4 cursor-pointer"
               onClick={() => {
@@ -99,8 +116,8 @@ export default function GitAllProduct() {
               {card.firstname} {card.lastname}
             </p>
             <p className="text-blue-600 font-bold">${card.price}</p>
-            <p className="text-sm text-gray-500">{card.location}</p>
-
+            <p className="text-sm text-gray-500">{card.location}</p>{" "}
+            {/* <p>ssssssss{card.reaction_counts.like}</p> */}
             {CusData.user.role === "customer" && (
               <div className="flex gap-3 mt-4">
                 <button
@@ -117,6 +134,29 @@ export default function GitAllProduct() {
                 </button>
               </div>
             )}
+            {/* <ReactionPicker
+              card={card}
+              product_id={card.product_id}
+              userId={CusData.user.user_id}
+            ></ReactionPicker> */}
+          <ReactionPicker
+              card={card}
+              product_id={card.product_id}
+              userId={CusData.user.user_id}
+              onReactionUpdate={(product_id, reactionCounts, selectedReaction) => {
+                setCards((prevCards) =>
+                  prevCards.map((c) =>
+                    c.product_id === product_id
+                      ? {
+                          ...c,
+                          reaction_counts: reactionCounts,
+                          selectedReaction: selectedReaction,
+                        }
+                      : c
+                  )
+                );
+              }}
+            />
           </div>
         ))}
       </div>

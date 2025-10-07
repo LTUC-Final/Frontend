@@ -3,9 +3,12 @@ import { ImageIcon, Upload } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
+import useSuggestions from "../../hooks/SuggestionsInputdesc"
 
 export default function ProductForm() {
   const { user } = useSelector((state) => state.UserInfo);
+  const { decText, SuggestionsInputdesc } = useSuggestions();
+  console.log(decText);
 
   const providerId = user?.provider?.provider_id;
   const [formData, setFormData] = useState({
@@ -19,6 +22,8 @@ export default function ProductForm() {
     location: "",
   });
   const port = import.meta.env.VITE_PORT;
+  console.log(formData.description);
+
 
   const [categories, setCategories] = useState([]);
   const [imagePreview, setImagePreview] = useState(null);
@@ -46,6 +51,8 @@ export default function ProductForm() {
     fetchCategories();
   }, []);
 
+
+
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({
       ...prev,
@@ -68,6 +75,16 @@ export default function ProductForm() {
       reader.readAsDataURL(file);
     }
   };
+  const handleSuggestion = async () => {
+    try {
+      const newSuggestions = await SuggestionsInputdesc(formData.description);
+      console.log("New suggestions:", newSuggestions);
+    } catch (err) {
+      console.error("AI suggestion error:", err);
+    }
+  };
+
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -240,6 +257,8 @@ export default function ProductForm() {
                 placeholder="Enter description"
                 required
               />
+
+
             </div>
 
             {/* Category */}
@@ -289,6 +308,23 @@ export default function ProductForm() {
               {isLoading ? "Adding Post..." : "Add Post"}
             </button>
           </form>
+          <button
+            type="submit"
+            className="bg-blue-600 text-white px-4 py-2 rounded"
+            onClick={handleSuggestion}
+          >
+            Get Suggestions
+          </button>
+          {decText.length > 0 && (
+            <div className="p-3 bg-gray-100 border rounded">
+              <h4 className="font-semibold">AI Description Suggestions:</h4>
+              {decText.map((suggestion, index) => (
+                <p key={index}>{suggestion}</p>
+              ))}
+            </div>
+          )}
+
+
         </div>
       </div>
     </div>

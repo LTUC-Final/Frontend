@@ -4,6 +4,7 @@ import GitAllProduct from "./component/GitAllProduct";
 import Footer from "./component/NavigationBar/Footer/Footer";
 import Layout from "./component/NavigationBar/Layout";
 import NotFoundPage from "./component/notFoundPage";
+
 import LoginPage from "./pages/login/login";
 // import GitReviews from "./component/GitReviews";
 import CardDeatils from "./component/CardDetails";
@@ -22,11 +23,37 @@ import OrdersManagementCustomer from "./pages/order/order";
 
 import ProductForm from "./pages/ProviderDashBoard/providerDashboard";
 import OrdersManagementProvider from "./pages/request/pageReq";
+import LiveChat from "./component/LiveChat/LiveChat";
 import CartPage from "./pages/cart/page";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import axios from "axios";
 function App() {
+  const [cart, setCart] = useState([]); 
+  const CusData = useSelector((state) => state.UserInfo);
+  const port = import.meta.env.VITE_PORT;
+
+ const fetchCart = async () => {
+  if (!CusData?.user?.user_id) return;
+  try {
+    const res = await axios.get(
+      `http://localhost:${port}/api/carts/products/${CusData.user.user_id}`
+    );
+    setCart(res.data.cards || []);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+useEffect(() => {
+  fetchCart();
+  const interval =setInterval(fetchCart , 1000)
+
+  return ()=> clearInterval(interval )
+}, [CusData]);
   return (
     <div>
-      <Layout>
+      <Layout cartCount={cart.length}>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/" element={<h1>Alquraan </h1>} />
@@ -34,6 +61,8 @@ function App() {
 
           <Route path="/register" element={<Register />} />
           <Route path="/profile/:user_id" element={<Profile />} />
+          <Route path="/LiveChat" element={<LiveChat />} />
+
 
           <Route
             path="/providerDashboard"
@@ -45,7 +74,7 @@ function App() {
           <Route path="/productdatails" element={<CardDeatils />} />
           <Route path="/userDashboard" element={<GitAllProduct />} />
 
-          <Route path="/cart" element={<CartPage></CartPage>} />
+          <Route path="/cart" element={<CartPage cart={cart} fetchCart={fetchCart}></CartPage>} />
           <Route path="/payments" element={<h1>ييييييييييييييييييييي </h1>} />
           <Route
             path="/prodactInfo/:prodactId"
