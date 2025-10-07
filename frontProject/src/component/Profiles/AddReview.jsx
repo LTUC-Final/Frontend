@@ -9,23 +9,37 @@ export default function AddReview({ providerID, user, onReviewAdded }) {
   const [loading, setLoading] = useState(false);
   const [alreadyReviewed, setAlreadyReviewed] = useState(false);
 
-  const showSwal = ({ title, text, icon = "info", confirmColor = "#F5C45E" }) => {
-    Swal.fire({
-      title,
-      text,
-      icon,
-      background: "#FFF6E9",
-      color: "#102E50",
-      confirmButtonColor: confirmColor,
-      confirmButtonText: "OK",
-      customClass: {
-        popup: "rounded-xl shadow-lg border",
-        title: "text-lg font-bold",
-        confirmButton: "px-5 py-2 rounded-md font-semibold",
-      },
-      buttonsStyling: false,
-    });
-  };
+const showSwal = ({
+  title,
+  text,
+  icon = "info",
+  confirmColor = "#F5C45E"
+}) => {
+  Swal.fire({
+    title,
+    text,
+    icon,
+    background: "#FFF6E9",
+    color: "#102E50",
+    iconColor:
+      icon === "success"
+        ? "#F5C45E"
+        : icon === "error"
+        ? "#BE3D2A"
+        : icon === "warning"
+        ? "#E78B48"
+        : "#102E50",
+    confirmButtonColor: confirmColor,
+    confirmButtonText: "OK",
+    customClass: {
+      popup: "swal2-custom-popup",
+      title: "swal2-custom-title",
+      confirmButton: "swal2-custom-confirm"
+    },
+    buttonsStyling: false
+  });
+};
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -57,12 +71,12 @@ export default function AddReview({ providerID, user, onReviewAdded }) {
 
       if (onReviewAdded) onReviewAdded(res.data.review);
 
-      showSwal({
-        title: "Review Added",
-        text: "Thanks for sharing your feedback!",
-        icon: "success",
-        confirmColor: "#F5C45E",
-      });
+   showSwal({
+  title: "Review Added",
+  text: "Thanks for sharing your feedback!",
+  icon: "success",
+  confirmColor: "#F5C45E",
+});
 
       setRating(0);
       setComment("");
@@ -71,19 +85,20 @@ export default function AddReview({ providerID, user, onReviewAdded }) {
 
       if (err.response?.status === 400) {
         setAlreadyReviewed(true);
-        showSwal({
-          title: "Already Reviewed",
-          text: err.response.data.message || "You’ve already reviewed this provider.",
-          icon: "error",
-          confirmColor: "#BE3D2A",
-        });
+       showSwal({
+  title: "Already Reviewed",
+  text: err.response.data.message || "You’ve already reviewed this provider.",
+  icon: "error",
+  confirmColor: "#BE3D2A",
+});
+
       } else {
-        showSwal({
-          title: "Error",
-          text: "Something went wrong. Please try again.",
-          icon: "error",
-          confirmColor: "#BE3D2A",
-        });
+       showSwal({
+  title: "Error",
+  text: "Something went wrong. Please try again.",
+  icon: "error",
+  confirmColor: "#BE3D2A",
+});
       }
     } finally {
       setLoading(false);

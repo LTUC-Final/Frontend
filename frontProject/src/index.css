@@ -105,13 +105,13 @@ button:focus-visible {
 } */
 @keyframes colorPulse {
   0% {
-    background: radial-gradient(circle at center, #E78B48 0%, transparent 70%);
+    background: radial-gradient(circle at center, #E78B48 0%, transparent 80%);
   }
   50% {
-    background: radial-gradient(circle at center, #F5C45E 40%, transparent 70%);
+    background: radial-gradient(circle at center, #F5C45E 40%, transparent 80%);
   }
   100% {
-    background: radial-gradient(circle at center, #E78B48 0%, transparent 70%);
+    background: radial-gradient(circle at center, #E78B48 0%, transparent 80%);
   }
 }
 
@@ -120,5 +120,36 @@ button:focus-visible {
   border-radius: 2rem;
   pointer-events: none;
 }
+
+/* SweetAlert2 Custom Styling */
+.swal2-custom-popup {
+  border: 2px solid #F5C45E;
+  border-radius: 12px;
+  font-family: inherit;
+}
+
+.swal2-custom-title {
+  color: #102E50;
+  font-weight: 600;
+}
+
+.swal2-custom-confirm {
+  background-color: #F5C45E !important;
+  color: #102E50 !important;
+  border: none;
+}
+
+.swal2-custom-deny {
+  background-color: #BE3D2A !important;
+  color: #FFF6E9 !important;
+  border: none;
+}
+
+.swal2-custom-cancel {
+  background-color: #eee !important;
+  color: #102E50 !important;
+  border: none;
+}
+
 
 

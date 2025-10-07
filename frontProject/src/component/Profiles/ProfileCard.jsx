@@ -89,7 +89,7 @@ export default function ProfileCard({ data, refreshTrigger }) {
             )}
 
             {/* Name */}
-            <h2 className="text-2xl sm:text-3xl font-bold text-[#102E50] mb-2">
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#102E50] mb-2 mt-4">
               {profile.firstname || "Unknown"} {profile.lastname || "User"}
             </h2>
 

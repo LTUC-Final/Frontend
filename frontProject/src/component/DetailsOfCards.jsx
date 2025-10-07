@@ -50,6 +50,7 @@ export default function DetailsOfCards({
       </div>
     );
   }
+console.log("img", dataCard);
 
   return (
   <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-6 mt-6">
@@ -132,7 +133,12 @@ export default function DetailsOfCards({
 
       <div className="flex items-center gap-4 sm:gap-6">
         <img
-          src={dataCard.image}
+          src={dataCard.profile_image
+                          ? dataCard.profile_image.startsWith("http")
+                            ? dataCard.profile_image
+
+                            : `http://localhost:${port}${dataCard.profile_image}`
+                          : `../src/assets/cupcakes-1283247__340.jpg`}
           alt="seller"
           onClick={() => navigate(`/profile/${dataCard.user_id}`)}
           className="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded-full border-4 border-[#F5C45E] cursor-pointer hover:scale-110 transition-transform duration-300"

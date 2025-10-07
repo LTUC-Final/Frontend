@@ -40,13 +40,30 @@ export default function EditProduct({ product, productId, onCancel, onUpdate }) 
   const handleSubmit = async (e) => {
     e.preventDefault();
  
-    const result = await Swal.fire({
-      title: "Do you want to save the changes?",
-      showDenyButton: true,
-      showCancelButton: true,
-      confirmButtonText: "Save",
-      denyButtonText: `Don't save`,
-    });
+   const result = await Swal.fire({
+  title: "Do you want to save the changes?",
+  text: "Make sure your product details are correct.",
+  icon: "question",
+  background: "#FFF6E9",
+  color: "#102E50",
+  iconColor: "#E78B48",
+  showDenyButton: true,
+  showCancelButton: true,
+  confirmButtonText: "Save",
+  denyButtonText: `Don't Save`,
+  cancelButtonText: "Cancel",
+  confirmButtonColor: "#F5C45E",
+  denyButtonColor: "#BE3D2A",
+  cancelButtonColor: "#ccc",
+  customClass: {
+    popup: "swal2-custom-popup",
+    title: "swal2-custom-title",
+    confirmButton: "swal2-custom-confirm",
+    denyButton: "swal2-custom-deny",
+    cancelButton: "swal2-custom-cancel"
+  }
+});
+
  
     if (!result.isConfirmed) {
       if (result.isDenied && onCancel) onCancel();
@@ -69,10 +86,38 @@ export default function EditProduct({ product, productId, onCancel, onUpdate }) 
  
       if (onUpdate) onUpdate(data);
  
-      Swal.fire("Saved!", "", "success");
+Swal.fire({
+  title: "Saved!",
+  text: "Product updated successfully.",
+  icon: "success",
+  background: "#FFF6E9",
+  color: "#102E50",
+  iconColor: "#F5C45E",
+  confirmButtonText: "OK",
+  confirmButtonColor: "#F5C45E",
+  customClass: {
+    popup: "swal2-custom-popup",
+    title: "swal2-custom-title",
+    confirmButton: "swal2-custom-confirm"
+  }
+});
     } catch (err) {
       console.error("Error updating product:", err);
-      Swal.fire("Error", "Failed to save changes.", "error");
+Swal.fire({
+  title: "Error",
+  text: "Failed to save product changes.",
+  icon: "error",
+  background: "#FFF6E9",
+  color: "#102E50",
+  iconColor: "#BE3D2A",
+  confirmButtonText: "OK",
+  confirmButtonColor: "#BE3D2A",
+  customClass: {
+    popup: "swal2-custom-popup",
+    title: "swal2-custom-title",
+    confirmButton: "swal2-custom-confirm"
+  }
+});
     }
   };
 console.log("image: ",product.image);

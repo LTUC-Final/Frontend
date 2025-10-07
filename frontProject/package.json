@@ -23,6 +23,7 @@
     "axios": "^1.12.2",
     "bcrypt": "^6.0.0",
     "clsx": "^2.1.1",
+    "easyinvoice": "^3.0.47",
     "firebase": "^12.3.0",
     "framer-motion": "^12.23.19",
     "google-map-react": "^2.2.5",
@@ -36,12 +37,14 @@
     "react-router-dom": "^7.9.1",
     "react-scripts": "^5.0.1",
     "react-slick": "^0.31.0",
+    "recharts": "^3.2.1",
     "redux-persist": "^6.0.0",
     "slick-carousel": "^1.8.1",
     "socket.io-client": "^4.8.1",
     "sweetalert2": "^11.23.0",
     "uuid": "^13.0.0",
-    "web-vitals": "^5.1.0"
+    "web-vitals": "^5.1.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.35.0",

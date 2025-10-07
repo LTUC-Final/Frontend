@@ -6,7 +6,7 @@ export default async function AddToCart(card, CusData) {
   console.log("this is cusid ", CusData.user.user_id);
 
   try {
-    axios.post(`http://localhost:${port}/api/AddCart`, {
+   await axios.post(`http://localhost:${port}/api/AddCart`, {
       customer_id: Number(CusData.user.user_id),
       provider_id: card.provider_id,
       product_id: card.product_id,

@@ -53,8 +53,8 @@ export default function EditImage({ userId, onUpdate }) {
         />
         <button
           onClick={() => inputRef.current.click()}
-          className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#FFF6E9] text-[#102E50] flex items-center justify-center shadow-lg hover:scale-105 transition-transform"
-          style={{ border: "2px solid #102E50" }}
+          className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#FFF6E9] text-[#BE3D2A] flex items-center justify-center shadow-lg hover:scale-105 transition-transform"
+          style={{ border: "2px solid #BE3D2A" }}
           aria-label="Change Profile Picture"
         >
           <Camera size={16} className="sm:size-5" />
@@ -71,7 +71,7 @@ export default function EditImage({ userId, onUpdate }) {
               isUploading ? "opacity-50 cursor-not-allowed" : "shadow-lg"
             }`}
             style={{
-              backgroundColor: "#BE3D2A",
+              backgroundColor: "#F5C45E",
               color: "white",
               border: "2px solid white",
             }}

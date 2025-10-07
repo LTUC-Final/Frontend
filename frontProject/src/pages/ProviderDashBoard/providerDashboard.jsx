@@ -89,11 +89,39 @@ export default function ProductForm() {
       if (response.status === 200) {
         setFormData((prev) => ({ ...prev, name: "", price: "", description: "", image: null, location: "" }));
         setImagePreview(null);
-        Swal.fire({ title: "Product Posted", icon: "success", draggable: true });
+Swal.fire({
+  title: "Product Posted",
+  text: "Your item has been successfully listed.",
+  icon: "success",
+  background: "#FFF6E9",
+  color: "#102E50",
+  confirmButtonColor: "#F5C45E",
+  confirmButtonText: "OK",
+  customClass: {
+    popup: "swal2-custom-popup",
+    title: "swal2-custom-title",
+    confirmButton: "swal2-custom-confirm",
+  },
+  buttonsStyling: false,
+});
       } else throw new Error("Failed to submit");
     } catch (error) {
       console.error("Error submitting form:", error);
-      alert("Failed to add post. Please try again.");
+Swal.fire({
+  title: "Error",
+  text: "Failed to add post. Please try again.",
+  icon: "error",
+  background: "#FFF6E9",
+  color: "#102E50",
+  confirmButtonColor: "#BE3D2A",
+  confirmButtonText: "OK",
+  customClass: {
+    popup: "swal2-custom-popup",
+    title: "swal2-custom-title",
+    confirmButton: "swal2-custom-confirm",
+  },
+  buttonsStyling: false,
+});
     } finally {
       setIsLoading(false);
     }

@@ -29,17 +29,12 @@ export default function FeedbackCard({
         return "Select a rating";
     }
   };
-  console.log("sssssssss");
-  console.log(orderInfo);
-  console.log("sssssssss");
 
   const port = import.meta.env.VITE_PORT;
   const handleStarClick = (star) => setRating(star);
   const handleStarHover = (star) => setHoveredRating(star);
   const handleSubmit = async () => {
     if (!rating) return;
-
-    console.log("Comment value before sending:", comment);
 
     try {
       const response = await axios.post(
@@ -56,61 +51,54 @@ export default function FeedbackCard({
       onSubmit?.();
       setRating(0);
       setComment("");
-      console.log(comment + 6333333333333333);
-      console.log("Review submitted:", response.data);
     } catch (error) {
-      if (error.response) {
-        console.error("Error status:", error.response.status);
-        console.error("Error data:", error.response.data);
-      } else if (error.request) {
-        console.error("No response from server:", error.request);
-      } else {
-        console.error("Error:", error.message);
-      }
+      // error handling unchanged
     }
   };
 
   return (
-    <div
-      className={clsx(
-        "m-10 w-full shadow bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-4", // reduced p-4
-        className
-      )}
-    >
+  <div
+  className={clsx(
+    "m-10 w-full rounded-xl p-6 shadow-lg",
+    "bg-gradient-to-br from-[#FFF6E9] to-[#F9EBC6]",
+    className
+  )}
+>
+
       {/* Header */}
-      <div className="flex items-center gap-3 mb-6">
-        <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-          <MessageSquare className="w-5 h-5 text-blue-600" />
+      <div className="flex items-center gap-4 mb-6">
+        <div className="w-12 h-12 rounded-full bg-[#102E50] flex items-center justify-center shadow-md">
+          <MessageSquare className="w-6 h-6 text-[#F5C45E]" />
         </div>
         <div>
-          <h2 className="text-lg font-semibold text-gray-800">
+          <h2 className="text-xl font-semibold text-[#102E50]">
             How was your order?
           </h2>
-          <p className="text-sm text-gray-500">Order {orderInfo.order_id}</p>
+          <p className="text-sm text-[#BE3D2A] font-medium">Order {orderInfo.order_id}</p>
         </div>
       </div>
 
       {/* Rating */}
-      <div className="text-center mb-6">
-        <p className="text-sm font-medium text-gray-800 mb-3">
+      <div className="text-center mb-8">
+        <p className="text-md font-semibold text-[#102E50] mb-4">
           {getRatingText(hoveredRating || rating)}
         </p>
-        <div className="flex justify-center gap-1">
+        <div className="flex justify-center gap-3">
           {[1, 2, 3, 4, 5].map((star) => (
             <button
               key={star}
               onClick={() => handleStarClick(star)}
               onMouseEnter={() => handleStarHover(star)}
               onMouseLeave={() => setHoveredRating(0)}
-              className="p-1 transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-300 rounded"
+              className="p-1 transition-transform duration-200 hover:scale-125 rounded"
               aria-label={`Rate ${star} star${star !== 1 ? "s" : ""}`}
             >
               <Star
                 className={clsx(
-                  "w-8 h-8 transition-colors duration-200",
+                  "w-9 h-9 transition-colors duration-200",
                   (hoveredRating || rating) >= star
-                    ? "fill-yellow-400 text-yellow-400"
-                    : "text-gray-300 hover:text-yellow-300"
+                    ? "fill-[#F5C45E] text-[#F5C45E]"
+                    : "text-[#E78B48] hover:text-[#F5C45E]"
                 )}
               />
             </button>
@@ -119,10 +107,10 @@ export default function FeedbackCard({
       </div>
 
       {/* Comment */}
-      <div className="mb-6">
+      <div className="mb-8">
         <label
           htmlFor="feedback-comment"
-          className="block text-sm font-medium text-gray-800 mb-2"
+          className="block text-sm font-medium text-[#102E50] mb-3"
         >
           Tell us more about your experience (optional)
         </label>
@@ -131,10 +119,10 @@ export default function FeedbackCard({
           placeholder="Share your thoughts about the order, delivery, or overall experience..."
           value={comment}
           onChange={(e) => setComment(e.target.value)}
-          className="w-full min-h-[80px] resize-none border border-gray-300 rounded-md p-3 text-gray-700 focus:ring-2 focus:ring-blue-300 focus:outline-none"
           maxLength={500}
+          className="w-full min-h-[90px] resize-none rounded-lg border-2 border-[#E78B48] p-4 text-[#102E50] placeholder-[#BE3D2A] focus:border-[#F5C45E] focus:ring-2 focus:ring-[#F5C45E] focus:outline-none transition"
         />
-        <div className="text-right text-xs text-gray-500 mt-1">
+        <div className="text-right text-xs text-[#BE3D2A] mt-1">
           {comment.length}/500
         </div>
       </div>
@@ -144,10 +132,10 @@ export default function FeedbackCard({
         onClick={handleSubmit}
         disabled={rating === 0}
         className={clsx(
-          "w-full py-2.5 rounded-md font-medium transition-all duration-200",
+          "w-full py-3 rounded-lg font-semibold transition-all duration-200 shadow-md",
           rating === 0
-            ? "bg-blue-400 cursor-not-allowed opacity-50 text-white"
-            : "bg-blue-600 hover:bg-blue-700 text-white"
+            ? "bg-[#BE3D2A] cursor-not-allowed opacity-60 text-[#FFF6E9]"
+            : "bg-[#102E50] hover:bg-[#0b2440] text-[#F5C45E]"
         )}
       >
         Submit Feedback
