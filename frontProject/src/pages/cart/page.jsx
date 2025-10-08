@@ -1109,6 +1109,18 @@ export default function CartPage() {
           `http://localhost:${port}/api/carts/products/${CusData.user.user_id}`
         );
         setCart(res.data.cards);
+        console.log("sssssssssssssssssssss");
+
+        console.log(
+          res.data,
+          "Ssssssssssسسسسسسسسسسسسسسsppppppppppssssssssssss"
+        );
+        console.log("sssssssssssssssssssss");
+
+        console.log("sssssssssssssssssssss");
+
+        console.log(cart, "ppppppppppppppppppppppppp");
+        console.log("sssssssssssssssssssss");
       } catch (error) {
         console.log(error);
       }
@@ -1217,6 +1229,8 @@ export default function CartPage() {
   };
 
   const deleteItemCart = async (cart_id) => {
+  
+    const port = import.meta.env.VITE_PORT;
     try {
       await axios.delete(`http://localhost:${port}/deleteCard/${cart_id}`);
       setCart((prevCart) => prevCart.filter((item) => item.cart_id !== cart_id));
@@ -1225,8 +1239,15 @@ export default function CartPage() {
     }
   };
 
-  const subtotal = cart.reduce((sum, p) => sum + p.cart_price * p.quantity, 0);
+  // const subtotal = cart.reduce((sum, p) => sum + p.cart_price * p.quantity, 0);
+  const subtotal = (Array.isArray(cart) ? cart : []).reduce(
+    (sum, p) => sum + p.cart_price * p.quantity,
+    0
+  );
 
+  const tax = subtotal * 0.08;
+  const total = subtotal + tax;
+console.log('Cart value:', cart);
   const handleCheckout = () => setShowCheckout(true);
   const completePayment = async () => {
     alert("Payment completed successfully!");
@@ -1282,6 +1303,8 @@ export default function CartPage() {
                         </span>
                       </div>
                     </div>
+
+                  
 
                     <div className="flex-1 space-y-4 sm:space-y-5 relative">
                       <div className="flex flex-col gap-1">
