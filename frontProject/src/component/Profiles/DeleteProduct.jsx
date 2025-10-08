@@ -48,7 +48,7 @@ export default function DeleteProduct({ productId, providerId, productName, onDe
   return (
     <button
       onClick={handleDelete}
-      className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+className="bg-[#102E50] hover:bg-[#E78B48] text-white px-3 py-1 rounded"
     >
        <Trash2 size={20} />
     </button>

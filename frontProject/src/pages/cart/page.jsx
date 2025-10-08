@@ -89,7 +89,7 @@ export default function CartPage() {
         let res = await axios.get(
           `http://localhost:${port}/api/carts/products/${CusData.user.user_id}`
         );
-        setCart(res.data);
+        setCart(res.data.cards);
         console.log("sssssssssssssssssssss");
 
         console.log(res.data, "Sssssssssssssssssssssss");
@@ -233,6 +233,7 @@ export default function CartPage() {
     setCart((prevCart) => prevCart.filter((p) => p.cart_id !== cart_id));
   };
   const deleteItemCart = async (cart_id) => {
+  
     const port = import.meta.env.VITE_PORT;
     try {
       const res = await axios.delete(
@@ -252,7 +253,7 @@ export default function CartPage() {
   const subtotal = cart.reduce((sum, p) => sum + p.cart_price * p.quantity, 0);
   const tax = subtotal * 0.08;
   const total = subtotal + tax;
-
+console.log('Cart value:', cart);
   const handleCheckout = () => setShowCheckout(true);
   const completePayment = async () => {
     alert("Payment completed successfully!");
@@ -296,6 +297,9 @@ export default function CartPage() {
                               : `http://localhost:${port}${product.product_image}`
                             : `../src/assets/cupcakes-1283247__340.jpg`
                         }
+                        // src={product.product_image || "/placeholder.svg"}
+
+      
                         alt={product.product_name}
                         className="w-48 h-48 object-cover rounded-lg"
                       />

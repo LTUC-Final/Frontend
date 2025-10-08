@@ -6,6 +6,8 @@ import ProductFetcher from "../component/Profiles/ProductFetcher";
 import ProfileFetcher from "../component/Profiles/ProfileFetcher";
 import ProviderReviewFetcher from "../component/Profiles/ProviderReviewFetcher";
 import AddReview from "../component/Profiles/AddReview";
+// import RatingDisplay from "../component/Profiles/RatingDisplay";
+// import useProviderReviews from "../hooks/useProviderReviews.jsx";
 
 export default function Profile() {
   const user = useSelector((state) => state.UserInfo.user);
@@ -13,6 +15,12 @@ export default function Profile() {
   const [refresh, setRefresh] = useState(0);
   const navigate = useNavigate();
   const { user_id } = useParams();
+
+  // Fetch provider reviews for top rating display
+  // const { reviews, avgRating } = useProviderReviews(
+  //   profile?.provider_user_id,
+  //   refresh
+  // );
 
   useEffect(() => {
     if (!user) {
@@ -33,7 +41,7 @@ export default function Profile() {
     };
 
     fetchProfile();
-  }, [user, navigate, user_id,refresh]);
+  }, [user, navigate, user_id, refresh]);
 
   if (!profile) return <p>Loading profile...</p>;
 
@@ -42,30 +50,43 @@ export default function Profile() {
   };
 
   return (
-    <div>
-    
-      <ProfileFetcher profile={profile} setProfile={setProfile} refreshTrigger={refresh}
+    <div className="bg-[#FFF6E9] min-h-screen ">
+     {/* {profile.role === "provider" && (
+  <div className="mb-6 cursor-pointer" onClick={() => {
+  const reviewsSection = document.getElementById('customer-reviews');
+  if (reviewsSection) {
+    reviewsSection.scrollIntoView({ behavior: 'smooth' });
+  }
+}}>
+  <h2 className="text-lg font-semibold mb-2 ml-4">Overall Rating</h2>
+  <RatingDisplay avgRating={avgRating} count={reviews.length} compact 
+  className=" ml-6"/>
+</div>
+)} */}
+
+      {/* Profile info */}
+      <ProfileFetcher
+        profile={profile}
+        setProfile={setProfile}
+        refreshTrigger={refresh}
       />
 
-   
       {profile.role === "provider" && (
-        <ProductFetcher profile={profile} user={user}
-        refreshTrigger={refresh}
-        />
-      )}
+        <>
+          <ProductFetcher profile={profile} user={user} refreshTrigger={refresh} />
+          <section id="customer-reviews">
+          <ProviderReviewFetcher profile={profile} refreshTrigger={refresh} />
 
-     
-      <ProviderReviewFetcher profile={profile}
-       refreshTrigger={refresh} />
-
-    
-      {user?.role === "customer" && profile?.role === "provider" && (
-        <AddReview
-          providerID={profile.provider_user_id}
-          user={user}
-          onReviewAdded={handleReviewAdded}
-           refreshTrigger={refresh}
-        />
+          {user?.role === "customer" && (
+            <AddReview
+              providerID={profile.provider_user_id}
+              user={user}
+              onReviewAdded={handleReviewAdded}
+              refreshTrigger={refresh}
+            />
+          )}
+          </section>
+        </>
       )}
     </div>
   );

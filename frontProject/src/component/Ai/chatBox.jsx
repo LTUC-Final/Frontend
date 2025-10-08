@@ -18,27 +18,24 @@ export default function ChatBox({ isOpen, setIsOpen }) {
 
   return (
     <div
-      className={`fixed bottom-6 right-6 w-80 h-[400px] transform transition-all duration-300 ${
+      className={`fixed bottom-4 right-4 sm:bottom-6 sm:right-6 w-[90%] sm:w-80 h-[420px] transform transition-all duration-300 z-50 ${
         isOpen ? "scale-100 opacity-100" : "scale-0 opacity-0"
       }`}
     >
-      <div className="bg-white dark:bg-gray-800 rounded-xl h-full flex flex-col shadow-xl overflow-hidden">
+      <div className="bg-[#FFF6E9] rounded-2xl h-full flex flex-col shadow-2xl overflow-hidden border border-[#F5C45E]/40">
         {/* Header */}
-        <div className="flex justify-between items-center p-3 border-b border-gray-200 dark:border-gray-700">
-          <h3 className="text-base font-semibold text-gray-800 dark:text-white">
-            Quraan AI
-          </h3>
-
+        <div className="flex justify-between items-center p-3 bg-[#102E50] text-white">
+          <h3 className="text-base font-semibold tracking-wide">Quraan AI</h3>
           <button
-            className="text-black dark:text-white hover:text-gray-600"
+            className="hover:text-[#F5C45E] transition"
             onClick={() => setIsOpen(false)}
           >
-            <X size={16} />
+            <X size={18} />
           </button>
         </div>
 
         {/* Messages */}
-        <div className="flex-1 p-3 overflow-y-auto space-y-2">
+        <div className="flex-1 p-3 overflow-y-auto space-y-2 bg-[#FFF6E9]">
           {messages
             .filter((msgArr) => msgArr.role !== "system")
             .map((msg, i) => (
@@ -47,17 +44,17 @@ export default function ChatBox({ isOpen, setIsOpen }) {
         </div>
 
         {/* Input Area */}
-        <div className="flex p-3 border-t border-gray-200 dark:border-gray-700">
+        <div className="flex p-3 border-t border-[#F5C45E]/30 bg-[#FFF6E9]">
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => (e.key === "Enter" ? handleSend() : null)}
             placeholder="Type your message..."
-            className="flex-1 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md outline-none dark:bg-gray-700 dark:text-white"
+            className="flex-1 px-3 py-2 text-sm border border-[#E78B48]/40 rounded-lg outline-none bg-white focus:ring-2 focus:ring-[#F5C45E] transition text-[#102E50]"
           />
           <button
             onClick={handleSend}
-            className="ml-2 p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition"
+            className="ml-2 p-2 bg-[#102E50] hover:bg-[#F5C45E] hover:text-[#102E50] text-white rounded-lg transition font-medium shadow-md"
           >
             <Send size={16} />
           </button>
