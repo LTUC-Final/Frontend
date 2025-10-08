@@ -88,13 +88,18 @@ export default function CartPage() {
         let res = await axios.get(
           `http://localhost:${port}/api/carts/products/${CusData.user.user_id}`
         );
-        setCart(res.data);
+        setCart(res.data.cards);
         console.log("sssssssssssssssssssss");
 
         console.log(
           res.data,
           "Ssssssssssسسسسسسسسسسسسسسsppppppppppssssssssssss"
         );
+        console.log("sssssssssssssssssssss");
+
+        console.log("sssssssssssssssssssss");
+
+        console.log(cart, "ppppppppppppppppppppppppp");
         console.log("sssssssssssssssssssss");
       } catch (error) {
         console.log(error);
@@ -251,7 +256,12 @@ export default function CartPage() {
     }
   };
 
-  const subtotal = cart.reduce((sum, p) => sum + p.cart_price * p.quantity, 0);
+  // const subtotal = cart.reduce((sum, p) => sum + p.cart_price * p.quantity, 0);
+  const subtotal = (Array.isArray(cart) ? cart : []).reduce(
+    (sum, p) => sum + p.cart_price * p.quantity,
+    0
+  );
+
   const tax = subtotal * 0.08;
   const total = subtotal + tax;
 
@@ -283,176 +293,183 @@ export default function CartPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
-            {cart.map((product) => (
-              <Card key={product.cart_id} className="overflow-hidden">
-                <CardContent className="p-6">
-                  <div className="flex flex-col md:flex-row gap-6">
-                    <div className="flex-shrink-0">
-                      <img
-                        // src={product.product_image || "/placeholder.svg"}
+            {Array.isArray(cart) &&
+              cart.map((product) => (
+                <Card key={product.cart_id} className="overflow-hidden">
+                  <CardContent className="p-6">
+                    <div className="flex flex-col md:flex-row gap-6">
+                      <div className="flex-shrink-0">
+                        <img
+                          // src={product.product_image || "/placeholder.svg"}
 
-                        src={
-                          product.product_image
-                            ? product.product_image.startsWith("http")
-                              ? product.product_image
-                              : `http://localhost:${port}${product.product_image}`
-                            : `../src/assets/cupcakes-1283247__340.jpg`
-                        }
-                        alt={product.product_name}
-                        className="w-48 h-48 object-cover rounded-lg"
-                      />
-                    </div>
-
-                    <div className="flex-1 space-y-4 relative">
-                      <div>
-                        <h3 className="text-xl font-semibold">
-                          {product.product_name}
-                        </h3>
-                        <p className="text-2xl font-bold">
-                          ${product.cart_price}
-                        </p>
+                          src={
+                            product.product_image
+                              ? product.product_image.startsWith("http")
+                                ? product.product_image
+                                : `http://localhost:${port}${product.product_image}`
+                              : `../src/assets/cupcakes-1283247__340.jpg`
+                          }
+                          alt={product.product_name}
+                          className="w-48 h-48 object-cover rounded-lg"
+                        />
                       </div>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        className="absolute top-0 right-0"
-                        onClick={() => deleteItemCart(product.cart_id)}
-                      >
-                        Delete
-                      </Button>
-                      <div className="flex items-center gap-3">
-                        <span className="text-sm">Quantity:</span>
-                        {product.provider_response ? (
-                          <span className="w-8 text-center font-medium">
-                            {product.quantity}
-                          </span>
-                        ) : (
-                          <div className="flex items-center gap-2">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() =>
-                                updateQuantity(product.cart_id, -1)
-                              }
-                            >
-                              <Minus className="h-4 w-4" />
-                            </Button>
+
+                      <div className="flex-1 space-y-4 relative">
+                        <div>
+                          <h3 className="text-xl font-semibold">
+                            {product.product_name}
+                          </h3>
+                          <p className="text-2xl font-bold">
+                            ${product.cart_price}
+                          </p>
+                        </div>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          className="absolute top-0 right-0"
+                          onClick={() => deleteItemCart(product.cart_id)}
+                        >
+                          Delete
+                        </Button>
+                        <div className="flex items-center gap-3">
+                          <span className="text-sm">Quantity:</span>
+                          {product.provider_response ? (
                             <span className="w-8 text-center font-medium">
                               {product.quantity}
                             </span>
+                          ) : (
+                            <div className="flex items-center gap-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() =>
+                                  updateQuantity(product.cart_id, -1)
+                                }
+                              >
+                                <Minus className="h-4 w-4" />
+                              </Button>
+                              <span className="w-8 text-center font-medium">
+                                {product.quantity}
+                              </span>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() =>
+                                  updateQuantity(product.cart_id, 1)
+                                }
+                              >
+                                <Plus className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          )}{" "}
+                        </div>
+                        {product.provider_response &&
+                        product.status_pay !== "Approve" ? (
+                          <div>
+                            {" "}
+                            <h3 className="text-x font-semibold">
+                              Provider Message : {product.provider_response}
+                            </h3>
                             <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => updateQuantity(product.cart_id, 1)}
+                              variant="default"
+                              onClick={() =>
+                                handleApprove(
+                                  product.cart_id,
+                                  product.customer_id
+                                )
+                              }
+                              className="bg-green-600 hover:bg-green-700 text-white"
                             >
-                              <Plus className="h-4 w-4" />
+                              {" "}
+                              APPROVE{" "}
+                            </Button>{" "}
+                            <Button
+                              variant="destructive"
+                              onClick={() =>
+                                handleReject(
+                                  product.cart_id,
+                                  product.customer_id
+                                )
+                              }
+                            >
+                              {" "}
+                              REJECT{" "}
                             </Button>
                           </div>
-                        )}{" "}
+                        ) : product.custom_requirement &&
+                          product.provider_response === null ? (
+                          <p className="text-green-600 font-medium">
+                            Wating provider response
+                          </p>
+                        ) : (
+                          <div>
+                            {" "}
+                            <Button
+                              variant="secondary"
+                              onClick={() =>
+                                toggleResponseProvider(product.cart_id)
+                              }
+                            >
+                              RESPONSE PROVIDER
+                            </Button>
+                          </div>
+                        )}
+
+                        {responseProviders[product.cart_id]?.isVisible && (
+                          <div className="space-y-3">
+                            {!product.sendedtoprovider ? (
+                              <>
+                                <Textarea
+                                  placeholder="Enter your response..."
+                                  value={
+                                    responseProviders[product.cart_id]
+                                      ?.content || ""
+                                  }
+                                  onChange={(e) =>
+                                    updateResponseContent(
+                                      product.cart_id,
+                                      e.target.value
+                                    )
+                                  }
+                                  className="min-h-[100px]"
+                                />
+
+                                {responseProviders[product.cart_id]
+                                  ?.content && (
+                                  <div className="flex gap-3">
+                                    <Button
+                                      variant="default"
+                                      onClick={() =>
+                                        sendTheCustomerReqAndToOrder({
+                                          cart_id: product.cart_id,
+                                          product_id: product.product_id,
+                                          provider_id: product.provider_id,
+                                          cart_price: product.cart_price,
+                                          custom_requirement:
+                                            responseProviders[product.cart_id]
+                                              ?.content,
+                                          quantity: product.quantity,
+                                          user_id: product.customer_id,
+                                        })
+                                      }
+                                    >
+                                      Send To Provider
+                                    </Button>
+                                  </div>
+                                )}
+                              </>
+                            ) : (
+                              <p className="text-green-600 font-medium">
+                                Request Sent Successfully
+                              </p>
+                            )}
+                          </div>
+                        )}
                       </div>
-                      {product.provider_response &&
-                      product.status_pay !== "Approve" ? (
-                        <div>
-                          {" "}
-                          <h3 className="text-x font-semibold">
-                            Provider Message : {product.provider_response}
-                          </h3>
-                          <Button
-                            variant="default"
-                            onClick={() =>
-                              handleApprove(
-                                product.cart_id,
-                                product.customer_id
-                              )
-                            }
-                            className="bg-green-600 hover:bg-green-700 text-white"
-                          >
-                            {" "}
-                            APPROVE{" "}
-                          </Button>{" "}
-                          <Button
-                            variant="destructive"
-                            onClick={() =>
-                              handleReject(product.cart_id, product.customer_id)
-                            }
-                          >
-                            {" "}
-                            REJECT{" "}
-                          </Button>
-                        </div>
-                      ) : product.custom_requirement &&
-                        product.provider_response === null ? (
-                        <p className="text-green-600 font-medium">
-                          Wating provider response
-                        </p>
-                      ) : (
-                        <div>
-                          {" "}
-                          <Button
-                            variant="secondary"
-                            onClick={() =>
-                              toggleResponseProvider(product.cart_id)
-                            }
-                          >
-                            RESPONSE PROVIDER
-                          </Button>
-                        </div>
-                      )}
-
-                      {responseProviders[product.cart_id]?.isVisible && (
-                        <div className="space-y-3">
-                          {!product.sendedtoprovider ? (
-                            <>
-                              <Textarea
-                                placeholder="Enter your response..."
-                                value={
-                                  responseProviders[product.cart_id]?.content ||
-                                  ""
-                                }
-                                onChange={(e) =>
-                                  updateResponseContent(
-                                    product.cart_id,
-                                    e.target.value
-                                  )
-                                }
-                                className="min-h-[100px]"
-                              />
-
-                              {responseProviders[product.cart_id]?.content && (
-                                <div className="flex gap-3">
-                                  <Button
-                                    variant="default"
-                                    onClick={() =>
-                                      sendTheCustomerReqAndToOrder({
-                                        cart_id: product.cart_id,
-                                        product_id: product.product_id,
-                                        provider_id: product.provider_id,
-                                        cart_price: product.cart_price,
-                                        custom_requirement:
-                                          responseProviders[product.cart_id]
-                                            ?.content,
-                                        quantity: product.quantity,
-                                        user_id: product.customer_id,
-                                      })
-                                    }
-                                  >
-                                    Send To Provider
-                                  </Button>
-                                </div>
-                              )}
-                            </>
-                          ) : (
-                            <p className="text-green-600 font-medium">
-                              Request Sent Successfully
-                            </p>
-                          )}
-                        </div>
-                      )}
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              ))}
           </div>
 
           <div className="lg:col-span-1">
@@ -461,19 +478,20 @@ export default function CartPage() {
                 <CardTitle>Order Summary</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                {cart.map((product) => (
-                  <div
-                    key={product.cart_id}
-                    className="flex justify-between text-sm"
-                  >
-                    <span>
-                      {product.product_name} × {product.quantity}
-                    </span>
-                    <span>
-                      ${(product.cart_price * product.quantity).toFixed(2)}
-                    </span>
-                  </div>
-                ))}
+                {Array.isArray(cart) &&
+                  cart.map((product) => (
+                    <div
+                      key={product.cart_id}
+                      className="flex justify-between text-sm"
+                    >
+                      <span>
+                        {product.product_name} × {product.quantity}
+                      </span>
+                      <span>
+                        ${(product.cart_price * product.quantity).toFixed(2)}
+                      </span>
+                    </div>
+                  ))}
                 <hr className="border" />
                 <div className="flex justify-between">
                   <span>Subtotal</span>
