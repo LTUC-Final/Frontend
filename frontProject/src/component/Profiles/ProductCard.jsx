@@ -7,7 +7,7 @@ import { Edit2, ShoppingCart, Heart, MapPin } from "lucide-react";
 import AddToCart from "../AddToCart";
 import AddTOFav from "../AddToFav";
 import { useSelector } from "react-redux";
-import defaultImg from "../../assets/NoImage.jpg";
+import defaultImg from "../../assets/NoImage.png";
 
 export default function ProductCard({ product, profile, user, onDelete, onUpdate }) {
   const navigate = useNavigate();

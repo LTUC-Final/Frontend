@@ -336,7 +336,8 @@ function OrdersManagementProvider() {
                           ? order.product_image.startsWith("http")
                             ? order.product_image
                             : `http://localhost:${port}${order.product_image}`
-                          : `../src/assets/cupcakes-1283247__340.jpg`
+                          : '../../assests/NoImage'
+                
                       }
                       alt={order.productName}
 

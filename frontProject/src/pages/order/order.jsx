@@ -24,7 +24,7 @@ import useSummary from "../../hooks/useAnaliasisOrder"
 import useLastDate from "../../hooks/useLastDate"
 import useSupport from "../../hooks/useSupport"
 import OrdersSummary from "./aiComponent"
-
+import defaultImg from "../../assets/NoImage.png";
 const statusClasses = {
   pending: "text-[#E78B48] bg-[#FFF6E9] border-2 border-[#E78B48]",
   "In Progress": "text-[#E78B48] bg-[#FFF6E9] border-2 border-[#E78B48] shadow-md animate-pulse-subtle",
@@ -317,21 +317,17 @@ function OrdersManagementCustomer() {
               >
                 <div className="flex flex-col md:flex-row md:space-x-6">
                   <div className="flex-shrink-0 mb-4 md:mb-0">
-                    <img
+                
+                     <img
                       src={
                         order.product_image
                           ? order.product_image.startsWith("http")
                             ? order.product_image
                             : `http://localhost:${port}${order.product_image}`
-                          : `../src/assets/cupcakes-1283247__340.jpg`
-                        order.product_image
-                          ? order.product_image.startsWith("http")
-                            ? order.product_image
-                            : `http://localhost:${port}${order.product_image}`
-                          : `../src/assets/cupcakes-1283247__340.jpg`
+                          : defaultImg
                       }
                       alt={order.productName}
-                      className="w-full sm:w-48 h-48 object-cover rounded-lg border-2 border-[#E78B48]"
+                      className="m-8 w-50 h-50 rounded-lg border border-border border-[#E78B48] object-cover hover:border-[#F5C45E] transition-colors cursor-pointer"
                     />
                   </div>
 

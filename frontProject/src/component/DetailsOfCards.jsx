@@ -1,4 +1,3 @@
-'use client';
 
 import axios from "axios";
 import {
@@ -19,6 +18,7 @@ import {
 } from "react-router-dom";
 import AddToCart from "./AddToCart";
 import AddTOFav from "./AddToFav";
+import defaultImg from "../assets//NoImage.png";
 
 export default function DetailsOfCards({
   Id
@@ -56,7 +56,7 @@ console.log("img", dataCard);
   <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-6 mt-6">
   <div className="rounded-3xl shadow-2xl overflow-hidden border-[3px] border-[#102E50] bg-[#FFF6E9] transition-all duration-500">
 
-    {/* 🔥 Gradient Top Bar */}
+
     <div
       className="h-2 w-full"
       style={{
@@ -64,13 +64,12 @@ console.log("img", dataCard);
       }}
     />
 
-    {/* Content */}
+
     <div className="flex flex-col md:flex-row gap-6 md:gap-10 p-4 sm:p-6 md:p-8">
 
-      {/* 🖼 Image */}
       <div className="relative w-full md:w-1/2">
         <img
-          src={dataCard.image}
+          src={dataCard.image|| defaultImg}
           alt={dataCard.name}
           className="w-full h-[250px] sm:h-[300px] md:h-80 object-cover rounded-2xl border-[3px] border-[#E78B48] shadow-lg transition-transform duration-500 hover:scale-105"
         />
@@ -138,7 +137,7 @@ console.log("img", dataCard);
                             ? dataCard.profile_image
 
                             : `http://localhost:${port}${dataCard.profile_image}`
-                          : `../src/assets/cupcakes-1283247__340.jpg`}
+                          : defaultImg}
           alt="seller"
           onClick={() => navigate(`/profile/${dataCard.user_id}`)}
           className="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded-full border-4 border-[#F5C45E] cursor-pointer hover:scale-110 transition-transform duration-300"

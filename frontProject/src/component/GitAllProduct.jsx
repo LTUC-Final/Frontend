@@ -6,6 +6,7 @@ import AddTOFav from "./AddToFav";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ReactionPicker from "./reaction";
+import defaultImg from "../assets//NoImage.png";
 
 export default function GitAllProduct() {
   const navigate = useNavigate();
@@ -103,7 +104,7 @@ console.log("asdas",number);
                   ? card.image.startsWith("http")
                     ? card.image
                     : `http://localhost:${port}${card.image}`
-                  : `../src/assets/cupcakes-1283247__340.jpg`
+                  : defaultImg
               }
               alt={card.name}
               className="w-full h-48 object-cover rounded-lg mb-4 cursor-pointer"

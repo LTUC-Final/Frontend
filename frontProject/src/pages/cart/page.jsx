@@ -233,7 +233,7 @@ export default function CartPage() {
     setCart((prevCart) => prevCart.filter((p) => p.cart_id !== cart_id));
   };
   const deleteItemCart = async (cart_id) => {
-    const port = import.meta.env.VITE_PORT;
+  
     const port = import.meta.env.VITE_PORT;
     try {
       const res = await axios.delete(
@@ -299,13 +299,7 @@ console.log('Cart value:', cart);
                         }
                         // src={product.product_image || "/placeholder.svg"}
 
-                        src={
-                          product.product_image
-                            ? product.product_image.startsWith("http")
-                              ? product.product_image
-                              : `http://localhost:${port}${product.product_image}`
-                            : `../src/assets/cupcakes-1283247__340.jpg`
-                        }
+      
                         alt={product.product_name}
                         className="w-48 h-48 object-cover rounded-lg"
                       />
@@ -330,7 +324,6 @@ console.log('Cart value:', cart);
                       </Button>
                       <div className="flex items-center gap-3">
                         <span className="text-sm">Quantity:</span>
-                        {product.provider_response ? (
                         {product.provider_response ? (
                           <span className="w-8 text-center font-medium">
                             {product.quantity}
