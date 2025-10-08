@@ -22,7 +22,7 @@ export default function ChatBox({ isOpen, setIsOpen }) {
     isOpen ? "scale-100 opacity-100" : "scale-0 opacity-0"
   }`}
 >
-
+    
       <div className="bg-[#FFF6E9] rounded-2xl h-full flex flex-col shadow-2xl overflow-hidden border border-[#F5C45E]/40">
         {/* Header */}
         <div className="flex justify-between items-center p-3 bg-[#102E50] text-white">
