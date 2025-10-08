@@ -324,6 +324,11 @@ function OrdersManagementCustomer() {
                             ? order.product_image
                             : `http://localhost:${port}${order.product_image}`
                           : `../src/assets/cupcakes-1283247__340.jpg`
+                        order.product_image
+                          ? order.product_image.startsWith("http")
+                            ? order.product_image
+                            : `http://localhost:${port}${order.product_image}`
+                          : `../src/assets/cupcakes-1283247__340.jpg`
                       }
                       alt={order.productName}
                       className="w-full sm:w-48 h-48 object-cover rounded-lg border-2 border-[#E78B48]"

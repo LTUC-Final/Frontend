@@ -62,6 +62,7 @@ function OrdersManagementProvider() {
   const { messages, sendMessage } = useSummary();
   const { messagesSupportProvider, sendMessageSupportProvider } =
     useSupportProvider();
+
   const { messagesss, sendMessagess, report, formatDateLocal } = useLastDate();
   const [buttonAi, setButtonAi] = useState(false);
 
@@ -122,8 +123,11 @@ function OrdersManagementProvider() {
 
       sendMessage(mappedOrders);
       sendMessageSupportProvider();
-      sendMessagess(mappedOrders);
+
       console.log("Fetched orders:", mappedOrders);
+
+      console.log(mappedOrders);
+
     } catch (error) {
       console.error("Error fetching orders:", error);
     }
@@ -171,6 +175,7 @@ function OrdersManagementProvider() {
     }
   }
 
+
   function summarizeOrdersByStatus(orders) {
     const summary = {};
     orders.forEach((order) => {
@@ -187,6 +192,7 @@ function OrdersManagementProvider() {
   }
 
   const summary = summarizeOrdersByStatus(orders);
+
   const data = Object.entries(summary).map(([status, values]) => ({
     name: status,
     value: values.totalPrice,
@@ -195,6 +201,7 @@ function OrdersManagementProvider() {
     name: status,
     value: values.count,
   }));
+
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#A020F0"];
 
   return (
@@ -282,6 +289,7 @@ function OrdersManagementProvider() {
               <option value="oldest">Oldest First</option>
             </select>
 
+
             <div className="flex items-center">
               <DownLoadAllOrder order={orders} />
             </div>
@@ -304,12 +312,14 @@ function OrdersManagementProvider() {
             {buttonAi && (
               <OrdersSummary
                 data={data}
+
                 data2={data2}
                 COLORS={COLORS}
                 report={report}
                 assistantMessagesSupport={assistantMessagesSupport}
                 formatDateLocal={formatDateLocal}
               />
+
             )}
 
             {filteredOrders.map((order) => (
@@ -329,6 +339,7 @@ function OrdersManagementProvider() {
                           : `../src/assets/cupcakes-1283247__340.jpg`
                       }
                       alt={order.productName}
+
                       className="w-full sm:w-48 h-48 object-cover rounded-lg border-2 border-[#E78B48]"
                     />
                   </div>
@@ -339,11 +350,13 @@ function OrdersManagementProvider() {
                         <h3 className="text-lg font-montserrat font-semibold text-[#102E50]">
                           {order.order_id}
                         </h3>
+
                         <div
                           className={
                             "flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium border " +
                             statusClasses[order.status]
                           }
+
                         >
                         {order.status === "completed" ? (
                             <CheckCircle2 className="w-3.5 h-3.5" />
@@ -353,6 +366,7 @@ function OrdersManagementProvider() {
                             <div className={"w-2 h-2 rounded-full " + statusDotClasses[order.status]} />
                           )}
                           <span>{order.status}</span>
+
                         </div>
                         <div
                           className={
@@ -376,6 +390,7 @@ function OrdersManagementProvider() {
                           Provider Response: {order.response_from_provider}
                         </p>
                       )}
+
 
                       {order.customNotes && (
                         <p className="text-sm text-[#E78B48] mb-4 italic bg-[#FFF6E9] p-2 rounded border-l-4 border-[#E78B48]">
@@ -428,6 +443,7 @@ function OrdersManagementProvider() {
                     </div>
 
                     <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 sm:gap-6 text-sm mt-4">
+
                       <div className="flex items-center space-x-2">
                         <DollarSign className="h-4 w-4 text-[#F5C45E]" />
                         <span className="text-[#102E50] font-bold">
@@ -440,13 +456,16 @@ function OrdersManagementProvider() {
                           {new Date(order.orderDate).toLocaleDateString()}
                         </span>
                       </div>
+
                       <div className="flex items-center space-x-2">
                         <Truck className="h-4 w-4 text-[#102E50]" />
                         <span className="text-[#102E50]/70">
                           {new Date(order.estimatedDelivery).toLocaleDateString()}
                         </span>
                       </div>
+                      {/* التصنيف */}
                       <div className="flex items-center space-x-2">
+
                         <span className="text-xs px-3 py-1  text-[#F5C45E] rounded-full font-semibold">
                           {order.category}
                         </span>
@@ -463,6 +482,7 @@ function OrdersManagementProvider() {
 
                     {(order.status === "pending" || order.status === "on_progress") && (
                       <div className="mt-4">
+
                         <ButtonStatus
                           onSuccess={fetchOrders}
                           orderId={order.order_id}
