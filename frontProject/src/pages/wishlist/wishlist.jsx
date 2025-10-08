@@ -120,8 +120,8 @@ export default function WishList() {
 
   if (loading)
     return (
-      <div className="min-h-screen grid place-items-center bg-[#FFF6E9] p-6">
-        <div className="rounded-2xl px-6 py-4 bg-white shadow ring-1 ring-[#102E50]/10 text-[#102E50]">
+      <div className="min-h-screen grid place-items-center bg-[#FFF6E9] px-4 py-10">
+        <div className="rounded-2xl px-4 sm:px-6 py-3 sm:py-4 bg-white shadow ring-1 ring-[#102E50]/10 text-[#102E50] text-sm sm:text-base">
           Loading…
         </div>
       </div>
@@ -129,24 +129,27 @@ export default function WishList() {
 
   if (items.length === 0)
     return (
-      <div className="min-h-screen grid place-items-center bg-[#FFF6E9] p-6">
-        <div className="rounded-2xl px-6 py-4 bg-white shadow ring-1 ring-[#102E50]/10 text-[#102E50]">
+      <div className="min-h-screen grid place-items-center bg-[#FFF6E9] px-4 py-10">
+        <div className="rounded-2xl px-4 sm:px-6 py-3 sm:py-4 bg-white shadow ring-1 ring-[#102E50]/10 text-[#102E50] text-sm sm:text-base">
           Your wishlist is empty.
         </div>
       </div>
     );
 
   return (
-    <div className="min-h-screen bg-[#FFF6E9] p-6">
-      <div className="mx-auto max-w-7xl">
-        <h1 className="text-2xl md:text-3xl font-extrabold text-[#102E50] mb-6">My Wishlist</h1>
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <div className="min-h-screen bg-[#FFF6E9] px-3 sm:px-4 md:px-6 py-6 md:py-8">
+      <div className="mx-auto w-full max-w-7xl">
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#102E50] mb-4 sm:mb-6">
+          My Wishlist
+        </h1>
+
+        <div className="grid gap-3 sm:gap-4 md:gap-5 grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {items.map((p) => (
             <div
               key={p.wishlist_id}
-              className="group rounded-2xl bg-white shadow-sm ring-1 ring-[#102E50]/10 hover:ring-[#F5C45E] transition overflow-hidden"
+              className="group rounded-xl sm:rounded-2xl bg-white shadow-sm ring-1 ring-[#102E50]/10 hover:ring-[#F5C45E] transition overflow-hidden"
             >
-              <div className="aspect-[4/3] overflow-hidden bg-[#102E50]/5">
+              <div className="w-full aspect-[4/3] overflow-hidden bg-[#102E50]/5">
                 <img
                   src={p.image || "https://via.placeholder.com/800x600?text=No+Image"}
                   alt={p.name || "wishlist item"}
@@ -157,33 +160,38 @@ export default function WishList() {
                   }}
                 />
               </div>
-              <div className="p-4">
+
+              <div className="p-3 sm:p-4">
                 <div className="flex items-start justify-between gap-2">
-                  <div>
-                    <div className="font-semibold text-[#102E50] line-clamp-1">{p.name}</div>
-                    <div className="text-sm text-[#102E50]/70">
+                  <div className="min-w-0">
+                    <div className="font-semibold text-[#102E50] text-sm sm:text-base line-clamp-1">
+                      {p.name}
+                    </div>
+                    <div className="text-xs sm:text-sm text-[#102E50]/70">
                       {Number(p.price).toFixed(2)} JOD
                     </div>
                   </div>
-                  <span className="shrink-0 rounded-md bg-[#F5C45E] text-[#102E50] text-xs font-semibold px-2 py-1">
+                  <span className="shrink-0 rounded-md bg-[#F5C45E] text-[#102E50] text-[10px] sm:text-xs font-semibold px-2 py-0.5 sm:px-2.5 sm:py-1">
                     Wish
                   </span>
                 </div>
-                <div className="mt-4 flex gap-2">
+
+                <div className="mt-3 sm:mt-4 flex flex-col xs:flex-row gap-2">
                   <button
                     onClick={() => onToggleFav(p)}
-                    className="px-4 py-2 rounded-xl bg-[#BE3D2A] text-white font-semibold shadow hover:shadow-md active:scale-[0.99] transition"
+                    className="w-full xs:w-auto px-3 sm:px-4 py-2 rounded-lg sm:rounded-xl bg-[#BE3D2A] text-white text-sm sm:text-base font-semibold shadow hover:shadow-md active:scale-[0.99] transition"
                   >
                     Remove
                   </button>
                   <button
                     onClick={() => onAddToCart(p)}
-                    className="px-4 py-2 rounded-xl bg-[#102E50] text-[#FFF6E9] font-semibold shadow hover:shadow-md active:scale-[0.99] transition"
+                    className="w-full xs:w-auto px-3 sm:px-4 py-2 rounded-lg sm:rounded-xl bg-[#102E50] text-[#FFF6E9] text-sm sm:text-base font-semibold shadow hover:shadow-md active:scale-[0.99] transition"
                   >
                     Add to Cart
                   </button>
                 </div>
               </div>
+
               <div className="h-1 w-full bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]" />
             </div>
           ))}

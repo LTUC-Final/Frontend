@@ -16,6 +16,7 @@ import WishList from "./pages/wishlist/wishlist";
 import Forget from "./pages/forgetpassword/forget";
 import VerifyOtp from "./pages/forgetpassword/verify_otp";
 import ResetPassword from "./pages/forgetpassword/reset_password";
+import About from "./pages/About";
 
 
 
@@ -93,6 +94,8 @@ useEffect(() => {
           <Route path="/forget" element={<Forget />} />
           <Route path="/verify_otp" element={<VerifyOtp />} />
           <Route path="/reset_password" element={<ResetPassword />} />
+
+          <Route path="/About" element={<About/>}  />
 
         </Routes>
       </Layout>

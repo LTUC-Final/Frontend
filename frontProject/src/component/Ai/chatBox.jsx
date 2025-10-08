@@ -66,3 +66,4 @@ export default function ChatBox({ isOpen, setIsOpen }) {
     </div>
   );
 }
+

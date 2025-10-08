@@ -31,6 +31,12 @@ export default function NavigationBar({ onScroll, cartCount }) {
       name: "My Profile",
       href: `/profile/${userId}`,
     },
+
+    { name: "About", href: "/About" },
+    {
+      name: "About Us",
+      href: `/About`,
+    },
     {
       name: "Profile",
       // href: "/profile",
