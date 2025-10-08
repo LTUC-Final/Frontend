@@ -240,6 +240,7 @@ export default function CartPage() {
     setCart((prevCart) => prevCart.filter((p) => p.cart_id !== cart_id));
   };
   const deleteItemCart = async (cart_id) => {
+  
     const port = import.meta.env.VITE_PORT;
     try {
       const res = await axios.delete(
@@ -264,7 +265,7 @@ export default function CartPage() {
 
   const tax = subtotal * 0.08;
   const total = subtotal + tax;
-
+console.log('Cart value:', cart);
   const handleCheckout = () => setShowCheckout(true);
   const completePayment = async () => {
     alert("Payment completed successfully!");
@@ -302,17 +303,22 @@ export default function CartPage() {
                         <img
                           // src={product.product_image || "/placeholder.svg"}
 
-                          src={
-                            product.product_image
-                              ? product.product_image.startsWith("http")
-                                ? product.product_image
-                                : `http://localhost:${port}${product.product_image}`
-                              : `../src/assets/cupcakes-1283247__340.jpg`
-                          }
-                          alt={product.product_name}
-                          className="w-48 h-48 object-cover rounded-lg"
-                        />
-                      </div>
+                        src={
+                          product.product_image
+                            ? product.product_image.startsWith("http")
+                              ? product.product_image
+                              : `http://localhost:${port}${product.product_image}`
+                            : `../src/assets/cupcakes-1283247__340.jpg`
+                        }
+                        // src={product.product_image || "/placeholder.svg"}
+
+      
+                        alt={product.product_name}
+                        className="w-48 h-48 object-cover rounded-lg"
+                      />
+                    </div>
+
+                  
 
                       <div className="flex-1 space-y-4 relative">
                         <div>

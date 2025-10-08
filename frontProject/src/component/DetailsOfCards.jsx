@@ -1,19 +1,32 @@
+
 import axios from "axios";
-import { Heart, ShoppingCart } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import {
+  Heart,
+  ShoppingCart,
+  MapPin,
+  Tag
+} from "lucide-react";
+import {
+  useEffect,
+  useState
+} from "react";
+import {
+  useSelector
+} from "react-redux";
+import {
+  useNavigate
+} from "react-router-dom";
 import AddToCart from "./AddToCart";
 import AddTOFav from "./AddToFav";
+import defaultImg from "../assets//NoImage.png";
 
-export default function DetailsOfCards({ Id }) {
+export default function DetailsOfCards({
+  Id
+}) {
   const port = import.meta.env.VITE_PORT;
   const [dataCard, setDataCard] = useState(null);
   const CusData = useSelector((state) => state.UserInfo);
   const navigate = useNavigate();
-
-  console.log(CusData);
-  console.log("data", dataCard);
 
   useEffect(() => {
     const gitdetails = async () => {
@@ -21,9 +34,6 @@ export default function DetailsOfCards({ Id }) {
         const res = await axios.get(
           `http://localhost:${port}/api/DetailsOfCardInfo/${Id}`
         );
-
-        console.log("Full response:", res.data);
-
         setDataCard(res.data);
       } catch (error) {
         console.error(error);
@@ -35,75 +45,116 @@ export default function DetailsOfCards({ Id }) {
 
   if (!dataCard) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <p className="text-gray-600 text-lg">Loading product details...</p>
+      <div className="flex justify-center items-center h-screen bg-[#FFF6E9]">
+        <p className="text-[#102E50] text-lg animate-pulse">Loading product details...</p>
       </div>
     );
   }
+console.log("img", dataCard);
 
   return (
-    <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-2xl p-6 mt-8">
-      <div className="flex flex-col md:flex-row gap-8">
+  <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-6 mt-6">
+  <div className="rounded-3xl shadow-2xl overflow-hidden border-[3px] border-[#102E50] bg-[#FFF6E9] transition-all duration-500">
+
+
+    <div
+      className="h-2 w-full"
+      style={{
+        background: "linear-gradient(90deg, #F5C45E 0%, #E78B48 50%, #BE3D2A 100%)",
+      }}
+    />
+
+
+    <div className="flex flex-col md:flex-row gap-6 md:gap-10 p-4 sm:p-6 md:p-8">
+
+      <div className="relative w-full md:w-1/2">
         <img
-          src={dataCard.image}
+          src={dataCard.image|| defaultImg}
           alt={dataCard.name}
-          className="w-full md:w-1/2 h-80 object-cover rounded-xl shadow"
+          className="w-full h-[250px] sm:h-[300px] md:h-80 object-cover rounded-2xl border-[3px] border-[#E78B48] shadow-lg transition-transform duration-500 hover:scale-105"
         />
-
-        <div className="flex-1">
-          <h3 className="text-2xl font-bold text-gray-800 mb-2">
-            {dataCard.name}
-          </h3>
-          <p className="text-gray-600 mb-2">{dataCard.description}</p>
-          <p className="text-sm text-gray-500 mb-1">
-            Location: {dataCard.location}
-          </p>
-          <p className="text-sm text-gray-500 mb-1">
-            Type: {dataCard.type_of_product}
-          </p>
-          <p className="text-xl font-semibold text-blue-600 mb-4">
-            ${dataCard.price}
-          </p>
-
-          {CusData.user.role === "customer" && (
-            <div className="flex gap-3 mt-4">
-              <button
-                onClick={() => AddTOFav(card, CusData)}
-                className="flex items-center justify-center gap-2 flex-1 px-4 py-2 border-2 border-pink-500 text-pink-500 rounded-xl hover:bg-pink-500 hover:text-white transition-all duration-300 shadow-sm"
-              >
-                <Heart className="w-5 h-5" />
-              </button>
-
-              <button
-                onClick={() => AddToCart(card, CusData)}
-                className="flex items-center justify-center gap-2 flex-1 px-4 py-2 border-2 border-green-500 text-green-500 rounded-xl hover:bg-green-500 hover:text-white transition-all duration-300 shadow-sm"
-              >
-                <ShoppingCart className="w-5 h-5" />
-              </button>
-            </div>
-          )}
+        {/* Price Tag */}
+        <div className="absolute top-4 left-4 px-4 py-1.5 rounded-full shadow-md bg-[#F5C45E] text-[#102E50] font-semibold text-sm">
+          ${dataCard.price}
         </div>
       </div>
 
-      <div className="mt-8 border-t pt-4">
-        <h4 className="text-lg font-semibold text-gray-700 mb-2">
-          Seller Information
-        </h4>
-        <div className="flex items-center gap-4">
-          <img
-            src={dataCard.image}
-            alt="seller"
-            onClick={() => navigate(`/profile/${dataCard.user_id}`)}
-            className="w-16 h-16 object-cover rounded-full border"
-          />
-          <p
-            className="text-gray-700 font-medium"
-            onClick={() => navigate(`/profile/${dataCard.user_id}`)}
-          >
+      {/* Product Info */}
+      <div className="flex-1 text-[#102E50] font-['Quicksand',sans-serif]">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-3 leading-tight">
+          {dataCard.name}
+        </h2>
+
+        <p className="text-sm sm:text-base text-[#3f4c5c] leading-relaxed mb-4">
+          {dataCard.description}
+        </p>
+
+        {/* Icons Info */}
+        <div className="space-y-2 text-sm text-[#3f4c5c] mb-4">
+          <div className="flex items-center gap-2">
+            <MapPin size={16} className="text-[#E78B48]" />
+            <span>{dataCard.location}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Tag size={16} className="text-[#E78B48]" />
+            <span>{dataCard.type_of_product}</span>
+          </div>
+        </div>
+
+        {/* Buttons */}
+        {CusData.user.role === "customer" && (
+          <div className="flex flex-col sm:flex-row gap-4 mt-6">
+            <button
+              onClick={() => AddTOFav(dataCard, CusData)}
+              className="flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3 bg-[#BE3D2A] text-white rounded-xl hover:bg-[#a53020] shadow-md transition-transform duration-300 hover:scale-105"
+            >
+              <Heart className="w-5 h-5" />
+              Favorite
+            </button>
+
+            <button
+              onClick={() => AddToCart(dataCard, CusData)}
+              className="flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3 bg-[#102E50] text-white rounded-xl hover:bg-[#0b223c] shadow-md transition-transform duration-300 hover:scale-105"
+            >
+              <ShoppingCart className="w-5 h-5" />
+              Add to Cart
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+
+    {/* Seller Info */}
+    <div className="px-4 sm:px-6 md:px-8 pb-6 border-t border-[#F5C45E] pt-5">
+      <h3 className="text-lg sm:text-xl font-semibold text-[#102E50] mb-4">
+        Seller Information
+      </h3>
+
+      <div className="flex items-center gap-4 sm:gap-6">
+        <img
+          src={dataCard.profile_image
+                          ? dataCard.profile_image.startsWith("http")
+                            ? dataCard.profile_image
+
+                            : `http://localhost:${port}${dataCard.profile_image}`
+                          : defaultImg}
+          alt="seller"
+          onClick={() => navigate(`/profile/${dataCard.user_id}`)}
+          className="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded-full border-4 border-[#F5C45E] cursor-pointer hover:scale-110 transition-transform duration-300"
+        />
+        <div
+          onClick={() => navigate(`/profile/${dataCard.user_id}`)}
+          className="cursor-pointer"
+        >
+          <p className="text-base sm:text-lg font-medium hover:text-[#E78B48] transition-colors">
             {dataCard.firstname} {dataCard.lastname}
           </p>
+          <p className="text-sm text-[#3f4c5c]">Verified Seller</p>
         </div>
       </div>
     </div>
+  </div>
+</div>
+
   );
 }
