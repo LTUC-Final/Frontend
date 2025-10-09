@@ -20,10 +20,7 @@ export default function NavigationBar({ onScroll, cartCount }) {
     },
 
     { name: "About", href: "/About" },
-    {
-      name: "About Us",
-      href: `/About`,
-    },
+   
     {
       name: "Dashboard",
       href: "/providerDashboard",

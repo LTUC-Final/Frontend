@@ -6,7 +6,7 @@ import AddTOFav from "./AddToFav";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ReactionPicker from "./reaction";
-import defaultImg from "../assets/NoImage.jpg";
+import defaultImg from "../assets/NoImage.png";
 
 export default function GitAllProduct() {
   const navigate = useNavigate();
