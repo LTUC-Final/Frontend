@@ -6,6 +6,7 @@ import AddTOFav from "./AddToFav";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ReactionPicker from "./reaction";
+import defaultImg from "../assets//NoImage.png";
 
 export default function GitAllProduct() {
   const navigate = useNavigate();
@@ -103,7 +104,7 @@ console.log("asdas",number);
                   ? card.image.startsWith("http")
                     ? card.image
                     : `http://localhost:${port}${card.image}`
-                  : `../src/assets/cupcakes-1283247__340.jpg`
+                  : defaultImg
               }
               alt={card.name}
               className="w-full h-48 object-cover rounded-lg mb-4 cursor-pointer"
@@ -139,15 +140,19 @@ console.log("asdas",number);
               product_id={card.product_id}
               userId={CusData.user.user_id}
             ></ReactionPicker> */}
-            <ReactionPicker
+          <ReactionPicker
               card={card}
               product_id={card.product_id}
               userId={CusData.user.user_id}
-              onReactionUpdate={(updatedReaction) => {
+              onReactionUpdate={(product_id, reactionCounts, selectedReaction) => {
                 setCards((prevCards) =>
                   prevCards.map((c) =>
-                    c.product_id === card.product_id
-                      ? { ...c, selectedReaction: updatedReaction }
+                    c.product_id === product_id
+                      ? {
+                          ...c,
+                          reaction_counts: reactionCounts,
+                          selectedReaction: selectedReaction,
+                        }
                       : c
                   )
                 );

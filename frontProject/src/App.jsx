@@ -1,5 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
+
 import GitAllProduct from "./component/GitAllProduct";
 import Footer from "./component/NavigationBar/Footer/Footer";
 import Layout from "./component/NavigationBar/Layout";
@@ -16,13 +17,13 @@ import WishList from "./pages/wishlist/wishlist";
 
 import OrdersManagementCustomer from "./pages/order/order";
 
-import ProductForm from "./pages/ProviderDashBoard/providerDashboard";
-import OrdersManagementProvider from "./pages/request/pageReq";
-import LiveChat from "./component/LiveChat/LiveChat";
-import CartPage from "./pages/cart/page";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import axios from "axios";
+import LiveChat from "./component/LiveChat/LiveChat";
+import CartPage from "./pages/cart/page";
+import ProductForm from "./pages/ProviderDashBoard/providerDashboard";
+import OrdersManagementProvider from "./pages/request/pageReq";
 function App() {
   const [cart, setCart] = useState([]);
   const CusData = useSelector((state) => state.UserInfo);
@@ -42,10 +43,16 @@ function App() {
 
   useEffect(() => {
     fetchCart();
-    const interval = setInterval(fetchCart, 1000)
 
-    return () => clearInterval(interval)
+    const interval = setInterval(fetchCart, 1000);
+
+    return () => clearInterval(interval);
   }, [CusData]);
+  const { user } = useSelector((state) => state.UserInfo);
+  const [isOpen, setIsOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+
   return (
     <div>
       <Layout cartCount={cart.length} >
@@ -57,7 +64,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/profile/:user_id" element={<Profile />} />
           <Route path="/LiveChat" element={<LiveChat />} />
-          
+
 
           <Route
             path="/providerDashboard"
@@ -69,7 +76,10 @@ function App() {
           <Route path="/productdatails" element={<CardDeatils />} />
           <Route path="/userDashboard" element={<GitAllProduct />} />
 
-          <Route path="/cart" element={<CartPage cart={cart} fetchCart={fetchCart}></CartPage>} />
+          <Route
+            path="/cart"
+            element={<CartPage cart={cart} fetchCart={fetchCart}></CartPage>}
+          />
           <Route path="/payments" element={<h1>ييييييييييييييييييييي </h1>} />
           <Route
             path="/prodactInfo/:prodactId"
@@ -86,6 +96,7 @@ function App() {
           <Route path="*" element={<NotFoundPage></NotFoundPage>}></Route>
         </Routes>
       </Layout>
+
       <Footer></Footer>
     </div>
   );

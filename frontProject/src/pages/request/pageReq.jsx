@@ -1,13 +1,17 @@
+"use client";
+
 import axios from "axios";
 import {
   Bell,
   Calendar,
+    CheckCircle2,
   DollarSign,
   Filter,
   Menu,
   MessageCircle,
   Search,
   Truck,
+  Sparkles,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
@@ -20,32 +24,30 @@ import ApprovalForm from "./approvalForm";
 import ButtonStatus from "./ButtonStatues";
 import DownLoadAllOrder from "./downLoadAllOrders";
 import PrintInvoiceButton from "./printInvoice";
-import Layout from "../../component/NavigationBar/Layout";
-
 const statusClasses = {
-  pending: "text-yellow-600 bg-yellow-50 border border-yellow-200",
-  "In Progress": "text-blue-600 bg-blue-50 border border-blue-200",
-  "Ready for Delivery": "text-purple-600 bg-purple-50 border border-purple-200",
-  completed: "text-green-600 bg-green-50 border border-green-200",
-  awaiting_approval: "text-orange-600 bg-orange-50 border border-orange-200",
-  on_progress: "text-indigo-600 bg-indigo-50 border border-indigo-200",
-  rejected: "text-red-600 bg-red-50 border border-red-200",
+  pending: "text-[#E78B48] bg-[#FFF6E9] border-2 border-[#E78B48]",
+  "In Progress": "text-[#102E50] bg-[#F5C45E]/20 border-2 border-[#102E50]",
+  "Ready for Delivery": "text-[#F5C45E] bg-[#102E50] border-2 border-[#F5C45E]",
+  completed: "text-[#F5C45E] bg-[#102E50] border-2 border-[#F5C45E] shadow-lg",
+  awaiting_approval: "text-[#E78B48] bg-[#FFF6E9] border-2 border-[#E78B48]",
+  on_progress: "text-[#102E50] bg-[#F5C45E]/30 border-2 border-[#102E50]",
+  rejected: "text-[#BE3D2A] bg-[#FFF6E9] border-2 border-[#BE3D2A]",
 };
 
 const statusDotClasses = {
-  pending: "bg-yellow-500",
-  "In Progress": "bg-blue-500",
-  "Ready for Delivery": "bg-purple-500",
-  completed: "bg-green-500",
-  awaiting_approval: "bg-orange-500",
-  on_progress: "bg-indigo-500",
-  rejected: "bg-red-500",
+  pending: "bg-[#E78B48]",
+  "In Progress": "bg-[#102E50]",
+  "Ready for Delivery": "bg-[#F5C45E]",
+  completed: "bg-[#F5C45E]",
+  awaiting_approval: "bg-[#E78B48]",
+  on_progress: "bg-[#102E50]",
+  rejected: "bg-[#BE3D2A]",
 };
 
 const paymentStatusClasses = {
-  Paid: "text-green-600 bg-green-50",
-  "Partially Paid": "text-yellow-600 bg-yellow-50",
-  Unpaid: "text-red-600 bg-red-50",
+  Paid: "text-[#102E50] bg-[#F5C45E] font-semibold",
+  "Partially Paid": "text-[#E78B48] bg-[#FFF6E9] border border-[#E78B48]",
+  Unpaid: "text-[#BE3D2A] bg-[#FFF6E9] border border-[#BE3D2A]",
 };
 
 function OrdersManagementProvider() {
@@ -61,7 +63,6 @@ function OrdersManagementProvider() {
   const { messagesSupportProvider, sendMessageSupportProvider } =
     useSupportProvider();
   // const { messagesSupport, generateMessage } = useSupport();
-  const location = useLocation();
   const { messagesss, sendMessagess, report, formatDateLocal } = useLastDate();
   const [buttonAi, setButtonAi] = useState(false);
 
@@ -73,22 +74,22 @@ function OrdersManagementProvider() {
   const provider_id = user?.provider?.provider_id;
   const port = import.meta.env.VITE_PORT;
   const navigate = useNavigate();
+
   useEffect(() => {
-    fetchOrders();
+    if (provider_id) {
+      fetchOrders();
+    }
   }, [provider_id]);
 
 
  
   const fetchOrders = async () => {
+    if (!provider_id) return;
     try {
       const response = await axios.get(
         `http://localhost:${port}/getAllOrderProvider/${provider_id}`
       );
-  
 
-  
-
-   
       const mappedOrders = response.data.map((order) => ({
         order_id: order.order_id,
         status: order.status,
@@ -125,8 +126,11 @@ function OrdersManagementProvider() {
       setOrders(mappedOrders);
       sendMessage(mappedOrders);
       sendMessageSupportProvider();
-      sendMessagess(mappedOrders);
+
+      console.log("Fetched orders:", mappedOrders);
+
       console.log(mappedOrders);
+
     } catch (error) {
       console.error("Error fetching orders:", error);
     }
@@ -137,9 +141,7 @@ function OrdersManagementProvider() {
   const filteredOrders = useMemo(() => {
     const filtered = orders.filter((order) => {
       const matchesSearch =
-        String(order.order_id)
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase()) ||
+        String(order.order_id).toLowerCase().includes(searchTerm.toLowerCase()) ||
         order.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         order.serviceDetails.toLowerCase().includes(searchTerm.toLowerCase());
 
@@ -165,44 +167,37 @@ function OrdersManagementProvider() {
 
   function deleteOrder(order_id) {
     try {
-      console.log(order_id);
-      const response = axios.put(
+      axios.put(
         `http://localhost:${port}/updateStatusOrder/rejected/${order_id}`
       );
-      console.log("responseeeeeeeeeeeeeeeeeeeeeeeeeeee");
       setOrders((prevOrders) =>
-        prevOrders.map((order) =>
-          order.order_id === order_id ? { ...order, status: "rejected" } : order
+        prevOrders.map((o) =>
+          o.order_id === order_id ? { ...o, status: "rejected" } : o
         )
       );
-      console.log(response.data);
-      console.log("responseeeeeeeeeeeeeeeeeeeeeeeeeeee");
     } catch (error) {
-      console.error(" Unexpected error:", error);
+      console.error("Error on reject:", error);
     }
   }
+
+
   function summarizeOrdersByStatus(orders) {
     const summary = {};
-    console.log(orders);
     orders.forEach((order) => {
       const status = order.status;
-      const priceString = order.totalAmount;
-      const price = parseFloat(priceString) || 0;
-      const totalPrice = price * (order.quantity || 1);
+      const price = parseFloat(order.totalAmount) || 0;
+      const total = price * (order.quantity || 1);
       if (!summary[status]) {
         summary[status] = { count: 0, totalPrice: 0 };
       }
-
       summary[status].count += 1;
-      summary[status].totalPrice += totalPrice;
+      summary[status].totalPrice += total;
     });
     return summary;
   }
-  // Import EasyInvoice
 
   const summary = summarizeOrdersByStatus(orders);
-  // sendMessage(summary);
-  console.log(summary);
+
   const data = Object.entries(summary).map(([status, values]) => ({
     name: status,
     value: values.totalPrice,
@@ -215,8 +210,8 @@ function OrdersManagementProvider() {
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#A020F0"];
 
   return (
-    <div className="flex h-screen bg-background">
-      {/* Overlay */}
+    <div className="flex flex-col lg:flex-row h-screen bg-[#FFF6E9]">
+      {/* Sidebar overlay when open (for mobile) */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
@@ -226,53 +221,50 @@ function OrdersManagementProvider() {
 
 
 
-      {/* Main Content */}
+      {/* Main content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
-        <header className="bg-card border-b border-border px-6 py-4">
+        <header className="bg-[#102E50] border-b-4 border-[#F5C45E] px-4 sm:px-6 py-3 sm:py-4 shadow-lg">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-3">
               <button
                 onClick={() => setSidebarOpen(true)}
-                className="lg:hidden text-foreground hover:text-primary"
+                className="lg:hidden text-[#FFF6E9] hover:text-[#E78B48]"
               >
                 <Menu className="h-6 w-6" />
               </button>
-              <h2 className="text-2xl font-montserrat font-bold text-foreground">
+              <h2 className="text-xl sm:text-2xl font-montserrat font-bold text-[#FFF6E9]">
                 Orders Management
               </h2>
             </div>
-
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-3">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#102E50] h-4 w-4" />
                 <input
                   type="text"
                   placeholder="Search orders..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 pr-4 py-2 w-80 bg-input border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
+                  className="pl-10 pr-4 py-2 w-48 sm:w-80 bg-[#FFF6E9] border-2 border-[#F5C45E] text-[#102E50] placeholder-[#102E50]/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E78B48] focus:border-[#E78B48]"
                 />
               </div>
-              <Bell className="h-5 w-5 text-muted-foreground" />
+              <Bell className="h-5 w-5 text-[#F5C45E] hover:text-[#E78B48] transition-colors cursor-pointer" />
             </div>
           </div>
         </header>
 
         {/* Filters */}
-        <div className="bg-card border-b border-border px-6 py-4">
-          <div className="flex flex-wrap items-center gap-4">
+        <div className="bg-white border-b-2 border-[#E78B48] px-4 sm:px-6 py-3 sm:py-4 shadow-sm">
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4">
             <div className="flex items-center space-x-2">
-              <Filter className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm font-medium text-foreground">
-                Filters:
-              </span>
+              <Filter className="h-4 w-4 text-[#E78B48]" />
+              <span className="text-sm font-medium text-[#102E50]">Filters:</span>
             </div>
 
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-3 py-1 bg-input border border-border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+              className="px-3 py-1 bg-[#FFF6E9] border-2 border-[#102E50] text-[#102E50] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#F5C45E] focus:border-[#F5C45E]"
             >
               <option value="All">All Status</option>
               {statuses.map((status) => (
@@ -285,7 +277,7 @@ function OrdersManagementProvider() {
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="px-3 py-1 bg-input border border-border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+              className="px-3 py-1 bg-[#FFF6E9] border-2 border-[#102E50] text-[#102E50] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#F5C45E] focus:border-[#F5C45E]"
             >
               <option value="All">All Categories</option>
               {categories.map((category) => (
@@ -294,217 +286,198 @@ function OrdersManagementProvider() {
                 </option>
               ))}
             </select>
+
             <select
               value={sortOrder}
               onChange={(e) => setSortOrder(e.target.value)}
-              className="px-3 py-1 bg-input border border-border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+              className="px-3 py-1 bg-[#FFF6E9] border-2 border-[#102E50] text-[#102E50] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#F5C45E] focus:border-[#F5C45E]"
             >
               <option value="newest">Newest First</option>
               <option value="oldest">Oldest First</option>
             </select>
-            <div className="flex items-center space-x-2">
-
-              <DownLoadAllOrder order={orders} />
-
-            </div>
+              <div className="flex items-center space-x-2">
+                    
+                          <DownLoadAllOrder order={orders} />
+                      
+                      </div>
           </div>
         </div>
 
-        {/* Orders List */}
-        <div className="flex-1 overflow-auto p-6">
-          <div className="grid gap-4">
-            {" "}
-            {/* //////////////
-            ////////////////
-            /////////////
-            /////////// */}
+        {/* Orders list / AI summary */}
+        <div className="flex-1 overflow-auto p-4 sm:p-6">
+          <div className="flex flex-col gap-4">
             <button
-              onClick={() => {
-                setButtonAi(!buttonAi);
-              }}
-              className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+              onClick={() => setButtonAi((prev) => !prev)}
+              className={`flex items-center justify-center gap-2 px-6 py-3 bg-[#F5C45E] text-[#102E50] font-semibold rounded-lg shadow-lg
+                transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#E78B48] focus:ring-offset-2
+                hover:bg-[#E78B48]`}
             >
-              {buttonAi ? "Hide" : "Analyze using AI"}
+              <Sparkles className="h-5 w-5" />
+              {buttonAi ? "Hide Analysis" : "Analyze using AI"}
             </button>
-            {buttonAi ? (
+
+            {buttonAi && (
               <OrdersSummary
                 data={data}
-                بهة
+
                 data2={data2}
                 COLORS={COLORS}
                 report={report}
                 assistantMessagesSupport={assistantMessagesSupport}
                 formatDateLocal={formatDateLocal}
               />
-            ) : (
-              <></>
+
             )}
-            {/* /////////
-            //////////
-            //////
-            //// */}
+
             {filteredOrders.map((order) => (
               <div
-                key={order.id}
-                className="bg-card border border-border rounded-lg p-6 hover:shadow-md transition-shadow cursor-pointer"
+                key={order.order_id}
+                className="bg-white border-2 border-[#F5C45E] rounded-lg p-4 sm:p-6 hover:shadow-xl transition-shadow cursor-pointer"
                 onClick={() => setSelectedOrder(order)}
               >
-                <div className="flex items-start justify-between">
-                  <div className="flex-shrink-0">
+                <div className="flex flex-col md:flex-row md:space-x-6">
+                  <div className="flex-shrink-0 mb-4 md:mb-0">
                     <img
                       src={
                         order.product_image
                           ? order.product_image.startsWith("http")
                             ? order.product_image
                             : `http://localhost:${port}${order.product_image}`
-                          : `../src/assets/cupcakes-1283247__340.jpg`
+                          : '../../assests/NoImage'
+                
                       }
                       alt={order.productName}
-                      className="m-8 w-50 h-50 rounded-lg object-cover border border-border"
+
+                      className="w-full sm:w-48 h-48 object-cover rounded-lg border-2 border-[#E78B48]"
                     />
                   </div>
-                  <div>
-                    {/* <button
-                      onClick={() => {
-                        printInvoice(order);
-                      }}
-                    >
-                      aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-                    </button> */}
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-3 mb-3">
-                      <h3 className="text-lg font-montserrat font-semibold text-card-foreground">
-                        {order.id}
-                      </h3>
-                      <div
-                        className={
-                          "flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium border " +
-                          statusClasses[order.status]
-                        }
-                      >
+
+                  <div className="flex-1 flex flex-col justify-between">
+                    <div>
+                      <div className="flex flex-wrap items-center gap-3 mb-3">
+                        <h3 className="text-lg font-montserrat font-semibold text-[#102E50]">
+                          {order.order_id}
+                        </h3>
+
                         <div
                           className={
-                            "w-2 h-2 rounded-full " +
-                            statusDotClasses[order.status]
+                            "flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium border " +
+                            statusClasses[order.status]
                           }
-                        />
-                        <span>{order.status}</span>
-                      </div>
-                      <div
-                        className={
-                          "px-2 py-1 rounded-full text-xs font-medium " +
-                          paymentStatusClasses[order.paymentStatus]
-                        }
-                      >
-                        {order.paymentStatus}
-                      </div>
-                    </div>
 
-                    <h4 className="text-base font-semibold text-card-foreground mb-2">
-                      {order.productName}
-                    </h4>
-                    <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
-                      {order.serviceDetails}
-                    </p>
-                    {order.response_from_provider && (
-                      <p className="text-sm text-muted-foreground mb-4 italic">
-                        Provider Response: {order.response_from_provider}
-                      </p>
-                    )}
-                    {order.customNotes && (
-                      <p className="text-sm text-muted-foreground mb-4 italic">
-                        Note Customer: {order.customNotes}
-                      </p>
-                    )}
-                    <span className="text-sm">Quantity:</span>
-                    <span className="w-8 text-center font-medium">
-                      {order.quantity}
-                    </span>
+                        >
+                        {order.status === "completed" ? (
+                            <CheckCircle2 className="w-3.5 h-3.5" />
+                          ) : order.status === "In Progress" || order.status === "on_progress" ? (
+                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                          ) : (
+                            <div className={"w-2 h-2 rounded-full " + statusDotClasses[order.status]} />
+                          )}
+                          <span>{order.status}</span>
 
-                    {/* {order.status === "awaiting_approval" ? (
-                      order.customNotes !== null &&  order.customNotes !== ""&&
-                      order.response_from_provider === null ? (
-                        <ApprovalForm orderId={order.order_id} port={port} />
-                      ) : (
-                        <p>Already send Messag and Update your price</p>
-                      )
-                    ) : (
-                      <p></p>
-                    )} */}
-
-                    {order.status === "awaiting_approval" &&
-                      order.customNotes !== null &&
-                      order.customNotes !== "" &&
-                      order.response_from_provider === null && (
-                        // <ApprovalForm orderId={order.order_id} port={port} />
-                        <div>
-                          <ApprovalForm
-                            orderId={order.order_id}
-                            cart_id={order.cart_id}
-                            port={port}
-                            onSuccess={(updatedOrder) => {
-                              setOrders((prevOrders) =>
-                                prevOrders.map((o) =>
-                                  o.order_id === updatedOrder.order_id
-                                    ? { ...o, ...updatedOrder }
-                                    : o
-                                )
-                              );
-                            }}
-                          />{" "}
-                          <button
-                            className="flex-1 sm:flex-auto bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-                            onClick={() => {
-                              deleteOrder(order.order_id);
-                            }}
-                          >
-                            Reject{" "}
-                          </button>
                         </div>
-                      )}
-                    {/* Buttons to update order status */}
+                        <div
+                          className={
+                            "px-2 py-1 rounded-full text-xs font-medium " +
+                            paymentStatusClasses[order.paymentStatus]
+                          }
+                        >
+                          {order.paymentStatus}
+                        </div>
+                      </div>
 
-                    {order.status === "awaiting_approval" &&
-                      order.response_from_provider !== null && (
-                        <p className="text-sm text-red-500 font-medium">
-                          Already sent message and updated your price
+                      <h4 className="text-base font-semibold text-[#102E50] mb-2">
+                        {order.productName}
+                      </h4>
+                      <p className="text-sm text-[#102E50]/70 mb-3 line-clamp-2">
+                        {order.serviceDetails}
+                      </p>
+
+                      {order.response_from_provider && (
+                        <p className="text-sm text-[#E78B48] mb-4 italic bg-[#FFF6E9] p-2 rounded border-l-4 border-[#E78B48]">
+                          Provider Response: {order.response_from_provider}
                         </p>
                       )}
 
-                    <div className="grid grid-cols-2 md:grid-cols-5 gap-6 text-sm">
-                      {/* السعر */}
-                      <div className="flex items-center space-x-2">
-                        <DollarSign className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-card-foreground font-medium">
-                          {(
-                            order.totalAmount * order.quantity
-                          ).toLocaleString()}
+
+                      {order.customNotes && (
+                        <p className="text-sm text-[#E78B48] mb-4 italic bg-[#FFF6E9] p-2 rounded border-l-4 border-[#E78B48]">
+                          Note Customer: {order.customNotes}
+                        </p>
+                      )}
+
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="text-sm text-[#102E50] font-medium">Quantity:</span>
+                        <span className="w-8 text-center font-bold text-[#E78B48]">
+                          {order.quantity}
                         </span>
                       </div>
-                      {/* تاريخ الطلب */}
+
+                      {order.status === "awaiting_approval" &&
+                        order.customNotes &&
+                        !order.response_from_provider && (
+                   <div className="flex flex-col sm:flex-row sm:items-start gap-1 mb-3">
+                        <button
+                  className="sm:mt-[24px] px-4 py-2 bg-[#BE3D2A] text-white rounded-lg hover:bg-[#BE3D2A]/80 transition-colors"
+                        onClick={(e) => {
+                        e.stopPropagation();
+                         deleteOrder(order.order_id);
+                       }}
+                       >
+                        Reject
+                      </button>
+                     <ApprovalForm
+                       orderId={order.order_id}
+                     cart_id={order.cart_id}
+                       port={port}
+                       onSuccess={(updatedOrder) => {
+                      setOrders((prevOrders) =>
+                          prevOrders.map((o) =>
+                     o.order_id === updatedOrder.order_id ? { ...o, ...updatedOrder } : o
+        )
+      );
+    }}
+  />
+</div>
+
+                        )}
+
+                      {order.status === "awaiting_approval" &&
+                        order.response_from_provider && (
+                          <p className="text-sm text-[#BE3D2A] font-medium bg-[#FFF6E9] p-2 rounded border-l-4 border-[#BE3D2A]">
+                            Already sent message and updated your price
+                          </p>
+                        )}
+                    </div>
+
+                    <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 sm:gap-6 text-sm mt-4">
+
                       <div className="flex items-center space-x-2">
-                        <Calendar className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-muted-foreground">
+                        <DollarSign className="h-4 w-4 text-[#F5C45E]" />
+                        <span className="text-[#102E50] font-bold">
+                          {(order.totalAmount * order.quantity).toLocaleString()}
+                        </span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Calendar className="h-4 w-4 text-[#E78B48]" />
+                        <span className="text-[#102E50]/70">
                           {new Date(order.orderDate).toLocaleDateString()}
                         </span>
                       </div>
-                      {/* تاريخ التوصيل */}
+
                       <div className="flex items-center space-x-2">
-                        <Truck className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-muted-foreground">
-                          {new Date(
-                            order.estimatedDelivery
-                          ).toLocaleDateString()}
+                        <Truck className="h-4 w-4 text-[#102E50]" />
+                        <span className="text-[#102E50]/70">
+                          {new Date(order.estimatedDelivery).toLocaleDateString()}
                         </span>
                       </div>
                       {/* التصنيف */}
                       <div className="flex items-center space-x-2">
-                        <span className="text-xs px-3 py-1 bg-secondary text-secondary-foreground rounded">
+
+                        <span className="text-xs px-3 py-1  text-[#F5C45E] rounded-full font-semibold">
                           {order.category}
                         </span>
                       </div>
-                      {/* زر الطباعة */}
                       <div className="flex items-center space-x-2">
                         {order.status === "completed" ? (
                           <PrintInvoiceButton order={order} />
@@ -512,33 +485,25 @@ function OrdersManagementProvider() {
                           <></>
                         )}
                       </div>{" "}
-
+                    
                     </div>
 
                     {
                       /* {order.status === "completed" || */
                       order.status === "on_progress" ||
-                        order.status === "pending" ? (
+                      order.status === "pending" ? (
                         <ButtonStatus
                           onSuccess={fetchOrders}
                           orderId={order.order_id}
                           setOrders={setOrders}
                           port={port}
-                        ></ButtonStatus>
-                      ) : (
-                        <></>
-                      )
-                    }
+                        />
+                      </div>
+                    )}
                   </div>
 
-                  <div></div>
-                  <div className="flex flex-col items-center mt-2">
+                  <div className="mt-4 md:mt-0 flex flex-col items-center">
                     <img
-                      // src={
-                      //   order.provider_profile_image ||
-                      //   "../src/assets/default-avatar.png"
-                      // }
-
                       src={
                         order.customer_profile_image
                           ? `http://localhost:${port}${order.customer_profile_image}`
@@ -548,9 +513,9 @@ function OrdersManagementProvider() {
                         navigate(`/profile/${order.customer_id}`);
                       }}
                       alt={`${order.customer_firstname} ${order.customer_lastname}`}
-                      className="w-10 h-10 rounded-full border border-border object-cover"
+                      className="w-10 h-10 rounded-full border-2 border-[#E78B48] object-cover hover:border-[#F5C45E] transition-colors cursor-pointer"
                     />
-                    <span className="text-sm font-medium text-card-foreground mt-1">
+                    <span className="text-sm font-medium text-[#102E50] mt-2 text-center">
                       {order.customer_firstname} {order.customer_lastname}
                     </span>
                   </div>
@@ -566,7 +531,6 @@ function OrdersManagementProvider() {
                     <button className="p-2 text-muted-foreground hover:text-primary hover:bg-secondary rounded-lg transition-colors">
                       <MessageCircle className="h-4 w-4" />
                     </button>
-
                   </div>
                 </div>
               </div>
