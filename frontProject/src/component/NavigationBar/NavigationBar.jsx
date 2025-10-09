@@ -145,6 +145,12 @@ export default function NavigationBar({ onScroll, cartCount }) {
                     {cartCount}
                   </span>
                 )}
+                {item.name === "ReqProvider" && (
+                  <span
+
+                  ></span>
+                )}
+
                 <div className="absolute top-0 -left-full w-full h-full bg-gradient-to-r from-transparent via-[rgba(19,246,238,0.4)] to-transparent transition-[left] duration-500 group-hover:left-full"></div>
 
                 {/* Active state glow effect */}

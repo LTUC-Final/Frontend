@@ -21,7 +21,7 @@ export default function GitAllProduct() {
   console.log(selectore);
   console.log(selectore);
 
-  console.log(CusData);
+  console.log("asdallllllllsd",CusData);
 
   console.log(cards);
   console.log(textSearch);

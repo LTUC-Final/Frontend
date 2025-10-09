@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import NavigationBar from "./NavigationBar";
+import OrdersManagementProvider from "../../pages/request/pageReq";
 
-export default function Layout({ children , cartCount  }) {
+export default function Layout({ children, cartCount }) {
   const OurValue = useRef(null);
   const Client = useRef(null);
   const Partner = useRef(null);
@@ -36,6 +37,8 @@ export default function Layout({ children , cartCount  }) {
       window.removeEventListener("storage", handleStorageChange);
     };
   }, []);
+ 
+  
   return (
     <>
       {!shouldHideNav && (
@@ -51,6 +54,7 @@ export default function Layout({ children , cartCount  }) {
           }}
         ></NavigationBar>
       )}
+      
       {children}
       {/* <Footer /> */}
     </>

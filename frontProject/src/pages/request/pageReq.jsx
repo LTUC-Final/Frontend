@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import useSummary from "../../hooks/useAnaliasisOrder";
 import useLastDate from "../../hooks/useLastDate";
 import useSupportProvider from "../../hooks/useSupportProvider";
@@ -20,6 +20,8 @@ import ApprovalForm from "./approvalForm";
 import ButtonStatus from "./ButtonStatues";
 import DownLoadAllOrder from "./downLoadAllOrders";
 import PrintInvoiceButton from "./printInvoice";
+import Layout from "../../component/NavigationBar/Layout";
+
 const statusClasses = {
   pending: "text-yellow-600 bg-yellow-50 border border-yellow-200",
   "In Progress": "text-blue-600 bg-blue-50 border border-blue-200",
@@ -51,13 +53,15 @@ function OrdersManagementProvider() {
   const [statusFilter, setStatusFilter] = useState("All");
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [selectedOrder, setSelectedOrder] = useState(null);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [orders, setOrders] = useState([]);
+  const [currentLength, setCurrentLength] = useState(0);
   const [sortOrder, setSortOrder] = useState("newest");
   const { messages, sendMessage } = useSummary();
   const { messagesSupportProvider, sendMessageSupportProvider } =
     useSupportProvider();
   // const { messagesSupport, generateMessage } = useSupport();
+  const location = useLocation();
   const { messagesss, sendMessagess, report, formatDateLocal } = useLastDate();
   const [buttonAi, setButtonAi] = useState(false);
 
@@ -73,12 +77,18 @@ function OrdersManagementProvider() {
     fetchOrders();
   }, [provider_id]);
 
+
+ 
   const fetchOrders = async () => {
     try {
       const response = await axios.get(
         `http://localhost:${port}/getAllOrderProvider/${provider_id}`
       );
+  
 
+  
+
+   
       const mappedOrders = response.data.map((order) => ({
         order_id: order.order_id,
         status: order.status,
@@ -111,8 +121,8 @@ function OrdersManagementProvider() {
         product_image: order.product_image,
         location: order.location,
       }));
+       
       setOrders(mappedOrders);
-
       sendMessage(mappedOrders);
       sendMessageSupportProvider();
       sendMessagess(mappedOrders);
@@ -121,6 +131,8 @@ function OrdersManagementProvider() {
       console.error("Error fetching orders:", error);
     }
   };
+
+
 
   const filteredOrders = useMemo(() => {
     const filtered = orders.filter((order) => {
@@ -212,6 +224,8 @@ function OrdersManagementProvider() {
         />
       )}
 
+
+
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
@@ -288,11 +302,11 @@ function OrdersManagementProvider() {
               <option value="newest">Newest First</option>
               <option value="oldest">Oldest First</option>
             </select>
-              <div className="flex items-center space-x-2">
-                    
-                          <DownLoadAllOrder order={orders} />
-                      
-                      </div>
+            <div className="flex items-center space-x-2">
+
+              <DownLoadAllOrder order={orders} />
+
+            </div>
           </div>
         </div>
 
@@ -498,13 +512,13 @@ function OrdersManagementProvider() {
                           <></>
                         )}
                       </div>{" "}
-                    
+
                     </div>
 
                     {
                       /* {order.status === "completed" || */
                       order.status === "on_progress" ||
-                      order.status === "pending" ? (
+                        order.status === "pending" ? (
                         <ButtonStatus
                           onSuccess={fetchOrders}
                           orderId={order.order_id}
@@ -552,6 +566,7 @@ function OrdersManagementProvider() {
                     <button className="p-2 text-muted-foreground hover:text-primary hover:bg-secondary rounded-lg transition-colors">
                       <MessageCircle className="h-4 w-4" />
                     </button>
+
                   </div>
                 </div>
               </div>

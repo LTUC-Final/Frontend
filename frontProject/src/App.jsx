@@ -24,31 +24,31 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 function App() {
-  const [cart, setCart] = useState([]); 
+  const [cart, setCart] = useState([]);
   const CusData = useSelector((state) => state.UserInfo);
   const port = import.meta.env.VITE_PORT;
 
- const fetchCart = async () => {
-  if (!CusData?.user?.user_id) return;
-  try {
-    const res = await axios.get(
-      `http://localhost:${port}/api/carts/products/${CusData.user.user_id}`
-    );
-    setCart(res.data.cards || []);
-  } catch (err) {
-    console.error(err);
-  }
-};
+  const fetchCart = async () => {
+    if (!CusData?.user?.user_id) return;
+    try {
+      const res = await axios.get(
+        `http://localhost:${port}/api/carts/products/${CusData.user.user_id}`
+      );
+      setCart(res.data.cards || []);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
-useEffect(() => {
-  fetchCart();
-  const interval =setInterval(fetchCart , 1000)
+  useEffect(() => {
+    fetchCart();
+    const interval = setInterval(fetchCart, 1000)
 
-  return ()=> clearInterval(interval )
-}, [CusData]);
+    return () => clearInterval(interval)
+  }, [CusData]);
   return (
     <div>
-      <Layout cartCount={cart.length}>
+      <Layout cartCount={cart.length} >
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/" element={<h1>Alquraan </h1>} />
@@ -57,7 +57,7 @@ useEffect(() => {
           <Route path="/register" element={<Register />} />
           <Route path="/profile/:user_id" element={<Profile />} />
           <Route path="/LiveChat" element={<LiveChat />} />
-
+          
 
           <Route
             path="/providerDashboard"
@@ -77,7 +77,7 @@ useEffect(() => {
           ></Route>
           <Route
             path="/requestProvider"
-            element={<OrdersManagementProvider></OrdersManagementProvider>}
+            element={<OrdersManagementProvider/>}
           ></Route>
           <Route
             path="/orderCustomer"
