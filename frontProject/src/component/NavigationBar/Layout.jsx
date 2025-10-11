@@ -2,10 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import NavigationBar from "./NavigationBar";
 
-
-import Footer from "./Footer/Footer";
-
-
 export default function Layout({ children, cartCount }) {
   const OurValue = useRef(null);
   const Client = useRef(null);
@@ -44,18 +40,14 @@ export default function Layout({ children, cartCount }) {
             else if (section === "Client") scrollToComponent(Client);
             else if (section === "OurValue") scrollToComponent(OurValue);
             else if (section === "Owners") scrollToComponent(Owners);
-            else if (section === "AboutCompany") scrollToComponent(AboutCompany);
+            else if (section === "AboutCompany")
+              scrollToComponent(AboutCompany);
           }}
         />
       )}
 
-
       {/* Main content should take up all remaining space */}
-      <main className="flex-1">
-        {children}
-      </main>
-
-    
+      <main className="flex-1">{children}</main>
     </div>
   );
 }
