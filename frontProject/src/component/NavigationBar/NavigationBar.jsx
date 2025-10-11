@@ -64,7 +64,6 @@ export default function NavigationBar({ onScroll, cartCount }) {
         </div>
 
         {/* Desktop Navigation */}
-
         <div className="hidden md:flex items-center gap-8">
           {navItem.map((item, index) => (
             <div className="relative group" key={index}>
@@ -84,86 +83,66 @@ export default function NavigationBar({ onScroll, cartCount }) {
                 `}
               >
                 <span className="relative z-[2]">{item.name}</span>
+
                 {item.name === "Cart" && cartCount > 0 && (
-                  <span className="absolute top-1/4 right-1/5 transform translate-x-1/2 -translate-y-1/2 w-7 h-7 bg-red-500 rounded-full flex items-center justify-center text-white text-sm">
+                  <span className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-white text-xs">
                     {cartCount}
                   </span>
                 )}
-                {item.name === "ReqProvider" && (
-                  <span
-
-                  ></span>
-                )}
-
-                <div className="absolute top-0 -left-full w-full h-full bg-gradient-to-r from-transparent via-[rgba(19,246,238,0.4)] to-transparent transition-[left] duration-500 group-hover:left-full"></div>
-
-                <div className="hidden md:flex items-center gap-4">
-                  {navItem.map((item, index) => {
-                    const isActive = location.pathname === item.href
-                    const baseClasses = `relative flex items-center px-5 py-2.5 text-sm font-semibold rounded-full transition-all duration-300 overflow-hidden`
-                    const activeClasses = `bg-gradient-to-r from-[#F5C45E] to-[#E78B48] text-[#102E50] shadow-[0_4px_12px_rgba(245,196,94,0.4)]`
-                    const inactiveClasses = `text-[#FFF6E9] hover:text-[#F5C45E] hover:bg-[#FFF6E9]/10 border border-[#FFF6E9]/20 hover:border-[#F5C45E]/50`
-                    const linkClasses = `${baseClasses} ${isActive ? activeClasses : inactiveClasses}`
-
-
-                    return (
-                      <div className="relative group" key={index}>
-                        <Link onClick={() => onScroll?.(item.section)} to={item.href} className={linkClasses}>
-                          <span className="relative z-[2]">{item.name}</span>
-
-                          {isActive && (
-                            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[#F5C45E] to-[#E78B48] blur-md opacity-50 -z-[1]"></div>
-                          )}
-                        </Link>
-                      </div>
-                    )
-                  })}
-                </div>
-
-                {/* Mobile Menu Button */}
-                <button
-                  className="md:hidden flex flex-col justify-center items-center w-10 h-10 bg-[#FFF6E9]/10 border border-[#F5C45E]/30 rounded-lg cursor-pointer transition-all duration-300 hover:bg-[#F5C45E]/20 hover:border-[#F5C45E]"
-                  onClick={() => setIsMenuOpen(!isMenuOpen)}
-                >
-                  <div className="flex flex-col gap-1">
-                    <span
-                      className={`w-5 h-0.5 bg-[#FFF6E9] transition-all duration-300 rounded-sm ${isMenuOpen ? "rotate-45 translate-x-[5px] translate-y-[5px]" : ""
-                        }`}
-                    ></span>
-                    <span
-                      className={`w-5 h-0.5 bg-[#FFF6E9] transition-all duration-300 rounded-sm ${isMenuOpen ? "opacity-0" : ""
-                        }`}
-                    ></span>
-                    <span
-                      className={`w-5 h-0.5 bg-[#FFF6E9] transition-all duration-300 rounded-sm ${isMenuOpen ? "-rotate-45 translate-x-[7px] -translate-y-[6px]" : ""
-                        }`}
-                    ></span>
-                  </div>
-                </button>
-            </div>
-
-      {/* Mobile Navigation */ }
-            < div
-        className = {`md:hidden flex flex-col bg-[#102E50]/98 backdrop-blur-lg border-t-2 border-[#F5C45E]/20 overflow-hidden transition-[max-height] duration-300 ${isMenuOpen ? "max-h-[500px]" : "max-h-0"
-              }`}
-      >
-          {navItem.map((item, index) => {
-            const isActive = location.pathname === item.href
-            return (
-              <Link
-                key={index}
-                to={item.href}
-                className={`block px-8 py-4 text-[#FFF6E9] no-underline font-medium transition-all duration-300 border-b border-[#FFF6E9]/10 hover:bg-[#F5C45E]/20 hover:text-[#F5C45E] hover:pl-10 hover:border-l-4 hover:border-l-[#E78B48] ${isActive
-                    ? "bg-gradient-to-r from-[#F5C45E]/30 to-transparent text-[#F5C45E] pl-10 border-l-4 border-l-[#E78B48]"
-                    : ""
-                  }`}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {item.name}
               </Link>
-            )
-          })}
+            </div>
+          ))}
         </div>
+
+        {/* Mobile Menu Button */}
+        <button
+          className="md:hidden flex flex-col justify-center items-center w-10 h-10 bg-[#FFF6E9]/10 border border-[#F5C45E]/30 rounded-lg cursor-pointer transition-all duration-300 hover:bg-[#F5C45E]/20 hover:border-[#F5C45E]"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+        >
+          <div className="flex flex-col gap-1">
+            <span
+              className={`w-5 h-0.5 bg-[#FFF6E9] transition-all duration-300 rounded-sm ${
+                isMenuOpen ? "rotate-45 translate-x-[5px] translate-y-[5px]" : ""
+              }`}
+            ></span>
+            <span
+              className={`w-5 h-0.5 bg-[#FFF6E9] transition-all duration-300 rounded-sm ${
+                isMenuOpen ? "opacity-0" : ""
+              }`}
+            ></span>
+            <span
+              className={`w-5 h-0.5 bg-[#FFF6E9] transition-all duration-300 rounded-sm ${
+                isMenuOpen ? "-rotate-45 translate-x-[7px] -translate-y-[6px]" : ""
+              }`}
+            ></span>
+          </div>
+        </button>
+      </div>
+
+      {/* Mobile Navigation */}
+      <div
+        className={`md:hidden flex flex-col bg-[#102E50]/98 backdrop-blur-lg border-t-2 border-[#F5C45E]/20 overflow-hidden transition-[max-height] duration-300 ${
+          isMenuOpen ? "max-h-[500px]" : "max-h-0"
+        }`}
+      >
+        {navItem.map((item, index) => {
+          const isActive = location.pathname === item.href
+          return (
+            <Link
+              key={index}
+              to={item.href}
+              className={`block px-8 py-4 text-[#FFF6E9] no-underline font-medium transition-all duration-300 border-b border-[#FFF6E9]/10 hover:bg-[#F5C45E]/20 hover:text-[#F5C45E] hover:pl-10 hover:border-l-4 hover:border-l-[#E78B48] ${
+                isActive
+                  ? "bg-gradient-to-r from-[#F5C45E]/30 to-transparent text-[#F5C45E] pl-10 border-l-4 border-l-[#E78B48]"
+                  : ""
+              }`}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              {item.name}
+            </Link>
+          )
+        })}
+      </div>
     </nav>
   )
 }

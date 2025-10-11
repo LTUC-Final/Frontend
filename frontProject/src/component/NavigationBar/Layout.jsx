@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import NavigationBar from "./NavigationBar";
 
-import OrdersManagementProvider from "../../pages/request/pageReq";
 
 import Footer from "./Footer/Footer";
 
@@ -58,6 +57,5 @@ export default function Layout({ children, cartCount }) {
 
     
     </div>
->>>>>>> f06f3b4bd7ff86bb45e4a6f45b7e355fba427158
   );
 }
