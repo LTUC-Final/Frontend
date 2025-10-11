@@ -69,10 +69,7 @@ export default function LiveChat() {
       // setMessages(prev => [...prev, messageData]);
     }
     try {
-      await axios.post(
-        `http://localhost:${port}/api/send-messages`,
-        messageData
-      );
+      await axios.post(`  http://localhost:${port}/api/send-messages`, messageData);
       setTextMessage("");
     } catch (error) {
       console.log(error);
