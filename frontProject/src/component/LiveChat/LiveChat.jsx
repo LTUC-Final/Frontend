@@ -38,7 +38,7 @@ useEffect(() => {
   useEffect(() => {
     if (!sender) return;
 
-    socketRef.current = io("http://localhost:3001");
+    socketRef.current = io(`http://localhost:${port}`);
 
     socketRef.current.emit("register", sender.user_id);
 
@@ -67,7 +67,7 @@ useEffect(() => {
       // setMessages(prev => [...prev, messageData]);
     }
     try {
-      await axios.post("http://localhost:3001/api/send-messages", messageData);
+      await axios.post(`  http://localhost:${port}/api/send-messages`, messageData);
       setTextMessage("");
     } catch (error) {
       console.log(error);
