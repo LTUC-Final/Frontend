@@ -1,12 +1,12 @@
 "use client";
-import { useNavigate } from "react-router-dom";
+import { Edit2, Mail, MessageCircle, PhoneIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import EditProfile from "./EditProfile";
 import { useSelector } from "react-redux";
-import { Edit2, MessageCircle, Mail, PhoneIcon } from "lucide-react";
-import EditImage from "./EditImage.jsx";
+import { useNavigate } from "react-router-dom";
 import RatingDisplay from "../../component/Profiles/RatingDisplay.jsx";
 import useProviderReviews from "../../hooks/useProviderReviews.jsx";
+import EditImage from "./EditImage.jsx";
+import EditProfile from "./EditProfile";
 
 export default function ProfileCard({ data, refreshTrigger }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -43,7 +43,9 @@ export default function ProfileCard({ data, refreshTrigger }) {
             <img
               src={
                 profile.profile_image
-                  ? `http://localhost:${port}${profile.profile_image}?t=${Date.now()}`
+                  ? `http://localhost:${port}${
+                      profile.profile_image
+                    }?t=${Date.now()}`
                   : `https://ui-avatars.com/api/?name=${profile.firstname}+${profile.lastname}&background=random&color=fff`
               }
               alt={`${profile.firstname || "User"} ${profile.lastname || ""}`}
@@ -73,7 +75,8 @@ export default function ProfileCard({ data, refreshTrigger }) {
               <div
                 className="mb-2 cursor-pointer"
                 onClick={() => {
-                  const reviewsSection = document.getElementById("customer-reviews");
+                  const reviewsSection =
+                    document.getElementById("customer-reviews");
                   if (reviewsSection) {
                     reviewsSection.scrollIntoView({ behavior: "smooth" });
                   }
@@ -90,7 +93,14 @@ export default function ProfileCard({ data, refreshTrigger }) {
 
             {/* Name */}
             <h2 className="text-2xl sm:text-3xl font-bold text-[#102E50] mb-2 mt-4">
-              {profile.firstname || "Unknown"} {profile.lastname || "User"}
+              {/* {profile.firstname || "Unknown"} {profile.lastname || "User"} */}
+              {`${
+                profile.firstname.charAt(0).toUpperCase() +
+                profile.firstname.slice(1)
+              } ${
+                profile.lastname.charAt(0).toUpperCase() +
+                profile.lastname.slice(1)
+              }`}
             </h2>
 
             {/* Email */}
