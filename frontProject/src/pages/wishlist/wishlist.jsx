@@ -1,10 +1,10 @@
 import axios from "axios";
-import { useEffect, useMemo, useState, useCallback } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 import AddToCart from "../../component/AddToCart.jsx";
 import AddTOFav from "../../component/AddToFav.jsx";
-import Swal from "sweetalert2";
 
 export default function WishList() {
   const token = useSelector((s) => s.UserInfo.token);
@@ -50,7 +50,8 @@ export default function WishList() {
       });
       setItems(Array.isArray(data?.items) ? data.items : []);
     } catch (e) {
-      const m = e?.response?.data?.error || e?.message || "Failed to load wishlist";
+      const m =
+        e?.response?.data?.error || e?.message || "Failed to load wishlist";
       await alertError(m);
     } finally {
       setLoading(false);
@@ -85,11 +86,15 @@ export default function WishList() {
 
     try {
       await AddTOFav({ product_id: p.product_id }, { user });
-      await alertSuccess("Removed!", `${p.name ?? "Item"} has been removed from your wishlist.`);
+      await alertSuccess(
+        "Removed!",
+        `${p.name ?? "Item"} has been removed from your wishlist.`
+      );
       setTimeout(load, 250);
     } catch (e) {
       setItems(prev);
-      const m = e?.response?.data?.error || e?.message || "Failed to toggle favorite";
+      const m =
+        e?.response?.data?.error || e?.message || "Failed to toggle favorite";
       await alertError(m);
     }
   };
@@ -109,9 +114,13 @@ export default function WishList() {
         price: p.price,
       };
       await AddToCart(card, { user });
-      await alertSuccess("Added to cart!", `${p.name ?? "Item"} has been added successfully.`);
+      await alertSuccess(
+        "Added to cart!",
+        `${p.name ?? "Item"} has been added successfully.`
+      );
     } catch (e) {
-      const m = e?.response?.data?.error || e?.message || "Failed to add to cart";
+      const m =
+        e?.response?.data?.error || e?.message || "Failed to add to cart";
       await alertError(m);
     }
   };
@@ -151,12 +160,21 @@ export default function WishList() {
             >
               <div className="w-full aspect-[4/3] overflow-hidden bg-[#102E50]/5">
                 <img
-                  src={p.image || "https://via.placeholder.com/800x600?text=No+Image"}
+                  // src={p.image || "https://via.placeholder.com/800x600?text=No+Image"}
+
+                  src={
+                    p.image
+                      ? p.image.startsWith("http")
+                        ? p.image
+                        : `http://localhost:${port}${p.image}`
+                      : "../../assests/NoImage"
+                  }
                   alt={p.name || "wishlist item"}
                   className="w-full h-full object-cover transition duration-300 group-hover:scale-105"
                   loading="lazy"
                   onError={(e) => {
-                    e.currentTarget.src = "https://via.placeholder.com/800x600?text=No+Image";
+                    e.currentTarget.src =
+                      "https://via.placeholder.com/800x600?text=No+Image";
                   }}
                 />
               </div>

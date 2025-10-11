@@ -12,6 +12,7 @@ import {
   Search,
   Truck,
   Sparkles,
+  Loader2,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";

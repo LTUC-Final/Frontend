@@ -1,8 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { FaStar } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
 import DetailsOfCards from "./DetailsOfCards";
-import { FaStar } from "react-icons/fa"; 
 
 export default function CardDeatils() {
   const port = import.meta.env.VITE_PORT;
@@ -18,6 +18,10 @@ export default function CardDeatils() {
           `http://localhost:${port}/api/ReviewsProduct/${card.product_id}`
         );
         setCardRev(res.data);
+        console.log("vvvvvvvvvvvvvvvvvvvvvvvvvvvvv");
+        console.log(res.data);
+
+        console.log("vvvvvvvvvvvvvvvvvvvvvvvvvvvvv");
       } catch (error) {
         console.log(error);
       }
@@ -53,11 +57,10 @@ export default function CardDeatils() {
               <div className="flex items-center gap-4">
                 <img
                   src={
-                    review.customer_profile_image
-                      ? review.customer_profile_image.startsWith("http")
-                        ? review.customer_profile_image
-                        : ` https://ui-avatars.com/api/?name=${review.firstname}+${review.lastname}&background=random&color=fff`
-                      : `../src/assets/cupcakes-1283247__340.jpg`
+                    review.customer_profile_image &&
+                    review.customer_profile_image.startsWith("http")
+                      ? review.customer_profile_image
+                      : `https://ui-avatars.com/api/?name=${review.customer_name}+${review.customerlastname}&background=random&color=fff`
                   }
                   onClick={() => navigate(`/profile/${review.customer_id}`)}
                   alt={review.customer_name}
@@ -68,7 +71,13 @@ export default function CardDeatils() {
                     className="font-semibold text-[#102E50] cursor-pointer hover:underline"
                     onClick={() => navigate(`/profile/${review.customer_id}`)}
                   >
-                    {review.customer_name}
+                    {`${
+                      review.customer_name.charAt(0).toUpperCase() +
+                      review.customer_name.slice(1)
+                    } ${
+                      review.customerlastname.charAt(0).toUpperCase() +
+                      review.customerlastname.slice(1)
+                    }`}
                   </p>
                   <div className="flex items-center text-[#F5C45E] font-bold">
                     <FaStar className="mr-1" />

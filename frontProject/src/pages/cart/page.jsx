@@ -1,4 +1,3 @@
-
 "use client";
 
 import axios from "axios";
@@ -213,25 +212,29 @@ export default function CartPage() {
   };
 
   const deleteItemCart = async (cart_id) => {
-  
     const port = import.meta.env.VITE_PORT;
     try {
       await axios.delete(`http://localhost:${port}/deleteCard/${cart_id}`);
-      setCart((prevCart) => prevCart.filter((item) => item.cart_id !== cart_id));
+      setCart((prevCart) =>
+        prevCart.filter((item) => item.cart_id !== cart_id)
+      );
     } catch (error) {
       console.error(error);
     }
   };
 
   // const subtotal = cart.reduce((sum, p) => sum + p.cart_price * p.quantity, 0);
-  const subtotal = (Array.isArray(cart) ? cart : []).reduce(
-    (sum, p) => sum + p.cart_price * p.quantity,
-    0
-  );
+  const subtotal = (Array.isArray(cart) ? cart : []).reduce((sum, p) => {
+    if (p.provider_response) {
+      return sum + Number(p.cart_price);
+    } else {
+      return sum + Number(p.cart_price) * Number(p.quantity);
+    }
+  }, 0);
 
   const tax = subtotal * 0.08;
   const total = subtotal + tax;
-console.log('Cart value:', cart);
+  console.log("Cart value:", cart);
   const handleCheckout = () => setShowCheckout(true);
   const completePayment = async () => {
     alert("Payment completed successfully!");
@@ -243,12 +246,15 @@ console.log('Cart value:', cart);
       const res = await axios.get(
         `http://localhost:${port}/api/carts/products/${CusData.user.user_id}`
       );
-      setCart(res.data);
+      setCart(res.data.cards);
     } catch (error) {
       console.log(error);
     }
   };
 
+
+
+  
   return (
     <div className="min-h-screen bg-[radial-gradient(1200px_800px_at_20%_-10%,rgba(245,196,94,.18),transparent_55%),radial-gradient(900px_700px_at_100%_0%,rgba(231,139,72,.14),transparent_45%)] from-[#FFF6E9] to-[#FFF6E9] bg-[#FFF6E9] pt-20 md:pt-24 px-3 sm:px-4 md:px-6 py-6 md:py-8">
       <div className="max-w-7xl mx-auto">
@@ -261,171 +267,195 @@ console.log('Cart value:', cart);
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-8 lg:gap-10">
           <div className="lg:col-span-2 space-y-5 sm:space-y-8">
-            {cart.map((product) => (
-              <Card key={product.cart_id}>
-                <CardContent className="p-4 sm:p-6">
-                  <div className="flex flex-col md:flex-row gap-5 md:gap-8">
-                    <div className="md:flex-shrink-0">
-                      <div className="relative">
-                        <div className="w-full md:w-48">
-                          <div className="w-full aspect-[1/1]">
-                            <img
-                              src={
-                                product.product_image
-                                  ? product.product_image.startsWith("http")
-                                    ? product.product_image
-                                    : `http://localhost:${port}${product.product_image}`
-                                  : `/fallback.jpg`
-                              }
-                              alt={product.product_name}
-                              className="w-full h-full object-cover rounded-2xl border-2 border-[#F5C45E] shadow-md"
-                            />
+            {Array.isArray(cart) &&
+              cart.map((product) => (
+                <Card key={product.cart_id}>
+                  <CardContent className="p-4 sm:p-6">
+                    <div className="flex flex-col md:flex-row gap-5 md:gap-8">
+                      <div className="md:flex-shrink-0">
+                        <div className="relative">
+                          <div className="w-full md:w-48">
+                            <div className="w-full aspect-[1/1]">
+                              <img
+                                src={
+                                  product.product_image
+                                    ? product.product_image.startsWith("http")
+                                      ? product.product_image
+                                      : `http://localhost:${port}${product.product_image}`
+                                    : `/fallback.jpg`
+                                }
+                                alt={product.product_name}
+                                className="w-full h-full object-cover rounded-2xl border-2 border-[#F5C45E] shadow-md"
+                              />
+                            </div>
                           </div>
-                        </div>
-                        <span className="absolute -top-3 -left-3 px-3 py-1 rounded-full text-[10px] sm:text-xs font-bold bg-[#102E50] text-white shadow">
-                          Item
-                        </span>
-                      </div>
-                    </div>
-
-                  
-
-                    <div className="flex-1 space-y-4 sm:space-y-5 relative">
-                      <div className="flex flex-col gap-1">
-                        <h3 className="text-lg sm:text-2xl font-extrabold text-[#102E50] leading-tight line-clamp-2">
-                          {product.product_name}
-                        </h3>
-                        <p className="inline-flex w-fit items-center gap-2 text-2xl sm:text-3xl font-black text-[#E78B48]">
-                          <span className="h-2 w-2 rounded-full bg-[#F5C45E]"></span>${product.cart_price}
-                        </p>
-                      </div>
-
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        className="absolute top-0 right-0"
-                        onClick={() => deleteItemCart(product.cart_id)}
-                      >
-                        Delete
-                      </Button>
-
-                      <div className="flex items-center gap-3">
-                        <span className="text-sm text-[#102E50]">Quantity:</span>
-                        {product.provider_response ? (
-                          <span className="w-10 text-center font-semibold text-[#102E50] bg-[#FFF6E9] rounded-lg border border-[#F5C45E]/50 py-1">
-                            {product.quantity}
+                          <span className="absolute -top-3 -left-3 px-3 py-1 rounded-full text-[10px] sm:text-xs font-bold bg-[#102E50] text-white shadow">
+                            Item
                           </span>
-                        ) : (
-                          <div className="flex items-center gap-2">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() =>
-                                updateQuantity(product.cart_id, -1)
-                              }
-                            >
-                              <Minus className="h-4 w-4" />
-                            </Button>
+                        </div>
+                      </div>
+
+                      <div className="flex-1 space-y-4 sm:space-y-5 relative">
+                        <div className="flex flex-col gap-1">
+                          <h3 className="text-lg sm:text-2xl font-extrabold text-[#102E50] leading-tight line-clamp-2">
+                            {product.product_name}
+                          </h3>
+                          <p className="inline-flex w-fit items-center gap-2 text-2xl sm:text-3xl font-black text-[#E78B48]">
+                            <span className="h-2 w-2 rounded-full bg-[#F5C45E]"></span>
+                            ${product.cart_price}
+                          </p>
+                        </div>
+
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          className="absolute top-0 right-0"
+                          onClick={() => deleteItemCart(product.cart_id)}
+                        >
+                          Delete
+                        </Button>
+
+                        <div className="flex items-center gap-3">
+                          <span className="text-sm text-[#102E50]">
+                            Quantity:
+                          </span>
+                          {product.provider_response ? (
                             <span className="w-10 text-center font-semibold text-[#102E50] bg-[#FFF6E9] rounded-lg border border-[#F5C45E]/50 py-1">
                               {product.quantity}
                             </span>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => updateQuantity(product.cart_id, 1)}
-                            >
-                              <Plus className="h-4 w-4" />
-                            </Button>
+                          ) : (
+                            <div className="flex items-center gap-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() =>
+                                  updateQuantity(product.cart_id, -1)
+                                }
+                              >
+                                <Minus className="h-4 w-4" />
+                              </Button>
+                              <span className="w-10 text-center font-semibold text-[#102E50] bg-[#FFF6E9] rounded-lg border border-[#F5C45E]/50 py-1">
+                                {product.quantity}
+                              </span>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() =>
+                                  updateQuantity(product.cart_id, 1)
+                                }
+                              >
+                                <Plus className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          )}
+                        </div>
+
+                        {product.provider_response &&
+                        product.status_pay !== "Approve" ? (
+                          <div className="space-y-3 sm:space-y-4">
+                            <div className="px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-[#FFF6E9] border border-[#F5C45E]/50 text-[#102E50]">
+                              <span className="text-sm font-semibold">
+                                Provider Message:
+                              </span>
+                              <div className="mt-1 text-sm sm:text-[15px] font-medium">
+                                {product.provider_response}
+                              </div>
+                            </div>
+                            <div className="flex flex-wrap gap-2 sm:gap-3">
+                              <Button
+                                onClick={() =>
+                                  handleApprove(
+                                    product.cart_id,
+                                    product.customer_id
+                                  )
+                                }
+                                className="bg-[#F5C45E] md:hover:bg-[#E78B48] text-[#102E50]"
+                              >
+                                APPROVE
+                              </Button>
+                              <Button
+                                variant="destructive"
+                                onClick={() =>
+                                  handleReject(
+                                    product.cart_id,
+                                    product.customer_id
+                                  )
+                                }
+                              >
+                                REJECT
+                              </Button>
+                            </div>
+                          </div>
+                        ) : product.custom_requirement &&
+                          product.provider_response === null ? (
+                          <p className="inline-flex items-center gap-2 text-[#E78B48] font-semibold">
+                            <span className="h-2 w-2 rounded-full bg-[#E78B48]"></span>
+                            Waiting provider response
+                          </p>
+                        ) : (
+                          <Button
+                            variant="secondary"
+                            onClick={() =>
+                              toggleResponseProvider(product.cart_id)
+                            }
+                          >
+                            RESPONSE PROVIDER
+                          </Button>
+                        )}
+
+                        {responseProviders[product.cart_id]?.isVisible && (
+                          <div className="space-y-3">
+                            {!product.sendedtoprovider ? (
+                              <>
+                                <Textarea
+                                  placeholder="Enter your response..."
+                                  value={
+                                    responseProviders[product.cart_id]
+                                      ?.content || ""
+                                  }
+                                  onChange={(e) =>
+                                    updateResponseContent(
+                                      product.cart_id,
+                                      e.target.value
+                                    )
+                                  }
+                                />
+                                {responseProviders[product.cart_id]
+                                  ?.content && (
+                                  <div className="flex gap-3">
+                                    <Button
+                                      onClick={() =>
+                                        sendTheCustomerReqAndToOrder({
+                                          cart_id: product.cart_id,
+                                          product_id: product.product_id,
+                                          provider_id: product.provider_id,
+                                          cart_price: product.cart_price,
+                                          custom_requirement:
+                                            responseProviders[product.cart_id]
+                                              ?.content,
+                                          quantity: product.quantity,
+                                          user_id: product.customer_id,
+                                        })
+                                      }
+                                    >
+                                      Send To Provider
+                                    </Button>
+                                  </div>
+                                )}
+                              </>
+                            ) : (
+                              <p className="inline-flex items-center gap-2 text-[#E78B48] font-semibold">
+                                <span className="h-2 w-2 rounded-full bg-[#F5C45E]"></span>
+                                Request Sent Successfully
+                              </p>
+                            )}
                           </div>
                         )}
                       </div>
-
-                      {product.provider_response && product.status_pay !== "Approve" ? (
-                        <div className="space-y-3 sm:space-y-4">
-                          <div className="px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-[#FFF6E9] border border-[#F5C45E]/50 text-[#102E50]">
-                            <span className="text-sm font-semibold">Provider Message:</span>
-                            <div className="mt-1 text-sm sm:text-[15px] font-medium">
-                              {product.provider_response}
-                            </div>
-                          </div>
-                          <div className="flex flex-wrap gap-2 sm:gap-3">
-                            <Button
-                              onClick={() =>
-                                handleApprove(product.cart_id, product.customer_id)
-                              }
-                              className="bg-[#F5C45E] md:hover:bg-[#E78B48] text-[#102E50]"
-                            >
-                              APPROVE
-                            </Button>
-                            <Button
-                              variant="destructive"
-                              onClick={() =>
-                                handleReject(product.cart_id, product.customer_id)
-                              }
-                            >
-                              REJECT
-                            </Button>
-                          </div>
-                        </div>
-                      ) : product.custom_requirement && product.provider_response === null ? (
-                        <p className="inline-flex items-center gap-2 text-[#E78B48] font-semibold">
-                          <span className="h-2 w-2 rounded-full bg-[#E78B48]"></span>
-                          Waiting provider response
-                        </p>
-                      ) : (
-                        <Button
-                          variant="secondary"
-                          onClick={() => toggleResponseProvider(product.cart_id)}
-                        >
-                          RESPONSE PROVIDER
-                        </Button>
-                      )}
-
-                      {responseProviders[product.cart_id]?.isVisible && (
-                        <div className="space-y-3">
-                          {!product.sendedtoprovider ? (
-                            <>
-                              <Textarea
-                                placeholder="Enter your response..."
-                                value={responseProviders[product.cart_id]?.content || ""}
-                                onChange={(e) =>
-                                  updateResponseContent(product.cart_id, e.target.value)
-                                }
-                              />
-                              {responseProviders[product.cart_id]?.content && (
-                                <div className="flex gap-3">
-                                  <Button
-                                    onClick={() =>
-                                      sendTheCustomerReqAndToOrder({
-                                        cart_id: product.cart_id,
-                                        product_id: product.product_id,
-                                        provider_id: product.provider_id,
-                                        cart_price: product.cart_price,
-                                        custom_requirement:
-                                          responseProviders[product.cart_id]?.content,
-                                        quantity: product.quantity,
-                                        user_id: product.customer_id,
-                                      })
-                                    }
-                                  >
-                                    Send To Provider
-                                  </Button>
-                                </div>
-                              )}
-                            </>
-                          ) : (
-                            <p className="inline-flex items-center gap-2 text-[#E78B48] font-semibold">
-                              <span className="h-2 w-2 rounded-full bg-[#F5C45E]"></span>
-                              Request Sent Successfully
-                            </p>
-                          )}
-                        </div>
-                      )}
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              ))}
           </div>
 
           <div className="lg:col-span-1">
@@ -444,7 +474,10 @@ console.log('Cart value:', cart);
                         {product.product_name} × {product.quantity}
                       </span>
                       <span className="font-semibold text-[#E78B48]">
-                        ${(product.cart_price * product.quantity).toFixed(2)}
+                        {product.provider_response
+                          ? product.cart_price
+                          : (product.cart_price * product.quantity).toFixed(2)}
+                        {/* ${(product.cart_price * product.quantity).toFixed(2)} */}
                       </span>
                     </div>
                   ))}
@@ -461,7 +494,11 @@ console.log('Cart value:', cart);
                     <span className="text-[#E78B48]">${subtotal}</span>
                   </div>
                 </div>
-                <Button onClick={handleCheckout} size="lg" className="w-full mt-3 sm:mt-4">
+                <Button
+                  onClick={handleCheckout}
+                  size="lg"
+                  className="w-full mt-3 sm:mt-4"
+                >
                   Checkout
                 </Button>
               </CardContent>
@@ -477,7 +514,9 @@ console.log('Cart value:', cart);
               </CardHeader>
               <CardContent className="space-y-5 sm:space-y-6 text-[#102E50]">
                 <div className="text-center">
-                  <p className="text-base sm:text-lg font-semibold">Total Amount</p>
+                  <p className="text-base sm:text-lg font-semibold">
+                    Total Amount
+                  </p>
                   <p className="text-3xl sm:text-4xl font-extrabold text-[#E78B48]">
                     ${subtotal}
                   </p>
@@ -495,7 +534,11 @@ console.log('Cart value:', cart);
                   <Button onClick={completePayment} className="flex-1">
                     Complete Payment
                   </Button>
-                  <Button variant="outline" onClick={() => setShowCheckout(false)} className="flex-1">
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowCheckout(false)}
+                    className="flex-1"
+                  >
                     Cancel
                   </Button>
                 </div>
