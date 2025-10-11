@@ -13,6 +13,9 @@ export default function LiveChat() {
   const MessageEndRef = useRef(null);
 
   const { sender, reciver } = location.state || {};
+
+  console.log(port);
+  
 useEffect(() => {
   if (!sender || !reciver) return;
 
