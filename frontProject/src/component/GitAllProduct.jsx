@@ -18,6 +18,16 @@ export default function GitAllProduct() {
 
   const number = 0;
 
+
+  console.log(selectore);
+  console.log(selectore);
+
+  console.log("asdallllllllsd",CusData);
+
+  console.log(cards);
+  console.log(textSearch);
+
+
   const resultOfFilter = cards.filter((card) => {
     const FilterByName = card.name
       .toLowerCase()

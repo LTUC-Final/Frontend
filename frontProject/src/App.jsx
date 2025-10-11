@@ -49,6 +49,7 @@ function App() {
 
   useEffect(() => {
     fetchCart();
+
     const interval = setInterval(fetchCart, 1000);
 
     return () => clearInterval(interval);
@@ -57,9 +58,10 @@ function App() {
   const [isOpen, setIsOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+
   return (
     <div>
-      <Layout cartCount={cart.length}>
+      <Layout cartCount={cart.length} >
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/" element={<h1>Alquraan </h1>} />
@@ -68,6 +70,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/profile/:user_id" element={<Profile />} />
           <Route path="/LiveChat" element={<LiveChat />} />
+
 
           <Route
             path="/providerDashboard"
@@ -90,7 +93,7 @@ function App() {
           ></Route>
           <Route
             path="/requestProvider"
-            element={<OrdersManagementProvider></OrdersManagementProvider>}
+            element={<OrdersManagementProvider/>}
           ></Route>
           <Route
             path="/orderCustomer"

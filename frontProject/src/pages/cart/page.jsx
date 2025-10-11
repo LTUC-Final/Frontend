@@ -264,6 +264,7 @@ export default function CartPage() {
           </span>
           Shopping Cart
         </h1>
+          
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-8 lg:gap-10">
           <div className="lg:col-span-2 space-y-5 sm:space-y-8">
