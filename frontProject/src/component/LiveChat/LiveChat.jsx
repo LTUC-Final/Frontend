@@ -1,4 +1,3 @@
-
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
@@ -13,27 +12,30 @@ export default function LiveChat() {
   const MessageEndRef = useRef(null);
 
   const { sender, reciver } = location.state || {};
-useEffect(() => {
-  if (!sender || !reciver) return;
+  useEffect(() => {
+    if (!sender || !reciver) return;
 
-  const fetchMessages = async () => {
-    try {
-      const res = await axios.get(`http://localhost:${port}/api/getmessages`, {
-        params: { senderId: sender.user_id, receiveId: reciver.user_id },
-      });
-      setMessages(res.data);
-      console.log("Fetched messages:", res.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    const fetchMessages = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:${port}/api/getmessages`,
+          {
+            params: { senderId: sender.user_id, receiveId: reciver.user_id },
+          }
+        );
+        setMessages(res.data);
+        console.log("Fetched messages:", res.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
-  fetchMessages();
+    fetchMessages();
 
-  const interval = setInterval(fetchMessages, 1000); 
+    const interval = setInterval(fetchMessages, 1000);
 
-  return () => clearInterval(interval); 
-}, [sender, reciver]);
+    return () => clearInterval(interval);
+  }, [sender, reciver]);
 
   useEffect(() => {
     if (!sender) return;
