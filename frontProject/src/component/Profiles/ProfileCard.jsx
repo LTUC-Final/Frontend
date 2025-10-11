@@ -19,6 +19,7 @@ export default function ProfileCard({ data, refreshTrigger }) {
     refresh
   );
   const port = import.meta.env.VITE_PORT;
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     setProfile({ ...data });
@@ -34,7 +35,6 @@ export default function ProfileCard({ data, refreshTrigger }) {
     );
   }
   console.log(refresh);
-  
 
   return (
     <div className="[font-family:'Quicksand',sans-serif] flex flex-col items-center py-10 px-4 sm:px-6 lg:px-8">
