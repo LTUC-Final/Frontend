@@ -18,9 +18,6 @@ export default function NavigationBar({ onScroll, cartCount }) {
       name: "My Profile",
       href: `/profile/${userId}`,
     },
-
-    { name: "About", href: "/About" },
-   
     {
       name: "Dashboard",
       href: "/providerDashboard",
@@ -67,34 +64,26 @@ export default function NavigationBar({ onScroll, cartCount }) {
         </div>
 
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-8">
-          {navItem.map((item, index) => (
-            <div className="relative group" key={index}>
-              <Link
-                onClick={() => onScroll?.(item.section)}
-                to={item.href}
-                className={`
-                  relative flex items-center px-6 py-3 text-white no-underline text-base font-medium 
-                  rounded-full transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] overflow-hidden
-                  bg-white/10 backdrop-blur-[10px] border border-white/20
-                  hover:-translate-y-0.5 hover:shadow-[0_10px_25px_rgba(19,246,238,0.3)] 
-                  hover:border-[#13f6ee] hover:text-[#13f6ee]
-                  ${location.pathname === item.href
-                    ? "bg-gradient-to-r from-[rgba(19,246,238,0.2)] to-[rgba(0,212,255,0.2)] text-[#13f6ee] border-[#13f6ee] shadow-[0_0_20px_rgba(19,246,238,0.4)]"
-                    : ""
-                  }
-                `}
-              >
-                <span className="relative z-[2]">{item.name}</span>
+        <div className="hidden md:flex items-center gap-4">
+          {navItem.map((item, index) => {
+            const isActive = location.pathname === item.href
+            const baseClasses = `relative flex items-center px-5 py-2.5 text-sm font-semibold rounded-full transition-all duration-300 overflow-hidden`
+            const activeClasses = `bg-gradient-to-r from-[#F5C45E] to-[#E78B48] text-[#102E50] shadow-[0_4px_12px_rgba(245,196,94,0.4)]`
+            const inactiveClasses = `text-[#FFF6E9] hover:text-[#F5C45E] hover:bg-[#FFF6E9]/10 border border-[#FFF6E9]/20 hover:border-[#F5C45E]/50`
+            const linkClasses = `${baseClasses} ${isActive ? activeClasses : inactiveClasses}`
 
-                {item.name === "Cart" && cartCount > 0 && (
-                  <span className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-white text-xs">
-                    {cartCount}
-                  </span>
-                )}
-              </Link>
-            </div>
-          ))}
+            return (
+              <div className="relative group" key={index}>
+                <Link onClick={() => onScroll?.(item.section)} to={item.href} className={linkClasses}>
+                  <span className="relative z-[2]">{item.name}</span>
+
+                  {isActive && (
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[#F5C45E] to-[#E78B48] blur-md opacity-50 -z-[1]"></div>
+                  )}
+                </Link>
+              </div>
+            )
+          })}
         </div>
 
         {/* Mobile Menu Button */}
