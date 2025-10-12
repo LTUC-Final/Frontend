@@ -21,6 +21,8 @@ export default function ProfileCard({ data, refreshTrigger }) {
   const port = import.meta.env.VITE_PORT;
   const [isOpen, setIsOpen] = useState(false);
 
+  console.log("asdasdasdasd",data);
+  
   useEffect(() => {
     setProfile({ ...data });
   }, [data, refreshTrigger]);
@@ -35,6 +37,8 @@ export default function ProfileCard({ data, refreshTrigger }) {
     );
   }
   console.log(refresh);
+  console.log("info user",user);
+  
 
   return (
     <div className="[font-family:'Quicksand',sans-serif] flex flex-col items-center py-10 px-4 sm:px-6 lg:px-8">
@@ -151,7 +155,7 @@ export default function ProfileCard({ data, refreshTrigger }) {
             {user.email !== profile.email && (
               <button
                 onClick={() =>
-                  navigate("/LiveChat", {
+                  navigate(`/LiveChat/${data.user_id}`, {
                     state: { sender: user, reciver: data },
                   })
                 }

@@ -67,7 +67,7 @@ function App() {
 
           <Route path="/register" element={<Register />} />
           <Route path="/profile/:user_id" element={<Profile />} />
-          <Route path="/LiveChat" element={<LiveChat />} />
+          <Route path="/LiveChat/:user_id" element={<LiveChat />} />
 
           <Route
             path="/providerDashboard"

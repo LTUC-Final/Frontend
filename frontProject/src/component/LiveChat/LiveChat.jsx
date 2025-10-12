@@ -16,6 +16,7 @@ export default function LiveChat() {
   const messageContainerRef = useRef(null);
   const [autoScroll, setAutoScroll] = useState(true);
   const { sender, reciver } = location.state || {};
+console.log(sender);
 
   useEffect(() => {
     if (!sender || !reciver) return;
@@ -72,6 +73,7 @@ export default function LiveChat() {
     if (autoScroll && container) {
       container.scrollTo({ top: container.scrollHeight, behavior: "smooth" });
     }
+    
   }, [messages]);
 
   console.log(messages);
