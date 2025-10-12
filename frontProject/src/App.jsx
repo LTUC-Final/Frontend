@@ -19,13 +19,12 @@ import WishList from "./pages/wishlist/wishlist";
 // import ResetPassword from "./pages/forgetpassword/reset_password";
 import About from "./pages/About";
 
-
-
 import OrdersManagementCustomer from "./pages/order/order";
 
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import ChatBoot from "./component/chatboot/chatboot";
 import LiveChat from "./component/LiveChat/LiveChat";
 import CartPage from "./pages/cart/page";
 import ProductForm from "./pages/ProviderDashBoard/providerDashboard";
@@ -58,10 +57,9 @@ function App() {
   const [isOpen, setIsOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-
   return (
     <div>
-      <Layout cartCount={cart.length} >
+      <Layout cartCount={cart.length}>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/" element={<h1>Alquraan </h1>} />
@@ -70,7 +68,6 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/profile/:user_id" element={<Profile />} />
           <Route path="/LiveChat" element={<LiveChat />} />
-
 
           <Route
             path="/providerDashboard"
@@ -93,7 +90,7 @@ function App() {
           ></Route>
           <Route
             path="/requestProvider"
-            element={<OrdersManagementProvider/>}
+            element={<OrdersManagementProvider />}
           ></Route>
           <Route
             path="/orderCustomer"
@@ -105,11 +102,10 @@ function App() {
           <Route path="/verify_otp" element={<VerifyOtp />} />
           <Route path="/reset_password" element={<ResetPassword />} /> */}
 
-          <Route path="/About" element={<About/>}  />
-
+          <Route path="/About" element={<About />} />
         </Routes>
       </Layout>
-
+      <ChatBoot></ChatBoot>
       <Footer></Footer>
     </div>
   );
