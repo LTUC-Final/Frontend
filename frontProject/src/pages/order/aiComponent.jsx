@@ -54,10 +54,8 @@ const OrdersSummary = ({ data, data2, COLORS, report, assistantMessagesSupport, 
                   labelLine={false}
                   label={({ name, value }) => `${name}: $${value.toFixed(0)}`}
                   outerRadius={100}
-                  innerRadius={60}
                   fill="#8884d8"
                   dataKey="value"
-                  strokeWidth={3}
                   stroke="#FFF6E9"
                 >
                   {data.map((_, index) => (
@@ -65,19 +63,15 @@ const OrdersSummary = ({ data, data2, COLORS, report, assistantMessagesSupport, 
                   ))}
                 </Pie>
                 <Tooltip
-                  contentStyle={{
-                    backgroundColor: "#FFF6E9",
-                    border: "2px solid #F5C45E",
-                    borderRadius: "8px",
-                    color: "#102E50",
-                  }}
+                  // contentStyle={{
+                  //   backgroundColor: "#FFF6E9",
+                  //   border: "2px solid #F5C45E",
+                  //   borderRadius: "8px",
+                  //   color: "#102E50",
+                  // }}
                 />
                 <Legend
-                  wrapperStyle={{
-                    paddingTop: "20px",
-                    fontWeight: "600",
-                    color: "#102E50",
-                  }}
+                
                 />
               </PieChart>
             </ResponsiveContainer>
@@ -97,30 +91,21 @@ const OrdersSummary = ({ data, data2, COLORS, report, assistantMessagesSupport, 
                   labelLine={false}
                   label={({ name, value }) => `${name} ${value.toFixed(0)}`}
                   outerRadius={100}
-                  innerRadius={60}
+                  // innerRadius={60}
                   fill="#8884d8"
                   dataKey="value"
-                  strokeWidth={3}
-                  stroke="#FFF6E9"
+                  // strokeWidth={3}
+                  // stroke="#FFF6E9"
                 >
                   {data2.map((_, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
                 <Tooltip
-                  contentStyle={{
-                    backgroundColor: "#FFF6E9",
-                    border: "2px solid #F5C45E",
-                    borderRadius: "8px",
-                    color: "#102E50",
-                  }}
+          
                 />
                 <Legend
-                  wrapperStyle={{
-                    paddingTop: "20px",
-                    fontWeight: "600",
-                    color: "#102E50",
-                  }}
+                
                 />
               </PieChart>
             </ResponsiveContainer>
