@@ -24,6 +24,7 @@
     "bcrypt": "^6.0.0",
     "clsx": "^2.1.1",
     "easyinvoice": "^3.0.47",
+    "emoji-picker-react": "^4.14.0",
     "firebase": "^12.3.0",
     "framer-motion": "^12.23.19",
     "google-map-react": "^2.2.5",

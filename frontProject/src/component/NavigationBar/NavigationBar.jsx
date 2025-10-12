@@ -76,6 +76,11 @@ export default function NavigationBar({ onScroll, cartCount }) {
               <div className="relative group" key={index}>
                 <Link onClick={() => onScroll?.(item.section)} to={item.href} className={linkClasses}>
                   <span className="relative z-[2]">{item.name}</span>
+                  {item.name === "Cart" && cartCount > 0 && (
+                    <span className="ml-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                      {cartCount}
+                    </span>
+                  )}
 
                   {isActive && (
                     <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[#F5C45E] to-[#E78B48] blur-md opacity-50 -z-[1]"></div>
@@ -93,19 +98,16 @@ export default function NavigationBar({ onScroll, cartCount }) {
         >
           <div className="flex flex-col gap-1">
             <span
-              className={`w-5 h-0.5 bg-[#FFF6E9] transition-all duration-300 rounded-sm ${
-                isMenuOpen ? "rotate-45 translate-x-[5px] translate-y-[5px]" : ""
-              }`}
+              className={`w-5 h-0.5 bg-[#FFF6E9] transition-all duration-300 rounded-sm ${isMenuOpen ? "rotate-45 translate-x-[5px] translate-y-[5px]" : ""
+                }`}
             ></span>
             <span
-              className={`w-5 h-0.5 bg-[#FFF6E9] transition-all duration-300 rounded-sm ${
-                isMenuOpen ? "opacity-0" : ""
-              }`}
+              className={`w-5 h-0.5 bg-[#FFF6E9] transition-all duration-300 rounded-sm ${isMenuOpen ? "opacity-0" : ""
+                }`}
             ></span>
             <span
-              className={`w-5 h-0.5 bg-[#FFF6E9] transition-all duration-300 rounded-sm ${
-                isMenuOpen ? "-rotate-45 translate-x-[7px] -translate-y-[6px]" : ""
-              }`}
+              className={`w-5 h-0.5 bg-[#FFF6E9] transition-all duration-300 rounded-sm ${isMenuOpen ? "-rotate-45 translate-x-[7px] -translate-y-[6px]" : ""
+                }`}
             ></span>
           </div>
         </button>
@@ -113,9 +115,8 @@ export default function NavigationBar({ onScroll, cartCount }) {
 
       {/* Mobile Navigation */}
       <div
-        className={`md:hidden flex flex-col bg-[#102E50]/98 backdrop-blur-lg border-t-2 border-[#F5C45E]/20 overflow-hidden transition-[max-height] duration-300 ${
-          isMenuOpen ? "max-h-[500px]" : "max-h-0"
-        }`}
+        className={`md:hidden flex flex-col bg-[#102E50]/98 backdrop-blur-lg border-t-2 border-[#F5C45E]/20 overflow-hidden transition-[max-height] duration-300 ${isMenuOpen ? "max-h-[500px]" : "max-h-0"
+          }`}
       >
         {navItem.map((item, index) => {
           const isActive = location.pathname === item.href
@@ -123,11 +124,10 @@ export default function NavigationBar({ onScroll, cartCount }) {
             <Link
               key={index}
               to={item.href}
-              className={`block px-8 py-4 text-[#FFF6E9] no-underline font-medium transition-all duration-300 border-b border-[#FFF6E9]/10 hover:bg-[#F5C45E]/20 hover:text-[#F5C45E] hover:pl-10 hover:border-l-4 hover:border-l-[#E78B48] ${
-                isActive
+              className={`block px-8 py-4 text-[#FFF6E9] no-underline font-medium transition-all duration-300 border-b border-[#FFF6E9]/10 hover:bg-[#F5C45E]/20 hover:text-[#F5C45E] hover:pl-10 hover:border-l-4 hover:border-l-[#E78B48] ${isActive
                   ? "bg-gradient-to-r from-[#F5C45E]/30 to-transparent text-[#F5C45E] pl-10 border-l-4 border-l-[#E78B48]"
                   : ""
-              }`}
+                }`}
               onClick={() => setIsMenuOpen(false)}
             >
               {item.name}
