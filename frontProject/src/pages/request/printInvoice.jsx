@@ -1,7 +1,5 @@
-
-import easyinvoice from "easyinvoice"
-import { Download } from "lucide-react"
-
+import easyinvoice from "easyinvoice";
+import { Download } from "lucide-react";
 
 export default function PrintInvoiceButton({ order }) {
   const printInvoice = async (order) => {
@@ -38,24 +36,29 @@ export default function PrintInvoiceButton({ order }) {
             ? order.product_image.startsWith("http")
               ? order.product_image
               : `http://localhost:3000${order.product_image}`
-            : undefined,
+            : `https://ui-avatars.com/api/?name=${order.customer_firstname}+${order.customer_lastname}&background=random&color=fff`,
         },
       ],
 
-      "bottom-notice": "Thank you for choosing us – your satisfaction is our priority.",
+      "bottom-notice":
+        "Thank you for choosing us – your satisfaction is our priority.",
 
       logo: order.provider_profile_image
         ? order.provider_profile_image.startsWith("http")
           ? order.provider_profile_image
           : `http://localhost:3000${order.provider_profile_image}`
         : undefined,
-
-    }
+    };
 
     easyinvoice.createInvoice(data, (result) => {
-      easyinvoice.download("invoice.pdf", result.pdf)
-    })
-  }
+      if (result.pdf) {
+        easyinvoice.download("invoice.pdf", result.pdf);
+      } else {
+        console.error("Invoice PDF not generated", result);
+        alert("Failed to generate the invoice, please try again later.");
+      }
+    });
+  };
 
   return (
     <button
@@ -71,9 +74,8 @@ export default function PrintInvoiceButton({ order }) {
       "
     >
       <Download className="h-4 w-4 sm:h-5 sm:w-5" />
-      <span className="hidden xs:inline">Download Invoice</span>
-      <span className="inline xs:hidden">Download</span>
+      {/* <span className="hidden xs:inline">Download Invoice</span> */}
+      <span className="inline xs:hidden">Download INVOICE</span>
     </button>
-  )
-
+  );
 }
