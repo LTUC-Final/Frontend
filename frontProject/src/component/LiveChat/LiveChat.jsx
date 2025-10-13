@@ -121,7 +121,6 @@ console.log("hello omar ");
                 })}
               </div>
             </div>
-          </div>
         );
       })}
       <div ref={MessageEndRef} />
