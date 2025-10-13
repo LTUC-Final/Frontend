@@ -257,7 +257,6 @@ function OrdersManagementProvider() {
                 Filters:
               </span>
             </div>
-
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
@@ -270,7 +269,6 @@ function OrdersManagementProvider() {
                 </option>
               ))}
             </select>
-
             <select
               value={sortOrder}
               onChange={(e) => setSortOrder(e.target.value)}
@@ -278,7 +276,8 @@ function OrdersManagementProvider() {
             >
               <option value="newest">Newest First</option>
               <option value="oldest">Oldest First</option>
-            </select>
+            </select>{" "}
+            <DownLoadAllOrder order={orders} />
           </div>
         </div>
 
@@ -514,9 +513,6 @@ function OrdersManagementProvider() {
               </div>
             ))}
           </div>
-        </div>
-        <div className="flex items-center space-x-2 px-4 sm:px-6 mb-6">
-          <DownLoadAllOrder order={orders} />
         </div>
       </div>
     </div>
