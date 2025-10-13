@@ -217,7 +217,7 @@ function OrdersManagementProvider() {
       )}
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col overflow-hidden  h-250">
+      <div className="flex-1 flex flex-col overflow-hidden  h-">
         {/* Header */}
         <header className="bg-[#102E50] border-b-4 border-[#F5C45E] px-4 sm:px-6 py-3 sm:py-4 shadow-lg">
           <div className="flex items-center justify-between">
@@ -515,7 +515,7 @@ function OrdersManagementProvider() {
             ))}
           </div>
         </div>
-        <div className="flex items-center space-x-2 px-4 sm:px-6 mb-12 ">
+        <div className="flex items-center space-x-2 px-4 sm:px-6 mb-6">
           <DownLoadAllOrder order={orders} />
         </div>
       </div>
