@@ -48,6 +48,11 @@ export default function NavigationBar({ onScroll, cartCount }) {
       href: "/cart",
       roles: ["customer"],
     },
+    {
+      name: "Messages",
+      href: "/messages",
+      roles: ["customer","provider"],
+    },
     { name: "Log out", href: "/logout" },
   ]
 
