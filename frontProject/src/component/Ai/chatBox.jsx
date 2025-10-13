@@ -1,5 +1,5 @@
 import { Send, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useChat from "../../hooks/useChat";
 import ChatMessage from "./chatMessage";
 
@@ -15,14 +15,16 @@ export default function ChatBox({ isOpen, setIsOpen }) {
     await sendMessage(inputM);
     setInput("");
   }
-
+  const messagesEndRef = useRef(null);
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
   return (
-   <div
-  className={`fixed bottom-4 right-4 sm:bottom-6 sm:right-6 w-[95%] sm:w-[24rem] md:w-[28rem] h-[60vh] transform transition-all duration-300 z-50 ${
-    isOpen ? "scale-100 opacity-100" : "scale-0 opacity-0"
-  }`}
->
-    
+    <div
+      className={`fixed bottom-4 right-4 sm:bottom-6 sm:right-6 w-[95%] sm:w-[24rem] md:w-[28rem] h-[60vh] transform transition-all duration-300 z-50 ${
+        isOpen ? "scale-100 opacity-100" : "scale-0 opacity-0"
+      }`}
+    >
       <div className="bg-[#FFF6E9] rounded-2xl h-full flex flex-col shadow-2xl overflow-hidden border border-[#F5C45E]/40">
         {/* Header */}
         <div className="flex justify-between items-center p-3 bg-[#102E50] text-white">
@@ -41,7 +43,8 @@ export default function ChatBox({ isOpen, setIsOpen }) {
             .filter((msgArr) => msgArr.role !== "system")
             .map((msg, i) => (
               <ChatMessage key={i} role={msg.role} content={msg.content} />
-            ))}
+            ))}{" "}
+          <div ref={messagesEndRef} />
         </div>
 
         {/* Input Area */}
@@ -64,4 +67,3 @@ export default function ChatBox({ isOpen, setIsOpen }) {
     </div>
   );
 }
-

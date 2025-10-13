@@ -211,6 +211,8 @@ export default function ReactionPicker({
                   const Icon = reaction.icon;
                   const isSelected = selectedReaction === reaction.type;
                   const isHovered = hoveredReaction === reaction.type;
+                  const reactionCount =
+                    card.reaction_counts?.[reaction.type] || 0; 
 
                   return (
                     <motion.button
@@ -223,20 +225,29 @@ export default function ReactionPicker({
                       onMouseLeave={() => setHoveredReaction(null)}
                       whileHover={{ scale: 1.15, y: -4 }}
                       whileTap={{ scale: 0.95 }}
-                      className={`relative flex flex-col items-center gap-2 p-4 rounded-xl transition-all duration-300 ${
+                      className={`relative flex flex-col items-center gap-2 -bottom-0  p-4 rounded-xl transition-all duration-300 ${
                         isSelected
                           ? `${reaction.bgColor} ${reaction.color} shadow-lg`
                           : `hover:bg-gray-50 ${reaction.hoverBg}`
                       }`}
                     >
+                      {" "}
+                      {reactionCount > 0 && ( 
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          className={`absolute -top-1 -right-1 min-w-[1.25rem] h-5 px-1.5 flex items-center justify-center rounded-full text-[10px] font-bold text-white bg-gradient-to-r ${reaction.gradient} shadow-md z-20`}
+                        >
+                          {reactionCount}
+                        </motion.div>
+                      )}
                       {isHovered && (
                         <motion.div
                           layoutId="glow"
-                          className={`absolute inset-0 bg-gradient-to-r ${reaction.gradient} opacity-10 rounded-xl`}
+                          className={`absolute inset-0   bg-gradient-to-r ${reaction.gradient} opacity-10 rounded-xl`}
                           transition={{ type: "spring", stiffness: 300 }}
                         />
                       )}
-
                       <motion.div
                         animate={
                           isHovered
@@ -247,19 +258,17 @@ export default function ReactionPicker({
                             : {}
                         }
                         transition={{ duration: 0.5 }}
-                        className="relative z-10"
+                        className="relative z-10 bottom-3 "
                       >
-                        <Icon className={`w-7 h-7 ${reaction.color}`} />
+                        <Icon className={`w-7 h-7  ${reaction.color}`} />
                       </motion.div>
-
                       <span
                         className={`text-xs font-semibold relative z-10 ${
-                          isSelected ? reaction.color : "text-gray-700"
+                          isSelected ? reaction.color : "text-gray-700 "
                         }`}
                       >
                         {reaction.label}
                       </span>
-
                       {isSelected && (
                         <motion.div
                           layoutId="selected-indicator"
@@ -271,7 +280,7 @@ export default function ReactionPicker({
                   );
                 })}
               </div>
-              <div className="absolute -bottom-2 left-6 w-4 h-4 bg-white border-r-2 border-b-2 border-gray-200 rotate-45" />
+              {/* <div className="absolute -bottom-2 left-6 w-4 h-4 bg-white border-r-2 border-b-2 border-gray-200 rotate-45" /> */}
             </motion.div>
           </>
         )}
@@ -279,6 +288,3 @@ export default function ReactionPicker({
     </div>
   );
 }
-
-
-
