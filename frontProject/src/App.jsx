@@ -25,7 +25,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import ChatBoot from "./component/chatboot/chatboot";
-import LiveChat from "./component/LiveChat/LiveChat";
+// import LiveChat from "./component/LiveChat/LiveChat";
 import CartPage from "./pages/cart/page";
 import ProductForm from "./pages/ProviderDashBoard/providerDashboard";
 import OrdersManagementProvider from "./pages/request/pageReq";
@@ -68,7 +68,7 @@ function App() {
 
           <Route path="/register" element={<Register />} />
           <Route path="/profile/:user_id" element={<Profile />} />
-          <Route path="/LiveChat/:user_id" element={<LiveChat />} />
+          {/* <Route path="/LiveChat/:user_id" element={<LiveChat />} /> */}
 
           <Route
             path="/providerDashboard"
