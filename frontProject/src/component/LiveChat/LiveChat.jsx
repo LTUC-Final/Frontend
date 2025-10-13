@@ -20,6 +20,7 @@ export default function LiveChat() {
   const { sender, reciver } = location.state || {};
 console.log("sadasdasd",sender);
 console.log("wwqq",reciver);
+console.log("hello omar ");
 
   useEffect(() => {
     if (!sender || !reciver) return;
