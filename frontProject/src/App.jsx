@@ -26,10 +26,10 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import ChatBoot from "./component/chatboot/chatboot";
 import LiveChat from "./component/LiveChat/LiveChat";
+import MessagesSlice from "./component/LiveChat/MessagesSlice";
 import CartPage from "./pages/cart/page";
 import ProductForm from "./pages/ProviderDashBoard/providerDashboard";
 import OrdersManagementProvider from "./pages/request/pageReq";
-import MessagesSlice from "./component/LiveChat/MessagesSlice";
 function App() {
   const [cart, setCart] = useState([]);
   const CusData = useSelector((state) => state.UserInfo);
@@ -80,7 +80,6 @@ function App() {
           <Route path="/productdatails" element={<CardDeatils />} />
           <Route path="/userDashboard" element={<GitAllProduct />} />
           <Route path="/Messages" element={<MessagesSlice />} />
-
 
           <Route
             path="/cart"
