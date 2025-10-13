@@ -1,9 +1,8 @@
-import EmojiPicker from "emoji-picker-react";
-import { useState } from "react";
 import axios from "axios";
-import { io } from "socket.io-client";
-import { useEffect, useRef } from "react";
+import EmojiPicker from "emoji-picker-react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { io } from "socket.io-client";
 
 export default function LiveChat() {
   const [textMessage, setTextMessage] = useState("");
@@ -16,7 +15,7 @@ export default function LiveChat() {
   const messageContainerRef = useRef(null);
   const [autoScroll, setAutoScroll] = useState(true);
   const { sender, reciver } = location.state || {};
-console.log(sender);
+  console.log(sender);
 
   useEffect(() => {
     if (!sender || !reciver) return;
@@ -57,7 +56,10 @@ console.log(sender);
     setMessages((prev) => [...prev, newMessage]);
     socketRef.current?.emit("send-message", messageData);
     try {
-      await axios.post(`http://localhost:${port}/api/send-messages`, messageData);
+      await axios.post(
+        `http://localhost:${port}/api/send-messages`,
+        messageData
+      );
       setTextMessage("");
     } catch (error) {
       console.log(error);
@@ -73,16 +75,15 @@ console.log(sender);
     if (autoScroll && container) {
       container.scrollTo({ top: container.scrollHeight, behavior: "smooth" });
     }
-    
   }, [messages]);
 
   console.log(messages);
 
-
   return (
     <div className="max-w-md mx-auto p-4 rounded-2xl bg-[#FFF6E9] border border-[#F5C45E]/60 shadow-[0_18px_40px_rgba(16,46,80,0.15)]">
       <h2 className="text-sm font-semibold mb-4 text-[#FFF6E9] bg-[#102E50] px-4 py-2 rounded-xl">
-        Chat with <span className="text-[#F5C45E]">{reciver?.name || "Receiver"}</span>
+        Chat with{" "}
+        <span className="text-[#F5C45E]">{reciver?.name || "Receiver"}</span>
       </h2>
 
       <div
@@ -95,13 +96,16 @@ console.log(sender);
           return (
             <div
               key={idx}
-              className={`px-3 py-2 rounded-2xl text-sm leading-relaxed max-w-[80%] ${isSender
+              className={`px-3 py-2 rounded-2xl text-sm leading-relaxed max-w-[80%] ${
+                isSender
                   ? "bg-gradient-to-r from-[#BE3D2A] to-[#E78B48] text-[#FFF6E9] self-end"
                   : "bg-white text-[#102E50] border border-[#F5C45E]/60 self-start"
-                }`}
+              }`}
             >
               <div className="text-xs font-semibold mb-1">
-                {isSender === msg.senderId ? msg.sender_name : msg.receiver_name}
+                {isSender === msg.senderId
+                  ? msg.sender_name
+                  : msg.receiver_name}
               </div>
               <div className="text-[15px]">{msg.text}</div>
               <div className="text-[11px] mt-1 opacity-70">
