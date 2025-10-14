@@ -89,7 +89,7 @@ function OrdersManagementProvider() {
         `http://localhost:${port}/getAllOrderProvider/${provider_id}`
       );
 
-      const mappedOrders = response.data.map((order) => ({
+      const mappedOrders = response.data.orders.map((order) => ({
         order_id: order.order_id,
         status: order.status,
         productName: order.product_name,
@@ -256,7 +256,19 @@ function OrdersManagementProvider() {
               <span className="text-sm font-medium text-[#102E50]">
                 Filters:
               </span>
-            </div>
+            </div>{" "}
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="px-3 py-1 bg-[#FFF6E9] border-2 border-[#102E50] text-[#102E50] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#F5C45E] focus:border-[#F5C45E]"
+            >
+              <option value="All">All Status</option>
+              {statuses.map((status) => (
+                <option key={status} value={status}>
+                  {status}
+                </option>
+              ))}
+            </select>
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
