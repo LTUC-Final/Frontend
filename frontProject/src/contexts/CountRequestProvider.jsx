@@ -8,25 +8,30 @@ export function CountRequestProvider({ children }) {
 
   const { user } = useSelector((state) => state.UserInfo);
   const provider_id = user?.provider?.provider_id;
+  const user_role = user?.provider?.role;
+
   const port = import.meta.env.VITE_PORT;
+
   useEffect(() => {
-    const sendRequest = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:${port}/getAllOrderProvider/${provider_id}`
-        );
-        setValue(response.data.ordersCount);
-        localStorage.setItem("count", response.data.ordersCount);
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    };
+    if (user_role === "provider") {
+      const sendRequest = async () => {
+        try {
+          const response = await axios.get(
+            `http://localhost:${port}/getAllOrderProvider/${provider_id}`
+          );
+          setValue(response.data.ordersCount);
+          localStorage.setItem("count", response.data.ordersCount);
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      };
 
-    sendRequest();
+      sendRequest();
 
-    const intervalId = setInterval(sendRequest, 1000);
+      const intervalId = setInterval(sendRequest, 1000);
 
-    return () => clearInterval(intervalId);
+      return () => clearInterval(intervalId);
+    }
   }, []);
 
   return (

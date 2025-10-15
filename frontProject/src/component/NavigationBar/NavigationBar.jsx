@@ -8,11 +8,11 @@ export default function NavigationBar({ onScroll, cartCount }) {
   console.log("asdasdasd", cartCount);
   const { value } = useContext(CountRequest);
   console.log(
-    "ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss"
+    "ssssssssssssssssssssssssssssssssssssssssssssssssssssssvvvvvvvvvvvssssssssssssssssss"
   );
   console.log(value);
   console.log(
-    "ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss"
+    "ssssssssssssssssssssssssssssssssssssssssssssssssssvvvvvvvvvvvvvvvssssssssssssssss"
   );
 
   const location = useLocation();
