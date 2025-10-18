@@ -1,12 +1,11 @@
-
 import axios from "axios";
 import { useEffect, useState } from "react";
-import AddToCart from "./AddToCart";
-import AddTOFav from "./AddToFav";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import ReactionPicker from "./reaction";
 import defaultImg from "../assets/NoImage.png";
+import AddTOFav from "./AddToFav";
+import ReactionPicker from "./reaction";
+import { useAddToCart } from "./AddToCart";
 
 export default function GitAllProduct() {
   const navigate = useNavigate();
@@ -15,18 +14,16 @@ export default function GitAllProduct() {
   const CusData = useSelector((state) => state.UserInfo);
   const [textSearch, setTextSearch] = useState("");
   const [selectore, setSelectore] = useState("");
-
+  const { AddToCart } = useAddToCart();
   const number = 0;
 
-
   console.log(selectore);
   console.log(selectore);
 
-  console.log("asdallllllllsd",CusData);
+  console.log("asdallllllllsd", CusData);
 
   console.log(cards);
   console.log(textSearch);
-
 
   const resultOfFilter = cards.filter((card) => {
     const FilterByName = card.name
@@ -167,7 +164,11 @@ export default function GitAllProduct() {
                     card={card}
                     product_id={card.product_id}
                     userId={CusData.user.user_id}
-                    onReactionUpdate={(product_id, reactionCounts, selectedReaction) => {
+                    onReactionUpdate={(
+                      product_id,
+                      reactionCounts,
+                      selectedReaction
+                    ) => {
                       setCards((prevCards) =>
                         prevCards.map((c) =>
                           c.product_id === product_id
@@ -193,5 +194,3 @@ export default function GitAllProduct() {
     </div>
   );
 }
-
-

@@ -81,12 +81,30 @@ function OrdersManagementProvider() {
       fetchOrders();
     }
   }, [provider_id]);
+  const persistedData = JSON.parse(localStorage.getItem("persist:UserInfo"));
 
+  const token = JSON.parse(persistedData.token);
   const fetchOrders = async () => {
     if (!provider_id) return;
     try {
+      console.log(
+        'JSON.parse(JSON.parse(localStorage.getItem("persist:UserInfo")).token)'
+      );
+      console.log(
+        JSON.parse(JSON.parse(localStorage.getItem("persist:UserInfo")).token)
+      );
+      console.log(
+        'JSON.parse(JSON.parse(localStorage.getItem("persist:UserInfo")).token)'
+      );
+
       const response = await axios.get(
-        `http://localhost:${port}/getAllOrderProvider/${provider_id}`
+        `http://localhost:${port}/getAllOrderProvider/${provider_id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+          },
+        }
       );
 
       const mappedOrders = response.data.orders.map((order) => ({
@@ -130,8 +148,20 @@ function OrdersManagementProvider() {
 
       console.log(mappedOrders);
     } catch (error) {
-      console.error("Error fetching orders:", error);
+if (error.response) {
+    console.log(" Server error message:", error.response.data.message);
+
+    if (error.response.status === 403) {
+      console.log(" Token expired, please login again.");
+      
+    } else if (error.response.status === 401) {
+      console.log(" Token not provided or invalid.");
     }
+  } else if (error.request) {
+    console.log(" No response from server:", error.request);
+  } else {
+    console.log(" Error setting up request:", error.message);
+  }    }
   };
 
   const filteredOrders = useMemo(() => {
@@ -334,7 +364,7 @@ function OrdersManagementProvider() {
                           ? order.product_image.startsWith("http")
                             ? order.product_image
                             : `http://localhost:${port}${order.product_image}`
-                          : "../../assests/NoImage"
+                          : "../src/assets/NoImage.png"
                       }
                       alt={order.productName}
                       className="w-full sm:w-48 h-48 object-cover rounded-lg border-2 border-[#E78B48]"

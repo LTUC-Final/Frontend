@@ -4,13 +4,16 @@ import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { CountRequest } from "../../contexts/CountRequestContext";
 
-export default function NavigationBar({ onScroll, cartCount }) {
-  console.log("asdasdasd", cartCount);
+export default function NavigationBar({ onScroll }) {
+  const cartCount = useSelector((state) => state.UserInfo.cartItem);
+
   const { value } = useContext(CountRequest);
   console.log(
     "ssssssssssssssssssssssssssssssssssssssssssssssssssssssvvvvvvvvvvvssssssssssssssssss"
   );
   console.log(value);
+  console.log("asdasdasd", cartCount);
+
   console.log(
     "ssssssssssssssssssssssssssssssssssssssssssssssssssvvvvvvvvvvvvvvvssssssssssssssss"
   );

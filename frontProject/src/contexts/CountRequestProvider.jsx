@@ -14,12 +14,22 @@ export function CountRequestProvider({ children }) {
   console.log("ssssssfffffffffffffffffffffffffffffffffffffffffffffffffff");
 
   const port = import.meta.env.VITE_PORT;
+  const persistedData = JSON.parse(localStorage.getItem("persist:UserInfo"));
+  const CusData = useSelector((state) => state.UserInfo);
+
+  const token = CusData.token;
   useEffect(() => {
     if (role === "provider" && provider_id) {
       const sendRequest = async () => {
         try {
           const response = await axios.get(
-            `http://localhost:${port}/getAllOrderProvider/${provider_id}`
+            `http://localhost:${port}/getAllOrderProvider/${provider_id}`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+              },
+            }
           );
           setValue(response.data.ordersCount);
           localStorage.setItem("count", response.data.ordersCount);
@@ -30,7 +40,7 @@ export function CountRequestProvider({ children }) {
 
       sendRequest();
 
-      const intervalId = setInterval(sendRequest, 1000);
+      const intervalId = setInterval(sendRequest, 1000*60);
 
       return () => clearInterval(intervalId);
     }

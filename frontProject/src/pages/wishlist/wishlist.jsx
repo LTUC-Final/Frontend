@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import AddToCart from "../../component/AddToCart.jsx";
+import { useAddToCart } from "../../component/AddToCart.jsx";
 import AddTOFav from "../../component/AddToFav.jsx";
 
 export default function WishList() {
@@ -11,6 +11,7 @@ export default function WishList() {
   const user = useSelector((s) => s.UserInfo.user);
   const userId = user?.user_id;
   const navigate = useNavigate();
+  const { AddToCart } = useAddToCart();
 
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -114,10 +115,10 @@ export default function WishList() {
         price: p.price,
       };
       await AddToCart(card, { user });
-      await alertSuccess(
-        "Added to cart!",
-        `${p.name ?? "Item"} has been added successfully.`
-      );
+      // await alertSuccess(
+      //   "Added to cart!",
+      //   `${p.name ?? "Item"} has been added successfully.`
+      // );
     } catch (e) {
       const m =
         e?.response?.data?.error || e?.message || "Failed to add to cart";
@@ -167,7 +168,7 @@ export default function WishList() {
                       ? p.image.startsWith("http")
                         ? p.image
                         : `http://localhost:${port}${p.image}`
-                      : "../../assests/NoImage"
+                      : "src/assets/NoImage.png"
                   }
                   alt={p.name || "wishlist item"}
                   className="w-full h-full object-cover transition duration-300 group-hover:scale-105"

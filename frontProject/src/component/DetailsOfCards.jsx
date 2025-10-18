@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import defaultImg from "../assets//NoImage.png";
-import AddToCart from "./AddToCart";
+
+import { useAddToCart } from "./AddToCart";
 import AddTOFav from "./AddToFav";
 
 export default function DetailsOfCards({ Id }) {
@@ -12,6 +13,7 @@ export default function DetailsOfCards({ Id }) {
   const [dataCard, setDataCard] = useState(null);
   const CusData = useSelector((state) => state.UserInfo);
   const navigate = useNavigate();
+  const { AddToCart } = useAddToCart();
 
   useEffect(() => {
     const gitdetails = async () => {
@@ -141,8 +143,13 @@ export default function DetailsOfCards({ Id }) {
               <p className="text-base sm:text-lg font-medium hover:text-[#E78B48] transition-colors">
                 {/* {dataCard.firstname} {dataCard.lastname} */}
 
-                {`${dataCard.firstname.charAt(0).toUpperCase() + dataCard.firstname.slice(1)} ${dataCard.lastname.charAt(0).toUpperCase() + dataCard.lastname.slice(1)}`}
-
+                {`${
+                  dataCard.firstname.charAt(0).toUpperCase() +
+                  dataCard.firstname.slice(1)
+                } ${
+                  dataCard.lastname.charAt(0).toUpperCase() +
+                  dataCard.lastname.slice(1)
+                }`}
               </p>
               <p className="text-sm text-[#3f4c5c]">Verified Seller</p>
             </div>
