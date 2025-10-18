@@ -220,7 +220,7 @@ export default function CartPage() {
       setCart((prevCart) =>
         prevCart.filter((item) => item.cart_id !== cart_id)
       );
-        dispatch(decrementCartItem());
+      dispatch(decrementCartItem());
     } catch (error) {
       console.error(error);
     }
@@ -420,7 +420,7 @@ export default function CartPage() {
                               toggleResponseProvider(product.cart_id)
                             }
                           >
-                            CUSTOM REQURNEBT{" "}
+                            CUSTOM REQURMENT{" "}
                           </Button>
                         )}
 
