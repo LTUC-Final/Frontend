@@ -203,6 +203,9 @@ function OrdersManagementProvider() {
     name: status,
     value: values.count,
   }));
+  console.log("Sssssssssssssssssssssssssssssssssssssss");
+  console.log(data2);
+  console.log("Sssssssssssssssssssss");
 
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#A020F0"];
 
