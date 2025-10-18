@@ -2,7 +2,7 @@ import { ImageIcon, Upload } from "lucide-react";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
-import defaultImg from "../../assets/NoImage.png";
+import defaultImg from "../../assets/NoImageUploaded.png";
  
 export default function EditProduct({ product, productId, onCancel, onUpdate }) {
   const [form, setForm] = useState({
@@ -141,11 +141,14 @@ return (
         />
       </label>
 
-      <img
-        src={product.image ? `http://localhost:${port}${product.image}` : defaultImg}
-        alt="Product"
-        className="w-20 h-20 object-cover rounded-lg border border-[#F5C45E] shadow-sm"
-      />
+    <div className="w-full max-w-[150px]">
+  <img
+    src={product.image ? `http://localhost:${port}${product.image}` : defaultImg}
+    alt="Product"
+    className="w-full h-auto object-contain rounded-lg border border-[#F5C45E] shadow-sm bg-white"
+  />
+</div>
+
     </div>
   </div>
 

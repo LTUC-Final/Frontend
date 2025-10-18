@@ -89,7 +89,7 @@ function OrdersManagementProvider() {
         `http://localhost:${port}/getAllOrderProvider/${provider_id}`
       );
 
-      const mappedOrders = response.data.map((order) => ({
+      const mappedOrders = response.data.orders.map((order) => ({
         order_id: order.order_id,
         status: order.status,
         productName: order.product_name,
@@ -217,7 +217,7 @@ function OrdersManagementProvider() {
       )}
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col overflow-hidden  h-250">
+      <div className="flex-1 flex flex-col overflow-hidden  h-">
         {/* Header */}
         <header className="bg-[#102E50] border-b-4 border-[#F5C45E] px-4 sm:px-6 py-3 sm:py-4 shadow-lg">
           <div className="flex items-center justify-between">
@@ -256,8 +256,19 @@ function OrdersManagementProvider() {
               <span className="text-sm font-medium text-[#102E50]">
                 Filters:
               </span>
-            </div>
-
+            </div>{" "}
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="px-3 py-1 bg-[#FFF6E9] border-2 border-[#102E50] text-[#102E50] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#F5C45E] focus:border-[#F5C45E]"
+            >
+              <option value="All">All Status</option>
+              {statuses.map((status) => (
+                <option key={status} value={status}>
+                  {status}
+                </option>
+              ))}
+            </select>
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
@@ -270,7 +281,6 @@ function OrdersManagementProvider() {
                 </option>
               ))}
             </select>
-
             <select
               value={sortOrder}
               onChange={(e) => setSortOrder(e.target.value)}
@@ -278,7 +288,8 @@ function OrdersManagementProvider() {
             >
               <option value="newest">Newest First</option>
               <option value="oldest">Oldest First</option>
-            </select>
+            </select>{" "}
+            <DownLoadAllOrder order={orders} />
           </div>
         </div>
 
@@ -514,9 +525,6 @@ function OrdersManagementProvider() {
               </div>
             ))}
           </div>
-        </div>
-        <div className="flex items-center space-x-2 px-4 sm:px-6 mb-12 ">
-          <DownLoadAllOrder order={orders} />
         </div>
       </div>
     </div>

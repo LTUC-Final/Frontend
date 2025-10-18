@@ -26,6 +26,9 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import ChatBoot from "./component/chatboot/chatboot";
 import LiveChat from "./component/LiveChat/LiveChat";
+import MessagesSlice from "./component/LiveChat/MessagesSlice";
+// import { CountRequest } from "./contexts/countRequest";
+import { CountRequestProvider } from "./contexts/CountRequestProvider";
 import CartPage from "./pages/cart/page";
 import ProductForm from "./pages/ProviderDashBoard/providerDashboard";
 import OrdersManagementProvider from "./pages/request/pageReq";
@@ -58,56 +61,59 @@ function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div>
-      <Layout cartCount={cart.length}>
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/" element={<h1>Alquraan </h1>} />
-          <Route path="/logout" element={<Logout />} />
+    <CountRequestProvider>
+      <div>
+        <Layout cartCount={cart.length}>
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/" element={<h1>Alquraan </h1>} />
+            <Route path="/logout" element={<Logout />} />
 
-          <Route path="/register" element={<Register />} />
-          <Route path="/profile/:user_id" element={<Profile />} />
-          <Route path="/LiveChat/:user_id" element={<LiveChat />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/profile/:user_id" element={<Profile />} />
+            <Route path="/LiveChat/:user_id" element={<LiveChat />} />
 
-          <Route
-            path="/providerDashboard"
-            element={<ProductForm></ProductForm>}
-          />
-          {/* <Route path="/userDashboard" element={<h1>كفووو userDashboard</h1>} /> */}
-          <Route path="/mainDashBoard" element={<MainDashBoard />} />
-          <Route path="/favorite" element={<WishList />} />
-          <Route path="/productdatails" element={<CardDeatils />} />
-          <Route path="/userDashboard" element={<GitAllProduct />} />
+            <Route
+              path="/providerDashboard"
+              element={<ProductForm></ProductForm>}
+            />
+            {/* <Route path="/userDashboard" element={<h1>كفووو userDashboard</h1>} /> */}
+            <Route path="/mainDashBoard" element={<MainDashBoard />} />
+            <Route path="/favorite" element={<WishList />} />
+            <Route path="/productdatails" element={<CardDeatils />} />
+            <Route path="/userDashboard" element={<GitAllProduct />} />
+            <Route path="/Messages" element={<MessagesSlice />} />
 
-          <Route
-            path="/cart"
-            element={<CartPage cart={cart} fetchCart={fetchCart}></CartPage>}
-          />
-          <Route path="/payments" element={<h1>ييييييييييييييييييييي </h1>} />
-          <Route
-            path="/prodactInfo/:prodactId"
-            element={<h1>sssssssssssss</h1>}
-          ></Route>
-          <Route
-            path="/requestProvider"
-            element={<OrdersManagementProvider />}
-          ></Route>
-          <Route
-            path="/orderCustomer"
-            element={<OrdersManagementCustomer></OrdersManagementCustomer>}
-          ></Route>
-          <Route path="*" element={<NotFoundPage></NotFoundPage>}></Route>
+            <Route
+              path="/cart"
+              element={<CartPage cart={cart} fetchCart={fetchCart}></CartPage>}
+            />
+            <Route path="/payments" element={<h1>ييييييييييييييييييييي </h1>} />
+            <Route
+              path="/prodactInfo/:prodactId"
+              element={<h1>sssssssssssss</h1>}
+            ></Route>
+            <Route
+              path="/requestProvider"
+              element={<OrdersManagementProvider />}
+            ></Route>
+            <Route
+              path="/orderCustomer"
+              element={<OrdersManagementCustomer></OrdersManagementCustomer>}
+            ></Route>
+            <Route path="*" element={<NotFoundPage></NotFoundPage>}></Route>
 
-          {/* <Route path="/forget" element={<Forget />} />
+            {/* <Route path="/forget" element={<Forget />} />
           <Route path="/verify_otp" element={<VerifyOtp />} />
           <Route path="/reset_password" element={<ResetPassword />} /> */}
 
-          <Route path="/About" element={<About />} />
-        </Routes>
-      </Layout>
-      <ChatBoot></ChatBoot>
-      <Footer></Footer>
-    </div>
+            <Route path="/About" element={<About />} />
+          </Routes>
+        </Layout>
+        <ChatBoot></ChatBoot>
+        <Footer></Footer>
+      </div>
+    </CountRequestProvider>
   );
 }
 
