@@ -45,6 +45,9 @@ export default function ProtectedRoute() {
   if (!token) {
     return <Navigate to="/login" />;
   }
+console.log("tokentokentokentokentokentokentokentokentokentokentokentokentokentokentokentokentokentokentoken")
+console.log(token)
+console.log("tokentokentokentokentokentokentokentokentokentokentokentokentokentokentokentokentokentokentoken")
 
   try {
     const decoded = jwtDecode(token);

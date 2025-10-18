@@ -15,6 +15,11 @@ const OrdersSummary = ({
   assistantMessagesSupport,
   formatDateLocal,
 }) => {
+  console.log("datdata2data2data2data2data2data2data2data2data2data2data2a2");
+
+  console.log(data2);
+  console.log("data2data2data2data2data2data2data2data2data2data2data2");
+
   return (
     <div className="space-y-6">
       {/* Charts Section */} {/* Assistant Messages */}
