@@ -1,9 +1,9 @@
 import axios from "axios";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { setUserInfo } from "../../redux/userInfo/userInfo";
+import { setCartItem, setUserInfo } from "../../redux/userInfo/userInfo";
 
 const allowedDomains = new Set([
   "gmail.com",
@@ -12,12 +12,15 @@ const allowedDomains = new Set([
   "outlook.com",
   "hotmail.com",
   "live.com",
-  "icloud.com"
+  "icloud.com",
 ]);
 
 function validEmail(emailRaw) {
-  const email = String(emailRaw || "").trim().toLowerCase();
-  if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(email)) return false;
+  const email = String(emailRaw || "")
+    .trim()
+    .toLowerCase();
+  if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(email))
+    return false;
   const domain = email.split("@")[1] || "";
   return allowedDomains.has(domain);
 }
@@ -30,7 +33,7 @@ export default function LoginPage() {
 
   const [fieldErrors, setFieldErrors] = useState({
     email: "",
-    password: ""
+    password: "",
   });
 
   const navigate = useNavigate();
@@ -58,26 +61,28 @@ export default function LoginPage() {
       transition
     `;
   }
+  const CusData = useSelector((state) => state.UserInfo);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     liveValidateEmail(email);
     liveValidatePassword(password);
 
-    const hasErrors =
-      (!validEmail(email) ? "x" : "") ||
-      (!password ? "x" : "");
+    const hasErrors = (!validEmail(email) ? "x" : "") || (!password ? "x" : "");
 
     if (hasErrors) {
       const msgs = [];
-      if (!validEmail(email)) msgs.push("Email: Valid provider (Gmail/Yahoo/Outlook…).");
+      if (!validEmail(email))
+        msgs.push("Email: Valid provider (Gmail/Yahoo/Outlook…).");
       if (!password) msgs.push("Password: Required.");
       Swal.fire({
         title: "Please fix the following:",
-        html: `<ul style="text-align:left;margin:0;padding-left:18px;">${msgs.map((m) => `<li>${m}</li>`).join("")}</ul>`,
+        html: `<ul style="text-align:left;margin:0;padding-left:18px;">${msgs
+          .map((m) => `<li>${m}</li>`)
+          .join("")}</ul>`,
         icon: "error",
         confirmButtonText: "OK",
-        draggable: true
+        draggable: true,
       });
       return;
     }
@@ -86,21 +91,33 @@ export default function LoginPage() {
       setLoading(true);
       const port = import.meta.env.VITE_PORT;
       const response = await axios.post(`http://localhost:${port}/api/login`, {
-        email: String(email || "").trim().toLowerCase(),
-        password
+        email: String(email || "")
+          .trim()
+          .toLowerCase(),
+        password,
       });
 
       dispatch(
         setUserInfo({
           user: response.data.user,
-          token: response.data.token
+          token: response.data.token,
+        })
+      );
+
+      const res = await axios.get(
+        `http://localhost:${port}/api/carts/products/${CusData.user.user_id}`
+      );
+
+      dispatch(
+        setCartItem({
+          cartItem: Number(res.data.length),
         })
       );
 
       Swal.fire({
         title: response?.data?.message || "Login successful",
         icon: "success",
-        draggable: true
+        draggable: true,
       }).then(() => navigate("/mainDashBoard"));
     } catch (err) {
       const data = err?.response?.data || {};
@@ -110,8 +127,10 @@ export default function LoginPage() {
         setErr("email", data.fields.email || "");
         setErr("password", data.fields.password || "");
       } else {
-        if (msg.toLowerCase().includes("email")) setErr("email", "Invalid email or password.");
-        if (msg.toLowerCase().includes("password")) setErr("password", "Invalid email or password.");
+        if (msg.toLowerCase().includes("email"))
+          setErr("email", "Invalid email or password.");
+        if (msg.toLowerCase().includes("password"))
+          setErr("password", "Invalid email or password.");
       }
 
       Swal.fire({
@@ -119,7 +138,7 @@ export default function LoginPage() {
         text: msg,
         icon: "error",
         confirmButtonText: "OK",
-        draggable: true
+        draggable: true,
       });
     } finally {
       setLoading(false);
@@ -155,9 +174,17 @@ export default function LoginPage() {
             </p>
           </div>
 
-          <form className="px-8 pb-8 pt-2 flex flex-col gap-5" onSubmit={handleLogin}>
+          <form
+            className="px-8 pb-8 pt-2 flex flex-col gap-5"
+            onSubmit={handleLogin}
+          >
             <div className="text-left">
-              <label htmlFor="email" className="block mb-2 font-medium text-[#102E50]">Email</label>
+              <label
+                htmlFor="email"
+                className="block mb-2 font-medium text-[#102E50]"
+              >
+                Email
+              </label>
               <input
                 type="email"
                 id="email"
@@ -165,16 +192,26 @@ export default function LoginPage() {
                 required
                 className={inputClass(!!fieldErrors.email)}
                 value={email}
-                onChange={(e) => { setEmail(e.target.value); liveValidateEmail(e.target.value); }}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  liveValidateEmail(e.target.value);
+                }}
                 onBlur={(e) => liveValidateEmail(e.target.value)}
               />
               {fieldErrors.email && (
-                <p className="text-[#BE3D2A] text-xs mt-1">{fieldErrors.email}</p>
+                <p className="text-[#BE3D2A] text-xs mt-1">
+                  {fieldErrors.email}
+                </p>
               )}
             </div>
 
             <div className="text-left">
-              <label htmlFor="password" className="block mb-2 font-medium text-[#102E50]">Password</label>
+              <label
+                htmlFor="password"
+                className="block mb-2 font-medium text-[#102E50]"
+              >
+                Password
+              </label>
               <div className="relative">
                 <input
                   type={showPass ? "text" : "password"}
@@ -183,7 +220,10 @@ export default function LoginPage() {
                   required
                   className={inputClass(!!fieldErrors.password) + " pr-12"}
                   value={password}
-                  onChange={(e) => { setPassword(e.target.value); liveValidatePassword(e.target.value); }}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    liveValidatePassword(e.target.value);
+                  }}
                   onBlur={(e) => liveValidatePassword(e.target.value)}
                 />
                 <button
@@ -193,18 +233,28 @@ export default function LoginPage() {
                   aria-label={showPass ? "Hide password" : "Show password"}
                 >
                   {showPass ? (
-                    <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
+                    <svg
+                      viewBox="0 0 24 24"
+                      className="w-5 h-5"
+                      fill="currentColor"
+                    >
                       <path d="M2 5.27L3.28 4l16.97 16.97-1.27 1.27-2.1-2.1A10.66 10.66 0 0112 20C6.5 20 2.05 16.38 1 12c.35-1.38 1.1-2.73 2.14-3.9L2 5.27zM12 6c5.5 0 9.95 3.62 11 8a9.73 9.73 0 01-3.61 5.4ل-1.45-1.45A7.8 7.8 0 0020.9 14C19.93 10.6 16.32 8 12 8a7.8 7.8 0 00-3.95 1.06L6.6 6.61A9.7 9.7 0 0112 6z" />
                     </svg>
                   ) : (
-                    <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
+                    <svg
+                      viewBox="0 0 24 24"
+                      className="w-5 h-5"
+                      fill="currentColor"
+                    >
                       <path d="M12 6c-5.5 0-9.95 3.62-11 8 1.05 4.38 5.5 8 11 8s9.95-3.62 11-8c-1.05-4.38-5.5-8-11-8zm0 13a5 5 0 110-10 5 5 0 010 10zm0-2.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" />
                     </svg>
                   )}
                 </button>
               </div>
               {fieldErrors.password && (
-                <p className="text-[#BE3D2A] text-xs mt-1">{fieldErrors.password}</p>
+                <p className="text-[#BE3D2A] text-xs mt-1">
+                  {fieldErrors.password}
+                </p>
               )}
             </div>
 

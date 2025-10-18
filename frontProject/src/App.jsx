@@ -21,50 +21,52 @@ import About from "./pages/About";
 
 import OrdersManagementCustomer from "./pages/order/order";
 
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import ChatBoot from "./component/chatboot/chatboot";
 import LiveChat from "./component/LiveChat/LiveChat";
 import MessagesSlice from "./component/LiveChat/MessagesSlice";
 // import { CountRequest } from "./contexts/countRequest";
+import ProtectedRoute from "./component/ProdectRoute";
 import { CountRequestProvider } from "./contexts/CountRequestProvider";
 import CartPage from "./pages/cart/page";
 import ProductForm from "./pages/ProviderDashBoard/providerDashboard";
 import OrdersManagementProvider from "./pages/request/pageReq";
-import ProtectedRoute from "./component/ProdectRoute";
 function App() {
   const [cart, setCart] = useState([]);
   const CusData = useSelector((state) => state.UserInfo);
   const port = import.meta.env.VITE_PORT;
 
-  const fetchCart = async () => {
-    if (!CusData?.user?.user_id) return;
-    try {
-      const res = await axios.get(
-        `http://localhost:${port}/api/carts/products/${CusData.user.user_id}`
-      );
-      setCart(res.data.cards || []);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  // const fetchCart = async () => {
+  //   if (!CusData?.user?.user_id) return;
+  //   try {
+  //     const res = await axios.get(
+  //       `http://localhost:${port}/api/carts/products/${CusData.user.user_id}`
+  //     );
+  //     setCart(res.data.cards || []);
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
 
-  useEffect(() => {
-    fetchCart();
+  // useEffect(() => {
+  //   fetchCart();
 
-    const interval = setInterval(fetchCart, 1000);
+  //   const interval = setInterval(fetchCart, 1000);
 
-    return () => clearInterval(interval);
-  }, [CusData]);
+  //   return () => clearInterval(interval);
+  // }, [CusData]);
   const { user } = useSelector((state) => state.UserInfo);
   const [isOpen, setIsOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-      <div>    <CountRequestProvider>
-
-        <Layout cartCount={cart.length}>
+    <div>
+      {" "}
+      <CountRequestProvider>
+        <Layout
+        //  cartCount={cart.length}
+        >
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/" element={<h1>Alquraan </h1>} />
@@ -88,7 +90,10 @@ function App() {
               <Route
                 path="/cart"
                 element={
-                  <CartPage cart={cart} fetchCart={fetchCart}></CartPage>
+                  <CartPage
+                  // cart={cart}
+                  // fetchCart={fetchCart}
+                  ></CartPage>
                 }
               />
               <Route
@@ -116,9 +121,9 @@ function App() {
           </Routes>
         </Layout>
         <ChatBoot></ChatBoot>
-        <Footer></Footer>    </CountRequestProvider>
-
-      </div>
+        <Footer></Footer>{" "}
+      </CountRequestProvider>
+    </div>
   );
 }
 

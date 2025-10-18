@@ -1,10 +1,13 @@
 import axios from "axios";
 import { Heart, MapPin, ShoppingCart, Tag } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import defaultImg from "../assets//NoImage.png";
-import AddToCart from "./AddToCart";
+import {
+  decrementCartItem,
+  incrementCartItem,
+} from "../redux/userInfo/userInfo";
 import AddTOFav from "./AddToFav";
 
 export default function DetailsOfCards({ Id }) {
@@ -12,7 +15,33 @@ export default function DetailsOfCards({ Id }) {
   const [dataCard, setDataCard] = useState(null);
   const CusData = useSelector((state) => state.UserInfo);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
+  async function AddToCart(card, CusData) {
+    const port = import.meta.env.VITE_PORT;
+    console.log(card);
+    console.log("this is cusid ", CusData.user.user_id);
+    try {
+      const res = await axios.post(`http://localhost:${port}/api/AddCart`, {
+        customer_id: Number(CusData.user.user_id),
+        provider_id: card.provider_id,
+        product_id: card.product_id,
+        quantity: 1,
+        details_order_user: card.details_order_user,
+        price: card.price,
+      });
+
+      console.log("iiaiai", res);
+      if (res.data === "Product added to cart") {
+        dispatch(incrementCartItem());
+      } else {
+        dispatch(decrementCartItem());
+      }
+      alert(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
   useEffect(() => {
     const gitdetails = async () => {
       try {
@@ -141,8 +170,13 @@ export default function DetailsOfCards({ Id }) {
               <p className="text-base sm:text-lg font-medium hover:text-[#E78B48] transition-colors">
                 {/* {dataCard.firstname} {dataCard.lastname} */}
 
-                {`${dataCard.firstname.charAt(0).toUpperCase() + dataCard.firstname.slice(1)} ${dataCard.lastname.charAt(0).toUpperCase() + dataCard.lastname.slice(1)}`}
-
+                {`${
+                  dataCard.firstname.charAt(0).toUpperCase() +
+                  dataCard.firstname.slice(1)
+                } ${
+                  dataCard.lastname.charAt(0).toUpperCase() +
+                  dataCard.lastname.slice(1)
+                }`}
               </p>
               <p className="text-sm text-[#3f4c5c]">Verified Seller</p>
             </div>
