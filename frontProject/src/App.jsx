@@ -62,8 +62,8 @@ function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <CountRequestProvider>
-      <div>
+      <div>    <CountRequestProvider>
+
         <Layout cartCount={cart.length}>
           <Routes>
             <Route path="/login" element={<LoginPage />} />
@@ -116,9 +116,9 @@ function App() {
           </Routes>
         </Layout>
         <ChatBoot></ChatBoot>
-        <Footer></Footer>
+        <Footer></Footer>    </CountRequestProvider>
+
       </div>
-    </CountRequestProvider>
   );
 }
 

@@ -4,16 +4,18 @@ import { useSelector } from "react-redux";
 import { CountRequest } from "./CountRequestContext";
 
 export function CountRequestProvider({ children }) {
-  const [value, setValue] = useState();
+  const [value, setValue] = useState(null);
 
   const { user } = useSelector((state) => state.UserInfo);
   const provider_id = user?.provider?.provider_id;
-  const user_role = user?.provider?.role;
+  const role = user?.role;
+  console.log("ssssssfffffffffffffffffffffffffffffffffffffffffffffffffff");
+  console.log(role);
+  console.log("ssssssfffffffffffffffffffffffffffffffffffffffffffffffffff");
 
   const port = import.meta.env.VITE_PORT;
-
   useEffect(() => {
-    if (user_role === "provider") {
+    if (role === "provider" && provider_id) {
       const sendRequest = async () => {
         try {
           const response = await axios.get(
