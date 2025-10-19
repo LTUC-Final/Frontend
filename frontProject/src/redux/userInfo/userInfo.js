@@ -17,8 +17,8 @@ const UserInfoSlice = createSlice({
     setCartItem: (state, action) => {
       state.cartItem = Number(action.payload.cartItem);
     },
-    decrementCartItem: (state) => {
-      state.cartItem -= 1;
+    decrementCartItem: (state, action) => {
+      state.cartItem -= action.payload.number;
     },
     incrementCartItem: (state) => {
       state.cartItem += 1;

@@ -63,8 +63,16 @@ export function useAddToCart() {
           icon: "success",
           draggable: true,
         });
+      } else if (
+        res.data === "You cannot delete it because it was sent to the provider"
+      ) {
+        Swal.fire({
+          title: res.data,
+          icon: "error",
+          draggable: true,
+        });
       } else {
-        dispatch(decrementCartItem());
+        dispatch(decrementCartItem({ number: 1 }));
         Swal.fire({
           title: res.data,
           icon: "error",

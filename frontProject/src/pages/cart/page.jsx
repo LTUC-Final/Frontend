@@ -82,10 +82,13 @@ function Textarea({ className = "", ...props }) {
 export default function CartPage() {
   const CusData = useSelector((state) => state.UserInfo);
   const [cart, setCart] = useState([]);
+  const [ss, sss] = useState();
+
   const [responseProviders, setResponseProviders] = useState({});
   const [showCheckout, setShowCheckout] = useState(false);
   const port = import.meta.env.VITE_PORT;
   const dispatch = useDispatch();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -159,6 +162,13 @@ export default function CartPage() {
     user_id,
   }) {
     try {
+      setCart((prev) =>
+        prev.map((item) =>
+          item.cart_id === cart_id
+            ? { ...item, custom_requirement, provider_response: null }
+            : item
+        )
+      );
       await axios.put(`http://localhost:${port}/updateTheCustomReqAndToOrder`, {
         cart_id,
         custom_requirement,
@@ -207,6 +217,7 @@ export default function CartPage() {
         { cart_id, user_id: customer_id }
       );
       setCart((prevCart) => prevCart.filter((p) => p.cart_id !== cart_id));
+      dispatch(decrementCartItem({ number: 1 }));
     } catch (error) {
       console.log(error);
     }
@@ -220,7 +231,7 @@ export default function CartPage() {
       setCart((prevCart) =>
         prevCart.filter((item) => item.cart_id !== cart_id)
       );
-      dispatch(decrementCartItem());
+      dispatch(decrementCartItem({number:1}));
     } catch (error) {
       console.error(error);
     }
@@ -243,12 +254,17 @@ export default function CartPage() {
     alert("Payment completed successfully!");
     setShowCheckout(false);
     try {
-      await axios.post(
+      const ress = await axios.post(
         `http://localhost:${port}/moveApprovedCartToOrders/${CusData.user.user_id}`
       );
       const res = await axios.get(
         `http://localhost:${port}/api/carts/products/${CusData.user.user_id}`
       );
+      dispatch(decrementCartItem({ number: ress.data.length }));
+      console.log("ress.data.length");
+      console.log(ress.data.length);
+      console.log("ess.data.length");
+
       setCart(res.data.cards);
     } catch (error) {
       console.log(error);
