@@ -232,7 +232,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import AddToCart from "../../component/AddToCart.jsx";
+import { useAddToCart } from "../../component/AddToCart.jsx";
 import AddTOFav from "../../component/AddToFav.jsx";
 
 export default function WishList() {
@@ -240,6 +240,7 @@ export default function WishList() {
   const user = useSelector((s) => s.UserInfo.user);
   const userId = user?.user_id;
   const navigate = useNavigate();
+  const { AddToCart } = useAddToCart();
 
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);

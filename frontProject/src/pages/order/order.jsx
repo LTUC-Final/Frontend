@@ -25,7 +25,6 @@ import useSummary from "../../hooks/useAnaliasisOrder";
 import useLastDate from "../../hooks/useLastDate";
 import useSupport from "../../hooks/useSupport";
 import OrdersSummary from "./aiComponent";
-
 const statusClasses = {
   pending: "text-[#E78B48] bg-[#FFF6E9] border-2 border-[#E78B48]",
   "In Progress":
@@ -62,16 +61,17 @@ function OrdersManagementCustomer() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [orders, setOrders] = useState([]);
   const [sortOrder, setSortOrder] = useState("newest");
-  const [buttonAi, setButtonAi] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
-  const [input, setInput] = useState("");
-  const [reply, setReply] = useState("");
-  const [loading, setLoading] = useState(false);
-
   const { messages, sendMessage } = useSummary();
   const { messagesSuport, sendMessageSupport } = useSupport();
   const { messagesss, sendMessagess, report, formatDateLocal } = useLastDate();
+  const [buttonAi, setButtonAi] = useState(false);
 
+  console.log("77777777777777777777777");
+
+  console.log(report);
+  console.log("77777777777777777777777");
+
+  const assistantMessages = messages.filter((msg) => msg.role === "assistant");
   const assistantMessagesSupport = messagesSuport.filter(
     (msg) => msg.role === "assistant"
   );
@@ -80,6 +80,7 @@ function OrdersManagementCustomer() {
   const userId = user?.user_id;
   const port = import.meta.env.VITE_PORT;
   const navigate = useNavigate();
+  console.log("ssssssssssss");
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -87,9 +88,9 @@ function OrdersManagementCustomer() {
         const response = await axios.get(
           `http://localhost:${port}/getAllOrderInCustomer/${userId}`
         );
+        console.log(response.data);
         const mappedOrders = response.data.map((order) => ({
           order_id: order.order_id,
-          id: order.order_id,
           status: order.status,
           productName: order.product_name,
           serviceDetails: order.product_description,
@@ -122,6 +123,7 @@ function OrdersManagementCustomer() {
         setOrders(mappedOrders);
         sendMessageSupport();
         sendMessagess(mappedOrders);
+        console.log("saaaaaaaaaa" + orders);
       } catch (error) {
         console.error("Error fetching orders:", error);
       }
@@ -155,17 +157,43 @@ function OrdersManagementCustomer() {
 
     return sorted;
   }, [orders, searchTerm, statusFilter, categoryFilter, sortOrder]);
-
   const categories = [...new Set(orders.map((order) => order.category))];
   const statuses = [...new Set(orders.map((order) => order.status))];
+  const [isOpen, setIsOpen] = useState(false);
+
+  const [input, setInput] = useState("");
+  const [reply, setReply] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSend = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.post(`http://localhost:${port}/ai2`, {
+        input: orders,
+      });
+
+      setReply(res.data.result);
+      console.log(res.data.result);
+    } catch (error) {
+      console.error("Error:", error);
+      setReply("Something went wrong ❌");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   function summarizeOrdersByStatus(orders) {
     const summary = {};
+    console.log(orders);
     orders.forEach((order) => {
       const status = order.status;
-      const price = Number.parseFloat(order.totalAmount) || 0;
+      const priceString = order.totalAmount;
+      const price = Number.parseFloat(priceString) || 0;
       const totalPrice = price * (order.quantity || 1);
-      if (!summary[status]) summary[status] = { count: 0, totalPrice: 0 };
+      if (!summary[status]) {
+        summary[status] = { count: 0, totalPrice: 0 };
+      }
+
       summary[status].count += 1;
       summary[status].totalPrice += totalPrice;
     });
@@ -173,6 +201,7 @@ function OrdersManagementCustomer() {
   }
 
   const summary = summarizeOrdersByStatus(orders);
+  console.log(summary);
   const data = Object.entries(summary).map(([status, values]) => ({
     name: status,
     value: values.totalPrice,
@@ -181,6 +210,7 @@ function OrdersManagementCustomer() {
     name: status,
     value: values.count,
   }));
+
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#A020F0"];
 
   return (
@@ -198,35 +228,12 @@ function OrdersManagementCustomer() {
 
       {sidebarOpen && (
         <div
-          // className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* زر AI والتحليل أولًا */}
-        <div className="p-4 sm:p-6">
-          <button
-            onClick={() => setButtonAi(!buttonAi)}
-            className="flex items-center justify-center gap-2 px-6 py-3 bg-[#F5C45E] text-[#102E50] font-semibold rounded-lg shadow-lg transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#E78B48] focus:ring-offset-2 hover:bg-[#E78B48]"
-          >
-            <Sparkles className="h-5 w-5" />
-            {buttonAi ? "Hide Analysis" : "Analyze using AI"}
-          </button>
-
-          {buttonAi && (
-            <OrdersSummary
-              data={data}
-              data2={data2}
-              COLORS={COLORS}
-              report={report}
-              assistantMessagesSupport={assistantMessagesSupport}
-              formatDateLocal={formatDateLocal}
-            />
-          )}
-        </div>
-
-        {/* باقي الصفحة */}
         <header className="bg-[#102E50] border-b-4 border-[#F5C45E] px-4 sm:px-6 py-3 sm:py-4 shadow-lg">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
@@ -302,8 +309,30 @@ function OrdersManagementCustomer() {
           </div>
         </div>
 
+        {/* Orders List */}
         <div className="flex-1 overflow-auto p-4 sm:p-6">
           <div className="grid gap-4">
+            <button
+              onClick={() => {
+                setButtonAi(!buttonAi);
+              }}
+              className="flex items-center justify-center gap-2 px-6 py-3 bg-[#F5C45E] text-[#102E50] font-semibold rounded-lg shadow-lg transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#E78B48] focus:ring-offset-2 hover:bg-[#E78B48]"
+            >
+              <Sparkles className="h-5 w-5" />
+              {buttonAi ? "Hide Analysis" : "Analyze using AI"}
+            </button>
+            {buttonAi ? (
+              <OrdersSummary
+                data={data}
+                data2={data2}
+                COLORS={COLORS}
+                report={report}
+                assistantMessagesSupport={assistantMessagesSupport}
+                formatDateLocal={formatDateLocal}
+              />
+            ) : (
+              <></>
+            )}
             {filteredOrders.map((order) => (
               <div
                 key={order.id}
@@ -405,30 +434,64 @@ function OrdersManagementCustomer() {
                             ).toLocaleDateString()}
                           </span>
                         </div>
-
                         <div className="flex items-center space-x-2">
                           <span className="text-xs px-3 py-1 text-[#F5C45E] rounded-full font-semibold">
                             {order.category}
                           </span>
                         </div>
                       </div>
-
                       {order.status === "completed" &&
-                        order.viewFedbackPost &&
-                        !order.add_customer_review && (
-                          <FeedbackCard
-                            orderInfo={order}
-                            onSubmit={() => {
-                              setOrders((prev) =>
-                                prev.map((o) =>
-                                  o.id === order.id
-                                    ? { ...o, add_customer_review: true }
-                                    : o
-                                )
-                              );
-                            }}
-                          />
-                        )}
+                      order.viewFedbackPost &&
+                      !order.add_customer_review ? (
+                        <FeedbackCard
+                          orderInfo={order}
+                          onSubmit={() => {
+                            setOrders((prev) =>
+                              prev.map((o) =>
+                                o.id === order.id
+                                  ? {
+                                      ...o,
+                                      viewFedbackPost: false,
+                                    }
+                                  : o
+                              )
+                            );
+                          }}
+                        ></FeedbackCard>
+                      ) : (
+                        <div></div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="mt-4 md:mt-0 flex flex-col items-center">
+                    <img
+                      src={
+                        order.provider_profile_image
+                          ? `http://localhost:${port}${order.provider_profile_image}`
+                          : `https://ui-avatars.com/api/?name=${order.provider_firstname}+${order.provider_lastname}&background=random&color=fff`
+                      }
+                      onClick={() => {
+                        navigate(`/profile/${order.provider_user_id}`);
+                      }}
+                      alt={`${order.provider_firstname} ${order.provider_lastname}`}
+                      className="w-10 h-10 rounded-full border-2 border-[#E78B48] object-cover hover:border-[#F5C45E] transition-colors cursor-pointer"
+                    />
+                    <span className="text-sm font-medium text-[#102E50] mt-2 text-center">
+                      {order.provider_firstname} {order.provider_lastname}
+                    </span>
+                    <div className="flex items-center space-x-2 mt-2">
+                      <button
+                        onClick={() => {
+                          navigate(`/profile/${order.provider_user_id}`);
+                        }}
+                        className="px-3 py-1 text-[#FFF6E9] bg-[#102E50] hover:bg-[#E78B48] rounded-lg transition-colors"
+                      >
+                        View Provider
+                      </button>
+                      <button className="p-2 text-[#102E50] hover:text-[#E78B48] hover:bg-[#FFF6E9] rounded-lg transition-colors">
+                        <MessageCircle className="h-4 w-4" />
+                      </button>
                     </div>
                   </div>
                 </div>

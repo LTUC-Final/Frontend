@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import RatingDisplay from "../../component/Profiles/RatingDisplay.jsx";
 import useProviderReviews from "../../hooks/useProviderReviews.jsx";
+import ActivitiesList from "../activity.jsx";
 import EditImage from "./EditImage.jsx";
 import EditProfile from "./EditProfile";
 
@@ -21,8 +22,8 @@ export default function ProfileCard({ data, refreshTrigger }) {
   const port = import.meta.env.VITE_PORT;
   const [isOpen, setIsOpen] = useState(false);
 
-  console.log("asdasdasdasd",data);
-  
+  console.log("asdasdasdasd", data);
+
   useEffect(() => {
     setProfile({ ...data });
   }, [data, refreshTrigger]);
@@ -37,8 +38,7 @@ export default function ProfileCard({ data, refreshTrigger }) {
     );
   }
   console.log(refresh);
-  console.log("info user",user);
-  
+  console.log("info user", user);
 
   return (
     <div className="[font-family:'Quicksand',sans-serif] flex flex-col items-center py-10 px-4 sm:px-6 lg:px-8">
@@ -150,7 +150,6 @@ export default function ProfileCard({ data, refreshTrigger }) {
                 </p>
               </div>
             )}
-
             {/* Message Button */}
             {user.email !== profile.email && (
               <button
@@ -195,7 +194,8 @@ export default function ProfileCard({ data, refreshTrigger }) {
               </button>
             )}
           </div>
-        </div>
+        </div>            {profile.role === "customer" && <ActivitiesList ></ActivitiesList>}
+
       </div>
     </div>
   );

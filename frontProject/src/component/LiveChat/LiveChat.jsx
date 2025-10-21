@@ -1,6 +1,7 @@
 import axios from "axios";
 import EmojiPicker from "emoji-picker-react";
 import { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { io } from "socket.io-client";
 
@@ -8,6 +9,7 @@ export default function LiveChat() {
   const [textMessage, setTextMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const user = useSelector((state) => state.UserInfo);
   const location = useLocation();
   const port = import.meta.env.VITE_PORT;
   const socketRef = useRef(null);
@@ -15,7 +17,9 @@ export default function LiveChat() {
   const messageContainerRef = useRef(null);
   const [autoScroll, setAutoScroll] = useState(true);
   const { sender, reciver } = location.state || {};
-  console.log(sender);
+  console.log("sadasdasd", sender);
+  console.log("wwqq", reciver);
+  console.log("hello omar ");
 
   useEffect(() => {
     if (!sender || !reciver) return;
@@ -23,8 +27,15 @@ export default function LiveChat() {
       try {
         const res = await axios.get(
           `http://localhost:${port}/api/getmessages`,
-          { params: { senderId: sender.user_id, receiveId: reciver.user_id } }
+          {
+            params: {
+              senderId: sender.user_id || sender,
+              receiveId: reciver.user_id || reciver,
+            },
+          }
         );
+        console.log("sadasinofoinwq", res.data);
+
         setMessages(res.data);
       } catch (error) {
         console.error(error);
@@ -48,8 +59,8 @@ export default function LiveChat() {
   const sendMessage = async () => {
     if (!textMessage.trim()) return;
     const messageData = {
-      senderId: sender.user_id,
-      receiveId: reciver.user_id,
+      senderId: sender.user_id || sender,
+      receiveId: reciver.user_id || reciver,
       text: textMessage,
     };
     const newMessage = { ...messageData, time: new Date() };
@@ -108,8 +119,11 @@ export default function LiveChat() {
                   : msg.receiver_name}
               </div>
               <div className="text-[15px]">{msg.text}</div>
-              <div className="text-[11px] mt-1 opacity-70">
-                {new Date(msg.created_at).toLocaleTimeString()}
+              <div className="text-[11px] mt-1 opacity-70 text-right">
+                {new Date(msg.created_at).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
               </div>
             </div>
           );

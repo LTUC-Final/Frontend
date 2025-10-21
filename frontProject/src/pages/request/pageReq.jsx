@@ -81,15 +81,33 @@ function OrdersManagementProvider() {
       fetchOrders();
     }
   }, [provider_id]);
+  const persistedData = JSON.parse(localStorage.getItem("persist:UserInfo"));
 
+  const token = JSON.parse(persistedData.token);
   const fetchOrders = async () => {
     if (!provider_id) return;
     try {
-      const response = await axios.get(
-        `http://localhost:${port}/getAllOrderProvider/${provider_id}`
+      console.log(
+        'JSON.parse(JSON.parse(localStorage.getItem("persist:UserInfo")).token)'
+      );
+      console.log(
+        JSON.parse(JSON.parse(localStorage.getItem("persist:UserInfo")).token)
+      );
+      console.log(
+        'JSON.parse(JSON.parse(localStorage.getItem("persist:UserInfo")).token)'
       );
 
-      const mappedOrders = response.data.map((order) => ({
+      const response = await axios.get(
+        `http://localhost:${port}/getAllOrderProvider/${provider_id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+          },
+        }
+      );
+
+      const mappedOrders = response.data.orders.map((order) => ({
         order_id: order.order_id,
         status: order.status,
         productName: order.product_name,
@@ -130,8 +148,20 @@ function OrdersManagementProvider() {
 
       console.log(mappedOrders);
     } catch (error) {
-      console.error("Error fetching orders:", error);
+if (error.response) {
+    console.log(" Server error message:", error.response.data.message);
+
+    if (error.response.status === 403) {
+      console.log(" Token expired, please login again.");
+      
+    } else if (error.response.status === 401) {
+      console.log(" Token not provided or invalid.");
     }
+  } else if (error.request) {
+    console.log(" No response from server:", error.request);
+  } else {
+    console.log(" Error setting up request:", error.message);
+  }    }
   };
 
   const filteredOrders = useMemo(() => {
@@ -203,6 +233,9 @@ function OrdersManagementProvider() {
     name: status,
     value: values.count,
   }));
+  console.log("Sssssssssssssssssssssssssssssssssssssss");
+  console.log(data2);
+  console.log("Sssssssssssssssssssss");
 
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#A020F0"];
 
@@ -217,7 +250,7 @@ function OrdersManagementProvider() {
       )}
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col overflow-hidden  h-250">
+      <div className="flex-1 flex flex-col overflow-hidden  h-">
         {/* Header */}
         <header className="bg-[#102E50] border-b-4 border-[#F5C45E] px-4 sm:px-6 py-3 sm:py-4 shadow-lg">
           <div className="flex items-center justify-between">
@@ -256,8 +289,19 @@ function OrdersManagementProvider() {
               <span className="text-sm font-medium text-[#102E50]">
                 Filters:
               </span>
-            </div>
-
+            </div>{" "}
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="px-3 py-1 bg-[#FFF6E9] border-2 border-[#102E50] text-[#102E50] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#F5C45E] focus:border-[#F5C45E]"
+            >
+              <option value="All">All Status</option>
+              {statuses.map((status) => (
+                <option key={status} value={status}>
+                  {status}
+                </option>
+              ))}
+            </select>
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
@@ -270,7 +314,6 @@ function OrdersManagementProvider() {
                 </option>
               ))}
             </select>
-
             <select
               value={sortOrder}
               onChange={(e) => setSortOrder(e.target.value)}
@@ -278,7 +321,8 @@ function OrdersManagementProvider() {
             >
               <option value="newest">Newest First</option>
               <option value="oldest">Oldest First</option>
-            </select>
+            </select>{" "}
+            <DownLoadAllOrder order={orders} />
           </div>
         </div>
 
@@ -320,7 +364,7 @@ function OrdersManagementProvider() {
                           ? order.product_image.startsWith("http")
                             ? order.product_image
                             : `http://localhost:${port}${order.product_image}`
-                          : "../../assests/NoImage"
+                          : "../src/assets/NoImage.png"
                       }
                       alt={order.productName}
                       className="w-full sm:w-48 h-48 object-cover rounded-lg border-2 border-[#E78B48]"
@@ -514,9 +558,6 @@ function OrdersManagementProvider() {
               </div>
             ))}
           </div>
-        </div>
-        <div className="flex items-center space-x-2 px-4 sm:px-6 mb-12 ">
-          <DownLoadAllOrder order={orders} />
         </div>
       </div>
     </div>

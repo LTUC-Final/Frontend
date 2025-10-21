@@ -15,6 +15,11 @@ const OrdersSummary = ({
   assistantMessagesSupport,
   formatDateLocal,
 }) => {
+  console.log("datdata2data2data2data2data2data2data2data2data2data2data2a2");
+
+  console.log(data2);
+  console.log("data2data2data2data2data2data2data2data2data2data2data2");
+
   return (
     <div className="space-y-6">
       {/* Charts Section */} {/* Assistant Messages */}
@@ -70,6 +75,9 @@ const OrdersSummary = ({
                   fill="#8884d8"
                   dataKey="value"
                   stroke="#FFF6E9"
+                  animationBegin={0}
+                  animationDuration={1000}
+                  isAnimationActive={true}
                 >
                   {data.map((_, index) => (
                     <Cell
@@ -112,6 +120,9 @@ const OrdersSummary = ({
                   dataKey="value"
                   // strokeWidth={3}
                   // stroke="#FFF6E9"
+                  animationBegin={0}
+                  animationDuration={1000}
+                  isAnimationActive={true}
                 >
                   {data2.map((_, index) => (
                     <Cell
