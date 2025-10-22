@@ -1,9 +1,10 @@
-"use client";
+"use client"
 import { useContext, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { CountRequest } from "../../contexts/CountRequestContext";
-
+import { Home, User, LayoutDashboard, FileText, ShoppingBag, Heart, ShoppingCart, MessageSquare, LogOut, Sparkles, Info } from "lucide-react";
+import Logo from "../../assets/Logo1.png"
 export default function NavigationBar({ onScroll, cartCount }) {
   console.log("asdasdasd", cartCount);
   const { value } = useContext(CountRequest);
@@ -21,11 +22,41 @@ export default function NavigationBar({ onScroll, cartCount }) {
   const userRole = user?.role;
   const userId = user?.user_id;
 
+  const getIcon = (name) => {
+    const iconProps = { size: 18, strokeWidth: 2.5 };
+    switch (name) {
+      case "Home":
+        return <Home {...iconProps} />;
+        case "About":
+      return <Info {...iconProps} />;
+      case "My Profile":
+        return <User {...iconProps} />;
+      case "Dashboard":
+        return <LayoutDashboard {...iconProps} />;
+      case "Requests":
+        return <FileText {...iconProps} />;
+      case "Order":
+        return <ShoppingBag {...iconProps} />;
+      case "Favorite":
+        return <Heart {...iconProps} />;
+      case "Cart":
+        return <ShoppingCart {...iconProps} />;
+      case "Messages":
+        return <MessageSquare {...iconProps} />;
+      case "Log out":
+        return <LogOut {...iconProps} />;
+      default:
+        return null;
+    }
+  };
+
   const navItems = [
     { name: "Home", href: "/mainDashBoard" },
+     { name: "About", href: "/about" },
     {
       name: "My Profile",
       href: `/profile/${userId}`,
+      position: "right",
     },
     {
       name: "Dashboard",
@@ -38,7 +69,7 @@ export default function NavigationBar({ onScroll, cartCount }) {
       roles: ["customer"],
     },
     {
-      name: "ReqProvider",
+      name: "Requests",
       href: "/requestProvider",
       roles: ["provider"],
     },
@@ -62,36 +93,38 @@ export default function NavigationBar({ onScroll, cartCount }) {
       href: "/messages",
       roles: ["customer", "provider"],
     },
-    { name: "Log out", href: "/logout" },
+    { name: "Log out", href: "/logout", position: "right" },
   ];
 
   const navItem = navItems.filter(
     (item) => !item.roles || item.roles.includes(userRole)
   );
 
+  const centerItems = navItem.filter((item) => item.position !== "right");
+  const rightItems = navItem.filter((item) => item.position === "right");
+
   return (
-    <nav className="sticky top-0 z-[1000] bg-[#102E50] border-b-2 border-[#F5C45E]/20 shadow-[0_4px_20px_rgba(245,196,94,0.15)]">
-      <div className="flex items-center justify-between px-8 py-4 max-w-[1200px] mx-auto">
-        {/* Logo Section */}
-        <div className="flex items-center gap-4">
+    <nav className="sticky top-0 z-[1000] bg-[#102E50] border-b border-[#F5C45E]/20 shadow-lg backdrop-blur-sm">
+      <div className="flex items-center justify-between px-6 py-4 max-w-[1400px] mx-auto gap-8">
+        {/* Logo Section - Left */}
+       <div className="flex items-center gap-4">
           <div className="relative w-[150px] h-[75px] p-[3px]">
             <img
-              src="/images/logoM.png"
+              src={Logo}
               alt="Logo"
               className="w-full h-full object-cover origin-center"
             />
           </div>
         </div>
 
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-4">
-          {navItem.map((item, index) => {
+        {/* Desktop Navigation - Center */}
+        <div className="hidden lg:flex items-center justify-center gap-6 flex-1">
+          {centerItems.map((item, index) => {
             const isActive = location.pathname === item.href;
-            const baseClasses = `relative flex items-center px-5 py-2.5 text-sm font-semibold rounded-full transition-all duration-300 overflow-hidden`;
-            const activeClasses = `bg-gradient-to-r from-[#F5C45E] to-[#E78B48] text-[#102E50] shadow-[0_4px_12px_rgba(245,196,94,0.4)]`;
-            const inactiveClasses = `text-[#FFF6E9] hover:text-[#F5C45E] hover:bg-[#FFF6E9]/10 border border-[#FFF6E9]/20 hover:border-[#F5C45E]/50`;
-            const linkClasses = `${baseClasses} ${
-              isActive ? activeClasses : inactiveClasses
+            const linkClasses = `relative flex items-center gap-2 px-3 py-2 text-sm font-semibold transition-all duration-300 ${
+              isActive 
+                ? "text-[#F5C45E]" 
+                : "text-[#FFF6E9] hover:text-[#F5C45E]"
             }`;
 
             return (
@@ -101,19 +134,48 @@ export default function NavigationBar({ onScroll, cartCount }) {
                   to={item.href}
                   className={linkClasses}
                 >
-                  <span className="relative z-[2]">{item.name}</span>
+                  {getIcon(item.name)}
+                  <span>{item.name}</span>
                   {item.name === "Cart" && cartCount > 0 && (
-                    <span className="ml-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                    <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-lg">
                       {cartCount}
                     </span>
                   )}
                   {item.name === "ReqProvider" && value > 0 && (
-                    <span className="ml-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                    <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-lg">
                       {value}
                     </span>
                   )}
                   {isActive && (
-                    <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[#F5C45E] to-[#E78B48] blur-md opacity-50 -z-[1]"></div>
+                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#F5C45E] rounded-full"></div>
+                  )}
+                </Link>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Desktop Navigation - Right */}
+        <div className="hidden lg:flex items-center gap-6 flex-shrink-0">
+          {rightItems.map((item, index) => {
+            const isActive = location.pathname === item.href;
+            const linkClasses = `relative flex items-center gap-2 px-3 py-2 text-sm font-semibold transition-all duration-300 ${
+              isActive 
+                ? "text-[#F5C45E]" 
+                : "text-[#FFF6E9] hover:text-[#F5C45E]"
+            }`;
+
+            return (
+              <div className="relative group" key={index}>
+                <Link
+                  onClick={() => onScroll?.(item.section)}
+                  to={item.href}
+                  className={linkClasses}
+                >
+                  {getIcon(item.name)}
+                  <span className="hidden xl:inline">{item.name}</span>
+                  {isActive && (
+                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#F5C45E] rounded-full"></div>
                   )}
                 </Link>
               </div>
@@ -123,26 +185,26 @@ export default function NavigationBar({ onScroll, cartCount }) {
 
         {/* Mobile Menu Button */}
         <button
-          className="md:hidden flex flex-col justify-center items-center w-10 h-10 bg-[#FFF6E9]/10 border border-[#F5C45E]/30 rounded-lg cursor-pointer transition-all duration-300 hover:bg-[#F5C45E]/20 hover:border-[#F5C45E]"
+          className="lg:hidden flex flex-col justify-center items-center w-10 h-10 cursor-pointer transition-all duration-300 flex-shrink-0"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
           <div className="flex flex-col gap-1">
             <span
-              className={`w-5 h-0.5 bg-[#FFF6E9] transition-all duration-300 rounded-sm ${
+              className={`w-5 h-0.5 bg-[#F5C45E] transition-all duration-300 rounded-sm ${
                 isMenuOpen
-                  ? "rotate-45 translate-x-[5px] translate-y-[5px]"
+                  ? "rotate-45 translate-y-[6px]"
                   : ""
               }`}
             ></span>
             <span
-              className={`w-5 h-0.5 bg-[#FFF6E9] transition-all duration-300 rounded-sm ${
+              className={`w-5 h-0.5 bg-[#F5C45E] transition-all duration-300 rounded-sm ${
                 isMenuOpen ? "opacity-0" : ""
               }`}
             ></span>
             <span
-              className={`w-5 h-0.5 bg-[#FFF6E9] transition-all duration-300 rounded-sm ${
+              className={`w-5 h-0.5 bg-[#F5C45E] transition-all duration-300 rounded-sm ${
                 isMenuOpen
-                  ? "-rotate-45 translate-x-[7px] -translate-y-[6px]"
+                  ? "-rotate-45 -translate-y-[6px]"
                   : ""
               }`}
             ></span>
@@ -152,8 +214,8 @@ export default function NavigationBar({ onScroll, cartCount }) {
 
       {/* Mobile Navigation */}
       <div
-        className={`md:hidden flex flex-col bg-[#102E50]/98 backdrop-blur-lg border-t-2 border-[#F5C45E]/20 overflow-hidden transition-[max-height] duration-300 ${
-          isMenuOpen ? "max-h-[500px]" : "max-h-0"
+        className={`lg:hidden flex flex-col bg-[#102E50] border-t border-[#F5C45E]/20 overflow-hidden transition-[max-height] duration-300 ${
+          isMenuOpen ? "max-h-[600px]" : "max-h-0"
         }`}
       >
         {navItem.map((item, index) => {
@@ -162,14 +224,25 @@ export default function NavigationBar({ onScroll, cartCount }) {
             <Link
               key={index}
               to={item.href}
-              className={`block px-8 py-4 text-[#FFF6E9] no-underline font-medium transition-all duration-300 border-b border-[#FFF6E9]/10 hover:bg-[#F5C45E]/20 hover:text-[#F5C45E] hover:pl-10 hover:border-l-4 hover:border-l-[#E78B48] ${
+              className={`flex items-center gap-3 px-6 py-4 no-underline font-medium transition-all duration-300 ${
                 isActive
-                  ? "bg-gradient-to-r from-[#F5C45E]/30 to-transparent text-[#F5C45E] pl-10 border-l-4 border-l-[#E78B48]"
-                  : ""
+                  ? "text-[#F5C45E] bg-[#F5C45E]/10 border-l-4 border-l-[#F5C45E]"
+                  : "text-[#FFF6E9] hover:text-[#F5C45E] hover:bg-[#F5C45E]/5"
               }`}
               onClick={() => setIsMenuOpen(false)}
             >
-              {item.name}
+              {getIcon(item.name)}
+              <span className="flex-1">{item.name}</span>
+              {item.name === "Cart" && cartCount > 0 && (
+                <span className="bg-red-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
+                  {cartCount}
+                </span>
+              )}
+              {item.name === "ReqProvider" && value > 0 && (
+                <span className="bg-red-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
+                  {value}
+                </span>
+              )}
             </Link>
           );
         })}

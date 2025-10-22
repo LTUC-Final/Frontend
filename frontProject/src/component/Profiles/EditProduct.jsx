@@ -2,7 +2,7 @@ import { ImageIcon, Upload } from "lucide-react";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
-import defaultImg from "../../assets/NoImageUploaded.png";
+import defaultImg from "../../assets/NoImage.png";
  
 export default function EditProduct({ product, productId, onCancel, onUpdate }) {
   const [form, setForm] = useState({

@@ -3,7 +3,7 @@ import { Heart, MapPin, ShoppingCart, Tag } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import defaultImg from "../assets/NoImageUploaded.png";
+import defaultImg from "../assets/NoImage.png";
 import AddToCart from "./AddToCart";
 import AddTOFav from "./AddToFav";
 
