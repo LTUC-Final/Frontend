@@ -3,7 +3,8 @@
 import axios from "axios";
 import { Minus, Plus, ShoppingCart } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { decrementCartItem } from "../../redux/userInfo/userInfo";
 
 function Button({ children, onClick, className = "", variant, size }) {
   let base =
@@ -81,9 +82,12 @@ function Textarea({ className = "", ...props }) {
 export default function CartPage() {
   const CusData = useSelector((state) => state.UserInfo);
   const [cart, setCart] = useState([]);
+  const [ss, sss] = useState();
+
   const [responseProviders, setResponseProviders] = useState({});
   const [showCheckout, setShowCheckout] = useState(false);
   const port = import.meta.env.VITE_PORT;
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -158,6 +162,13 @@ export default function CartPage() {
     user_id,
   }) {
     try {
+      setCart((prev) =>
+        prev.map((item) =>
+          item.cart_id === cart_id
+            ? { ...item, custom_requirement, provider_response: null }
+            : item
+        )
+      );
       await axios.put(`http://localhost:${port}/updateTheCustomReqAndToOrder`, {
         cart_id,
         custom_requirement,
@@ -206,6 +217,7 @@ export default function CartPage() {
         { cart_id, user_id: customer_id }
       );
       setCart((prevCart) => prevCart.filter((p) => p.cart_id !== cart_id));
+      dispatch(decrementCartItem({ number: 1 }));
     } catch (error) {
       console.log(error);
     }
@@ -215,9 +227,11 @@ export default function CartPage() {
     const port = import.meta.env.VITE_PORT;
     try {
       await axios.delete(`http://localhost:${port}/deleteCard/${cart_id}`);
+
       setCart((prevCart) =>
         prevCart.filter((item) => item.cart_id !== cart_id)
       );
+      dispatch(decrementCartItem({number:1}));
     } catch (error) {
       console.error(error);
     }
@@ -240,21 +254,23 @@ export default function CartPage() {
     alert("Payment completed successfully!");
     setShowCheckout(false);
     try {
-      await axios.post(
+      const ress = await axios.post(
         `http://localhost:${port}/moveApprovedCartToOrders/${CusData.user.user_id}`
       );
       const res = await axios.get(
         `http://localhost:${port}/api/carts/products/${CusData.user.user_id}`
       );
+      dispatch(decrementCartItem({ number: ress.data.length }));
+      console.log("ress.data.length");
+      console.log(ress.data.length);
+      console.log("ess.data.length");
+
       setCart(res.data.cards);
     } catch (error) {
       console.log(error);
     }
   };
 
-
-
-  
   return (
     <div className="min-h-screen bg-[radial-gradient(1200px_800px_at_20%_-10%,rgba(245,196,94,.18),transparent_55%),radial-gradient(900px_700px_at_100%_0%,rgba(231,139,72,.14),transparent_45%)] from-[#FFF6E9] to-[#FFF6E9] bg-[#FFF6E9] pt-20 md:pt-24 px-3 sm:px-4 md:px-6 py-6 md:py-8">
       <div className="max-w-7xl mx-auto">
@@ -264,7 +280,6 @@ export default function CartPage() {
           </span>
           Shopping Cart
         </h1>
-          
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-8 lg:gap-10">
           <div className="lg:col-span-2 space-y-5 sm:space-y-8">
@@ -283,7 +298,7 @@ export default function CartPage() {
                                     ? product.product_image.startsWith("http")
                                       ? product.product_image
                                       : `http://localhost:${port}${product.product_image}`
-                                    : `/fallback.jpg`
+                                    : `../src/assets/NoImage.png`
                                 }
                                 alt={product.product_name}
                                 className="w-full h-full object-cover rounded-2xl border-2 border-[#F5C45E] shadow-md"
@@ -305,6 +320,20 @@ export default function CartPage() {
                             <span className="h-2 w-2 rounded-full bg-[#F5C45E]"></span>
                             ${product.cart_price}
                           </p>
+
+                          {product.provider_response &&
+                          product.status_pay === "Approve" ? (
+                            <div className="px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-[#FFF6E9] border border-[#F5C45E]/50 text-[#102E50]">
+                              <span className="text-sm font-semibold">
+                                Provider Message:
+                              </span>
+                              <div className="mt-1 text-sm sm:text-[15px] font-medium">
+                                {product.provider_response}
+                              </div>
+                            </div>
+                          ) : (
+                            <></>
+                          )}
                         </div>
 
                         <Button
@@ -320,7 +349,8 @@ export default function CartPage() {
                           <span className="text-sm text-[#102E50]">
                             Quantity:
                           </span>
-                          {product.provider_response ? (
+                          {product.provider_response ||
+                          product.status_pay !== "Approve" ? (
                             <span className="w-10 text-center font-semibold text-[#102E50] bg-[#FFF6E9] rounded-lg border border-[#F5C45E]/50 py-1">
                               {product.quantity}
                             </span>
@@ -393,6 +423,12 @@ export default function CartPage() {
                             <span className="h-2 w-2 rounded-full bg-[#E78B48]"></span>
                             Waiting provider response
                           </p>
+                        ) : product.custom_requirement &&
+                          product.provider_response ? (
+                          <p className="inline-flex items-center gap-2 text-[#E78B48] font-semibold">
+                            <span className="h-2 w-2 rounded-full bg-[#F5C45E]"></span>
+                            Request Sent Successfully
+                          </p>
                         ) : (
                           <Button
                             variant="secondary"
@@ -400,7 +436,7 @@ export default function CartPage() {
                               toggleResponseProvider(product.cart_id)
                             }
                           >
-                            RESPONSE PROVIDER
+                            CUSTOM REQURMENT{" "}
                           </Button>
                         )}
 
@@ -444,12 +480,12 @@ export default function CartPage() {
                                   </div>
                                 )}
                               </>
+                            ) : product.custom_requirement &&
+                              product.provider_response ? (
+                              <></>
                             ) : (
-                              <p className="inline-flex items-center gap-2 text-[#E78B48] font-semibold">
-                                <span className="h-2 w-2 rounded-full bg-[#F5C45E]"></span>
-                                Request Sent Successfully
-                              </p>
-                            )}
+                              <></>
+                            )}{" "}
                           </div>
                         )}
                       </div>

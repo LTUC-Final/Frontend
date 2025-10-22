@@ -4,20 +4,32 @@ import { useSelector } from "react-redux";
 import { CountRequest } from "./CountRequestContext";
 
 export function CountRequestProvider({ children }) {
-  const [value, setValue] = useState();
+  const [value, setValue] = useState(null);
 
   const { user } = useSelector((state) => state.UserInfo);
   const provider_id = user?.provider?.provider_id;
-  const user_role = user?.provider?.role;
+  const role = user?.role;
+  console.log("ssssssfffffffffffffffffffffffffffffffffffffffffffffffffff");
+  console.log(role);
+  console.log("ssssssfffffffffffffffffffffffffffffffffffffffffffffffffff");
 
   const port = import.meta.env.VITE_PORT;
+  const persistedData = JSON.parse(localStorage.getItem("persist:UserInfo"));
+  const CusData = useSelector((state) => state.UserInfo);
 
+  const token = CusData.token;
   useEffect(() => {
-    if (user_role === "provider") {
+    if (role === "provider" && provider_id) {
       const sendRequest = async () => {
         try {
           const response = await axios.get(
-            `http://localhost:${port}/getAllOrderProvider/${provider_id}`
+            `http://localhost:${port}/getAllOrderProvider/${provider_id}`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+              },
+            }
           );
           setValue(response.data.ordersCount);
           localStorage.setItem("count", response.data.ordersCount);
@@ -28,7 +40,7 @@ export function CountRequestProvider({ children }) {
 
       sendRequest();
 
-      const intervalId = setInterval(sendRequest, 1000);
+      const intervalId = setInterval(sendRequest, 1000*60);
 
       return () => clearInterval(intervalId);
     }

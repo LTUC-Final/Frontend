@@ -12,6 +12,8 @@ export default function NavigationBar({ onScroll, cartCount }) {
     "ssssssssssssssssssssssssssssssssssssssssssssssssssssssvvvvvvvvvvvssssssssssssssssss"
   );
   console.log(value);
+  console.log("asdasdasd", cartCount);
+
   console.log(
     "ssssssssssssssssssssssssssssssssssssssssssssssssssvvvvvvvvvvvvvvvssssssssssssssss"
   );
