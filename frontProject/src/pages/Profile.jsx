@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import AddReview from "../component/Profiles/AddReview";
 import ProductFetcher from "../component/Profiles/ProductFetcher";
 import ProfileFetcher from "../component/Profiles/ProfileFetcher";
 import ProviderReviewFetcher from "../component/Profiles/ProviderReviewFetcher";
-import AddReview from "../component/Profiles/AddReview";
 // import RatingDisplay from "../component/Profiles/RatingDisplay";
 // import useProviderReviews from "../hooks/useProviderReviews.jsx";
 
@@ -16,12 +16,15 @@ export default function Profile() {
   const navigate = useNavigate();
   const { user_id } = useParams();
 
+  console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
+  console.log(user_id);
+  console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
   // Fetch provider reviews for top rating display
   // const { reviews, avgRating } = useProviderReviews(
   //   profile?.provider_user_id,
   //   refresh
   // );
-
+  useEffect(() => {}, [user_id]);
   useEffect(() => {
     if (!user) {
       navigate("/login");
@@ -51,7 +54,7 @@ export default function Profile() {
 
   return (
     <div className="bg-[#FFF6E9] min-h-screen ">
-     {/* {profile.role === "provider" && (
+      {/* {profile.role === "provider" && (
   <div className="mb-6 cursor-pointer" onClick={() => {
   const reviewsSection = document.getElementById('customer-reviews');
   if (reviewsSection) {
@@ -69,22 +72,28 @@ export default function Profile() {
         profile={profile}
         setProfile={setProfile}
         refreshTrigger={refresh}
+        user_id={user_id}
       />
 
       {profile.role === "provider" && (
         <>
-          <ProductFetcher profile={profile} user={user} refreshTrigger={refresh} />
+          <ProductFetcher
+            profile={profile}
+            user={user}
+            refreshTrigger={refresh}
+            user_id={user_id}
+          />
           <section id="customer-reviews">
-          <ProviderReviewFetcher profile={profile} refreshTrigger={refresh} />
+            <ProviderReviewFetcher profile={profile} refreshTrigger={refresh} />
 
-          {user?.role === "customer" && (
-            <AddReview
-              providerID={profile.provider_user_id}
-              user={user}
-              onReviewAdded={handleReviewAdded}
-              refreshTrigger={refresh}
-            />
-          )}
+            {user?.role === "customer" && (
+              <AddReview
+                providerID={profile.provider_user_id}
+                user={user}
+                onReviewAdded={handleReviewAdded}
+                refreshTrigger={refresh}
+              />
+            )}
           </section>
         </>
       )}

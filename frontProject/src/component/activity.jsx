@@ -28,19 +28,23 @@ function getReactionConfig(type) {
   return REACTIONS.find((r) => r.type === type) || REACTIONS[0];
 }
 
-export default function ActivitiesList() {
+export default function ActivitiesList({ user_id }) {
   const port = import.meta.env.VITE_PORT;
   const { user } = useSelector((state) => state.UserInfo);
   const userId = user?.user_id;
   const [activities, setActivities] = useState([]);
+  console.log("vvvvvvvvvvvvvvvvvvvvvvvvvvvvv");
+  console.log(userId);
+  console.log(user_id);
 
+  console.log("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv");
   useEffect(() => {
     if (!userId) return;
 
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:${port}/getUserReactions/${userId}`
+          `http://localhost:${port}/getUserReactions/${user_id}`
         );
         setActivities(response.data);
         console.log("ddddddddddddddddddddddddddddddddddddddddddddddddddddddd");
@@ -52,11 +56,15 @@ export default function ActivitiesList() {
     };
 
     fetchData();
-  }, [userId, port]);
+  }, [user_id, port]);
 
   return (
     <section className="space-y-4">
-      <h2 className="text-lg font-semibold">Activities</h2>
+      {activities.length > 0 ? (
+        <h2 className="text-lg font-semibold">Activities</h2>
+      ) : (
+        <></>
+      )}
 
       <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {activities.map((act) => {
@@ -146,10 +154,12 @@ export default function ActivitiesList() {
         })}
       </ul>
 
-      {activities.length === 0 && (
+      {activities.length === 0 && user.role !== "provider" ? (
         <div className="text-center text-sm text-gray-500 py-8">
           No activities yet.
         </div>
+      ) : (
+        <></>
       )}
     </section>
   );
