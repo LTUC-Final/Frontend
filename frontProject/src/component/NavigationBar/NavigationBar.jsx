@@ -30,6 +30,10 @@ export default function NavigationBar({ onScroll }) {
       name: "My Profile",
       href: `/profile/${userId}`,
     },
+      {
+      name: "About",
+      href: `/About`,
+    },
     {
       name: "Dashboard",
       href: "/providerDashboard",

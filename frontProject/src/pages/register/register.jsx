@@ -80,7 +80,7 @@ export default function Register() {
 
   function liveValidateName(key, val) {
     const ok = validName(val);
-    setErr(key, ok ? "" : "Only English letters (3–40), allow space/'/-.");
+    setErr(key, ok ? "" : "Only English letters (3–40), allow space/'/ -.");
   }
 
   function liveValidateEmail(val) {
@@ -134,7 +134,7 @@ export default function Register() {
       if (!validEmail(email)) msgs.push("Email: Valid provider (Gmail/Yahoo/Outlook…).");
       if (!normalizePhoneJordan(phone)) msgs.push("Phone: Jordanian mobile like +9627XXXXXXXX.");
       const pc = pwdChecks(password);
-      if (!(pc.hasLen && pc.hasLetter && pc.hasDigit && pc.hasSymbol && pc.noSpaces))
+      if (!(pc.hasLen && pc.hasLetter && pc.hasDigit && pc.hasSymbol && c.noSpaces))
         msgs.push("Password: 8–64, include letter, number, symbol, no spaces.");
       if (confirm !== password) msgs.push("Confirm: Passwords must match.");
 
@@ -192,221 +192,322 @@ export default function Register() {
 
   function inputClass(hasError) {
     return `
-      w-full pl-10 pr-3 p-3 rounded-lg
-      border ${hasError ? "border-[#BE3D2A]" : "border-gray-300"}
-      text-[#102E50]
-      focus:outline-none focus:border-[#F5C45E] focus:ring-2 focus:ring-[#F5C45E]/50
+      w-full pl-10 pr-3 py-3 rounded-xl
+      border ${hasError ? "border-[#BE3D2A]" : "border-transparent"}
+      bg-white/90 placeholder-[#102E50]/80 text-[#102E50] text-sm
+      outline-none ring-1 ring-[#102E50]/15 focus:ring-3 focus:ring-[#F5C45E]/30 focus:border-[#F5C45E]
+      shadow-[0_1px_8px_rgba(16,46,80,0.06)]
       transition
     `;
   }
 
-  function HintLine({ ok, text }) {
-    return (
-      <div className="flex items-center gap-2 text-xs leading-5">
-        <span className={`inline-block w-3 h-3 rounded-full ${ok ? "bg-green-500" : "bg-gray-300"}`} />
-        <span className={`${ok ? "text-green-700" : "text-[#102E50]/70"}`}>{text}</span>
-      </div>
-    );
-  }
+  const passScore =
+    (passState.hasLen ? 1 : 0) +
+    (passState.hasLetter ? 1 : 0) +
+    (passState.hasDigit ? 1 : 0) +
+    (passState.hasSymbol ? 1 : 0) +
+    (passState.noSpaces ? 1 : 0);
+  const passPercent = (passScore / 5) * 100;
 
   return (
-    <div
-      className="
-        relative min-h-screen flex items-center justify-center p-4
-        bg-[#FFF6E9]
-        bg-[radial-gradient(1200px_600px_at_80%_-10%,#F5C45E20,transparent_60%),radial-gradient(900px_500px_at_10%_110%,#E78B4826,transparent_60%)]
-      "
-    >
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-[#F5C45E33] blur-3xl" />
-        <div className="absolute -bottom-28 -left-24 w-96 h-96 rounded-full bg-[#E78B4833] blur-3xl" />
+    <div className="h-screen bg-[#0f2a47] flex items-center justify-center p-3">
+      <style>{`
+        @keyframes float { 0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)}}
+        @keyframes slowspin {from{transform:rotate(0)}to{transform:rotate(360deg)}}
+        @media (prefers-reduced-motion: reduce) {
+          * { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+        }
+      `}</style>
+
+      <div className="pointer-events-none absolute inset-0">
+        <div
+          className="absolute -top-24 -left-24 w-[22rem] h-[22rem] rounded-full blur-xl opacity-20"
+          style={{ background: "radial-gradient(closest-side,#F5C45E66,transparent)", animation: "float 9s ease-in-out infinite" }}
+        />
+        <div
+          className="absolute -bottom-28 -right-20 w-[24rem] h-[24rem] rounded-full blur-xl opacity-16"
+          style={{ background: "radial-gradient(closest-side,#E78B4866,transparent)", animation: "float 11s ease-in-out 1s infinite" }}
+        />
       </div>
 
       <div className="relative w-full max-w-md">
-        <div className="bg-white/90 backdrop-blur rounded-2xl shadow-xl border border-[#102E50]/10 overflow-hidden">
-          <div className="h-1 w-full bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]" />
-          <div className="px-8 pt-8 pb-6 text-center">
-            <h2 className="text-3xl font-extrabold text-[#102E50]">Create Account</h2>
-            <p className="text-sm mt-1 text-[#102E50]/70">Join us and start booking or offering services</p>
+        <div className="relative rounded-2xl p-[1.5px]">
+          <div
+            className="absolute inset-0 rounded-2xl"
+            style={{
+              background:
+                "conic-gradient(from 0deg, #F5C45E, #E78B48, #BE3D2A, #102E50, #F5C45E)",
+              animation: "slowspin 22s linear infinite",
+              filter: "blur(0.3px)",
+            }}
+          />
+          <div className="relative rounded-xl bg-[#FFF6E9]/95 backdrop-blur-md shadow-[0_12px_28px_rgba(16,46,80,0.22)]">
+            <div className="px-6 pt-6 pb-3 text-center">
+              <h1 className="text-2xl font-extrabold tracking-tight text-[#102E50]">
+                Create your Bidaya account
+              </h1>
+              <p className="text-sm text-[#102E50]/75 mt-1">
+                Join <span className="font-semibold">Bidaya</span> to find services or offer yours
+              </p>
+            </div>
+
+            <form onSubmit={handleRegister} className="px-5 pb-6 space-y-4">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label htmlFor="firstname" className="sr-only">First Name</label>
+                  <div className="relative">
+                    <span className="absolute inset-y-0 left-3 flex items-center text-[#102E50]/70">
+                      <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor">
+                        <path d="M12 12a5 5 1 1 0-5-5 5 5 0 0 0 5 5Zm-8 9a8 8 0 1 1 16 0v1H4Z"/>
+                      </svg>
+                    </span>
+                    <input
+                      id="firstname"
+                      type="text"
+                      required
+                      className={inputClass(!!fieldErrors.firstname)}
+                      value={firstname}
+                      onChange={(e) => { setFirstname(e.target.value); liveValidateName("firstname", e.target.value); }}
+                      onBlur={(e) => liveValidateName("firstname", e.target.value)}
+                      placeholder="First name"
+                    />
+                  </div>
+                  {fieldErrors.firstname && <p className="text-[#BE3D2A] text-[11px] mt-1">{fieldErrors.firstname}</p>}
+                </div>
+
+                <div>
+                  <label htmlFor="lastname" className="sr-only">Last Name</label>
+                  <div className="relative">
+                    <span className="absolute inset-y-0 left-3 flex items-center text-[#102E50]/70">
+                      <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor">
+                        <path d="M12 12a5 5 1 1 0-5-5 5 5 0 0 0 5 5Zm-8 9a8 8 0 1 1 16 0v1H4Z"/>
+                      </svg>
+                    </span>
+                    <input
+                      id="lastname"
+                      type="text"
+                      required
+                      className={inputClass(!!fieldErrors.lastname)}
+                      value={lastname}
+                      onChange={(e) => { setLastname(e.target.value); liveValidateName("lastname", e.target.value); }}
+                      onBlur={(e) => liveValidateName("lastname", e.target.value)}
+                      placeholder="Last name"
+                    />
+                  </div>
+                  {fieldErrors.lastname && <p className="text-[#BE3D2A] text-[11px] mt-1">{fieldErrors.lastname}</p>}
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="email" className="sr-only">Email</label>
+                <div className="relative">
+                  <span className="absolute inset-y-0 left-3 flex items-center text-[#102E50]/70">
+                    <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor">
+                      <path d="M2 6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v.35L12 12 2 6.35V6Zm0 3.1V18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9.1l-9.37 5.25a2 2 0 0 1-1.96 0Z"/>
+                    </svg>
+                  </span>
+                  <input
+                    id="email"
+                    type="email"
+                    required
+                    className={inputClass(!!fieldErrors.email)}
+                    value={email}
+                    onChange={(e) => { setEmail(e.target.value); liveValidateEmail(e.target.value); }}
+                    onBlur={(e) => liveValidateEmail(e.target.value)}
+                    placeholder="name@gmail.com"
+                  />
+                </div>
+                {fieldErrors.email && <p className="text-[#BE3D2A] text-[11px] mt-1">{fieldErrors.email}</p>}
+              </div>
+
+              <div>
+                <label htmlFor="phone" className="sr-only">Phone</label>
+                <div className="relative">
+                  <span className="absolute inset-y-0 left-3 flex items-center text-[#102E50]/70">
+                    <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor">
+                      <path d="M6.6 10.8a15.5 15.5 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1.1-.2c1.2.5 2.5.8 3.9.8a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.3 21 3 13.7 3 4a1 1 0 0 1 1-1h2.1a1 1 0 0 1 1 1c0 1.4.3 2.7.8 3.9.2.4.1.9-.2 1.1Z"/>
+                    </svg>
+                  </span>
+                  <input
+                    id="phone"
+                    type="tel"
+                    required
+                    className={inputClass(!!fieldErrors.phone)}
+                    value={phone}
+                    onChange={(e) => { setPhone(e.target.value); liveValidatePhone(e.target.value); }}
+                    onBlur={(e) => liveValidatePhone(e.target.value)}
+                    placeholder="+9627XXXXXXXX"
+                  />
+                </div>
+                {fieldErrors.phone && <p className="text-[#BE3D2A] text-[11px] mt-1">{fieldErrors.phone}</p>}
+              </div>
+
+              <div>
+                <label htmlFor="password" className="sr-only">Password</label>
+                <div className="relative">
+                  <span className="absolute inset-y-0 left-3 flex items-center text-[#102E50]/70">
+                    <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor">
+                      <path d="M12 1a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5Zm-3 8V6a3 3 0 1 1 6 0v3Z"/>
+                    </svg>
+                  </span>
+                  <input
+                    id="password"
+                    type="password"
+                    required
+                    className={inputClass(!!fieldErrors.password)}
+                    value={password}
+                    onChange={(e) => { setPassword(e.target.value); liveValidatePassword(e.target.value); }}
+                    onBlur={(e) => liveValidatePassword(e.target.value)}
+                    placeholder="Password (8–64, letter, number, symbol)"
+                  />
+                </div>
+
+                {password && (
+                  <div className="mt-1.5 flex items-center gap-2">
+                    <div className="h-1.5 w-full bg-[#102E50]/10 rounded-full overflow-hidden">
+                      <div
+                        className="h-full transition-all"
+                        style={{
+                          width: `${passPercent}%`,
+                          background: "linear-gradient(90deg,#F5C45E,#E78B48,#BE3D2A)",
+                          borderRadius: "999px",
+                        }}
+                      />
+                    </div>
+                    <span className="text-[11px] text-[#102E50]/80 min-w-[50px] text-right">
+                      {passScore <= 2 ? "Weak" : passScore <= 4 ? "Good" : "Strong"}
+                    </span>
+                  </div>
+                )}
+
+                {fieldErrors.password && <p className="text-[#BE3D2A] text-[11px] mt-1">{fieldErrors.password}</p>}
+              </div>
+
+              <div>
+                <label htmlFor="confirm" className="sr-only">Confirm Password</label>
+                <div className="relative">
+                  <span className="absolute inset-y-0 left-3 flex items-center text-[#102E50]/70">
+                    <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor">
+                      <path d="M12 1a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5Zm-3 8V6a3 3 0 1 1 6 0v3Z"/>
+                    </svg>
+                  </span>
+                  <input
+                    id="confirm"
+                    type="password"
+                    required
+                    className={inputClass(!!fieldErrors.confirm)}
+                    value={confirm}
+                    onChange={(e) => { setConfirm(e.target.value); liveValidateConfirm(e.target.value); }}
+                    onBlur={(e) => liveValidateConfirm(e.target.value)}
+                    placeholder="Confirm password"
+                  />
+                </div>
+                {fieldErrors.confirm && <p className="text-[#BE3D2A] text-[11px] mt-1">{fieldErrors.confirm}</p>}
+              </div>
+
+              <fieldset className="space-y-2" aria-label="Select role">
+                <legend className="text-sm font-medium text-[#102E50]">How do you plan to use Bidaya?</legend>
+                <div className="grid grid-cols-2 gap-3 items-stretch">
+                  <label className="relative cursor-pointer group h-full">
+                    <input
+                      type="radio"
+                      name="role"
+                      value="provider"
+                      checked={role === "provider"}
+                      onChange={() => setRole("provider")}
+                      className="peer sr-only"
+                    />
+                    <div className="
+                      h-full min-h-[84px]
+                      rounded-xl p-2 bg-white/90 border border-[#102E50]/15 shadow-sm
+                      transition-all group-hover:shadow group-hover:-translate-y-0.5
+                      peer-checked:border-[#F5C45E] peer-checked:ring-3 peer-checked:ring-[#F5C45E]/25
+                      focus-within:ring-3 focus-within:ring-[#F5C45E]/25
+                      flex items-center gap-2
+                    ">
+                      <div className="absolute top-2 right-2 hidden peer-checked:block">
+                        <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-[#102E50] text-[#FFF6E9]">
+                          <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="currentColor">
+                            <path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/>
+                          </svg>
+                        </span>
+                      </div>
+                      <div className="h-7 w-7 rounded-lg bg-[#FFF6E9] flex items-center justify-center shadow-[inset_0_0_0_1px_rgba(16,46,80,0.08)]">
+                        <svg viewBox="0 0 24 24" className="h-4 w-4 text-[#102E50]" fill="currentColor">
+                          <path d="M12 12a4 4 1 1 0-4-4 4 4 0 0 0 4 4Zm-7 8a7 7 0 1 1 14 0v1H5Z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <h3 className="text-sm font-semibold text-[#102E50]">Provider</h3>
+                        <p className="text-[11px] text-[#102E50]/70">Offer services or products</p>
+                      </div>
+                    </div>
+                  </label>
+
+                  <label className="relative cursor-pointer group h-full">
+                    <input
+                      type="radio"
+                      name="role"
+                      value="customer"
+                      checked={role === "customer"}
+                      onChange={() => setRole("customer")}
+                      className="peer sr-only"
+                    />
+                    <div className="
+                      h-full min-h-[84px]
+                      rounded-xl p-2 bg-white/90 border border-[#102E50]/15 shadow-sm
+                      transition-all group-hover:shadow group-hover:-translate-y-0.5
+                      peer-checked:border-[#F5C45E] peer-checked:ring-3 peer-checked:ring-[#F5C45E]/25
+                      focus-within:ring-3 focus-within:ring-[#F5C45E]/25
+                      flex items-center gap-2
+                    ">
+                      <div className="absolute top-2 right-2 hidden peer-checked:block">
+                        <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-[#102E50] text-[#FFF6E9]">
+                          <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="currentColor">
+                            <path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/>
+                          </svg>
+                        </span>
+                      </div>
+                      <div className="h-7 w-7 rounded-lg bg-[#FFF6E9] flex items-center justify-center shadow-[inset_0_0_0_1px_rgba(16,46,80,0.08)]">
+                        <svg viewBox="0 0 24 24" className="h-4 w-4 text-[#102E50]" fill="currentColor">
+                          <path d="M7 6h14l-1.5 9.1A2 2 0 0 1 17.5 17H9.3a2 2 0 0 1-2-1.6L6 4H2" />
+                        </svg>
+                      </div>
+                      <div>
+                        <h3 className="text-sm font-semibold text-[#102E50]">Customer</h3>
+                        <p className="text-[11px] text-[#102E50]/70">Find services & shop</p>
+                      </div>
+                    </div>
+                  </label>
+                </div>
+              </fieldset>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full py-3 rounded-xl text-base font-semibold bg-[#102E50] text-[#FFF6E9] hover:bg-[#F5C45E] hover:text-[#102E50] transition shadow-[0_6px_16px_rgba(16,46,80,0.22)] disabled:opacity-60 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2"
+              >
+                {loading ? (
+                  <>
+                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 0 1 8-8v4a4 4 0 0 0-4 4H4z"></path>
+                    </svg>
+                    <span>Please wait...</span>
+                  </>
+                ) : (
+                  "Register"
+                )}
+              </button>
+
+              <p className="text-sm text-[#102E50] text-center">
+                Already have an account?{" "}
+                <Link to="/login" className="text-[#E78B48] font-semibold underline hover:text-[#BE3D2A]">
+                  Login
+                </Link>
+              </p>
+            </form>
           </div>
-
-          <form className="px-8 pb-8 pt-2 flex flex-col gap-5" onSubmit={handleRegister}>
-            <div className="text-left">
-              <label htmlFor="firstname" className="block mb-2 font-medium text-[#102E50]">First Name</label>
-              <div className="relative">
-                <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center">
-                  <svg viewBox="0 0 24 24" className="w-5 h-5 text-[#102E50]/60" fill="currentColor"><path d="M12 12a5 5 0 100-10 5 5 0 000 10zm-8 9a8 8 0 1116 0v1H4v-1z" /></svg>
-                </span>
-                <input
-                  id="firstname"
-                  type="text"
-                  required
-                  className={inputClass(!!fieldErrors.firstname)}
-                  value={firstname}
-                  onChange={(e) => { setFirstname(e.target.value); liveValidateName("firstname", e.target.value); }}
-                  onBlur={(e) => liveValidateName("firstname", e.target.value)}
-                  placeholder="First name"
-                />
-              </div>
-              {fieldErrors.firstname && <p className="text-[#BE3D2A] text-xs mt-1">{fieldErrors.firstname}</p>}
-            </div>
-
-            <div className="text-left">
-              <label htmlFor="lastname" className="block mb-2 font-medium text-[#102E50]">Last Name</label>
-              <div className="relative">
-                <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center">
-                  <svg viewBox="0 0 24 24" className="w-5 h-5 text-[#102E50]/60" fill="currentColor"><path d="M12 12a5 5 0 100-10 5 5 0 000 10zm-8 9a8 8 0 1116 0v1H4v-1z" /></svg>
-                </span>
-                <input
-                  id="lastname"
-                  type="text"
-                  required
-                  className={inputClass(!!fieldErrors.lastname)}
-                  value={lastname}
-                  onChange={(e) => { setLastname(e.target.value); liveValidateName("lastname", e.target.value); }}
-                  onBlur={(e) => liveValidateName("lastname", e.target.value)}
-                  placeholder="Last name"
-                />
-              </div>
-              {fieldErrors.lastname && <p className="text-[#BE3D2A] text-xs mt-1">{fieldErrors.lastname}</p>}
-            </div>
-
-            <div className="text-left">
-              <label htmlFor="email" className="block mb-2 font-medium text-[#102E50]">Email</label>
-              <div className="relative">
-                <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center">
-                  <svg viewBox="0 0 24 24" className="w-5 h-5 text-[#102E50]/60" fill="currentColor"><path d="M2 6a2 2 0 012-2h16a2 2 0 012 2v.35ل-10 5.6L2 6.35V6zm0 3.09V18a2 2 0 002 2h16a2 2 0 002-2V9.09ل-9.37 5.25a2 2 0 01-1.96 0L2 9.09z" /></svg>
-                </span>
-                <input
-                  id="email"
-                  type="email"
-                  required
-                  className={inputClass(!!fieldErrors.email)}
-                  value={email}
-                  onChange={(e) => { setEmail(e.target.value); liveValidateEmail(e.target.value); }}
-                  onBlur={(e) => liveValidateEmail(e.target.value)}
-                  placeholder="name@gmail.com"
-                />
-              </div>
-              {fieldErrors.email && <p className="text-[#BE3D2A] text-xs mt-1">{fieldErrors.email}</p>}
-            </div>
-
-            <div className="text-left">
-              <label htmlFor="phone" className="block mb-2 font-medium text-[#102E50]">Phone</label>
-              <div className="relative">
-                <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center">
-                  <svg viewBox="0 0 24 24" className="w-5 h-5 text-[#102E50]/60" fill="currentColor"><path d="M6.6 10.8a15.5 15.5 0 006.6 6.6l2.2-2.2a1 1 0 011.1-.2c1.2.5 2.5.8 3.9.8a1 1 0 011 1V20a1 1 0 01-1 1C10.3 21 3 13.7 3 4a1 1 0 011-1h2.1a1 1 0 011 1c0 1.4.3 2.7.8 3.9.2.4.1.9-.2 1.1l-2.1 1.8z" /></svg>
-                </span>
-                <input
-                  id="phone"
-                  type="tel"
-                  required
-                  className={inputClass(!!fieldErrors.phone)}
-                  value={phone}
-                  onChange={(e) => { setPhone(e.target.value); liveValidatePhone(e.target.value); }}
-                  onBlur={(e) => liveValidatePhone(e.target.value)}
-                  placeholder="+9627XXXXXXXX"
-                />
-              </div>
-              {fieldErrors.phone && <p className="text-[#BE3D2A] text-xs mt-1">{fieldErrors.phone}</p>}
-            </div>
-
-            <div className="text-left">
-              <label htmlFor="password" className="block mb-2 font-medium text-[#102E50]">Password</label>
-              <div className="relative">
-                <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center">
-                  <svg viewBox="0 0 24 24" className="w-5 h-5 text-[#102E50]/60" fill="currentColor"><path d="M12 1a5 5 0 00-5 5v3H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2h-1V6a5 5 0 00-5-5zm-3 8V6a3 3 0 116 0v3H9z" /></svg>
-                </span>
-                <input
-                  id="password"
-                  type="password"
-                  required
-                  className={inputClass(!!fieldErrors.password)}
-                  value={password}
-                  onChange={(e) => { setPassword(e.target.value); liveValidatePassword(e.target.value); }}
-                  onBlur={(e) => liveValidatePassword(e.target.value)}
-                  placeholder="********"
-                />
-              </div>
-              <div className="mt-2 space-y-1">
-                <HintLine ok={passState.hasLen} text="8–64 characters" />
-                <HintLine ok={passState.hasLetter} text="Contains a letter" />
-                <HintLine ok={passState.hasDigit} text="Contains a number" />
-                <HintLine ok={passState.hasSymbol} text="Contains a symbol" />
-                <HintLine ok={passState.noSpaces} text="No spaces" />
-              </div>
-              {fieldErrors.password && <p className="text-[#BE3D2A] text-xs mt-1">{fieldErrors.password}</p>}
-            </div>
-
-            <div className="text-left">
-              <label htmlFor="confirm" className="block mb-2 font-medium text-[#102E50]">Confirm Password</label>
-              <div className="relative">
-                <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center">
-                  <svg viewBox="0 0 24 24" className="w-5 h-5 text-[#102E50]/60" fill="currentColor"><path d="M12 1a5 5 0 00-5 5v3H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2h-1V6a5 5 0 00-5-5zm-3 8	V6a3 3 0 116 0v3H9z" /></svg>
-                </span>
-                <input
-                  id="confirm"
-                  type="password"
-                  required
-                  className={inputClass(!!fieldErrors.confirm)}
-                  value={confirm}
-                  onChange={(e) => { setConfirm(e.target.value); liveValidateConfirm(e.target.value); }}
-                  onBlur={(e) => liveValidateConfirm(e.target.value)}
-                  placeholder="********"
-                />
-              </div>
-              {fieldErrors.confirm && <p className="text-[#BE3D2A] text-xs mt-1">{fieldErrors.confirm}</p>}
-            </div>
-
-            <div className="text-left">
-              <p className="mb-2 font-medium text-[#102E50]">Are you signing up as a Service Provider or a Customer?</p>
-              <div className="flex items-center gap-6">
-                <label className="inline-flex items-center gap-2 text-[#102E50]">
-                  <input
-                    type="radio"
-                    name="role"
-                    value="provider"
-                    checked={role === "provider"}
-                    onChange={() => setRole("provider")}
-                  />
-                  <span>Provide a service (Provider)</span>
-                </label>
-                <label className="inline-flex items-center gap-2 text-[#102E50]">
-                  <input
-                    type="radio"
-                    name="role"
-                    value="customer"
-                    checked={role === "customer"}
-                    onChange={() => setRole("customer")}
-                  />
-                  <span>Find and book services (Customer)</span>
-                </label>
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="
-                w-full py-3 rounded-lg text-lg font-semibold
-                bg-[#102E50] text-[#FFF6E9]
-                hover:bg-[#F5C45E] hover:text-[#102E50]
-                transition shadow-sm hover:shadow
-                disabled:opacity-60 disabled:cursor-not-allowed
-              "
-            >
-              {loading ? "Please wait..." : "Register"}
-            </button>
-
-            <p className="text-sm text-[#102E50] text-center">
-              Already have an account?{" "}
-              <Link to="/login" className="text-[#E78B48] font-semibold underline hover:text-[#BE3D2A]">
-                Login
-              </Link>
-            </p>
-          </form>
-
-          <div className="h-1 w-full bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]" />
         </div>
       </div>
     </div>

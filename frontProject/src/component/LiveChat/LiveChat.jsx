@@ -1,8 +1,8 @@
 import axios from "axios";
 import EmojiPicker from "emoji-picker-react";
 import { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { io } from "socket.io-client";
 
 export default function LiveChat() {
@@ -17,9 +17,9 @@ export default function LiveChat() {
   const messageContainerRef = useRef(null);
   const [autoScroll, setAutoScroll] = useState(true);
   const { sender, reciver } = location.state || {};
-  console.log("sadasdasd", sender);
-  console.log("wwqq", reciver);
-  console.log("hello omar ");
+console.log("sadasdasd",sender);
+console.log("wwqq",reciver);
+console.log("hello omar ");
 
   useEffect(() => {
     if (!sender || !reciver) return;
@@ -27,15 +27,10 @@ export default function LiveChat() {
       try {
         const res = await axios.get(
           `http://localhost:${port}/api/getmessages`,
-          {
-            params: {
-              senderId: sender.user_id || sender,
-              receiveId: reciver.user_id || reciver,
-            },
-          }
+          { params: { senderId: sender.user_id || sender , receiveId: reciver.user_id || reciver } }
         );
-        console.log("sadasinofoinwq", res.data);
-
+        console.log("sadasinofoinwq",res.data);
+        
         setMessages(res.data);
       } catch (error) {
         console.error(error);
@@ -59,8 +54,8 @@ export default function LiveChat() {
   const sendMessage = async () => {
     if (!textMessage.trim()) return;
     const messageData = {
-      senderId: sender.user_id || sender,
-      receiveId: reciver.user_id || reciver,
+      senderId: sender.user_id || sender ,
+      receiveId:reciver.user_id || reciver,
       text: textMessage,
     };
     const newMessage = { ...messageData, time: new Date() };
@@ -94,7 +89,7 @@ export default function LiveChat() {
     <div className="max-w-md mx-auto p-4 rounded-2xl bg-[#FFF6E9] border border-[#F5C45E]/60 shadow-[0_18px_40px_rgba(16,46,80,0.15)]">
       <h2 className="text-sm font-semibold mb-4 text-[#FFF6E9] bg-[#102E50] px-4 py-2 rounded-xl">
         Chat with{" "}
-        <span className="text-[#F5C45E]">{reciver?.name || "Receiver"}</span>
+        <span className="text-[#F5C45E]">{reciver?.name ||(reciver?.firstname && reciver?.lastname ? `${reciver.firstname} ${reciver.lastname}` : null)|| "Receiver"}</span>
       </h2>
 
       <div
@@ -126,39 +121,39 @@ export default function LiveChat() {
                 })}
               </div>
             </div>
-          );
-        })}
-        <div ref={MessageEndRef} />
-      </div>
-
-      <div className="flex items-center gap-2 relative">
-        <button
-          onClick={() => setShowEmojiPicker((prev) => !prev)}
-          className="text-2xl px-2 py-1 rounded-lg bg-white hover:bg-[#F5C45E]/20 transition"
-        >
-          😊
-        </button>
-
-        {showEmojiPicker && (
-          <div className="absolute bottom-14 left-0 z-50">
-            <EmojiPicker onEmojiClick={onEmojiClick} theme="light" />
-          </div>
-        )}
-
-        <input
-          className="flex-1 rounded-xl px-3 py-2 text-[#102E50] bg-white placeholder-[#102E50]/50 border border-[#F5C45E]/70 focus:outline-none focus:ring-2 focus:ring-[#F5C45E] focus:border-transparent shadow-inner"
-          placeholder="Type a message..."
-          value={textMessage}
-          onChange={(e) => setTextMessage(e.target.value)}
-        />
-
-        <button
-          className="px-4 py-2 rounded-xl text-sm font-medium text-[#FFF6E9] bg-gradient-to-r from-[#BE3D2A] to-[#E78B48] hover:brightness-110 transition shadow-[0_12px_24px_rgba(190,61,42,0.30)] active:scale-95"
-          onClick={sendMessage}
-        >
-          Send
-        </button>
-      </div>
+        );
+      })}
+      <div ref={MessageEndRef} />
     </div>
-  );
+
+    <div className="flex items-center gap-2 relative">
+      <button
+        onClick={() => setShowEmojiPicker((prev) => !prev)}
+        className="text-2xl px-2 py-1 rounded-lg bg-white hover:bg-[#F5C45E]/20 transition"
+      >
+        😊
+      </button>
+
+      {showEmojiPicker && (
+        <div className="absolute bottom-14 left-0 z-50">
+          <EmojiPicker onEmojiClick={onEmojiClick} theme="light" />
+        </div>
+      )}
+
+      <input
+        className="flex-1 rounded-xl px-3 py-2 text-[#102E50] bg-white placeholder-[#102E50]/50 border border-[#F5C45E]/70 focus:outline-none focus:ring-2 focus:ring-[#F5C45E] focus:border-transparent shadow-inner"
+        placeholder="Type a message..."
+        value={textMessage}
+        onChange={(e) => setTextMessage(e.target.value)}
+      />
+
+      <button
+        className="px-4 py-2 rounded-xl text-sm font-medium text-[#FFF6E9] bg-gradient-to-r from-[#BE3D2A] to-[#E78B48] hover:brightness-110 transition shadow-[0_12px_24px_rgba(190,61,42,0.30)] active:scale-95"
+        onClick={sendMessage}
+      >
+        Send
+      </button>
+    </div>
+  </div>
+);
 }
