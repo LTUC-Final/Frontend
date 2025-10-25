@@ -331,8 +331,9 @@ function OrdersManagementProvider() {
                             ? order.product_image
                             : `http://localhost:${port}${order.product_image}`
                           : "../src/assets/NoImage.png"
-                          : "../src/assets/NoImage.png"
+                        
                       }
+                    
                       alt={order.productName}
                       className="w-full lg:w-40 h-40 object-cover rounded-lg border-2 border-[#E78B48] shadow-sm"
                     />

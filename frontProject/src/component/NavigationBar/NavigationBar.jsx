@@ -60,6 +60,10 @@ export default function NavigationBar({ onScroll, cartCount }) {
       href: `/profile/${userId}`,
       position: "right",
     },
+      {
+      name: "About",
+      href: `/About`,
+    },
     {
       name: "Dashboard",
       href: "/providerDashboard",

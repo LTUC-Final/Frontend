@@ -3,8 +3,9 @@ import { Heart, MapPin, ShoppingCart, Tag } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import defaultImg from "../assets/NoImage.png";
-import AddToCart from "./AddToCart";
+import defaultImg from "../assets//NoImage.png";
+
+import { useAddToCart } from "./AddToCart";
 import AddTOFav from "./AddToFav";
 
 export default function DetailsOfCards({ Id }) {
