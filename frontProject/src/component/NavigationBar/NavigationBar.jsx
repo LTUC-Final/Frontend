@@ -5,13 +5,15 @@ import { Link, useLocation } from "react-router-dom";
 import { CountRequest } from "../../contexts/CountRequestContext";
 import { Home, User, LayoutDashboard, FileText, ShoppingBag, Heart, ShoppingCart, MessageSquare, LogOut, Sparkles, Info } from "lucide-react";
 import Logo from "../../assets/Logo1.png"
-export default function NavigationBar({ onScroll, cartCount }) {
-  console.log("asdasdasd", cartCount);
+export default function NavigationBar({ onScroll }) {
+  
+    const cartCount = useSelector((state) => state.UserInfo.cartItem);
+    console.log("asdasdasd", cartCount);
   const { value } = useContext(CountRequest);
   console.log(
     "ssssssssssssssssssssssssssssssssssssssssssssssssssssssvvvvvvvvvvvssssssssssssssssss"
   );
-  console.log(value);
+  console.log("value",value);
   console.log("asdasdasd", cartCount);
 
   console.log(
