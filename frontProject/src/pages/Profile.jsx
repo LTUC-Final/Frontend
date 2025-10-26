@@ -6,6 +6,7 @@ import AddReview from "../component/Profiles/AddReview";
 import ProductFetcher from "../component/Profiles/ProductFetcher";
 import ProfileFetcher from "../component/Profiles/ProfileFetcher";
 import ProviderReviewFetcher from "../component/Profiles/ProviderReviewFetcher";
+import useProviderReviews from "../hooks/useProviderReviews";
 // import RatingDisplay from "../component/Profiles/RatingDisplay";
 // import useProviderReviews from "../hooks/useProviderReviews.jsx";
 
@@ -16,9 +17,6 @@ export default function Profile() {
   const navigate = useNavigate();
   const { user_id } = useParams();
 
-  console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
-  console.log(user_id);
-  console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
   // Fetch provider reviews for top rating display
   // const { reviews, avgRating } = useProviderReviews(
   //   profile?.provider_user_id,
@@ -31,6 +29,7 @@ export default function Profile() {
       return;
     }
 
+  
     const fetchProfile = async () => {
       try {
         const port = import.meta.env.VITE_PORT;
@@ -86,7 +85,7 @@ export default function Profile() {
           <section id="customer-reviews">
             <ProviderReviewFetcher profile={profile} refreshTrigger={refresh} />
 
-            {user?.role === "customer" && (
+            {user?.role === "customer"  && (
               <AddReview
                 providerID={profile.provider_user_id}
                 user={user}

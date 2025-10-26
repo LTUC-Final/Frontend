@@ -67,6 +67,10 @@ function OrdersManagementProvider() {
   const { messagesss, sendMessagess, report, formatDateLocal } = useLastDate();
   const [buttonAi, setButtonAi] = useState(false);
 
+  console.log("77777777777777777777777");
+
+  console.log(report);
+  console.log("77777777777777777777777");
   const assistantMessages = messages.filter((msg) => msg.role === "assistant");
   const assistantMessagesSupport = messagesSupportProvider.filter(
     (msg) => msg.role === "assistant"
@@ -143,25 +147,26 @@ function OrdersManagementProvider() {
       setOrders(mappedOrders);
       sendMessage(mappedOrders);
       sendMessageSupportProvider();
+      sendMessagess(mappedOrders);
 
       console.log("Fetched orders:", mappedOrders);
 
       console.log(mappedOrders);
     } catch (error) {
-if (error.response) {
-    console.log(" Server error message:", error.response.data.message);
+      if (error.response) {
+        console.log(" Server error message:", error.response.data.message);
 
-    if (error.response.status === 403) {
-      console.log(" Token expired, please login again.");
-      
-    } else if (error.response.status === 401) {
-      console.log(" Token not provided or invalid.");
+        if (error.response.status === 403) {
+          console.log(" Token expired, please login again.");
+        } else if (error.response.status === 401) {
+          console.log(" Token not provided or invalid.");
+        }
+      } else if (error.request) {
+        console.log(" No response from server:", error.request);
+      } else {
+        console.log(" Error setting up request:", error.message);
+      }
     }
-  } else if (error.request) {
-    console.log(" No response from server:", error.request);
-  } else {
-    console.log(" Error setting up request:", error.message);
-  }    }
   };
 
   const filteredOrders = useMemo(() => {

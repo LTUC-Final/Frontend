@@ -1,5 +1,6 @@
 "use client";
 
+import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
 import { Minus, Plus, ShoppingCart } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -8,7 +9,7 @@ import { decrementCartItem } from "../../redux/userInfo/userInfo";
 
 function Button({ children, onClick, className = "", variant, size }) {
   let base =
-    "inline-flex items-center justify-center px-4 py-2 rounded-xl font-semibold tracking-wide focus:outline-none transition duration-200 ease-in-out shadow-sm md:hover:shadow-lg active:scale-[.98] ";
+    "inline-flex items-center justify-center px-4 py-ش2 rounded-xl font-semibold tracking-wide focus:outline-none transition duration-200 ease-in-out shadow-sm md:hover:shadow-lg active:scale-[.98] ";
   if (variant === "outline")
     base += "border border-[#102E50] text-[#102E50] md:hover:bg-[#FFF6E9] ";
   else if (variant === "secondary")
@@ -114,6 +115,7 @@ export default function CartPage() {
     };
     fetchData();
   }, []);
+  const { user } = useSelector((state) => state.UserInfo);
 
   useEffect(() => {
     document.body.style.overflow = showCheckout ? "hidden" : "";
@@ -231,7 +233,7 @@ export default function CartPage() {
       setCart((prevCart) =>
         prevCart.filter((item) => item.cart_id !== cart_id)
       );
-      dispatch(decrementCartItem({number:1}));
+      dispatch(decrementCartItem({ number: 1 }));
     } catch (error) {
       console.error(error);
     }
@@ -250,6 +252,7 @@ export default function CartPage() {
   const total = subtotal + tax;
   console.log("Cart value:", cart);
   const handleCheckout = () => setShowCheckout(true);
+
   const completePayment = async () => {
     alert("Payment completed successfully!");
     setShowCheckout(false);
@@ -271,6 +274,45 @@ export default function CartPage() {
     }
   };
 
+  const completePayment2 = async () => {
+    const stripe = await loadStripe(
+      "pk_test_51SLmeU7XNof7c0LK21QyvjJxb28OZnQ9uOo3leNgWR3PHE7agxDJforXF2no1WQrRg29jAP4K4iMoodJPTL7ClpT00Gbwg0TCH"
+    );
+    // const body = { products: cart };
+    const headers = {
+      "Content-Type": "application/json",
+    };
+    const response = await axios.post(
+      `http://localhost:${port}/api/payments/create-checkout-session`,
+      {
+        products: cart,
+        email: user.email,
+        customer_id: user.user_id,
+      }
+    );
+    const session = response.data;
+    const resulte = await stripe.redirectToCheckout({ sessionId: session.id });
+    if (resulte.error) {
+      console.log(resulte.error);
+    }
+
+    // try {
+    //   const ress = await axios.post(
+    //     `http://localhost:${port}/moveApprovedCartToOrders/${CusData.user.user_id}`
+    //   );
+    //   const res = await axios.get(
+    //     `http://localhost:${port}/api/carts/products/${CusData.user.user_id}`
+    //   );
+    //   dispatch(decrementCartItem({ number: ress.data.length }));
+    //   console.log("ress.data.length");
+    //   console.log(ress.data.length);
+    //   console.log("ess.data.length");
+
+    //   setCart(res.data.cards);
+    // } catch (error) {
+    //   console.log(error);
+    // }
+  };
   return (
     <div className="min-h-screen bg-[radial-gradient(1200px_800px_at_20%_-10%,rgba(245,196,94,.18),transparent_55%),radial-gradient(900px_700px_at_100%_0%,rgba(231,139,72,.14),transparent_45%)] from-[#FFF6E9] to-[#FFF6E9] bg-[#FFF6E9] pt-20 md:pt-24 px-3 sm:px-4 md:px-6 py-6 md:py-8">
       <div className="max-w-7xl mx-auto">
@@ -568,7 +610,13 @@ export default function CartPage() {
                   </ul>
                 </div>
                 <div className="flex gap-3 pt-1 sm:pt-2">
-                  <Button onClick={completePayment} className="flex-1">
+                  <Button
+                    onClick={
+                      // completePayment
+                      completePayment2
+                    }
+                    className="flex-1"
+                  >
                     Complete Payment
                   </Button>
                   <Button

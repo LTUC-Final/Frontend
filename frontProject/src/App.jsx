@@ -32,6 +32,9 @@ import { CountRequestProvider } from "./contexts/CountRequestProvider";
 import CartPage from "./pages/cart/page";
 import ProductForm from "./pages/ProviderDashBoard/providerDashboard";
 import OrdersManagementProvider from "./pages/request/pageReq";
+import PaymentsPage from "./pages/PaymentsPage";
+import SuccessPage from "./pages/SuccessPage";
+import CancelPage from "./pages/CancelPage";
 function App() {
   const [cart, setCart] = useState([]);
   const CusData = useSelector((state) => state.UserInfo);
@@ -95,7 +98,10 @@ function App() {
                   // fetchCart={fetchCart}
                   ></CartPage>
                 }
-              />
+              />{" "}
+              {/* <Route path="/payments" element={<PaymentsPage />} /> */}
+              <Route path="/success" element={<SuccessPage />} />
+              <Route path="/cancel" element={<CancelPage />} />
               <Route
                 path="/payments"
                 element={<h1>ييييييييييييييييييييي </h1>}
