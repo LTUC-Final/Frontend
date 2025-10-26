@@ -31,7 +31,7 @@ export default function Layout({ children, cartCount }) {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-white">
       {!shouldHideNav && (
         <NavigationBar
           cartCount={cartCount}
@@ -46,7 +46,7 @@ export default function Layout({ children, cartCount }) {
         />
       )}
 
-      {/* Main content should take up all remaining space */}
+      {/* Main content - no extra padding needed since nav is sticky */}
       <main className="flex-1">{children}</main>
     </div>
   );

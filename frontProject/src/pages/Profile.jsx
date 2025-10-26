@@ -6,6 +6,8 @@ import AddReview from "../component/Profiles/AddReview";
 import ProductFetcher from "../component/Profiles/ProductFetcher";
 import ProfileFetcher from "../component/Profiles/ProfileFetcher";
 import ProviderReviewFetcher from "../component/Profiles/ProviderReviewFetcher";
+
+import AddReview from "../component/Profiles/AddReview";
 import useProviderReviews from "../hooks/useProviderReviews";
 // import RatingDisplay from "../component/Profiles/RatingDisplay";
 // import useProviderReviews from "../hooks/useProviderReviews.jsx";
@@ -16,18 +18,36 @@ export default function Profile() {
   const [refresh, setRefresh] = useState(0);
   const navigate = useNavigate();
   const { user_id } = useParams();
+  const [isMyReview, setIsMyReview] = useState(false);
+ 
 
+const { reviews, avgRating } = useProviderReviews({
+    provider_user_id: profile?.provider_user_id,isMyReview
+  });
+ 
+  console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
+  console.log(reviews);
+  console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
   // Fetch provider reviews for top rating display
   // const { reviews, avgRating } = useProviderReviews(
   //   profile?.provider_user_id,
   //   refresh
   // );
   useEffect(() => {}, [user_id]);
+  console.log("qqqqq", profile)
+  console.log("idfromlocal", user)
   useEffect(() => {
     if (!user) {
       navigate("/login");
       return;
     }
+        if (reviews && user?.user_id) {
+      const found = reviews.some(
+        (review) => review.customer_id === user.user_id
+      );
+      setIsMyReview(found);
+    }
+ 
 
   
     const fetchProfile = async () => {
@@ -85,7 +105,7 @@ export default function Profile() {
           <section id="customer-reviews">
             <ProviderReviewFetcher profile={profile} refreshTrigger={refresh} />
 
-            {user?.role === "customer"  && (
+            {user?.role === "customer" && !isMyReview && (
               <AddReview
                 providerID={profile.provider_user_id}
                 user={user}

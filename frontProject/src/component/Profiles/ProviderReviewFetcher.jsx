@@ -26,7 +26,7 @@ export default function ProviderReviewFetcher({ profile, refreshTrigger }) {
 
       {reviews.length === 0 && profile.role === "provider" ? (
         <p className="text-center text-[#102E50] italic bg-[#FFF6E9] py-4 px-4 rounded-lg shadow-inner mx-6 border border-dashed border-[#F5C45E]">
-          No reviews yet. Be the first to share your experience!
+     Looks like there aren’t any reviews yet. Check back soon!                                                                                  
         </p>
       ) : (
         <>

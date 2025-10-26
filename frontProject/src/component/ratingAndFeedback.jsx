@@ -57,13 +57,15 @@ export default function FeedbackCard({
   };
 
   return (
-  <div
+<div
   className={clsx(
-    "m-10 w-full rounded-xl p-6 shadow-lg",
+    "m-6 w-full max-w-[700px] rounded-xl p-6 shadow-lg",
     "bg-gradient-to-br from-[#FFF6E9] to-[#F9EBC6]",
     className
   )}
 >
+
+
 
       {/* Header */}
       <div className="flex items-center gap-4 mb-6">
