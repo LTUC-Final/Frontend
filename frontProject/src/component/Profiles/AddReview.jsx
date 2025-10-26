@@ -1,45 +1,41 @@
+
 import { useState } from "react";
 import { Star } from "lucide-react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import useProviderReviews from "../../hooks/useProviderReviews";
 
-export default function AddReview({ providerID, user, onReviewAdded }) {
+export default function AddReview({ providerID, user , onReviewAdded }) {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);
-  const [alreadyReviewed, setAlreadyReviewed] = useState(false);
 
-const showSwal = ({
-  title,
-  text,
-  icon = "info",
-  confirmColor = "#F5C45E"
-}) => {
-  Swal.fire({
-    title,
-    text,
-    icon,
-    background: "#FFF6E9",
-    color: "#102E50",
-    iconColor:
-      icon === "success"
-        ? "#F5C45E"
-        : icon === "error"
-        ? "#BE3D2A"
-        : icon === "warning"
-        ? "#E78B48"
-        : "#102E50",
-    confirmButtonColor: confirmColor,
-    confirmButtonText: "OK",
-    customClass: {
-      popup: "swal2-custom-popup",
-      title: "swal2-custom-title",
-      confirmButton: "swal2-custom-confirm"
-    },
-    buttonsStyling: false
-  });
-};
+  const { reviews, avgRating, setReviews } = useProviderReviews(providerID, 0);
 
+  const alreadyReviewed = user && reviews.some(
+    r => String(r.customer_id) === String(user.user_id)
+  );
+
+  const showSwal = ({ title, text, icon = "info", confirmColor = "#F5C45E" }) => {
+    Swal.fire({
+      title,
+      text,
+      icon,
+      background: "#FFF6E9",
+      color: "#102E50",
+      iconColor:
+        icon === "success"
+          ? "#F5C45E"
+          : icon === "error"
+          ? "#BE3D2A"
+          : icon === "warning"
+          ? "#E78B48"
+          : "#102E50",
+      confirmButtonColor: confirmColor,
+      confirmButtonText: "OK",
+      buttonsStyling: false,
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -69,37 +65,36 @@ const showSwal = ({
       const payload = { rating, review_text: comment };
       const res = await axios.post(endpoint, payload);
 
-      if (onReviewAdded) onReviewAdded(res.data.review);
+      // ✅ Add the new review to local state to hide form immediately
+      setReviews(prev => [
+        ...prev,
+        {
+          ...res.data.review,
+          customer_id: user.user_id,
+          rating,
+          review_text: comment,
+          created_at: new Date().toISOString(),
+        }
+      ]);
+      if (onReviewAdded) onReviewAdded();
 
-   showSwal({
-  title: "Review Added",
-  text: "Thanks for sharing your feedback!",
-  icon: "success",
-  confirmColor: "#F5C45E",
-});
+      showSwal({
+        title: "Review Added",
+        text: "Thanks for sharing your feedback!",
+        icon: "success",
+        confirmColor: "#F5C45E",
+      });
 
       setRating(0);
       setComment("");
     } catch (err) {
       console.error("Error posting review:", err);
-
-      if (err.response?.status === 400) {
-        setAlreadyReviewed(true);
-       showSwal({
-  title: "Already Reviewed",
-  text: err.response.data.message || "You’ve already reviewed this provider.",
-  icon: "error",
-  confirmColor: "#BE3D2A",
-});
-
-      } else {
-       showSwal({
-  title: "Error",
-  text: "Something went wrong. Please try again.",
-  icon: "error",
-  confirmColor: "#BE3D2A",
-});
-      }
+      showSwal({
+        title: "Error",
+        text: "Something went wrong. Please try again.",
+        icon: "error",
+        confirmColor: "#BE3D2A",
+      });
     } finally {
       setLoading(false);
     }
@@ -107,12 +102,21 @@ const showSwal = ({
 
   return (
     <>
+      <div className="mb-6 text-center">
+        <h3 className="text-lg font-semibold text-[#102E50]">Average Rating</h3>
+        <p className="text-[#E78B48] font-bold text-xl">
+          {avgRating ? avgRating.toFixed(1) : "No reviews yet"}
+        </p>
+      </div>
+
       {!alreadyReviewed ? (
         <form
           onSubmit={handleSubmit}
           className="mt-6 p-6 rounded-xl shadow-md bg-[#FFF6E9] max-w-xl mx-auto border border-[#F5C45E] mb-6"
         >
-          <h2 className="text-2xl font-bold text-[#102E50] mb-4 text-center">Leave a Review</h2>
+          <h2 className="text-2xl font-bold text-[#102E50] mb-4 text-center">
+            Leave a Review
+          </h2>
 
           <label className="block mb-2 font-semibold text-[#102E50]">Your rating:</label>
           <div className="flex gap-2 mb-4">
