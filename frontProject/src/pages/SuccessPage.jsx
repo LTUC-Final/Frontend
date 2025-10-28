@@ -5,7 +5,6 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { decrementCartItem } from "../redux/userInfo/userInfo";
-import { addPayment, getStripeSession } from "./services/paymentService";
 
 export default function SuccessPage() {
   const calledRef = useRef(false);
@@ -86,6 +85,15 @@ export default function SuccessPage() {
   useEffect(() => {
     const confirmPayment = async () => {
       try {
+        const sessionId = searchParams.get("session_id");
+        if (!sessionId) return console.error("No session_id found in URL");
+
+        const { data } = await axios.post(
+          `http://localhost:${port}/save-payment`,
+          { session_id: sessionId }
+        );
+
+        console.log(" Payment saved successfully:", data);
         const ress = await axios.post(
           `http://localhost:${port}/moveApprovedCartToOrders/${user.user_id}`
         );
@@ -98,27 +106,7 @@ export default function SuccessPage() {
         console.log("ress.data.length");
         console.log(ress.data.length);
         console.log("ess.data.length");
-        const sessionId = searchParams.get("session_id");
-        if (!sessionId) return;
-
-        const { data: session } = await getStripeSession(sessionId, token);
-        const cartIds = session.metadata.cart_ids; // مصفوفة cart_ids
-        const transactionId = session.id;
-
-        // 1️⃣ تسجيل الدفع في قاعدة البيانات
-        await addPayment(
-          { cart_ids: cartIds, transaction_id: transactionId, method: "card" },
-          token
-        );
-
-        // 2️⃣ نقل الأوردر ومسح السلة
-        // await axios.post(
-        //   `http://localhost:${port}/moveApprovedCartToOrders/${user.user_id}`,
-        //   { cart_ids: cartIds }
-        // );
-
-        // 3️⃣ إعادة التوجيه لسجل المدفوعات
-        const timer = setTimeout(() => {
+        setTimeout(() => {
           navigate("/payments");
         }, 3000);
       } catch (error) {

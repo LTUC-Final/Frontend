@@ -220,7 +220,7 @@ function OrdersManagementProvider() {
     <div className="flex flex-col lg:flex-row min-h-screen bg-[#FFF6E9]">
       {/* Sidebar overlay when open (for mobile) */}
       {sidebarOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />
+        <div className="fixed inset-0 bg-opacity-50 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />
       )}
 
       {/* Main content */}

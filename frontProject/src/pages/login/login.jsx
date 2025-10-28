@@ -16,8 +16,11 @@ const allowedDomains = new Set([
 ]);
 
 function validEmail(emailRaw) {
-  const email = String(emailRaw || "").trim().toLowerCase();
-  if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(email)) return false;
+  const email = String(emailRaw || "")
+    .trim()
+    .toLowerCase();
+  if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(email))
+    return false;
   const domain = email.split("@")[1] || "";
   return allowedDomains.has(domain);
 }
@@ -69,7 +72,8 @@ export default function LoginPage() {
     const hasErrors = (!validEmail(email) ? "x" : "") || (!password ? "x" : "");
     if (hasErrors) {
       const msgs = [];
-      if (!validEmail(email)) msgs.push("Email: Valid provider (Gmail/Yahoo/Outlook…).");
+      if (!validEmail(email))
+        msgs.push("Email: Valid provider (Gmail/Yahoo/Outlook…).");
       if (!password) msgs.push("Password: Required.");
       Swal.fire({
         title: "Please fix the following:",
@@ -87,9 +91,12 @@ export default function LoginPage() {
       setLoading(true);
       const port = import.meta.env.VITE_PORT;
       const response = await axios.post(`http://localhost:${port}/api/login`, {
-        email: String(email || "").trim().toLowerCase(),
+        email: String(email || "")
+          .trim()
+          .toLowerCase(),
         password,
       });
+      const { user } = response.data;
 
       dispatch(
         setUserInfo({
@@ -99,7 +106,7 @@ export default function LoginPage() {
       );
 
       const res = await axios.get(
-        `http://localhost:${port}/api/carts/products/${CusData.user.user_id}`
+        `http://localhost:${port}/api/carts/products/${user.user_id}`
       );
 
       dispatch(
@@ -121,8 +128,10 @@ export default function LoginPage() {
         setErr("email", data.fields.email || "");
         setErr("password", data.fields.password || "");
       } else {
-        if (msg.toLowerCase().includes("email")) setErr("email", "Invalid email or password.");
-        if (msg.toLowerCase().includes("password")) setErr("password", "Invalid email or password.");
+        if (msg.toLowerCase().includes("email"))
+          setErr("email", "Invalid email or password.");
+        if (msg.toLowerCase().includes("password"))
+          setErr("password", "Invalid email or password.");
       }
 
       Swal.fire({
@@ -150,11 +159,17 @@ export default function LoginPage() {
       <div className="pointer-events-none absolute inset-0">
         <div
           className="absolute -top-24 -left-24 w-[22rem] h-[22rem] rounded-full blur-xl opacity-20"
-          style={{ background: "radial-gradient(closest-side,#F5C45E66,transparent)", animation: "float 9s ease-in-out infinite" }}
+          style={{
+            background: "radial-gradient(closest-side,#F5C45E66,transparent)",
+            animation: "float 9s ease-in-out infinite",
+          }}
         />
         <div
           className="absolute -bottom-28 -right-20 w-[24rem] h-[24rem] rounded-full blur-xl opacity-16"
-          style={{ background: "radial-gradient(closest-side,#E78B4866,transparent)", animation: "float 11s ease-in-out 1s infinite" }}
+          style={{
+            background: "radial-gradient(closest-side,#E78B4866,transparent)",
+            animation: "float 11s ease-in-out 1s infinite",
+          }}
         />
       </div>
 
@@ -181,11 +196,17 @@ export default function LoginPage() {
 
             <form className="px-5 pb-7 space-y-4" onSubmit={handleLogin}>
               <div>
-                <label htmlFor="email" className="sr-only">Email</label>
+                <label htmlFor="email" className="sr-only">
+                  Email
+                </label>
                 <div className="relative">
                   <span className="absolute inset-y-0 left-3 flex items-center text-[#102E50]/70">
-                    <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor">
-                      <path d="M2 6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v.35L12 12 2 6.35V6Zm0 3.1V18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9.1l-9.37 5.25a2 2 0 0 1-1.96 0Z"/>
+                    <svg
+                      viewBox="0 0 24 24"
+                      className="w-4 h-4"
+                      fill="currentColor"
+                    >
+                      <path d="M2 6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v.35L12 12 2 6.35V6Zm0 3.1V18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9.1l-9.37 5.25a2 2 0 0 1-1.96 0Z" />
                     </svg>
                   </span>
                   <input
@@ -195,21 +216,32 @@ export default function LoginPage() {
                     required
                     className={inputClass(!!fieldErrors.email)}
                     value={email}
-                    onChange={(e) => { setEmail(e.target.value); liveValidateEmail(e.target.value); }}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      liveValidateEmail(e.target.value);
+                    }}
                     onBlur={(e) => liveValidateEmail(e.target.value)}
                   />
                 </div>
                 {fieldErrors.email && (
-                  <p className="text-[#BE3D2A] text-[11px] mt-1">{fieldErrors.email}</p>
+                  <p className="text-[#BE3D2A] text-[11px] mt-1">
+                    {fieldErrors.email}
+                  </p>
                 )}
               </div>
 
               <div>
-                <label htmlFor="password" className="sr-only">Password</label>
+                <label htmlFor="password" className="sr-only">
+                  Password
+                </label>
                 <div className="relative">
                   <span className="absolute inset-y-0 left-3 flex items-center text-[#102E50]/70">
-                    <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor">
-                      <path d="M12 1a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5Zm-3 8V6a3 3 0 1 1 6 0v3Z"/>
+                    <svg
+                      viewBox="0 0 24 24"
+                      className="w-4 h-4"
+                      fill="currentColor"
+                    >
+                      <path d="M12 1a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5Zm-3 8V6a3 3 0 1 1 6 0v3Z" />
                     </svg>
                   </span>
                   <input
@@ -219,7 +251,10 @@ export default function LoginPage() {
                     required
                     className={inputClass(!!fieldErrors.password) + " pr-12"}
                     value={password}
-                    onChange={(e) => { setPassword(e.target.value); liveValidatePassword(e.target.value); }}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      liveValidatePassword(e.target.value);
+                    }}
                     onBlur={(e) => liveValidatePassword(e.target.value)}
                   />
                   <button
@@ -229,18 +264,28 @@ export default function LoginPage() {
                     aria-label={showPass ? "Hide password" : "Show password"}
                   >
                     {showPass ? (
-                      <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
-                        <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5C21.27 7.61 17 4.5 12 4.5Zm0 12a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9Z"/>
+                      <svg
+                        viewBox="0 0 24 24"
+                        className="w-5 h-5"
+                        fill="currentColor"
+                      >
+                        <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5C21.27 7.61 17 4.5 12 4.5Zm0 12a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9Z" />
                       </svg>
                     ) : (
-                      <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
-                        <path d="M12 6c-5 0-9.27 3.11-11 7.5A12.9 12.9 0 0 0 5 17.7L3.3 19.4 4.7 20.8 20.8 4.7 19.4 3.3l-2 2A12.6 12.6 0 0 0 12 6Zm0 12c5 0 9.27-3.11 11-7.5a12.9 12.9 0 0 0-3.07-4.2l-2.1 2.1A7 7 0 1 1 9.6 15.73L7.8 17.5A12.5 12.5 0 0 0 12 18Z"/>
+                      <svg
+                        viewBox="0 0 24 24"
+                        className="w-5 h-5"
+                        fill="currentColor"
+                      >
+                        <path d="M12 6c-5 0-9.27 3.11-11 7.5A12.9 12.9 0 0 0 5 17.7L3.3 19.4 4.7 20.8 20.8 4.7 19.4 3.3l-2 2A12.6 12.6 0 0 0 12 6Zm0 12c5 0 9.27-3.11 11-7.5a12.9 12.9 0 0 0-3.07-4.2l-2.1 2.1A7 7 0 1 1 9.6 15.73L7.8 17.5A12.5 12.5 0 0 0 12 18Z" />
                       </svg>
                     )}
                   </button>
                 </div>
                 {fieldErrors.password && (
-                  <p className="text-[#BE3D2A] text-[11px] mt-1">{fieldErrors.password}</p>
+                  <p className="text-[#BE3D2A] text-[11px] mt-1">
+                    {fieldErrors.password}
+                  </p>
                 )}
               </div>
 
@@ -251,9 +296,24 @@ export default function LoginPage() {
               >
                 {loading ? (
                   <>
-                    <svg className="animate-spin h-6 w-6" viewBox="0 0 24 24" fill="none">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 0 1 8-8v4a4 4 0 0 0-4 4H4z"></path>
+                    <svg
+                      className="animate-spin h-6 w-6"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 0 1 8-8v4a4 4 0 0 0-4 4H4z"
+                      ></path>
                     </svg>
                     <span>Please wait...</span>
                   </>
@@ -263,10 +323,16 @@ export default function LoginPage() {
               </button>
 
               <div className="flex items-center justify-between text-base text-[#102E50]">
-                <Link to="/forget" className="text-[#E78B48] font-medium underline hover:text-[#BE3D2A] transition">
+                <Link
+                  to="/forget"
+                  className="text-[#E78B48] font-medium underline hover:text-[#BE3D2A] transition"
+                >
                   Forgot your password?
                 </Link>
-                <Link to="/register" className="text-[#E78B48] font-semibold underline hover:text-[#BE3D2A] transition">
+                <Link
+                  to="/register"
+                  className="text-[#E78B48] font-semibold underline hover:text-[#BE3D2A] transition"
+                >
                   Create account
                 </Link>
               </div>

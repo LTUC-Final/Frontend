@@ -1,109 +1,84 @@
 // src/pages/PaymentsPage.jsx
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { getPaymentsByUser, getPaymentsSummary } from "./services/paymentService";
 
 export default function PaymentsPage() {
-  const { user, token } = useSelector((state) => state.UserInfo); 
-  const userId = user?.user_id;
-
   const [payments, setPayments] = useState([]);
-  const [summary, setSummary] = useState({});
-  const [loading, setLoading] = useState(false);
+  const port = import.meta.env.VITE_PORT;
+  const { user } = useSelector((state) => state.UserInfo);
 
   useEffect(() => {
-    if (!userId || !token) return;
+    const fetchPayments = async () => {
+      try {
+        const { data } = await axios.get(
+          `http://localhost:${port}/history/${user.user_id}`
+        );
+        setPayments(data);
+      } catch (error) {
+        console.error("Error fetching payments:", error);
+      }
+    };
     fetchPayments();
-    fetchSummary();
-  }, [userId, token]);
-
-  const fetchPayments = async () => {
-    try {
-      setLoading(true);
-      const { data } = await getPaymentsByUser(userId, token);
-      setPayments(data);
-    } catch (err) {
-      console.error("Error fetching payments:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchSummary = async () => {
-    try {
-      const { data } = await getPaymentsSummary(userId, token);
-      setSummary(data);
-    } catch (err) {
-      console.error("Error fetching summary:", err);
-    }
-  };
-
-  // 🎨 ألوان حالات الدفع
-  const statusColors = {
-    paid: "text-green-600 font-bold",
-    pending: "text-yellow-600 font-semibold",
-    failed: "text-red-600 font-semibold",
-    unapproved: "text-gray-500",
-    refunded: "text-blue-600",
-    ready_to_pay: "text-indigo-600 font-bold",
-  };
+  }, [port, user.user_id]);
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10">
-      <h1 className="text-2xl font-bold mb-6">سجل المدفوعات</h1>
+    <div className="min-h-screen bg-[#FFF6E9] py-10 px-4 sm:px-6 md:px-12">
+      <div className="max-w-6xl mx-auto bg-white rounded-2xl shadow-lg p-8 border-t-4 border-[#F5C45E]">
+        <h1 className="text-3xl font-extrabold text-[#102E50] mb-6 text-center">
+          💳 Payment History
+        </h1>
 
-      {/* 🔹 ملخص الدفعات */}
-      <div className="bg-yellow-500 shadow rounded p-4 mb-6">
-        <h2 className="text-lg font-semibold mb-3">ملخص الدفعات</h2>
-        <p>المجموع المدفوع: {summary.total_paid || 0} $</p>
-        <p>بانتظار الدفع: {summary.total_pending || 0} $</p>
-        <p>فشل الدفع: {summary.total_failed || 0} $</p>
-        <p>عدد الدفعات: {summary.total_payments || 0}</p>
-      </div>
-
-      {/* 🔹 جدول الدفعات */}
-      {loading ? (
-        <p>جاري التحميل...</p>
-      ) : payments.length === 0 ? (
-        <p className="text-gray-500">لا يوجد دفعات بعد</p>
-      ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse border text-sm">
-            <thead>
-              <tr className="bg-emerald-500 text-left">
-                <th className="border p-2">#</th>
-                <th className="border p-2">المبلغ</th>
-                <th className="border p-2">الحالة</th>
-                <th className="border p-2">المنتج</th>
-                <th className="border p-2">التاريخ</th>
-              </tr>
-            </thead>
-            <tbody>
-              {payments.map((p, i) => {
-                const productName = p.product_name || "—";
-                const amount = p.amount
-                  ? parseFloat(p.amount).toFixed(2)
-                  : "0.00";
-                const statusClass = statusColors[p.status] || "";
-
-                return (
-                  <tr key={p.payment_id} className="hover:bg-amber-100">
-                    <td className="border p-2">{i + 1}</td>
-                    <td className="border p-2">{amount} $</td>
-                    <td className={`border p-2 ${statusClass}`}>{p.status}</td>
-                    <td className="border p-2">{productName}</td>
-                    <td className="border p-2">
-                      {p.transaction_date
-                        ? new Date(p.transaction_date).toLocaleString()
-                        : "—"}
+        {payments.length === 0 ? (
+          <p className="text-center text-[#E78B48] font-semibold">
+            No payments found yet.
+          </p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="min-w-full border-collapse">
+              <thead>
+                <tr className="bg-[#F5C45E]/20 text-[#102E50] text-sm md:text-base">
+                  <th className="p-3 border-b-2">Transaction ID</th>
+                  <th className="p-3 border-b-2">Amount</th>
+                  <th className="p-3 border-b-2">Status</th>
+                  <th className="p-3 border-b-2">Date</th>
+                  <th className="p-3 border-b-2">Email</th>
+                </tr>
+              </thead>
+              <tbody>
+                {payments.map((payment) => (
+                  <tr
+                    key={payment.stripe_payment_id}
+                    className="text-center hover:bg-[#FFF6E9]"
+                  >
+                    <td className="p-3 font-mono text-xs sm:text-sm text-[#102E50]">
+                      {payment.stripe_payment_id}
                     </td>
+                    <td className="p-3 font-semibold text-[#E78B48]">
+                      ${payment.amount}
+                    </td>
+                    <td
+                      className={`p-3 font-semibold ${
+                        payment.status === "succeeded"
+                          ? "text-green-600"
+                          : payment.status === "pending"
+                          ? "text-yellow-600"
+                          : "text-red-600"
+                      }`}
+                    >
+                      {payment.status}
+                    </td>
+                    <td className="p-3 text-[#102E50]/80">
+                      {new Date(payment.payment_date).toLocaleString()}
+                    </td>
+                    <td className="p-3 text-[#102E50]/70">{payment.email}</td>
                   </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      )}
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

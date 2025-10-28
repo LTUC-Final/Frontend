@@ -6,8 +6,6 @@ import AddReview from "../component/Profiles/AddReview";
 import ProductFetcher from "../component/Profiles/ProductFetcher";
 import ProfileFetcher from "../component/Profiles/ProfileFetcher";
 import ProviderReviewFetcher from "../component/Profiles/ProviderReviewFetcher";
-
-import AddReview from "../component/Profiles/AddReview";
 import useProviderReviews from "../hooks/useProviderReviews";
 // import RatingDisplay from "../component/Profiles/RatingDisplay";
 // import useProviderReviews from "../hooks/useProviderReviews.jsx";
@@ -19,12 +17,12 @@ export default function Profile() {
   const navigate = useNavigate();
   const { user_id } = useParams();
   const [isMyReview, setIsMyReview] = useState(false);
- 
 
-const { reviews, avgRating } = useProviderReviews({
-    provider_user_id: profile?.provider_user_id,isMyReview
+  const { reviews, avgRating } = useProviderReviews({
+    provider_user_id: profile?.provider_user_id,
+    isMyReview,
   });
- 
+
   console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
   console.log(reviews);
   console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
@@ -34,22 +32,20 @@ const { reviews, avgRating } = useProviderReviews({
   //   refresh
   // );
   useEffect(() => {}, [user_id]);
-  console.log("qqqqq", profile)
-  console.log("idfromlocal", user)
+  console.log("qqqqq", profile);
+  console.log("idfromlocal", user);
   useEffect(() => {
     if (!user) {
       navigate("/login");
       return;
     }
-        if (reviews && user?.user_id) {
+    if (reviews && user?.user_id) {
       const found = reviews.some(
         (review) => review.customer_id === user.user_id
       );
       setIsMyReview(found);
     }
- 
 
-  
     const fetchProfile = async () => {
       try {
         const port = import.meta.env.VITE_PORT;
