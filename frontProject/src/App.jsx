@@ -14,9 +14,9 @@ import MainDashBoard from "./pages/mainDashBoard/mainDashBoard";
 import Profile from "./pages/Profile";
 import Register from "./pages/register/register";
 import WishList from "./pages/wishlist/wishlist";
-// import Forget from "./pages/forgetpassword/forget";
-// import VerifyOtp from "./pages/forgetpassword/verify_otp";
-// import ResetPassword from "./pages/forgetpassword/reset_password";
+import Forget from "./pages/forgetpassword/forget";
+import VerifyOtp from "./pages/forgetpassword/verify_otp";
+import ResetPassword from "./pages/forgetpassword/reset_password";
 import About from "./pages/About";
 
 import OrdersManagementCustomer from "./pages/order/order";
@@ -74,6 +74,10 @@ function App() {
 
             <Route path="/register" element={<Register />} />
 
+            <Route path="/forget" element={<Forget />} />
+              <Route path="/verify_otp" element={<VerifyOtp />} />
+              <Route path="/reset_password" element={<ResetPassword />} />
+
             <Route element={<ProtectedRoute />}>
               <Route path="/profile/:user_id" element={<Profile />} />
               <Route path="/LiveChat/:user_id" element={<LiveChat />} />
@@ -113,9 +117,6 @@ function App() {
                 element={<OrdersManagementCustomer></OrdersManagementCustomer>}
               ></Route>
               <Route path="*" element={<NotFoundPage></NotFoundPage>}></Route>
-              {/* <Route path="/forget" element={<Forget />} />
-          <Route path="/verify_otp" element={<VerifyOtp />} />
-          <Route path="/reset_password" element={<ResetPassword />} /> */}
               <Route path="/About" element={<About />} />{" "}
             </Route>
           </Routes>
