@@ -5,7 +5,7 @@ import axios from "axios";
 import { Minus, Plus, ShoppingCart } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { decrementCartItem } from "../../redux/userInfo/userInfo";
+import { decrementCartItem, setCartItem } from "../../redux/userInfo/userInfo";
 
 function Button({ children, onClick, className = "", variant, size }) {
   let base =
@@ -98,7 +98,11 @@ export default function CartPage() {
         );
         setCart(res.data.cards);
         console.log("sssssssssssssssssssss");
-
+        dispatch(
+          setCartItem({
+            cartItem: Number(res.data.length),
+          })
+        );
         console.log(
           res.data,
           "Ssssssssssسسسسسسسسسسسسسسsppppppppppssssssssssss"
