@@ -9,7 +9,7 @@ import ActivitiesList from "../activity.jsx";
 import EditImage from "./EditImage.jsx";
 import EditProfile from "./EditProfile";
 
-export default function ProfileCard({ data, refreshTrigger }) {
+export default function ProfileCard({ data, refreshTrigger, user_id }) {
   const [isEditing, setIsEditing] = useState(false);
   const [refresh, setRefresh] = useState(0);
   const user = useSelector((state) => state.UserInfo.user);
@@ -72,7 +72,6 @@ export default function ProfileCard({ data, refreshTrigger }) {
             )}
           </div>
         </div>
-
         {/* Profile Card Content */}
         <div className="bg-white pt-32 pb-8 px-4 sm:px-6 md:px-10 rounded-2xl shadow-2xl w-full relative mt-5">
           <div className="flex-1 w-full relative min-h-[250px] text-center">
@@ -194,9 +193,10 @@ export default function ProfileCard({ data, refreshTrigger }) {
               </button>
             )}
           </div>
-        </div>            {profile.role === "customer" && <ActivitiesList ></ActivitiesList>}
-
-      </div>
+        </div>{" "}
+    {profile.user_id !== user_id ? (
+          <ActivitiesList user_id={user_id}></ActivitiesList>
+        ):<></>}{" "}      </div>
     </div>
   );
 }

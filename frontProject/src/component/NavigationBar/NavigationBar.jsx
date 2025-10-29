@@ -1,14 +1,23 @@
-"use client"
+"use client";
+
 import { useContext, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
+
 import { CountRequest } from "../../contexts/CountRequestContext";
 import { Home, User, LayoutDashboard, FileText, ShoppingBag, Heart, ShoppingCart, MessageSquare, LogOut, Sparkles, Info } from "lucide-react";
 import Logo from "../../assets/Logo1.png"
-
 export default function NavigationBar({ onScroll }) {
   const cartCount = useSelector((state) => state.UserInfo.cartItem);
+  console.log("asdasdasd", cartCount);
   const { value } = useContext(CountRequest);
+  const ReqCount = useSelector((state) => state.UserInfo.reqItem);
+
+  console.log(
+    "ssssssssssssssssssssssssssssssssssssssssssssssssssssssvvvvvvvvvvvssssssssssssssssss"
+  );
+  console.log("value", value);
+  console.log("asdasdasd", cartCount);
 
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -70,6 +79,7 @@ export default function NavigationBar({ onScroll }) {
       <div className="flex items-center justify-between px-6 py-4 max-w-[1400px] mx-auto gap-8">
         {/* Logo Section - Left */}
         {/* <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4">
           <div className="relative w-[150px] h-[75px] p-[3px]">
             <img
               src={Logo}
@@ -116,9 +126,9 @@ export default function NavigationBar({ onScroll }) {
                       {cartCount}
                     </span>
                   )}
-                  {item.name === "ReqProvider" && value > 0 && (
+                  {item.name === "Requests" && ReqCount > 0 && (
                     <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-lg">
-                      {value}
+                      {ReqCount}
                     </span>
                   )}
                   {isActive && (
@@ -214,9 +224,9 @@ export default function NavigationBar({ onScroll }) {
                   {cartCount}
                 </span>
               )}
-              {item.name === "ReqProvider" && value > 0 && (
+              {item.name === "Requests" && ReqCount > 0 && (
                 <span className="bg-red-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
-                  {value}
+                  {ReqCount}
                 </span>
               )}
             </Link>

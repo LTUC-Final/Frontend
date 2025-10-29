@@ -1,6 +1,6 @@
 "use client";
 
-import axios from "axios"
+import axios from "axios";
 import {
   Bell,
   Calendar,
@@ -13,18 +13,18 @@ import {
   Search,
   Sparkles,
   Truck,
-} from "lucide-react"
-import { useEffect, useMemo, useState } from "react"
-import { useSelector } from "react-redux"
-import { useNavigate } from "react-router-dom"
-import useSummary from "../../hooks/useAnaliasisOrder"
-import useLastDate from "../../hooks/useLastDate"
-import useSupportProvider from "../../hooks/useSupportProvider"
-import OrdersSummary from "../order/aiComponent"
-import ApprovalForm from "./approvalForm"
-import ButtonStatus from "./ButtonStatues"
-import DownLoadAllOrder from "./downLoadAllOrders"
-import PrintInvoiceButton from "./printInvoice"
+} from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import useSummary from "../../hooks/useAnaliasisOrder";
+import useLastDate from "../../hooks/useLastDate";
+import useSupportProvider from "../../hooks/useSupportProvider";
+import OrdersSummary from "../order/aiComponent";
+import ApprovalForm from "./approvalForm";
+import ButtonStatus from "./ButtonStatues";
+import DownLoadAllOrder from "./downLoadAllOrders";
+import PrintInvoiceButton from "./printInvoice";
 
 const statusClasses = {
   pending: "text-[#E78B48] bg-[#FFF6E9] border-2 border-[#E78B48]",
@@ -34,7 +34,7 @@ const statusClasses = {
   awaiting_approval: "text-[#E78B48] bg-[#FFF6E9] border-2 border-[#E78B48]",
   on_progress: "text-[#102E50] bg-[#F5C45E]/30 border-2 border-[#102E50]",
   rejected: "text-[#BE3D2A] bg-[#FFF6E9] border-2 border-[#BE3D2A]",
-}
+};
 
 const statusDotClasses = {
   pending: "bg-[#E78B48]",
@@ -44,56 +44,68 @@ const statusDotClasses = {
   awaiting_approval: "bg-[#E78B48]",
   on_progress: "bg-[#102E50]",
   rejected: "bg-[#BE3D2A]",
-}
+};
 
 const paymentStatusClasses = {
   Paid: "text-[#102E50] bg-[#F5C45E] font-semibold",
   "Partially Paid": "text-[#E78B48] bg-[#FFF6E9] border border-[#E78B48]",
   Unpaid: "text-[#BE3D2A] bg-[#FFF6E9] border border-[#BE3D2A]",
-}
+};
 
 function OrdersManagementProvider() {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [statusFilter, setStatusFilter] = useState("All")
-  const [categoryFilter, setCategoryFilter] = useState("All")
-  const [selectedOrder, setSelectedOrder] = useState(null)
-  const [sidebarOpen, setSidebarOpen] = useState(true)
-  const [orders, setOrders] = useState([])
-  const [currentLength, setCurrentLength] = useState(0)
-  const [sortOrder, setSortOrder] = useState("newest")
-  const { messages, sendMessage } = useSummary()
-  const { messagesSupportProvider, sendMessageSupportProvider } = useSupportProvider()
-  const { messagesss, sendMessagess, report, formatDateLocal } = useLastDate()
-  const [buttonAi, setButtonAi] = useState(false)
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [categoryFilter, setCategoryFilter] = useState("All");
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [orders, setOrders] = useState([]);
+  const [currentLength, setCurrentLength] = useState(0);
+  const [sortOrder, setSortOrder] = useState("newest");
+  const { messages, sendMessage } = useSummary();
+  const { messagesSupportProvider, sendMessageSupportProvider } =
+    useSupportProvider();
+  const { messagesss, sendMessagess, report, formatDateLocal } = useLastDate();
+  const [buttonAi, setButtonAi] = useState(false);
 
-  const assistantMessages = messages.filter((msg) => msg.role === "assistant")
-  const assistantMessagesSupport = messagesSupportProvider.filter((msg) => msg.role === "assistant")
-  const { user } = useSelector((state) => state.UserInfo)
-  const provider_id = user?.provider?.provider_id
-  const port = import.meta.env.VITE_PORT
-  const navigate = useNavigate()
+  const assistantMessages = messages.filter((msg) => msg.role === "assistant");
+  const assistantMessagesSupport = messagesSupportProvider.filter(
+    (msg) => msg.role === "assistant"
+  );
+  const { user } = useSelector((state) => state.UserInfo);
+  const provider_id = user?.provider?.provider_id;
+  const port = import.meta.env.VITE_PORT;
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (provider_id) {
-      fetchOrders()
+      fetchOrders();
     }
-  }, [provider_id])
-  const persistedData = JSON.parse(localStorage.getItem("persist:UserInfo"))
+  }, [provider_id]);
+  const persistedData = JSON.parse(localStorage.getItem("persist:UserInfo"));
 
-  const token = JSON.parse(persistedData.token)
+  const token = JSON.parse(persistedData.token);
   const fetchOrders = async () => {
-    if (!provider_id) return
+    if (!provider_id) return;
     try {
-      console.log('JSON.parse(JSON.parse(localStorage.getItem("persist:UserInfo")).token)')
-      console.log(JSON.parse(JSON.parse(localStorage.getItem("persist:UserInfo")).token))
-      console.log('JSON.parse(JSON.parse(localStorage.getItem("persist:UserInfo")).token)')
+      console.log(
+        'JSON.parse(JSON.parse(localStorage.getItem("persist:UserInfo")).token)'
+      );
+      console.log(
+        JSON.parse(JSON.parse(localStorage.getItem("persist:UserInfo")).token)
+      );
+      console.log(
+        'JSON.parse(JSON.parse(localStorage.getItem("persist:UserInfo")).token)'
+      );
 
-      const response = await axios.get(`http://localhost:${port}/getAllOrderProvider/${provider_id}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-        },
-      })
+      const response = await axios.get(
+        `http://localhost:${port}/getAllOrderProvider/${provider_id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+          },
+        }
+      );
 
       const mappedOrders = response.data.orders.map((order) => ({
         order_id: order.order_id,
@@ -105,7 +117,9 @@ function OrdersManagementProvider() {
         additionalServices: order.additional_services || 0,
         totalAmount: order.original_price || 0,
         estimatedDelivery: order.datedelivery || "",
-        orderDate: order.created_at ? new Date(order.created_at).toISOString().split("T")[0] : "",
+        orderDate: order.created_at
+          ? new Date(order.created_at).toISOString().split("T")[0]
+          : "",
         paymentStatus: order.payment_status,
         category: order.categories_name,
         provider_id: order.provider_id,
@@ -124,102 +138,116 @@ function OrdersManagementProvider() {
         quantity: order.quantity,
         product_image: order.product_image,
         location: order.location,
-      }))
+      }));
 
-      setOrders(mappedOrders)
-      sendMessage(mappedOrders)
-      sendMessageSupportProvider()
+      setOrders(mappedOrders);
+      sendMessage(mappedOrders);
+      sendMessageSupportProvider();
+      sendMessagess(mappedOrders);
 
-      console.log("Fetched orders:", mappedOrders)
+      console.log("Fetched orders:", mappedOrders);
 
-      console.log(mappedOrders)
+      console.log(mappedOrders);
     } catch (error) {
       if (error.response) {
-        console.log(" Server error message:", error.response.data.message)
+        console.log(" Server error message:", error.response.data.message);
 
         if (error.response.status === 403) {
-          console.log(" Token expired, please login again.")
+          console.log(" Token expired, please login again.");
         } else if (error.response.status === 401) {
-          console.log(" Token not provided or invalid.")
+          console.log(" Token not provided or invalid.");
         }
       } else if (error.request) {
-        console.log(" No response from server:", error.request)
+        console.log(" No response from server:", error.request);
       } else {
-        console.log(" Error setting up request:", error.message)
+        console.log(" Error setting up request:", error.message);
       }
     }
-  }
+  };
 
   const filteredOrders = useMemo(() => {
     const filtered = orders.filter((order) => {
       const matchesSearch =
-        String(order.order_id).toLowerCase().includes(searchTerm.toLowerCase()) ||
+        String(order.order_id)
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
         order.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        order.serviceDetails.toLowerCase().includes(searchTerm.toLowerCase())
+        order.serviceDetails.toLowerCase().includes(searchTerm.toLowerCase());
 
-      const matchesStatus = statusFilter === "All" || order.status === statusFilter
-      const matchesCategory = categoryFilter === "All" || order.category === categoryFilter
+      const matchesStatus =
+        statusFilter === "All" || order.status === statusFilter;
+      const matchesCategory =
+        categoryFilter === "All" || order.category === categoryFilter;
 
-      return matchesSearch && matchesStatus && matchesCategory
-    })
+      return matchesSearch && matchesStatus && matchesCategory;
+    });
 
     const sorted = [...filtered].sort((a, b) => {
-      const dateA = new Date(a.orderDate)
-      const dateB = new Date(b.orderDate)
-      return sortOrder === "newest" ? dateB - dateA : dateA - dateB
-    })
+      const dateA = new Date(a.orderDate);
+      const dateB = new Date(b.orderDate);
+      return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
+    });
 
-    return sorted
-  }, [orders, searchTerm, statusFilter, categoryFilter, sortOrder])
+    return sorted;
+  }, [orders, searchTerm, statusFilter, categoryFilter, sortOrder]);
 
-  const categories = [...new Set(orders.map((order) => order.category))]
-  const statuses = [...new Set(orders.map((order) => order.status))]
+  const categories = [...new Set(orders.map((order) => order.category))];
+  const statuses = [...new Set(orders.map((order) => order.status))];
 
-  function deleteOrder(order_id) {
+  function deleteOrder(order_id, cart_id) {
     try {
-      axios.put(`http://localhost:${port}/updateStatusOrder/rejected/${order_id}`)
-      setOrders((prevOrders) => prevOrders.map((o) => (o.order_id === order_id ? { ...o, status: "rejected" } : o)))
+      axios.put(
+        `http://localhost:${port}/updateStatusOrder/rejected/${order_id}/${cart_id}`
+      );
+      setOrders((prevOrders) =>
+        prevOrders.map((o) =>
+          o.order_id === order_id ? { ...o, status: "rejected" } : o
+        )
+      );
     } catch (error) {
-      console.error("Error on reject:", error)
+      console.error("Error on reject:", error);
     }
   }
 
   function summarizeOrdersByStatus(orders) {
-    const summary = {}
+    const summary = {};
     orders.forEach((order) => {
-      const status = order.status
-      const price = Number.parseFloat(order.totalAmount) || 0
-      const total = price * (order.quantity || 1)
+      const status = order.status;
+      const price = Number.parseFloat(order.totalAmount) || 0;
+      const total = price * (order.quantity || 1);
       if (!summary[status]) {
-        summary[status] = { count: 0, totalPrice: 0 }
+        summary[status] = { count: 0, totalPrice: 0 };
       }
-      summary[status].count += 1
-      summary[status].totalPrice += total
-    })
-    return summary
+      summary[status].count += 1;
+      summary[status].totalPrice += total;
+    });
+    return summary;
   }
 
-  const summary = summarizeOrdersByStatus(orders)
+  const summary = summarizeOrdersByStatus(orders);
 
   const data = Object.entries(summary).map(([status, values]) => ({
     name: status,
     value: values.totalPrice,
-  }))
+  }));
   const data2 = Object.entries(summary).map(([status, values]) => ({
     name: status,
     value: values.count,
-  }))
-  console.log("Sssssssssssssssssssssssssssssssssssssss")
-  console.log(data2)
-  console.log("Sssssssssssssssssssss")
+  }));
+  console.log("Sssssssssssssssssssssssssssssssssssssss");
+  console.log(data2);
+  console.log("Sssssssssssssssssssss");
 
-  const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#A020F0"]
+  const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#A020F0"];
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-[#FFF6E9]">
       {/* Sidebar overlay when open (for mobile) */}
       {sidebarOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />
+        <div
+          className="fixed inset-0 bg-opacity-50 z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
       )}
 
       {/* Main content */}
@@ -233,7 +261,9 @@ function OrdersManagementProvider() {
               >
                 <Menu className="h-6 w-6" />
               </button>
-              <h2 className="text-2xl lg:text-3xl font-bold text-[#FFF6E9] tracking-tight">Orders Management</h2>
+              <h2 className="text-2xl lg:text-3xl font-bold text-[#FFF6E9] tracking-tight">
+                Orders Management
+              </h2>
             </div>
             <div className="flex items-center gap-4">
               <div className="relative">
@@ -344,7 +374,6 @@ function OrdersManagementProvider() {
                             ? order.product_image
                             : `http://localhost:${port}${order.product_image}`
                           : "../src/assets/NoImage.png"
-                        
                       }
                       //comment
                     
@@ -355,30 +384,43 @@ function OrdersManagementProvider() {
 
                   <div className="flex-1 min-w-0 space-y-3">
                     <div className="flex flex-wrap items-center gap-3">
-                      <h3 className="text-xl font-bold text-[#102E50]">Order #{order.order_id}</h3>
+                      <h3 className="text-xl font-bold text-[#102E50]">
+                        Order #{order.order_id}
+                      </h3>
 
                       <div
-                        className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold ${statusClasses[order.status]}`}
+                        className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold ${
+                          statusClasses[order.status]
+                        }`}
                       >
                         {order.status === "completed" ? (
                           <CheckCircle2 className="w-3.5 h-3.5" />
-                        ) : order.status === "In Progress" || order.status === "on_progress" ? (
+                        ) : order.status === "In Progress" ||
+                          order.status === "on_progress" ? (
                           <Loader2 className="w-3.5 h-3.5 animate-spin" />
                         ) : (
-                          <div className={`w-2 h-2 rounded-full ${statusDotClasses[order.status]}`} />
+                          <div
+                            className={`w-2 h-2 rounded-full ${
+                              statusDotClasses[order.status]
+                            }`}
+                          />
                         )}
                         <span>{order.status}</span>
                       </div>
 
                       <div
-                        className={`px-3 py-1.5 rounded-full text-xs font-bold ${paymentStatusClasses[order.paymentStatus]}`}
+                        className={`px-3 py-1.5 rounded-full text-xs font-bold ${
+                          paymentStatusClasses[order.paymentStatus]
+                        }`}
                       >
                         {order.paymentStatus}
                       </div>
                     </div>
 
                     <div>
-                      <h4 className="text-lg font-bold text-[#102E50] mb-1">{order.productName}</h4>
+                      <h4 className="text-lg font-bold text-[#102E50] mb-1">
+                        {order.productName}
+                      </h4>
                       <p className="text-sm text-[#102E50]/70 leading-relaxed line-clamp-2">
                         {order.serviceDetails}
                       </p>
@@ -386,15 +428,23 @@ function OrdersManagementProvider() {
 
                     {order.response_from_provider && (
                       <div className="bg-[#FFF6E9] p-3 rounded-lg border-l-4 border-[#E78B48]">
-                        <p className="text-xs font-semibold text-[#E78B48] mb-1">Provider Response:</p>
-                        <p className="text-sm text-[#102E50] leading-relaxed">{order.response_from_provider}</p>
+                        <p className="text-xs font-semibold text-[#E78B48] mb-1">
+                          Provider Response:
+                        </p>
+                        <p className="text-sm text-[#102E50] leading-relaxed">
+                          {order.response_from_provider}
+                        </p>
                       </div>
                     )}
 
                     {order.customNotes && (
                       <div className="bg-[#FFF6E9] p-3 rounded-lg border-l-4 border-[#E78B48]">
-                        <p className="text-xs font-semibold text-[#E78B48] mb-1">Customer Note:</p>
-                        <p className="text-sm text-[#102E50] leading-relaxed">{order.customNotes}</p>
+                        <p className="text-xs font-semibold text-[#E78B48] mb-1">
+                          Customer Note:
+                        </p>
+                        <p className="text-sm text-[#102E50] leading-relaxed">
+                          {order.customNotes}
+                        </p>
                       </div>
                     )}
 
@@ -402,7 +452,10 @@ function OrdersManagementProvider() {
                       <div className="flex items-center gap-1.5">
                         <DollarSign className="h-4 w-4 text-[#F5C45E]" />
                         <span className="font-bold text-[#102E50]">
-                          ${(order.totalAmount * order.quantity).toLocaleString()}
+                          $
+                          {(
+                            order.totalAmount * order.quantity
+                          ).toLocaleString()}
                         </span>
                       </div>
                       <div className="flex items-center gap-1.5">
@@ -414,16 +467,22 @@ function OrdersManagementProvider() {
                       <div className="flex items-center gap-1.5">
                         <Truck className="h-4 w-4 text-[#102E50]" />
                         <span className="text-[#102E50]/70">
-                          {new Date(order.estimatedDelivery).toLocaleDateString()}
+                          {new Date(
+                            order.estimatedDelivery
+                          ).toLocaleDateString()}
                         </span>
                       </div>
                       <div className="flex items-center gap-1.5">
                         <span className="text-[#102E50]/70">Category:</span>
-                        <span className="font-semibold text-[#102E50]">{order.category}</span>
+                        <span className="font-semibold text-[#102E50]">
+                          {order.category}
+                        </span>
                       </div>
                       <div className="flex items-center gap-1.5">
                         <span className="text-[#102E50]/70">Qty:</span>
-                        <span className="font-bold text-[#E78B48]">{order.quantity}</span>
+                        <span className="font-bold text-[#E78B48]">
+                          {order.quantity}
+                        </span>
                       </div>
                       {order.status === "completed" && (
                         <div className="ml-auto">
@@ -432,41 +491,47 @@ function OrdersManagementProvider() {
                       )}
                     </div>
 
-                    {order.status === "awaiting_approval" && order.customNotes && !order.response_from_provider && (
-                      <div className="flex flex-wrap items-center gap-2">
-                        <button
-                          className="px-4 py-2 bg-[#BE3D2A] text-white text-sm font-semibold rounded-lg hover:bg-[#BE3D2A]/90 transition-colors shadow-sm"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            deleteOrder(order.order_id)
-                          }}
-                        >
-                          Reject
-                        </button>
-                        <ApprovalForm
-                          orderId={order.order_id}
-                          cart_id={order.cart_id}
-                          port={port}
-                          onSuccess={(updatedOrder) => {
-                            setOrders((prevOrders) =>
-                              prevOrders.map((o) =>
-                                o.order_id === updatedOrder.order_id ? { ...o, ...updatedOrder } : o,
-                              ),
-                            )
-                          }}
-                        />
-                      </div>
-                    )}
+                    {order.status === "awaiting_approval" &&
+                      order.customNotes &&
+                      !order.response_from_provider && (
+                        <div className="flex flex-wrap items-center gap-2">
+                          <button
+                            className="px-4 py-2 bg-[#BE3D2A] text-white text-sm font-semibold rounded-lg hover:bg-[#BE3D2A]/90 transition-colors shadow-sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              deleteOrder(order.order_id, order.cart_id);
+                            }}
+                          >
+                            Reject
+                          </button>
+                          <ApprovalForm
+                            orderId={order.order_id}
+                            cart_id={order.cart_id}
+                            port={port}
+                            onSuccess={(updatedOrder) => {
+                              setOrders((prevOrders) =>
+                                prevOrders.map((o) =>
+                                  o.order_id === updatedOrder.order_id
+                                    ? { ...o, ...updatedOrder }
+                                    : o
+                                )
+                              );
+                            }}
+                          />
+                        </div>
+                      )}
 
-                    {order.status === "awaiting_approval" && order.response_from_provider && (
-                      <div className="bg-[#FFF6E9] p-3 rounded-lg border-l-4 border-[#BE3D2A]">
-                        <p className="text-sm font-semibold text-[#BE3D2A]">
-                          Already sent message and updated your price
-                        </p>
-                      </div>
-                    )}
+                    {order.status === "awaiting_approval" &&
+                      order.response_from_provider && (
+                        <div className="bg-[#FFF6E9] p-3 rounded-lg border-l-4 border-[#BE3D2A]">
+                          <p className="text-sm font-semibold text-[#BE3D2A]">
+                            Already sent message and updated your price
+                          </p>
+                        </div>
+                      )}
 
-                    {(order.status === "on_progress" || order.status === "pending") && (
+                    {(order.status === "on_progress" ||
+                      order.status === "pending") && (
                       <div>
                         <ButtonStatus
                           onSuccess={fetchOrders}
@@ -487,8 +552,8 @@ function OrdersManagementProvider() {
                             : `https://ui-avatars.com/api/?name=${order.customer_firstname}+${order.customer_lastname}&background=random&color=fff`
                         }
                         onClick={(e) => {
-                          e.stopPropagation()
-                          navigate(`/profile/${order.customer_id}`)
+                          e.stopPropagation();
+                          navigate(`/profile/${order.customer_id}`);
                         }}
                         alt={`${order.customer_firstname} ${order.customer_lastname}`}
                         className="w-16 h-16 rounded-full border-3 border-[#E78B48] object-cover hover:border-[#F5C45E] hover:scale-105 transition-all cursor-pointer shadow-md"
@@ -501,8 +566,8 @@ function OrdersManagementProvider() {
                     <div className="flex lg:flex-col gap-2 w-full">
                       <button
                         onClick={(e) => {
-                          e.stopPropagation()
-                          navigate(`/profile/${order.customer_id}`)
+                          e.stopPropagation();
+                          navigate(`/profile/${order.customer_id}`);
                         }}
                         className="px-3 py-2 text-xs font-bold text-[#FFF6E9] bg-[#102E50] hover:bg-[#E78B48] rounded-lg transition-colors"
                       >
@@ -523,7 +588,7 @@ function OrdersManagementProvider() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default OrdersManagementProvider
+export default OrdersManagementProvider;

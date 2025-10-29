@@ -9,25 +9,22 @@ import AddTOFav from "../AddToFav";
 import DeleteProduct from "./DeleteProduct";
 import EditProduct from "./EditProduct";
 
-export default function ProductCard({
-  product,
-  profile,
-  user,
-  onDelete,
-  onUpdate,
-}) {
+export default function ProductCard({ product, profile, user, onDelete, onUpdate ,user_id}) {
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(product);
   const CusData = useSelector((state) => state.UserInfo);
   const port = import.meta.env.VITE_PORT;
-  const { AddToCart } = useAddToCart();
+const {AddToCart}=useAddToCart();
   function getImageUrl(image) {
     if (!image) return defaultImg;
     if (image.startsWith("http")) return image;
     return `http://localhost:${port}${image}`;
   }
 
+  console.log("ffffffffffffffffffffffffff");
+  console.log(user_id);
+  console.log("ffffffffffffffffffffffffffffffff");
   return (
     <div className="flex justify-center px-4">
       <div
@@ -40,8 +37,7 @@ export default function ProductCard({
         <div
           className="absolute top-0 left-0 right-0 h-2"
           style={{
-            background:
-              "linear-gradient(90deg, #F5C45E 0%, #E78B48 50%, #BE3D2A 100%)",
+            background: "linear-gradient(90deg, #F5C45E 0%, #E78B48 50%, #BE3D2A 100%)",
           }}
         />
 
@@ -53,11 +49,7 @@ export default function ProductCard({
                 className="p-2.5 rounded-full transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg"
                 style={{ backgroundColor: "#BE3D2A" }}
               >
-                <Heart
-                  size={20}
-                  className="text-[#FFF6E9]"
-                  fill="currentColor"
-                />
+                <Heart size={20} className="text-[#FFF6E9]" fill="currentColor" />
               </button>
 
               <button
@@ -119,10 +111,7 @@ export default function ProductCard({
               </div>
 
               {user.email === profile.email && (
-                <div
-                  className="flex gap-3 pt-3 border-t-2"
-                  style={{ borderColor: "#F5C45E" }}
-                >
+                <div className="flex gap-3 pt-3 border-t-2" style={{ borderColor: "#F5C45E" }}>
                   <button
                     className="p-2 rounded-lg transition-all duration-300 hover:scale-110"
                     style={{
@@ -153,10 +142,8 @@ export default function ProductCard({
               backgroundColor: "#BE3D2A",
               color: "#FFF6E9",
             }}
-            onClick={() => {
-              navigate(`/productdatails`, { state: product });
-              window.scrollTo(0, 0);
-            }}
+            onClick={() => {navigate(`/productdatails`, { state: product })
+          window.scrollTo(0, 0);}}
           >
             View Details
           </button>
