@@ -41,40 +41,43 @@ export default function DownLoadAllOrder({ order }) {
   };
 
   return (
-    <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4">
-      <div className="flex flex-col text-sm text-[#102E50]">
-        <label htmlFor="fromDate" className="mb-1 font-medium">
-          From Date{" "}
-        </label>{" "}
+    <div className="flex items-center gap-4">
+      {/* From Date */}
+      <div className="flex items-center gap-2 text-sm text-[#102E50]">
+        <label htmlFor="fromDate" className="font-medium">
+          From Date:
+        </label>
         <input
           type="date"
           id="fromDate"
           value={fromDate}
           onChange={(e) => setFromDate(e.target.value)}
-          className="border rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-[#F5C45E]"
+          className="border rounded-md px-2 py-1 w-36 focus:outline-none focus:ring-2 focus:ring-[#F5C45E]"
         />
       </div>
 
-      <div className="flex flex-cols text-sm text-[#102E50]">
-        <label htmlFor="toDate" className="mb-1 font-medium">
+      {/* To Date */}
+      <div className="flex items-center gap-2 text-sm text-[#102E50]">
+        <label htmlFor="toDate" className="font-medium">
           To Date:
-        </label>{" "}
+        </label>
         <input
           type="date"
           id="toDate"
           value={toDate}
           onChange={(e) => setToDate(e.target.value)}
-          className="border rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-[#F5C45E]"
+          className="border rounded-md px-2 py-1 w-36 focus:outline-none focus:ring-2 focus:ring-[#F5C45E]"
         />
       </div>
 
+      {/* Download Button */}
       <button
-        onClick={downloadOrder}
-        className="inline-flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-2.5 bg-[#F5C45E] text-[#102E50] text-sm sm:text-base rounded-lg font-medium transition-all hover:bg-[#E78B48] hover:shadow-lg active:scale-95 disabled:opacity-50"
-      >
-        <Download className="h-4 w-4 sm:h-5 sm:w-5" />
-        <span className="block sm:inline">Download EXCEL</span>
-      </button>
+  onClick={downloadOrder}
+  className="inline-flex items-center gap-2 sm:gap-3 px-4 py-2 bg-[#F5C45E] text-[#102E50] text-sm sm:text-base rounded-lg font-medium transition-all hover:bg-[#E78B48] hover:shadow-lg active:scale-95 disabled:opacity-50"
+>
+  <Download className="h-4 w-4 sm:h-5 sm:w-5" />
+  <span className="block sm:inline">Download EXCEL</span>
+</button>
     </div>
   );
 }

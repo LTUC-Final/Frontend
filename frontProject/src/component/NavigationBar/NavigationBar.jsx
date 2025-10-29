@@ -5,18 +5,10 @@ import { Link, useLocation } from "react-router-dom";
 import { CountRequest } from "../../contexts/CountRequestContext";
 import { Home, User, LayoutDashboard, FileText, ShoppingBag, Heart, ShoppingCart, MessageSquare, LogOut, Sparkles, Info } from "lucide-react";
 import Logo from "../../assets/Logo1.png"
-export default function NavigationBar({ onScroll, cartCount }) {
-  console.log("asdasdasd", cartCount);
-  const { value } = useContext(CountRequest);
-  console.log(
-    "ssssssssssssssssssssssssssssssssssssssssssssssssssssssvvvvvvvvvvvssssssssssssssssss"
-  );
-  console.log(value);
-  console.log("asdasdasd", cartCount);
 
-  console.log(
-    "ssssssssssssssssssssssssssssssssssssssssssssssssssvvvvvvvvvvvvvvvssssssssssssssss"
-  );
+export default function NavigationBar({ onScroll }) {
+  const cartCount = useSelector((state) => state.UserInfo.cartItem);
+  const { value } = useContext(CountRequest);
 
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -29,8 +21,8 @@ export default function NavigationBar({ onScroll, cartCount }) {
     switch (name) {
       case "Home":
         return <Home {...iconProps} />;
-        case "About":
-      return <Info {...iconProps} />;
+      case "About":
+        return <Info {...iconProps} />;
       case "My Profile":
         return <User {...iconProps} />;
       case "Dashboard":
@@ -54,51 +46,15 @@ export default function NavigationBar({ onScroll, cartCount }) {
 
   const navItems = [
     { name: "Home", href: "/mainDashBoard" },
-     { name: "About", href: "/about" },
-    {
-      name: "My Profile",
-      href: `/profile/${userId}`,
-      position: "right",
-    },
-      {
-      name: "About",
-      href: `/About`,
-    },
-    {
-      name: "Dashboard",
-      href: "/providerDashboard",
-      roles: ["provider"],
-    },
-    {
-      name: "Dashboard",
-      href: "/userDashboard",
-      roles: ["customer"],
-    },
-    {
-      name: "Requests",
-      href: "/requestProvider",
-      roles: ["provider"],
-    },
-    {
-      name: "Order",
-      href: "/orderCustomer",
-      roles: ["customer"],
-    },
-    {
-      name: "Favorite",
-      href: "/favorite",
-      roles: ["customer"],
-    },
-    {
-      name: "Cart",
-      href: "/cart",
-      roles: ["customer"],
-    },
-    {
-      name: "Messages",
-      href: "/messages",
-      roles: ["customer", "provider"],
-    },
+    { name: "About", href: "/about" },
+    { name: "My Profile", href: `/profile/${userId}`, position: "right" },
+    { name: "Dashboard", href: "/providerDashboard", roles: ["provider"] },
+    { name: "Dashboard", href: "/userDashboard", roles: ["customer"] },
+    { name: "Requests", href: "/requestProvider", roles: ["provider"] },
+    { name: "Order", href: "/orderCustomer", roles: ["customer"] },
+    { name: "Favorite", href: "/favorite", roles: ["customer"] },
+    { name: "Cart", href: "/cart", roles: ["customer"] },
+    { name: "Messages", href: "/messages", roles: ["customer", "provider"] },
     { name: "Log out", href: "/logout", position: "right" },
   ];
 
@@ -113,7 +69,7 @@ export default function NavigationBar({ onScroll, cartCount }) {
     <nav className="sticky top-0 z-[1000] bg-[#102E50] border-b border-[#F5C45E]/20 shadow-lg backdrop-blur-sm">
       <div className="flex items-center justify-between px-6 py-4 max-w-[1400px] mx-auto gap-8">
         {/* Logo Section - Left */}
-       <div className="flex items-center gap-4">
+        {/* <div className="flex items-center gap-4">
           <div className="relative w-[150px] h-[75px] p-[3px]">
             <img
               src={Logo}
@@ -121,15 +77,26 @@ export default function NavigationBar({ onScroll, cartCount }) {
               className="w-full h-full object-cover origin-center"
             />
           </div>
-        </div>
+        </div> */}
+        <div className="flex items-center gap-4">
+  <Link to="/mainDashBoard">
+    <div className="relative w-[150px] h-[75px] p-[3px]">
+      <img
+        src={Logo}
+        alt="Logo"
+        className="w-full h-full object-cover origin-center cursor-pointer"
+      />
+    </div>
+  </Link>
+</div>
 
         {/* Desktop Navigation - Center */}
         <div className="hidden lg:flex items-center justify-center gap-6 flex-1">
           {centerItems.map((item, index) => {
             const isActive = location.pathname === item.href;
             const linkClasses = `relative flex items-center gap-2 px-3 py-2 text-sm font-semibold transition-all duration-300 ${
-              isActive 
-                ? "text-[#F5C45E]" 
+              isActive
+                ? "text-[#F5C45E]"
                 : "text-[#FFF6E9] hover:text-[#F5C45E]"
             }`;
 
@@ -141,7 +108,9 @@ export default function NavigationBar({ onScroll, cartCount }) {
                   className={linkClasses}
                 >
                   {getIcon(item.name)}
-                  <span>{item.name}</span>
+                  {item.name !== "My Profile" && item.name !== "Log out" && (
+                    <span>{item.name}</span>
+                  )}
                   {item.name === "Cart" && cartCount > 0 && (
                     <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-lg">
                       {cartCount}
@@ -166,8 +135,8 @@ export default function NavigationBar({ onScroll, cartCount }) {
           {rightItems.map((item, index) => {
             const isActive = location.pathname === item.href;
             const linkClasses = `relative flex items-center gap-2 px-3 py-2 text-sm font-semibold transition-all duration-300 ${
-              isActive 
-                ? "text-[#F5C45E]" 
+              isActive
+                ? "text-[#F5C45E]"
                 : "text-[#FFF6E9] hover:text-[#F5C45E]"
             }`;
 
@@ -179,7 +148,10 @@ export default function NavigationBar({ onScroll, cartCount }) {
                   className={linkClasses}
                 >
                   {getIcon(item.name)}
-                  <span className="hidden xl:inline">{item.name}</span>
+                  {/* Hide text for My Profile and Log out */}
+                  {item.name !== "My Profile" && item.name !== "Log out" && (
+                    <span className="hidden xl:inline">{item.name}</span>
+                  )}
                   {isActive && (
                     <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#F5C45E] rounded-full"></div>
                   )}
@@ -197,9 +169,7 @@ export default function NavigationBar({ onScroll, cartCount }) {
           <div className="flex flex-col gap-1">
             <span
               className={`w-5 h-0.5 bg-[#F5C45E] transition-all duration-300 rounded-sm ${
-                isMenuOpen
-                  ? "rotate-45 translate-y-[6px]"
-                  : ""
+                isMenuOpen ? "rotate-45 translate-y-[6px]" : ""
               }`}
             ></span>
             <span
@@ -209,9 +179,7 @@ export default function NavigationBar({ onScroll, cartCount }) {
             ></span>
             <span
               className={`w-5 h-0.5 bg-[#F5C45E] transition-all duration-300 rounded-sm ${
-                isMenuOpen
-                  ? "-rotate-45 -translate-y-[6px]"
-                  : ""
+                isMenuOpen ? "-rotate-45 -translate-y-[6px]" : ""
               }`}
             ></span>
           </div>
@@ -238,7 +206,9 @@ export default function NavigationBar({ onScroll, cartCount }) {
               onClick={() => setIsMenuOpen(false)}
             >
               {getIcon(item.name)}
-              <span className="flex-1">{item.name}</span>
+              <span className="flex-1">
+                {item.name !== "My Profile" && item.name !== "Log out" ? item.name : null}
+              </span>
               {item.name === "Cart" && cartCount > 0 && (
                 <span className="bg-red-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
                   {cartCount}

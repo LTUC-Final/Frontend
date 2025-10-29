@@ -203,7 +203,7 @@ function OrdersManagementCustomer() {
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-[#FFF6E9]">
-      <button
+     <button
         onClick={() => setIsOpen(true)}
         className={`fixed bottom-8 right-8 h-16 w-16 rounded-full bg-gradient-to-br from-[#102E50] to-[#102E50]/90 text-[#F5C45E] shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-[0_0_30px_rgba(245,196,94,0.5)] hover:from-[#F5C45E] hover:to-[#E78B48] hover:text-[#102E50] z-50 ${
           isOpen ? "scale-0 opacity-0" : "scale-100 opacity-100"
@@ -293,13 +293,19 @@ function OrdersManagementCustomer() {
 
         <div className="flex-1 overflow-auto p-6 lg:p-8 bg-[#FFF6E9]">
           <div className="max-w-7xl mx-auto space-y-6">
-            <button
-              onClick={() => setButtonAi(!buttonAi)}
-              className="flex items-center justify-center gap-3 px-8 py-4 bg-[#F5C45E] text-[#102E50] text-lg font-bold rounded-lg shadow-md hover:bg-[#E78B48] hover:text-[#FFF6E9] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#E78B48] focus:ring-offset-2"
-            >
-              <Sparkles className="h-6 w-6" />
-              {buttonAi ? "Hide Analysis" : "Analyze using AI"}
-            </button>
+          <div className="max-w-7xl mx-auto">
+  <button
+    onClick={() => setButtonAi(!buttonAi)}
+    className="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl mx-auto flex items-center justify-center gap-3 px-6 py-3
+    bg-[#F5C45E] text-[#102E50] text-lg font-bold rounded-lg shadow-md
+    hover:bg-[#E78B48] hover:text-[#FFF6E9] transition-all duration-200
+    focus:outline-none focus:ring-2 focus:ring-[#E78B48] focus:ring-offset-2"
+  >
+    <Sparkles className="h-6 w-6" />
+    {buttonAi ? "Hide Analysis" : "Analyze using AI"}
+  </button>
+</div>
+
 
             {buttonAi && (
               <OrdersSummary

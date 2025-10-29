@@ -253,57 +253,70 @@ function OrdersManagementProvider() {
           </div>
         </header>
 
-        <div className="bg-white border-b-2 border-[#E78B48] px-6 py-4 shadow-sm">
-          <div className="flex flex-wrap items-center gap-4 max-w-7xl mx-auto">
-            <div className="flex items-center gap-2">
-              <Filter className="h-5 w-5 text-[#E78B48]" />
-              <span className="text-base font-semibold text-[#102E50]">Filters:</span>
-            </div>
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-4 py-2 bg-[#FFF6E9] border-2 border-[#102E50] text-[#102E50] text-base font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F5C45E] focus:border-[#F5C45E] transition-all cursor-pointer"
-            >
-              <option value="All">All Status</option>
-              {statuses.map((status) => (
-                <option key={status} value={status}>
-                  {status}
-                </option>
-              ))}
-            </select>
-            <select
-              value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value)}
-              className="px-4 py-2 bg-[#FFF6E9] border-2 border-[#102E50] text-[#102E50] text-base font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F5C45E] focus:border-[#F5C45E] transition-all cursor-pointer"
-            >
-              <option value="All">All Categories</option>
-              {categories.map((category) => (
-                <option key={category} value={category}>
-                  {category}
-                </option>
-              ))}
-            </select>
-            <select
-              value={sortOrder}
-              onChange={(e) => setSortOrder(e.target.value)}
-              className="px-4 py-2 bg-[#FFF6E9] border-2 border-[#102E50] text-[#102E50] text-base font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F5C45E] focus:border-[#F5C45E] transition-all cursor-pointer"
-            >
-              <option value="newest">Newest First</option>
-              <option value="oldest">Oldest First</option>
-            </select>
-            <DownLoadAllOrder order={orders} />
-          </div>
-        </div>
+     <div className="bg-white border-b-2 border-[#E78B48] px-6 py-4 shadow-sm">
+  <div className="flex items-center justify-between max-w-7xl mx-auto gap-4">
+    {/* Left: Filters + Selects */}
+    <div className="flex items-center gap-2">
+      <Filter className="h-5 w-5 text-[#E78B48]" />
+      <span className="text-base font-semibold text-[#102E50]">Filters:</span>
+
+      <select
+        value={statusFilter}
+        onChange={(e) => setStatusFilter(e.target.value)}
+        className="px-4 py-2 bg-[#FFF6E9] border-2 border-[#102E50] text-[#102E50] text-base font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F5C45E] focus:border-[#F5C45E] transition-all cursor-pointer"
+      >
+        <option value="All">All Status</option>
+        {statuses.map((status) => (
+          <option key={status} value={status}>
+            {status}
+          </option>
+        ))}
+      </select>
+
+      <select
+        value={categoryFilter}
+        onChange={(e) => setCategoryFilter(e.target.value)}
+        className="px-4 py-2 bg-[#FFF6E9] border-2 border-[#102E50] text-[#102E50] text-base font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F5C45E] focus:border-[#F5C45E] transition-all cursor-pointer"
+      >
+        <option value="All">All Categories</option>
+        {categories.map((category) => (
+          <option key={category} value={category}>
+            {category}
+          </option>
+        ))}
+      </select>
+
+      <select
+        value={sortOrder}
+        onChange={(e) => setSortOrder(e.target.value)}
+        className="px-4 py-2 bg-[#FFF6E9] border-2 border-[#102E50] text-[#102E50] text-base font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F5C45E] focus:border-[#F5C45E] transition-all cursor-pointer"
+      >
+        <option value="newest">Newest First</option>
+        <option value="oldest">Oldest First</option>
+      </select>
+    </div>
+
+    {/* Right: DownloadAllOrder */}
+    <DownLoadAllOrder order={orders} />
+  </div>
+</div>
+
 
         <div className="flex-1 overflow-auto p-6 lg:p-8 bg-[#FFF6E9]">
           <div className="max-w-7xl mx-auto space-y-6">
-            <button
-              onClick={() => setButtonAi((prev) => !prev)}
-              className="flex items-center justify-center gap-3 px-8 py-4 bg-[#F5C45E] text-[#102E50] text-lg font-bold rounded-lg shadow-md hover:bg-[#E78B48] hover:text-[#FFF6E9] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#E78B48] focus:ring-offset-2"
-            >
-              <Sparkles className="h-6 w-6" />
-              {buttonAi ? "Hide Analysis" : "Analyze using AI"}
-            </button>
+          <div className="max-w-7xl mx-auto">
+  <button
+    onClick={() => setButtonAi((prev) => !prev)}
+    className="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl mx-auto flex items-center justify-center gap-3 px-6 py-3
+      bg-[#F5C45E] text-[#102E50] text-lg font-bold rounded-lg shadow-md
+      hover:bg-[#E78B48] hover:text-[#FFF6E9] transition-all duration-200
+      focus:outline-none focus:ring-2 focus:ring-[#E78B48] focus:ring-offset-2"
+  >
+    <Sparkles className="h-6 w-6" />
+    {buttonAi ? "Hide Analysis" : "Analyze using AI"}
+  </button>
+</div>
+
 
             {buttonAi && (
               <OrdersSummary
