@@ -29,9 +29,13 @@ import MessagesSlice from "./component/LiveChat/MessagesSlice";
 // import { CountRequest } from "./contexts/countRequest";
 import ProtectedRoute from "./component/ProdectRoute";
 import { CountRequestProvider } from "./contexts/CountRequestProvider";
+import CancelPage from "./pages/CancelPage";
 import CartPage from "./pages/cart/page";
+import PaymentsPage from "./pages/PaymentsPage";
 import ProductForm from "./pages/ProviderDashBoard/providerDashboard";
+import ProviderPaymentsPage from "./pages/ProviderPaymentPage";
 import OrdersManagementProvider from "./pages/request/pageReq";
+import SuccessPage from "./pages/SuccessPage";
 function App() {
   const [cart, setCart] = useState([]);
   const CusData = useSelector((state) => state.UserInfo);
@@ -95,11 +99,18 @@ function App() {
                   // fetchCart={fetchCart}
                   ></CartPage>
                 }
-              />
+              />{" "}
+              <Route path="/payments" element={<PaymentsPage />} />{" "}
               <Route
+                path="/paymentsProvider"
+                element={<ProviderPaymentsPage />}
+              />
+              <Route path="/success" element={<SuccessPage />} />
+              <Route path="/cancel" element={<CancelPage />} />
+              {/* <Route
                 path="/payments"
                 element={<h1>ييييييييييييييييييييي </h1>}
-              />
+              /> */}
               <Route
                 path="/prodactInfo/:prodactId"
                 element={<h1>sssssssssssss</h1>}

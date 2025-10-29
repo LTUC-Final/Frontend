@@ -1,19 +1,31 @@
-"use client"
+"use client";
+import {
+  FileText,
+  Heart,
+  Home,
+  Info,
+  LayoutDashboard,
+  LogOut,
+  MessageSquare,
+  ShoppingBag,
+  ShoppingCart,
+  User,
+} from "lucide-react";
 import { useContext, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
+import Logo from "../../assets/Logo1.png";
 import { CountRequest } from "../../contexts/CountRequestContext";
-import { Home, User, LayoutDashboard, FileText, ShoppingBag, Heart, ShoppingCart, MessageSquare, LogOut, Sparkles, Info } from "lucide-react";
-import Logo from "../../assets/Logo1.png"
 export default function NavigationBar({ onScroll }) {
-  
-    const cartCount = useSelector((state) => state.UserInfo.cartItem);
-    console.log("asdasdasd", cartCount);
+  const cartCount = useSelector((state) => state.UserInfo.cartItem);
+  console.log("asdasdasd", cartCount);
   const { value } = useContext(CountRequest);
+  const ReqCount = useSelector((state) => state.UserInfo.reqItem);
+
   console.log(
     "ssssssssssssssssssssssssssssssssssssssssssssssssssssssvvvvvvvvvvvssssssssssssssssss"
   );
-  console.log("value",value);
+  console.log("value", value);
   console.log("asdasdasd", cartCount);
 
   console.log(
@@ -31,8 +43,8 @@ export default function NavigationBar({ onScroll }) {
     switch (name) {
       case "Home":
         return <Home {...iconProps} />;
-        case "About":
-      return <Info {...iconProps} />;
+      case "About":
+        return <Info {...iconProps} />;
       case "My Profile":
         return <User {...iconProps} />;
       case "Dashboard":
@@ -56,13 +68,13 @@ export default function NavigationBar({ onScroll }) {
 
   const navItems = [
     { name: "Home", href: "/mainDashBoard" },
-     { name: "About", href: "/about" },
+    { name: "About", href: "/about" },
     {
       name: "My Profile",
       href: `/profile/${userId}`,
       position: "right",
     },
-      {
+    {
       name: "About",
       href: `/About`,
     },
@@ -115,7 +127,7 @@ export default function NavigationBar({ onScroll }) {
     <nav className="sticky top-0 z-[1000] bg-[#102E50] border-b border-[#F5C45E]/20 shadow-lg backdrop-blur-sm">
       <div className="flex items-center justify-between px-6 py-4 max-w-[1400px] mx-auto gap-8">
         {/* Logo Section - Left */}
-       <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4">
           <div className="relative w-[150px] h-[75px] p-[3px]">
             <img
               src={Logo}
@@ -130,8 +142,8 @@ export default function NavigationBar({ onScroll }) {
           {centerItems.map((item, index) => {
             const isActive = location.pathname === item.href;
             const linkClasses = `relative flex items-center gap-2 px-3 py-2 text-sm font-semibold transition-all duration-300 ${
-              isActive 
-                ? "text-[#F5C45E]" 
+              isActive
+                ? "text-[#F5C45E]"
                 : "text-[#FFF6E9] hover:text-[#F5C45E]"
             }`;
 
@@ -149,9 +161,9 @@ export default function NavigationBar({ onScroll }) {
                       {cartCount}
                     </span>
                   )}
-                  {item.name === "ReqProvider" && value > 0 && (
+                  {item.name === "Requests" && ReqCount > 0 && (
                     <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-lg">
-                      {value}
+                      {ReqCount}
                     </span>
                   )}
                   {isActive && (
@@ -168,8 +180,8 @@ export default function NavigationBar({ onScroll }) {
           {rightItems.map((item, index) => {
             const isActive = location.pathname === item.href;
             const linkClasses = `relative flex items-center gap-2 px-3 py-2 text-sm font-semibold transition-all duration-300 ${
-              isActive 
-                ? "text-[#F5C45E]" 
+              isActive
+                ? "text-[#F5C45E]"
                 : "text-[#FFF6E9] hover:text-[#F5C45E]"
             }`;
 
@@ -199,9 +211,7 @@ export default function NavigationBar({ onScroll }) {
           <div className="flex flex-col gap-1">
             <span
               className={`w-5 h-0.5 bg-[#F5C45E] transition-all duration-300 rounded-sm ${
-                isMenuOpen
-                  ? "rotate-45 translate-y-[6px]"
-                  : ""
+                isMenuOpen ? "rotate-45 translate-y-[6px]" : ""
               }`}
             ></span>
             <span
@@ -211,9 +221,7 @@ export default function NavigationBar({ onScroll }) {
             ></span>
             <span
               className={`w-5 h-0.5 bg-[#F5C45E] transition-all duration-300 rounded-sm ${
-                isMenuOpen
-                  ? "-rotate-45 -translate-y-[6px]"
-                  : ""
+                isMenuOpen ? "-rotate-45 -translate-y-[6px]" : ""
               }`}
             ></span>
           </div>
@@ -246,9 +254,9 @@ export default function NavigationBar({ onScroll }) {
                   {cartCount}
                 </span>
               )}
-              {item.name === "ReqProvider" && value > 0 && (
+              {item.name === "Requests" && ReqCount > 0 && (
                 <span className="bg-red-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
-                  {value}
+                  {ReqCount}
                 </span>
               )}
             </Link>

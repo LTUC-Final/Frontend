@@ -71,13 +71,7 @@ export default function CardDeatils() {
                     className="font-semibold text-[#102E50] cursor-pointer hover:underline"
                     onClick={() => navigate(`/profile/${review.customer_id}`)}
                   >
-                    {`${
-                      review.customer_name.charAt(0).toUpperCase() +
-                      review.customer_name.slice(1)
-                    } ${
-                      review.customerlastname.charAt(0).toUpperCase() +
-                      review.customerlastname.slice(1)
-                    }`}
+{`${review.customer_name.charAt(0).toUpperCase() + review.customer_name.slice(1)} ${review.customerlastname.charAt(0).toUpperCase() + review.customerlastname.slice(1)}`}
                   </p>
                   <div className="flex items-center text-[#F5C45E] font-bold">
                     <FaStar className="mr-1" />

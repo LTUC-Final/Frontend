@@ -1,6 +1,6 @@
 import ProfileCard from "./ProfileCard";
 
-export default function ProfileFetcher({ profile, refreshTrigger }) {
+export default function ProfileFetcher({ profile, refreshTrigger, user_id }) {
   if (!profile) return <p>Loading...</p>;
 
   return (
@@ -12,7 +12,12 @@ export default function ProfileFetcher({ profile, refreshTrigger }) {
 
       {/* Foreground Content Container */}
       <div className="relative z-10 max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 mb-5">
-        <ProfileCard role={profile.role} data={profile} refreshTrigger={refreshTrigger} />
+        <ProfileCard
+          role={profile.role}
+          data={profile}
+          refreshTrigger={refreshTrigger}
+          user_id={user_id}
+        />
       </div>
     </div>
   );
