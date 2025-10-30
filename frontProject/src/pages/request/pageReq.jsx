@@ -376,9 +376,8 @@ function OrdersManagementProvider() {
                       </h3>
 
                       <div
-                        className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold ${
-                          statusClasses[order.status]
-                        }`}
+                        className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold ${statusClasses[order.status]
+                          }`}
                       >
                         {order.status === "completed" ? (
                           <CheckCircle2 className="w-3.5 h-3.5" />
@@ -387,18 +386,16 @@ function OrdersManagementProvider() {
                           <Loader2 className="w-3.5 h-3.5 animate-spin" />
                         ) : (
                           <div
-                            className={`w-2 h-2 rounded-full ${
-                              statusDotClasses[order.status]
-                            }`}
+                            className={`w-2 h-2 rounded-full ${statusDotClasses[order.status]
+                              }`}
                           />
                         )}
                         <span>{order.status}</span>
                       </div>
 
                       <div
-                        className={`px-3 py-1.5 rounded-full text-xs font-bold ${
-                          paymentStatusClasses[order.paymentStatus]
-                        }`}
+                        className={`px-3 py-1.5 rounded-full text-xs font-bold ${paymentStatusClasses[order.paymentStatus]
+                          }`}
                       >
                         {order.paymentStatus}
                       </div>
@@ -519,15 +516,15 @@ function OrdersManagementProvider() {
 
                     {(order.status === "on_progress" ||
                       order.status === "pending") && (
-                      <div>
-                        <ButtonStatus
-                          onSuccess={fetchOrders}
-                          orderId={order.order_id}
-                          setOrders={setOrders}
-                          port={port}
-                        />
-                      </div>
-                    )}
+                        <div>
+                          <ButtonStatus
+                            onSuccess={fetchOrders}
+                            orderId={order.order_id}
+                            setOrders={setOrders}
+                            port={port}
+                          />
+                        </div>
+                      )}
                   </div>
 
                   <div className="flex lg:flex-col items-center justify-center gap-3 pt-4 lg:pt-0 border-t lg:border-t-0 lg:border-l border-[#F5C45E]/30 lg:pl-5 lg:min-w-[140px]">
@@ -561,7 +558,31 @@ function OrdersManagementProvider() {
                         View Profile
                       </button>
                       <button
-                        onClick={(e) => e.stopPropagation()}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (!user?.user_id) return;
+
+                          const chatSender = {
+                            user_id: user.user_id,
+                            name: `${user.first_name || "User"} ${user.last_name || ""}`,
+                          };
+
+                          const receiverIsProvider = order.customer_id === user.user_id;
+
+                          const chatReceiver = {
+                            user_id: receiverIsProvider ? order.provider_user_id : order.customer_id,
+                            name: receiverIsProvider
+                              ? `${order.provider_firstname || "Provider"} ${order.provider_lastname || ""}`
+                              : `${order.customer_firstname || "Customer"} ${order.customer_lastname || ""}`,
+                          };
+
+                          navigate(`/LiveChat/${chatReceiver.user_id}`, {
+                            state: {
+                              sender: chatSender,
+                              reciver: chatReceiver,
+                            },
+                          });
+                        }}
                         className="p-2 text-[#102E50] hover:text-[#E78B48] hover:bg-[#FFF6E9] rounded-lg transition-colors border-2 border-[#102E50] hover:border-[#E78B48] flex items-center justify-center"
                       >
                         <MessageCircle className="h-4 w-4" />
