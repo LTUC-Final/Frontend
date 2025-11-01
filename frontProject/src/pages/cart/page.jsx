@@ -83,7 +83,7 @@ function Textarea({ className = "", ...props }) {
 export default function CartPage() {
   const CusData = useSelector((state) => state.UserInfo);
   const [cart, setCart] = useState([]);
-  const [ss, sss] = useState();
+  const [hideCounterQuntity, setHideCounterQuntity] = useState(false);
 
   const [responseProviders, setResponseProviders] = useState({});
   const [showCheckout, setShowCheckout] = useState(false);
@@ -171,7 +171,14 @@ export default function CartPage() {
       setCart((prev) =>
         prev.map((item) =>
           item.cart_id === cart_id
-            ? { ...item, custom_requirement, provider_response: null }
+            ? {
+                ...item,
+                custom_requirement,
+                provider_response: null,
+                quantityLocked: true,
+
+                // sendedtoprovider: true,
+              }
             : item
         )
       );
@@ -550,7 +557,9 @@ export default function CartPage() {
                             Quantity:
                           </span>
                           {product.provider_response ||
-                          product.status_pay !== "Approve" ? (
+                          product.status_pay !== "Approve" ||
+                          product.sendedtoprovider ||
+                          product.quantityLocked ? (
                             <span className="w-10 text-center font-semibold text-[#102E50] bg-[#FFF6E9] rounded-lg border border-[#F5C45E]/50 py-1">
                               {product.quantity}
                             </span>
