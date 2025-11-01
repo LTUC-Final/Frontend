@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useContext, useState } from "react";
@@ -6,7 +5,7 @@ import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 
 import { CountRequest } from "../../contexts/CountRequestContext";
-import { Home, User, LayoutDashboard, FileText, ShoppingBag, Heart, ShoppingCart, MessageSquare, LogOut, Sparkles, Info } from "lucide-react";
+import { Home, User, LayoutDashboard, FileText, ShoppingBag, Heart, ShoppingCart, MessageSquare, LogOut, Sparkles, Info, CreditCard } from "lucide-react";
 import Logo from "../../assets/Logo1.png"
 
 export default function NavigationBar({ onScroll }) {
@@ -52,23 +51,54 @@ export default function NavigationBar({ onScroll }) {
         return <MessageSquare {...iconProps} />;
       case "Log out":
         return <LogOut {...iconProps} />;
+      case "Payment":
+        return <CreditCard {...iconProps} />;
       default:
         return null;
     }
   };
 
   const navItems = [
-    { name: "Home", href: "/mainDashBoard" },
-    { name: "About", href: "/about" },
-    { name: "My Profile", href: `/profile/${userId}`, position: "right" },
-    { name: "Dashboard", href: "/providerDashboard", roles: ["provider"] },
-    { name: "Dashboard", href: "/userDashboard", roles: ["customer"] },
-    { name: "Requests", href: "/requestProvider", roles: ["provider"] },
-    { name: "Order", href: "/orderCustomer", roles: ["customer"] },
+    { name: "Home", 
+      href: "/mainDashBoard" },
+    { name: "About",
+       href: "/about" },
+    { name: "My Profile", 
+      href: `/profile/${userId}`,
+       position: "right" },
+    { name: "Dashboard",
+       href: "/providerDashboard",
+        roles: ["provider"] },
+    { name: "Dashboard",
+       href: "/userDashboard",
+        roles: ["customer"] },
+    { name: "Requests", 
+      href: "/requestProvider",
+       roles: ["provider"] },
+    { name: "Order", 
+      href: "/orderCustomer", 
+      roles: ["customer"] },
     { name: "Favorite", href: "/favorite", roles: ["customer"] },
-    { name: "Cart", href: "/cart", roles: ["customer"] },
-    { name: "Messages", href: "/messages", roles: ["customer", "provider"] },
-    { name: "Log out", href: "/logout", position: "right" },
+    { name: "Cart", 
+      href: "/cart", 
+      roles: ["customer"] },
+     {
+      name: "Payment",
+      href: "/payments",
+      roles: ["customer"],
+    },
+     {
+      name: "Payment",
+      href: "/paymentsProvider",
+      roles: ["provider"],
+    },
+    { name: "Messages", 
+      href: "/messages", 
+      roles: ["customer",
+         "provider"] },
+    { name: "Log out", 
+      href: "/logout", 
+      position: "right" },
   ];
 
   const navItem = navItems.filter(
@@ -89,8 +119,8 @@ export default function NavigationBar({ onScroll }) {
     <>
       <nav className="sticky top-0 z-[1000] bg-[#102E50] border-b border-[#F5C45E]/20 shadow-lg backdrop-blur-sm">
         <div className="flex items-center justify-between px-6 py-4 max-w-full mx-auto">
-          {/* Left Section: Logo + Dashboard, Home, About */}
-          <div className="flex items-center gap-8">
+          {/* Left Section: Logo */}
+          <div className="flex items-center">
             <Link to="/mainDashBoard">
               <div className="relative w-[150px] h-[75px] p-[3px]">
                 <img
@@ -100,38 +130,41 @@ export default function NavigationBar({ onScroll }) {
                 />
               </div>
             </Link>
+          </div>
 
-            {/* Desktop Left Navigation */}
-            <div className="hidden lg:flex items-center gap-8">
-              {leftItems.map((item, index) => {
-                const isActive = location.pathname === item.href;
-                const linkClasses = `relative flex items-center gap-3 px-5 py-3 text-base font-bold transition-all duration-300 rounded-lg ${
-                  isActive
-                    ? "text-[#F5C45E] bg-[#F5C45E]/10 shadow-md"
-                    : "text-[#FFF6E9] hover:text-[#F5C45E] hover:bg-[#F5C45E]/5 hover:shadow-md"
-                }`;
+          {/* Spacer */}
+          <div className="flex-1"></div>
 
-                return (
-                  <div className="relative group" key={index}>
-                    <Link
-                      onClick={() => onScroll?.(item.section)}
-                      to={item.href}
-                      className={linkClasses}
-                    >
-                      {getIcon(item.name, true)}
-                      <span className="tracking-wide">{item.name}</span>
-                      {isActive && (
-                        <div className="absolute -bottom-1 left-0 right-0 h-1 bg-[#F5C45E] rounded-full shadow-lg"></div>
-                      )}
-                    </Link>
-                  </div>
-                );
-              })}
-            </div>
+          {/* Right Section: Dashboard, Home, About */}
+          <div className="hidden lg:flex items-center gap-8">
+            {leftItems.map((item, index) => {
+              const isActive = location.pathname === item.href;
+              const linkClasses = `relative flex items-center gap-3 px-5 py-3 text-base font-normal transition-all duration-300 rounded-lg ${
+                isActive
+                  ? "text-[#F5C45E] bg-[#F5C45E]/10 shadow-md"
+                  : "text-[#FFF6E9] hover:text-[#F5C45E] hover:bg-[#F5C45E]/5 hover:shadow-md"
+              }`;
+
+              return (
+                <div className="relative group" key={index}>
+                  <Link
+                    onClick={() => onScroll?.(item.section)}
+                    to={item.href}
+                    className={linkClasses}
+                  >
+                    {getIcon(item.name, true)}
+                    <span className="tracking-wide">{item.name}</span>
+                    {isActive && (
+                      <div className="absolute -bottom-1 left-0 right-0 h-1 bg-[#F5C45E] rounded-full shadow-lg"></div>
+                    )}
+                  </Link>
+                </div>
+              );
+            })}
           </div>
 
           {/* Right Section: Profile Icon */}
-          <div className="hidden lg:block relative">
+          <div className="hidden lg:block relative ml-8">
             <div
               className="relative flex items-center justify-center w-14 h-14 cursor-pointer group"
               onMouseEnter={() => setIsSidebarOpen(true)}
