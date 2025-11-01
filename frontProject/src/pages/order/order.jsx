@@ -3,6 +3,7 @@
 import axios from "axios";
 import {
   Bell,
+
   Calendar,
   CheckCircle2,
   DollarSign,
@@ -261,7 +262,7 @@ function OrdersManagementCustomer() {
                 />
               </div>
               <button className="p-2 hover:bg-[#F5C45E]/10 rounded-lg transition-colors">
-                <Bell className="h-6 w-6 text-[#F5C45E] hover:text-[#E78B48] transition-colors" />
+                {/* <Bell className="h-6 w-6 text-[#F5C45E] hover:text-[#E78B48] transition-colors" /> */}
               </button>
             </div>
           </div>
@@ -504,12 +505,12 @@ function OrdersManagementCustomer() {
                       >
                         View Provider
                       </button>
-                      <button
+                      {/* <button
                         onClick={(e) => e.stopPropagation()}
                         className="p-2 text-[#102E50] hover:text-[#E78B48] hover:bg-[#FFF6E9] rounded-lg transition-colors border-2 border-[#102E50] hover:border-[#E78B48] flex items-center justify-center"
                       >
                         <MessageCircle className="h-4 w-4" />
-                      </button>
+                      </button> */}
                     </div>
                   </div>
                 </div>
