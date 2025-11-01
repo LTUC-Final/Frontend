@@ -1,24 +1,40 @@
 import { MessageCircle } from "lucide-react";
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import ChatBox from "../Ai/chatBox";
-
 export default function ChatBoot() {
-  const showChat = [
+  const location = useLocation();
+  const path = location.pathname;
+
+  const allowedPaths = [
     "/",
     "/userDashboard",
     "/cart",
     "/profile",
-    "/profile/:user_id",
     "/providerDashboard",
     "/mainDashBoard",
     "/favorite",
     "/productdatails",
     "/userDashboard",
-    "/prodactInfo/:prodactId",
     "/requestProvider",
     "/orderCustomer",
     "/About",
-  ].includes(location.pathname);
+    "/messages",
+    "/payments",
+    "/paymentsProvider",
+    "/success",
+    "/cancel",
+  ];
+
+
+
+
+  const showChat =
+    allowedPaths.includes(path) ||
+    path.startsWith("/profile/") ||
+    path.startsWith("/prodactInfo/") ||
+    path.startsWith("/LiveChat/");
+
   const [isOpen, setIsOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   return (
@@ -27,8 +43,8 @@ export default function ChatBoot() {
         <>
           <button
             onClick={() => setIsOpen(true)}
-            className={`fixed bottom-6 right-6 h-14 w-14 rounded-full bg-[#102E50] text-white shadow-lg flex items-center justify-center transition-transform duration-300 hover:bg-[#F5C45E] hover:text-[#102E50] ${
-              isOpen ? "scale-0 opacity-0" : "scale-100 opacity-100"
+                    className={`fixed bottom-8 right-8 h-16 w-16 rounded-full bg-gradient-to-br from-[#102E50] to-[#102E50]/90 text-[#F5C45E] shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-[0_0_30px_rgba(245,196,94,0.5)] hover:from-[#F5C45E] hover:to-[#E78B48] hover:text-[#102E50] z-50 ${isOpen ? "scale-0 opacity-0" : "scale-100 opacity-100"
+
             }`}
           >
             <MessageCircle size={24} />

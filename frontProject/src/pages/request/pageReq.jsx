@@ -277,76 +277,65 @@ function OrdersManagementProvider() {
                 />
               </div>
               <button className="p-2 hover:bg-[#F5C45E]/10 rounded-lg transition-colors">
-                {/* <Bell className="h-6 w-6 text-[#F5C45E] hover:text-[#E78B48] transition-colors" /> */}
+                <Bell className="h-6 w-6 text-[#F5C45E] hover:text-[#E78B48] transition-colors" />
               </button>
             </div>
           </div>
         </header>
 
-     <div className="bg-white border-b-2 border-[#E78B48] px-6 py-4 shadow-sm">
-  <div className="flex items-center justify-between max-w-7xl mx-auto gap-4">
-    {/* Left: Filters + Selects */}
-    <div className="flex items-center gap-2">
-      <Filter className="h-5 w-5 text-[#E78B48]" />
-      <span className="text-base font-semibold text-[#102E50]">Filters:</span>
-
-      <select
-        value={statusFilter}
-        onChange={(e) => setStatusFilter(e.target.value)}
-        className="px-4 py-2 bg-[#FFF6E9] border-2 border-[#102E50] text-[#102E50] text-base font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F5C45E] focus:border-[#F5C45E] transition-all cursor-pointer"
-      >
-        <option value="All">All Status</option>
-        {statuses.map((status) => (
-          <option key={status} value={status}>
-            {status}
-          </option>
-        ))}
-      </select>
-
-      <select
-        value={categoryFilter}
-        onChange={(e) => setCategoryFilter(e.target.value)}
-        className="px-4 py-2 bg-[#FFF6E9] border-2 border-[#102E50] text-[#102E50] text-base font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F5C45E] focus:border-[#F5C45E] transition-all cursor-pointer"
-      >
-        <option value="All">All Categories</option>
-        {categories.map((category) => (
-          <option key={category} value={category}>
-            {category}
-          </option>
-        ))}
-      </select>
-
-      <select
-        value={sortOrder}
-        onChange={(e) => setSortOrder(e.target.value)}
-        className="px-4 py-2 bg-[#FFF6E9] border-2 border-[#102E50] text-[#102E50] text-base font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F5C45E] focus:border-[#F5C45E] transition-all cursor-pointer"
-      >
-        <option value="newest">Newest First</option>
-        <option value="oldest">Oldest First</option>
-      </select>
-    </div>
-
-    {/* Right: DownloadAllOrder */}
-    <DownLoadAllOrder order={orders} />
-  </div>
-</div>
-
+        <div className="bg-white border-b-2 border-[#E78B48] px-6 py-4 shadow-sm">
+          <div className="flex flex-wrap items-center gap-4 max-w-7xl mx-auto">
+            <div className="flex items-center gap-2">
+              <Filter className="h-5 w-5 text-[#E78B48]" />
+              <span className="text-base font-semibold text-[#102E50]">
+                Filters:
+              </span>
+            </div>
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="px-4 py-2 bg-[#FFF6E9] border-2 border-[#102E50] text-[#102E50] text-base font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F5C45E] focus:border-[#F5C45E] transition-all cursor-pointer"
+            >
+              <option value="All">All Status</option>
+              {statuses.map((status) => (
+                <option key={status} value={status}>
+                  {status}
+                </option>
+              ))}
+            </select>
+            <select
+              value={categoryFilter}
+              onChange={(e) => setCategoryFilter(e.target.value)}
+              className="px-4 py-2 bg-[#FFF6E9] border-2 border-[#102E50] text-[#102E50] text-base font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F5C45E] focus:border-[#F5C45E] transition-all cursor-pointer"
+            >
+              <option value="All">All Categories</option>
+              {categories.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
+            <select
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
+              className="px-4 py-2 bg-[#FFF6E9] border-2 border-[#102E50] text-[#102E50] text-base font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F5C45E] focus:border-[#F5C45E] transition-all cursor-pointer"
+            >
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
+            </select>
+            <DownLoadAllOrder order={orders} />
+          </div>
+        </div>
 
         <div className="flex-1 overflow-auto p-6 lg:p-8 bg-[#FFF6E9]">
           <div className="max-w-7xl mx-auto space-y-6">
-          <div className="max-w-7xl mx-auto">
-  <button
-    onClick={() => setButtonAi((prev) => !prev)}
-    className="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl mx-auto flex items-center justify-center gap-3 px-6 py-3
-      bg-[#F5C45E] text-[#102E50] text-lg font-bold rounded-lg shadow-md
-      hover:bg-[#E78B48] hover:text-[#FFF6E9] transition-all duration-200
-      focus:outline-none focus:ring-2 focus:ring-[#E78B48] focus:ring-offset-2"
-  >
-    <Sparkles className="h-6 w-6" />
-    {buttonAi ? "Hide Analysis" : "Analyze using AI"}
-  </button>
-</div>
-
+            <button
+              onClick={() => setButtonAi((prev) => !prev)}
+              className="flex items-center justify-center gap-3 px-8 py-4 bg-[#F5C45E] text-[#102E50] text-lg font-bold rounded-lg shadow-md hover:bg-[#E78B48] hover:text-[#FFF6E9] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#E78B48] focus:ring-offset-2"
+            >
+              <Sparkles className="h-6 w-6" />
+              {buttonAi ? "Hide Analysis" : "Analyze using AI"}
+            </button>
 
             {buttonAi && (
               <OrdersSummary
@@ -375,8 +364,6 @@ function OrdersManagementProvider() {
                             : `http://localhost:${port}${order.product_image}`
                           : "../src/assets/NoImage.png"
                       }
-                      //comment
-                    
                       alt={order.productName}
                       className="w-full lg:w-40 h-40 object-cover rounded-lg border-2 border-[#E78B48] shadow-sm"
                     />
@@ -389,9 +376,8 @@ function OrdersManagementProvider() {
                       </h3>
 
                       <div
-                        className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold ${
-                          statusClasses[order.status]
-                        }`}
+                        className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold ${statusClasses[order.status]
+                          }`}
                       >
                         {order.status === "completed" ? (
                           <CheckCircle2 className="w-3.5 h-3.5" />
@@ -400,18 +386,16 @@ function OrdersManagementProvider() {
                           <Loader2 className="w-3.5 h-3.5 animate-spin" />
                         ) : (
                           <div
-                            className={`w-2 h-2 rounded-full ${
-                              statusDotClasses[order.status]
-                            }`}
+                            className={`w-2 h-2 rounded-full ${statusDotClasses[order.status]
+                              }`}
                           />
                         )}
                         <span>{order.status}</span>
                       </div>
 
                       <div
-                        className={`px-3 py-1.5 rounded-full text-xs font-bold ${
-                          paymentStatusClasses[order.paymentStatus]
-                        }`}
+                        className={`px-3 py-1.5 rounded-full text-xs font-bold ${paymentStatusClasses[order.paymentStatus]
+                          }`}
                       >
                         {order.paymentStatus}
                       </div>
@@ -532,15 +516,15 @@ function OrdersManagementProvider() {
 
                     {(order.status === "on_progress" ||
                       order.status === "pending") && (
-                      <div>
-                        <ButtonStatus
-                          onSuccess={fetchOrders}
-                          orderId={order.order_id}
-                          setOrders={setOrders}
-                          port={port}
-                        />
-                      </div>
-                    )}
+                        <div>
+                          <ButtonStatus
+                            onSuccess={fetchOrders}
+                            orderId={order.order_id}
+                            setOrders={setOrders}
+                            port={port}
+                          />
+                        </div>
+                      )}
                   </div>
 
                   <div className="flex lg:flex-col items-center justify-center gap-3 pt-4 lg:pt-0 border-t lg:border-t-0 lg:border-l border-[#F5C45E]/30 lg:pl-5 lg:min-w-[140px]">
@@ -573,12 +557,36 @@ function OrdersManagementProvider() {
                       >
                         View Profile
                       </button>
-                      {/* <button
-                        onClick={(e) => e.stopPropagation()}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (!user?.user_id) return;
+
+                          const chatSender = {
+                            user_id: user.user_id,
+                            name: `${user.first_name || "User"} ${user.last_name || ""}`,
+                          };
+
+                          const receiverIsProvider = order.customer_id === user.user_id;
+
+                          const chatReceiver = {
+                            user_id: receiverIsProvider ? order.provider_user_id : order.customer_id,
+                            name: receiverIsProvider
+                              ? `${order.provider_firstname || "Provider"} ${order.provider_lastname || ""}`
+                              : `${order.customer_firstname || "Customer"} ${order.customer_lastname || ""}`,
+                          };
+
+                          navigate(`/LiveChat/${chatReceiver.user_id}`, {
+                            state: {
+                              sender: chatSender,
+                              reciver: chatReceiver,
+                            },
+                          });
+                        }}
                         className="p-2 text-[#102E50] hover:text-[#E78B48] hover:bg-[#FFF6E9] rounded-lg transition-colors border-2 border-[#102E50] hover:border-[#E78B48] flex items-center justify-center"
                       >
                         <MessageCircle className="h-4 w-4" />
-                      </button> */}
+                      </button>
                     </div>
                   </div>
                 </div>

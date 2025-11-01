@@ -20,6 +20,8 @@ export default function LiveChat() {
 console.log("sadasdasd",sender);
 console.log("wwqq",reciver);
 console.log("hello omar ");
+console.log("set messages",messages);
+
 
   useEffect(() => {
     if (!sender || !reciver) return;

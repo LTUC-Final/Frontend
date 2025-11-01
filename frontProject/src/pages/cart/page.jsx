@@ -83,7 +83,7 @@ function Textarea({ className = "", ...props }) {
 export default function CartPage() {
   const CusData = useSelector((state) => state.UserInfo);
   const [cart, setCart] = useState([]);
-  const [ss, sss] = useState();
+  const [hideCounterQuntity, setHideCounterQuntity] = useState(false);
 
   const [responseProviders, setResponseProviders] = useState({});
   const [showCheckout, setShowCheckout] = useState(false);
@@ -171,7 +171,14 @@ export default function CartPage() {
       setCart((prev) =>
         prev.map((item) =>
           item.cart_id === cart_id
-            ? { ...item, custom_requirement, provider_response: null }
+            ? {
+                ...item,
+                custom_requirement,
+                provider_response: null,
+                quantityLocked: true,
+
+                // sendedtoprovider: true,
+              }
             : item
         )
       );
@@ -317,6 +324,160 @@ export default function CartPage() {
     //   console.log(error);
     // }
   };
+
+  const completePayment3 = async () => {
+    const stripe = await loadStripe(
+      "pk_test_51SLmeU7XNof7c0LK21QyvjJxb28OZnQ9uOo3leNgWR3PHE7agxDJforXF2no1WQrRg29jAP4K4iMoodJPTL7ClpT00Gbwg0TCH"
+    );
+
+    try {
+      const response = await axios.post(
+        `http://localhost:${port}/api/payments/create-multi-provider-sessions`,
+        {
+          products: cart,
+          email: user.email,
+          customer_id: user.user_id,
+        },
+        { headers: { "Content-Type": "application/json" } }
+      );
+
+      const sessions = response.data.sessions;
+
+      if (!sessions.length) {
+        alert("No Stripe sessions were created.");
+        return;
+      }
+
+      for (const s of sessions) {
+        console.log(` Provider ${s.provider_id} checkout: ${s.url}`);
+        window.open(s.url, "_blank");
+      }
+    } catch (error) {
+      console.error("Error creating Stripe sessions:", error);
+      alert("Failed to start payment process");
+    }
+  };
+  const completePayment4 = async () => {
+    const stripe = await loadStripe(
+      "pk_test_51SLmeU7XNof7c0LK21QyvjJxb28OZnQ9uOo3leNgWR3PHE7agxDJforXF2no1WQrRg29jAP4K4iMoodJPTL7ClpT00Gbwg0TCH"
+    );
+
+    try {
+      const response = await axios.post(
+        `http://localhost:${port}/api/payments/create-multi-provider-sessions`,
+        {
+          products: cart,
+          email: user.email,
+          customer_id: user.user_id,
+        },
+        { headers: { "Content-Type": "application/json" } }
+      );
+
+      const sessions = response.data.sessions;
+
+      if (!sessions?.length) {
+        alert("No Stripe sessions were created.");
+        return;
+      }
+
+      const openedTabs = sessions.map(() => window.open("", "_blank"));
+
+      sessions.forEach((s, idx) => {
+        if (openedTabs[idx]) {
+          openedTabs[idx].location.href = s.url;
+        }
+      });
+
+      console.log(` Opened ${sessions.length} Stripe checkout pages`);
+    } catch (error) {
+      console.error("Error creating Stripe sessions:", error);
+      alert("Failed to start payment process");
+    }
+  };
+  const completePaymentMultiProvider = async () => {
+    const stripe = await loadStripe(
+      "pk_test_51SLmeU7XNof7c0LK21QyvjJxb28OZnQ9uOo3leNgWR3PHE7agxDJforXF2no1WQrRg29jAP4K4iMoodJPTL7ClpT00Gbwg0TCH"
+    );
+
+    try {
+      const fakeTabs = [];
+      const expectedProviders = [...new Set(cart.map((p) => p.provider_id))];
+      expectedProviders.forEach(() => {
+        const newTab = window.open("", "_blank");
+        fakeTabs.push(newTab);
+      });
+
+      const response = await axios.post(
+        `http://localhost:${port}/api/payments/create-multi-provider-sessions`,
+        {
+          products: cart,
+          email: user.email,
+          customer_id: user.user_id,
+        },
+        { headers: { "Content-Type": "application/json" } }
+      );
+
+      const sessions = response.data.sessions;
+      if (!sessions?.length) {
+        alert("No Stripe sessions were created.");
+        fakeTabs.forEach((t) => t.close());
+        return;
+      }
+
+      // ⚡️ 3. نربط كل Tab بالـURL الصحيح
+      sessions.forEach((s, idx) => {
+        if (fakeTabs[idx]) {
+          fakeTabs[idx].location.href = s.url;
+        }
+      });
+
+      console.log(`✅ Opened ${sessions.length} Stripe checkout pages`);
+    } catch (error) {
+      console.error("Error creating Stripe sessions:", error);
+      alert("Failed to start payment process");
+    }
+  };
+  // const completePaymentAll = async () => {
+  //   const stripe = await loadStripe("pk_test_...");
+  //   try {
+  //     const { data } = await axios.post(
+  //       `http://localhost:${port}/api/payments/create-checkout-session-all`,
+  //       {
+  //         products: cart,
+  //         email: user.email,
+  //         customer_id: user.user_id,
+  //       },
+  //       { headers: { "Content-Type": "application/json" } }
+  //     );
+
+  //     await stripe.redirectToCheckout({ sessionId: data.id });
+  //   } catch (error) {
+  //     console.error("Error creating Stripe session:", error);
+  //     alert("Failed to start payment process");
+  //   }
+  // };
+  const completePaymentAll = async () => {
+    const stripe = await loadStripe(
+      "pk_test_51SLmeU7XNof7c0LK21QyvjJxb28OZnQ9uOo3leNgWR3PHE7agxDJforXF2no1WQrRg29jAP4K4iMoodJPTL7ClpT00Gbwg0TCH"
+    );
+    try {
+      const { data } = await axios.post(
+        `http://localhost:${port}/api/payments/create-checkout-session-all`,
+        {
+          products: cart,
+          email: user.email,
+          customer_id: user.user_id,
+        },
+        { headers: { "Content-Type": "application/json" } }
+      );
+
+      await stripe.redirectToCheckout({ sessionId: data.id });
+    } catch (error) {
+      console.error("Error creating Stripe session:", error);
+      alert("Failed to start payment process");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[radial-gradient(1200px_800px_at_20%_-10%,rgba(245,196,94,.18),transparent_55%),radial-gradient(900px_700px_at_100%_0%,rgba(231,139,72,.14),transparent_45%)] from-[#FFF6E9] to-[#FFF6E9] bg-[#FFF6E9] pt-20 md:pt-24 px-3 sm:px-4 md:px-6 py-6 md:py-8">
       <div className="max-w-7xl mx-auto">
@@ -396,7 +557,9 @@ export default function CartPage() {
                             Quantity:
                           </span>
                           {product.provider_response ||
-                          product.status_pay !== "Approve" ? (
+                          product.status_pay !== "Approve" ||
+                          product.sendedtoprovider ||
+                          product.quantityLocked ? (
                             <span className="w-10 text-center font-semibold text-[#102E50] bg-[#FFF6E9] rounded-lg border border-[#F5C45E]/50 py-1">
                               {product.quantity}
                             </span>
@@ -617,7 +780,11 @@ export default function CartPage() {
                   <Button
                     onClick={
                       // completePayment
-                      completePayment2
+                      // completePayment2
+                      // completePayment3
+                      // completePayment4
+                      // completePaymentMultiProvider
+                      completePaymentAll
                     }
                     className="flex-1"
                   >

@@ -3,7 +3,6 @@
 import axios from "axios";
 import {
   Bell,
-
   Calendar,
   CheckCircle2,
   DollarSign,
@@ -20,7 +19,6 @@ import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import defaultImg from "../../assets/NoImage.png";
-import ChatBox from "../../component/Ai/chatBox";
 import FeedbackCard from "../../component/ratingAndFeedback";
 import useSummary from "../../hooks/useAnaliasisOrder";
 import useLastDate from "../../hooks/useLastDate";
@@ -57,6 +55,7 @@ const paymentStatusClasses = {
 
 function OrdersManagementCustomer() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [dataMesg, setDataMesg] = useState([]);
   const [statusFilter, setStatusFilter] = useState("All");
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [selectedOrder, setSelectedOrder] = useState(null);
@@ -69,7 +68,17 @@ function OrdersManagementCustomer() {
   const [buttonAi, setButtonAi] = useState(false);
 
   console.log("77777777777777777777777");
+  console.log("data", dataMesg);
 
+  const Mesg = Array.isArray(dataMesg)
+    ? dataMesg.map((order) => ({
+        sender_id: order.customer_user_id,
+        receiver_id: order.provider_user_id,
+        order_id: order.order_id,
+      }))
+    : [];
+
+  console.log("Mesg", Mesg);
   console.log(report);
   console.log("77777777777777777777777");
 
@@ -79,6 +88,8 @@ function OrdersManagementCustomer() {
   );
 
   const { user } = useSelector((state) => state.UserInfo);
+  console.log("wqweeeee", user);
+
   const userId = user?.user_id;
   const port = import.meta.env.VITE_PORT;
   const navigate = useNavigate();
@@ -90,7 +101,9 @@ function OrdersManagementCustomer() {
         const response = await axios.get(
           `http://localhost:${port}/getAllOrderInCustomer/${userId}`
         );
-        console.log(response.data);
+        console.log("this is res", response.data);
+        setDataMesg(response.data);
+
         const mappedOrders = response.data.map((order) => ({
           order_id: order.order_id,
           status: order.status,
@@ -113,6 +126,8 @@ function OrdersManagementCustomer() {
           add_customer_review: order.add_customer_review,
           provider_firstname: order.provider_firstname,
           provider_lastname: order.provider_lastname,
+          customer_firstname: order.customer_firstname,
+          customer_lastname: order.customer_lastname,
           provider_profile_image: order.provider_profile_image,
           provider_user_id: order.provider_user_id,
           quantity: order.quantity,
@@ -159,6 +174,8 @@ function OrdersManagementCustomer() {
 
     return sorted;
   }, [orders, searchTerm, statusFilter, categoryFilter, sortOrder]);
+
+  console.log("filter order", filteredOrders);
 
   const categories = [...new Set(orders.map((order) => order.category))];
   const statuses = [...new Set(orders.map((order) => order.status))];
@@ -218,11 +235,10 @@ function OrdersManagementCustomer() {
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-[#FFF6E9]">
-     <button
+      {/* <button
         onClick={() => setIsOpen(true)}
-        className={`fixed bottom-8 right-8 h-16 w-16 rounded-full bg-gradient-to-br from-[#102E50] to-[#102E50]/90 text-[#F5C45E] shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-[0_0_30px_rgba(245,196,94,0.5)] hover:from-[#F5C45E] hover:to-[#E78B48] hover:text-[#102E50] z-50 ${
-          isOpen ? "scale-0 opacity-0" : "scale-100 opacity-100"
-        }`}
+        className={`fixed bottom-8 right-8 h-16 w-16 rounded-full bg-gradient-to-br from-[#102E50] to-[#102E50]/90 text-[#F5C45E] shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-[0_0_30px_rgba(245,196,94,0.5)] hover:from-[#F5C45E] hover:to-[#E78B48] hover:text-[#102E50] z-50 ${isOpen ? "scale-0 opacity-0" : "scale-100 opacity-100"
+          }`}
       >
         <MessageCircle size={28} strokeWidth={2.5} />
       </button>
@@ -234,7 +250,7 @@ function OrdersManagementCustomer() {
           className="fixed inset-0  bg-opacity-50 z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
-      )}
+      )} */}
 
       <div className="flex-1 flex flex-col overflow-hidden">
         <header className="bg-[#102E50] border-b-4 border-[#F5C45E] px-6 py-5 shadow-lg">
@@ -262,7 +278,7 @@ function OrdersManagementCustomer() {
                 />
               </div>
               <button className="p-2 hover:bg-[#F5C45E]/10 rounded-lg transition-colors">
-                {/* <Bell className="h-6 w-6 text-[#F5C45E] hover:text-[#E78B48] transition-colors" /> */}
+                <Bell className="h-6 w-6 text-[#F5C45E] hover:text-[#E78B48] transition-colors" />
               </button>
             </div>
           </div>
@@ -315,19 +331,13 @@ function OrdersManagementCustomer() {
 
         <div className="flex-1 overflow-auto p-6 lg:p-8 bg-[#FFF6E9]">
           <div className="max-w-7xl mx-auto space-y-6">
-          <div className="max-w-7xl mx-auto">
-  <button
-    onClick={() => setButtonAi(!buttonAi)}
-    className="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl mx-auto flex items-center justify-center gap-3 px-6 py-3
-    bg-[#F5C45E] text-[#102E50] text-lg font-bold rounded-lg shadow-md
-    hover:bg-[#E78B48] hover:text-[#FFF6E9] transition-all duration-200
-    focus:outline-none focus:ring-2 focus:ring-[#E78B48] focus:ring-offset-2"
-  >
-    <Sparkles className="h-6 w-6" />
-    {buttonAi ? "Hide Analysis" : "Analyze using AI"}
-  </button>
-</div>
-
+            <button
+              onClick={() => setButtonAi(!buttonAi)}
+              className="flex items-center justify-center gap-3 px-8 py-4 bg-[#F5C45E] text-[#102E50] text-lg font-bold rounded-lg shadow-md hover:bg-[#E78B48] hover:text-[#FFF6E9] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#E78B48] focus:ring-offset-2"
+            >
+              <Sparkles className="h-6 w-6" />
+              {buttonAi ? "Hide Analysis" : "Analyze using AI"}
+            </button>
 
             {buttonAi && (
               <OrdersSummary
@@ -505,12 +515,45 @@ function OrdersManagementCustomer() {
                       >
                         View Provider
                       </button>
-                      {/* <button
-                        onClick={(e) => e.stopPropagation()}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (!user?.user_id) return;
+
+                          const chatSender = {
+                            user_id: user.user_id,
+                            name: `${user.first_name || "User"} ${
+                              user.last_name || ""
+                            }`,
+                          };
+
+                          const receiverIsProvider =
+                            order.customer_id === user.user_id;
+
+                          const chatReceiver = {
+                            user_id: receiverIsProvider
+                              ? order.provider_user_id
+                              : order.customer_id,
+                            name: receiverIsProvider
+                              ? `${order.provider_firstname || "Provider"} ${
+                                  order.provider_lastname || ""
+                                }`
+                              : `${order.customer_firstname || "Customer"} ${
+                                  order.customer_lastname || ""
+                                }`,
+                          };
+
+                          navigate(`/LiveChat/${chatReceiver.user_id}`, {
+                            state: {
+                              sender: chatSender,
+                              reciver: chatReceiver,
+                            },
+                          });
+                        }}
                         className="p-2 text-[#102E50] hover:text-[#E78B48] hover:bg-[#FFF6E9] rounded-lg transition-colors border-2 border-[#102E50] hover:border-[#E78B48] flex items-center justify-center"
                       >
                         <MessageCircle className="h-4 w-4" />
-                      </button> */}
+                      </button>
                     </div>
                   </div>
                 </div>
