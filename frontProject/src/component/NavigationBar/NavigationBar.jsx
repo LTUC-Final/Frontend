@@ -68,7 +68,6 @@ export default function NavigationBar({ onScroll }) {
 
   const navItems = [
     { name: "Home", href: "/mainDashBoard" },
-    { name: "About", href: "/about" },
     {
       name: "My Profile",
       href: `/profile/${userId}`,
@@ -107,6 +106,16 @@ export default function NavigationBar({ onScroll }) {
       name: "Cart",
       href: "/cart",
       roles: ["customer"],
+    },
+    {
+      name: "Payment",
+      href: "/payments",
+      roles: ["customer"],
+    },
+    {
+      name: "Payment",
+      href: "/paymentsProvider",
+      roles: ["provider"],
     },
     {
       name: "Messages",
