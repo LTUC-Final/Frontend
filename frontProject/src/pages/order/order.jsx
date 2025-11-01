@@ -19,7 +19,6 @@ import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import defaultImg from "../../assets/NoImage.png";
-import ChatBox from "../../component/Ai/chatBox";
 import FeedbackCard from "../../component/ratingAndFeedback";
 import useSummary from "../../hooks/useAnaliasisOrder";
 import useLastDate from "../../hooks/useLastDate";
@@ -68,21 +67,18 @@ function OrdersManagementCustomer() {
   const { messagesss, sendMessagess, report, formatDateLocal } = useLastDate();
   const [buttonAi, setButtonAi] = useState(false);
 
-
   console.log("77777777777777777777777");
   console.log("data", dataMesg);
 
   const Mesg = Array.isArray(dataMesg)
     ? dataMesg.map((order) => ({
-      sender_id: order.customer_user_id,
-      receiver_id: order.provider_user_id,
-      order_id: order.order_id,
-    }))
+        sender_id: order.customer_user_id,
+        receiver_id: order.provider_user_id,
+        order_id: order.order_id,
+      }))
     : [];
 
-
-
-  console.log("Mesg", Mesg)
+  console.log("Mesg", Mesg);
   console.log(report);
   console.log("77777777777777777777777");
 
@@ -239,7 +235,7 @@ function OrdersManagementCustomer() {
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-[#FFF6E9]">
-      <button
+      {/* <button
         onClick={() => setIsOpen(true)}
         className={`fixed bottom-8 right-8 h-16 w-16 rounded-full bg-gradient-to-br from-[#102E50] to-[#102E50]/90 text-[#F5C45E] shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-[0_0_30px_rgba(245,196,94,0.5)] hover:from-[#F5C45E] hover:to-[#E78B48] hover:text-[#102E50] z-50 ${isOpen ? "scale-0 opacity-0" : "scale-100 opacity-100"
           }`}
@@ -254,7 +250,7 @@ function OrdersManagementCustomer() {
           className="fixed inset-0  bg-opacity-50 z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
-      )}
+      )} */}
 
       <div className="flex-1 flex flex-col overflow-hidden">
         <header className="bg-[#102E50] border-b-4 border-[#F5C45E] px-6 py-5 shadow-lg">
@@ -354,213 +350,219 @@ function OrdersManagementCustomer() {
               />
             )}
 
+            {filteredOrders.map((order) => (
+              <div
+                key={order.order_id}
+                className="bg-white border-2 border-[#F5C45E] rounded-xl p-5 hover:shadow-2xl hover:border-[#E78B48] transition-all duration-300 cursor-pointer"
+                onClick={() => setSelectedOrder(order)}
+              >
+                <div className="flex flex-col lg:flex-row gap-5">
+                  <div className="flex-shrink-0">
+                    <img
+                      src={
+                        order.product_image
+                          ? order.product_image.startsWith("http")
+                            ? order.product_image
+                            : `http://localhost:${port}${order.product_image}`
+                          : defaultImg
+                      }
+                      alt={order.productName}
+                      className="w-full lg:w-40 h-40 object-cover rounded-lg border-2 border-[#E78B48] shadow-sm"
+                    />
+                  </div>
 
-            {
-              filteredOrders.map((order) => (
-                <div
-                  key={order.order_id}
-                  className="bg-white border-2 border-[#F5C45E] rounded-xl p-5 hover:shadow-2xl hover:border-[#E78B48] transition-all duration-300 cursor-pointer"
-                  onClick={() => setSelectedOrder(order)}
-                >
-                  <div className="flex flex-col lg:flex-row gap-5">
-                    <div className="flex-shrink-0">
-                      <img
-                        src={
-                          order.product_image
-                            ? order.product_image.startsWith("http")
-                              ? order.product_image
-                              : `http://localhost:${port}${order.product_image}`
-                            : defaultImg
-                        }
-                        alt={order.productName}
-                        className="w-full lg:w-40 h-40 object-cover rounded-lg border-2 border-[#E78B48] shadow-sm"
-                      />
+                  <div className="flex-1 min-w-0 space-y-3">
+                    <div className="flex flex-wrap items-center gap-3">
+                      <h3 className="text-xl font-bold text-[#102E50]">
+                        Order #{order.order_id}
+                      </h3>
+
+                      <div
+                        className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold ${
+                          statusClasses[order.status]
+                        }`}
+                      >
+                        {order.status === "completed" ? (
+                          <CheckCircle2 className="w-3.5 h-3.5" />
+                        ) : order.status === "In Progress" ||
+                          order.status === "on_progress" ? (
+                          <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                        ) : (
+                          <div
+                            className={`w-2 h-2 rounded-full ${
+                              statusDotClasses[order.status]
+                            }`}
+                          />
+                        )}
+                        <span>{order.status}</span>
+                      </div>
+
+                      <div
+                        className={`px-3 py-1.5 rounded-full text-xs font-bold ${
+                          paymentStatusClasses[order.paymentStatus]
+                        }`}
+                      >
+                        {order.paymentStatus}
+                      </div>
                     </div>
 
-                    <div className="flex-1 min-w-0 space-y-3">
-                      <div className="flex flex-wrap items-center gap-3">
-                        <h3 className="text-xl font-bold text-[#102E50]">
-                          Order #{order.order_id}
-                        </h3>
+                    <div>
+                      <h4 className="text-lg font-bold text-[#102E50] mb-1">
+                        {order.productName}
+                      </h4>
+                      <p className="text-sm text-[#102E50]/70 leading-relaxed line-clamp-2">
+                        {order.serviceDetails}
+                      </p>
+                    </div>
 
-                        <div
-                          className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold ${statusClasses[order.status]
-                            }`}
-                        >
-                          {order.status === "completed" ? (
-                            <CheckCircle2 className="w-3.5 h-3.5" />
-                          ) : order.status === "In Progress" ||
-                            order.status === "on_progress" ? (
-                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                          ) : (
-                            <div
-                              className={`w-2 h-2 rounded-full ${statusDotClasses[order.status]
-                                }`}
-                            />
-                          )}
-                          <span>{order.status}</span>
-                        </div>
-
-                        <div
-                          className={`px-3 py-1.5 rounded-full text-xs font-bold ${paymentStatusClasses[order.paymentStatus]
-                            }`}
-                        >
-                          {order.paymentStatus}
-                        </div>
-                      </div>
-
-                      <div>
-                        <h4 className="text-lg font-bold text-[#102E50] mb-1">
-                          {order.productName}
-                        </h4>
-                        <p className="text-sm text-[#102E50]/70 leading-relaxed line-clamp-2">
-                          {order.serviceDetails}
+                    {order.customNotes && (
+                      <div className="bg-[#FFF6E9] p-3 rounded-lg border-l-4 border-[#E78B48]">
+                        <p className="text-xs font-semibold text-[#E78B48] mb-1">
+                          Provider Response:
+                        </p>
+                        <p className="text-sm text-[#102E50] leading-relaxed">
+                          {order.customNotes}
                         </p>
                       </div>
+                    )}
 
-                      {order.customNotes && (
-                        <div className="bg-[#FFF6E9] p-3 rounded-lg border-l-4 border-[#E78B48]">
-                          <p className="text-xs font-semibold text-[#E78B48] mb-1">
-                            Provider Response:
-                          </p>
-                          <p className="text-sm text-[#102E50] leading-relaxed">
-                            {order.customNotes}
-                          </p>
-                        </div>
-                      )}
-
-                      <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
-                        <div className="flex items-center gap-1.5">
-                          <DollarSign className="h-4 w-4 text-[#F5C45E]" />
-                          <span className="font-bold text-[#102E50]">
-                            $
-                            {(
-                              order.totalAmount * order.quantity
-                            ).toLocaleString()}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                          <Calendar className="h-4 w-4 text-[#E78B48]" />
-                          <span className="text-[#102E50]/70">
-                            {new Date(order.orderDate).toLocaleDateString()}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                          <Truck className="h-4 w-4 text-[#102E50]" />
-                          <span className="text-[#102E50]/70">
-                            {new Date(
-                              order.estimatedDelivery
-                            ).toLocaleDateString()}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-[#102E50]/70">Category:</span>
-                          <span className="font-semibold text-[#102E50]">
-                            {order.category}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-[#102E50]/70">Qty:</span>
-                          <span className="font-bold text-[#E78B48]">
-                            {order.quantity}
-                          </span>
-                        </div>
+                    <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
+                      <div className="flex items-center gap-1.5">
+                        <DollarSign className="h-4 w-4 text-[#F5C45E]" />
+                        <span className="font-bold text-[#102E50]">
+                          $
+                          {(
+                            order.totalAmount * order.quantity
+                          ).toLocaleString()}
+                        </span>
                       </div>
+                      <div className="flex items-center gap-1.5">
+                        <Calendar className="h-4 w-4 text-[#E78B48]" />
+                        <span className="text-[#102E50]/70">
+                          {new Date(order.orderDate).toLocaleDateString()}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <Truck className="h-4 w-4 text-[#102E50]" />
+                        <span className="text-[#102E50]/70">
+                          {new Date(
+                            order.estimatedDelivery
+                          ).toLocaleDateString()}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-[#102E50]/70">Category:</span>
+                        <span className="font-semibold text-[#102E50]">
+                          {order.category}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-[#102E50]/70">Qty:</span>
+                        <span className="font-bold text-[#E78B48]">
+                          {order.quantity}
+                        </span>
+                      </div>
+                    </div>
 
-                      {order.status === "completed" &&
-                        order.viewFedbackPost &&
-                        !order.add_customer_review && (
-                          <FeedbackCard
-                            orderInfo={order}
-                            onSubmit={() => {
-                              setOrders((prev) =>
-                                prev.map((o) =>
-                                  o.order_id === order.order_id
-                                    ? {
+                    {order.status === "completed" &&
+                      order.viewFedbackPost &&
+                      !order.add_customer_review && (
+                        <FeedbackCard
+                          orderInfo={order}
+                          onSubmit={() => {
+                            setOrders((prev) =>
+                              prev.map((o) =>
+                                o.order_id === order.order_id
+                                  ? {
                                       ...o,
                                       viewFedbackPost: false,
                                     }
-                                    : o
-                                )
-                              );
-                            }}
-                          />
-                        )}
+                                  : o
+                              )
+                            );
+                          }}
+                        />
+                      )}
+                  </div>
+
+                  <div className="flex lg:flex-col items-center justify-center gap-3 pt-4 lg:pt-0 border-t lg:border-t-0 lg:border-l border-[#F5C45E]/30 lg:pl-5 lg:min-w-[140px]">
+                    <div className="flex flex-col items-center gap-2">
+                      <img
+                        src={
+                          order.provider_profile_image
+                            ? `http://localhost:${port}${order.provider_profile_image}`
+                            : `https://ui-avatars.com/api/?name=${order.provider_firstname}+${order.provider_lastname}&background=random&color=fff`
+                        }
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/profile/${order.provider_user_id}`);
+                        }}
+                        alt={`${order.provider_firstname} ${order.provider_lastname}`}
+                        className="w-16 h-16 rounded-full border-3 border-[#E78B48] object-cover hover:border-[#F5C45E] hover:scale-105 transition-all cursor-pointer shadow-md"
+                      />
+                      <span className="text-sm font-bold text-[#102E50] text-center leading-tight">
+                        {order.provider_firstname} {order.provider_lastname}
+                      </span>
                     </div>
 
-                    <div className="flex lg:flex-col items-center justify-center gap-3 pt-4 lg:pt-0 border-t lg:border-t-0 lg:border-l border-[#F5C45E]/30 lg:pl-5 lg:min-w-[140px]">
-                      <div className="flex flex-col items-center gap-2">
-                        <img
-                          src={
-                            order.provider_profile_image
-                              ? `http://localhost:${port}${order.provider_profile_image}`
-                              : `https://ui-avatars.com/api/?name=${order.provider_firstname}+${order.provider_lastname}&background=random&color=fff`
-                          }
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            navigate(`/profile/${order.provider_user_id}`);
-                          }}
-                          alt={`${order.provider_firstname} ${order.provider_lastname}`}
-                          className="w-16 h-16 rounded-full border-3 border-[#E78B48] object-cover hover:border-[#F5C45E] hover:scale-105 transition-all cursor-pointer shadow-md"
-                        />
-                        <span className="text-sm font-bold text-[#102E50] text-center leading-tight">
-                          {order.provider_firstname} {order.provider_lastname}
-                        </span>
-                      </div>
+                    <div className="flex lg:flex-col gap-2 w-full">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/profile/${order.provider_user_id}`);
+                        }}
+                        className="px-3 py-2 text-xs font-bold text-[#FFF6E9] bg-[#102E50] hover:bg-[#E78B48] rounded-lg transition-colors"
+                      >
+                        View Provider
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (!user?.user_id) return;
 
-                      <div className="flex lg:flex-col gap-2 w-full">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            navigate(`/profile/${order.provider_user_id}`);
-                          }}
-                          className="px-3 py-2 text-xs font-bold text-[#FFF6E9] bg-[#102E50] hover:bg-[#E78B48] rounded-lg transition-colors"
-                        >
-                          View Provider
-                        </button>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            if (!user?.user_id) return;
+                          const chatSender = {
+                            user_id: user.user_id,
+                            name: `${user.first_name || "User"} ${
+                              user.last_name || ""
+                            }`,
+                          };
 
-                            const chatSender = {
-                              user_id: user.user_id,
-                              name: `${user.first_name || "User"} ${user.last_name || ""}`,
-                            };
+                          const receiverIsProvider =
+                            order.customer_id === user.user_id;
 
-                            const receiverIsProvider = order.customer_id === user.user_id;
+                          const chatReceiver = {
+                            user_id: receiverIsProvider
+                              ? order.provider_user_id
+                              : order.customer_id,
+                            name: receiverIsProvider
+                              ? `${order.provider_firstname || "Provider"} ${
+                                  order.provider_lastname || ""
+                                }`
+                              : `${order.customer_firstname || "Customer"} ${
+                                  order.customer_lastname || ""
+                                }`,
+                          };
 
-                            const chatReceiver = {
-                              user_id: receiverIsProvider ? order.provider_user_id : order.customer_id,
-                              name: receiverIsProvider
-                                ? `${order.provider_firstname || "Provider"} ${order.provider_lastname || ""}`
-                                : `${order.customer_firstname || "Customer"} ${order.customer_lastname || ""}`,
-                            };
-
-                            navigate(`/LiveChat/${chatReceiver.user_id}`, {
-                              state: {
-                                sender: chatSender,
-                                reciver: chatReceiver,
-                              },
-                            });
-                          }}
-                          className="p-2 text-[#102E50] hover:text-[#E78B48] hover:bg-[#FFF6E9] rounded-lg transition-colors border-2 border-[#102E50] hover:border-[#E78B48] flex items-center justify-center"
-                        >
-                          <MessageCircle className="h-4 w-4" />
-                        </button>
-
-
-
-                      </div>
+                          navigate(`/LiveChat/${chatReceiver.user_id}`, {
+                            state: {
+                              sender: chatSender,
+                              reciver: chatReceiver,
+                            },
+                          });
+                        }}
+                        className="p-2 text-[#102E50] hover:text-[#E78B48] hover:bg-[#FFF6E9] rounded-lg transition-colors border-2 border-[#102E50] hover:border-[#E78B48] flex items-center justify-center"
+                      >
+                        <MessageCircle className="h-4 w-4" />
+                      </button>
                     </div>
                   </div>
                 </div>
-              ))
-            }
+              </div>
+            ))}
           </div>
         </div>
       </div>
-    </div >
+    </div>
   );
 }
 
