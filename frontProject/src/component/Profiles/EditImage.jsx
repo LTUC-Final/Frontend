@@ -43,7 +43,7 @@ export default function EditImage({ userId, onUpdate }) {
   return (
     <>
       {/* 📸 Camera Button Overlay — fixed in image corner */}
-      <div className="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 z-30">
+      <div >
         <input
           ref={inputRef}
           type="file"

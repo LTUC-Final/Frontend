@@ -278,7 +278,7 @@ function OrdersManagementCustomer() {
                 />
               </div>
               <button className="p-2 hover:bg-[#F5C45E]/10 rounded-lg transition-colors">
-                <Bell className="h-6 w-6 text-[#F5C45E] hover:text-[#E78B48] transition-colors" />
+              
               </button>
             </div>
           </div>
@@ -331,13 +331,18 @@ function OrdersManagementCustomer() {
 
         <div className="flex-1 overflow-auto p-6 lg:p-8 bg-[#FFF6E9]">
           <div className="max-w-7xl mx-auto space-y-6">
-            <button
-              onClick={() => setButtonAi(!buttonAi)}
-              className="flex items-center justify-center gap-3 px-8 py-4 bg-[#F5C45E] text-[#102E50] text-lg font-bold rounded-lg shadow-md hover:bg-[#E78B48] hover:text-[#FFF6E9] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#E78B48] focus:ring-offset-2"
-            >
-              <Sparkles className="h-6 w-6" />
-              {buttonAi ? "Hide Analysis" : "Analyze using AI"}
-            </button>
+<div className="w-full flex justify-center mt-6">
+  <button
+    onClick={() => setButtonAi(!buttonAi)}
+    className="w-[500px] flex items-center justify-center gap-3 py-4 
+    bg-[#F5C45E] text-[#102E50] text-lg font-bold rounded-xl shadow-md
+    hover:bg-[#E78B48] hover:text-[#FFF6E9] transition-all duration-200 
+    focus:outline-none focus:ring-2 focus:ring-[#E78B48] focus:ring-offset-2"
+  >
+    <Sparkles className="h-6 w-6" />
+    {buttonAi ? "Hide Analysis" : "Analyze using AI"}
+  </button>
+</div>  
 
             {buttonAi && (
               <OrdersSummary
