@@ -502,9 +502,7 @@ export default function CartPage() {
                               <img
                                 src={
                                   product.product_image
-                                    ? product.product_image.startsWith("http")
-                                      ? product.product_image
-                                      : `http://localhost:${port}${product.product_image}`
+                                    ? product.product_image
                                     : `../src/assets/NoImage.png`
                                 }
                                 alt={product.product_name}

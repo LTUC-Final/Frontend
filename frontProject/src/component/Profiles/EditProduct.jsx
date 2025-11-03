@@ -143,7 +143,7 @@ return (
 
     <div className="w-full max-w-[150px]">
   <img
-    src={product.image ? `http://localhost:${port}${product.image}` : defaultImg}
+    src={product.image ? product.image : defaultImg}
     alt="Product"
     className="w-full h-auto object-contain rounded-lg border border-[#F5C45E] shadow-sm bg-white"
   />
@@ -152,7 +152,6 @@ return (
     </div>
   </div>
 
-  {/* NAME */}
   <div>
     <label className="block font-semibold mb-1">Product Name</label>
     <input

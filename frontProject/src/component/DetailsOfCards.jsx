@@ -58,9 +58,8 @@ export default function DetailsOfCards({ Id }) {
               // src={dataCard.image|| defaultImg}
               src={
                 dataCard.image
-                  ? dataCard.image.startsWith("http")
+                  
                     ? dataCard.image
-                    : `http://localhost:${port}${dataCard.image}`
                   : "../src/assets/NoImage.png"
               }
               alt={dataCard.name}
@@ -127,10 +126,8 @@ export default function DetailsOfCards({ Id }) {
             <img
               src={
                 dataCard.profile_image
-                  ? dataCard.profile_image.startsWith("http")
-                    ? dataCard.profile_image
-                    : `http://localhost:${port}${dataCard.profile_image}`
-                  : defaultImg
+                  ? dataCard.profile_image
+                      : `https://ui-avatars.com/api/?name=${dataCard.customer_name}+${dataCard.customerlastname}&background=random&color=fff`
               }
               alt="seller"
               onClick={() => navigate(`/profile/${dataCard.user_id}`)}

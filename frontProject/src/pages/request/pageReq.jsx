@@ -366,9 +366,7 @@ function OrdersManagementProvider() {
                     <img
                       src={
                         order.product_image
-                          ? order.product_image.startsWith("http")
-                            ? order.product_image
-                            : `http://localhost:${port}${order.product_image}`
+                          ? order.product_image
                           : "../src/assets/NoImage.png"
                       }
                       alt={order.productName}
@@ -539,7 +537,7 @@ function OrdersManagementProvider() {
                       <img
                         src={
                           order.customer_profile_image
-                            ? `http://localhost:${port}${order.customer_profile_image}`
+                            ? order.customer_profile_image
                             : `https://ui-avatars.com/api/?name=${order.customer_firstname}+${order.customer_lastname}&background=random&color=fff`
                         }
                         onClick={(e) => {

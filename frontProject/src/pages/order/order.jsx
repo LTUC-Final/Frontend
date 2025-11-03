@@ -2,7 +2,6 @@
 
 import axios from "axios";
 import {
-  Bell,
   Calendar,
   CheckCircle2,
   DollarSign,
@@ -277,9 +276,7 @@ function OrdersManagementCustomer() {
                   className="pl-12 pr-4 py-2.5 w-56 lg:w-96 bg-[#FFF6E9] border-2 border-[#F5C45E] text-[#102E50] text-base placeholder-[#102E50]/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E78B48] focus:border-[#E78B48] transition-all"
                 />
               </div>
-              <button className="p-2 hover:bg-[#F5C45E]/10 rounded-lg transition-colors">
-              
-              </button>
+              <button className="p-2 hover:bg-[#F5C45E]/10 rounded-lg transition-colors"></button>
             </div>
           </div>
         </header>
@@ -331,18 +328,18 @@ function OrdersManagementCustomer() {
 
         <div className="flex-1 overflow-auto p-6 lg:p-8 bg-[#FFF6E9]">
           <div className="max-w-7xl mx-auto space-y-6">
-<div className="w-full flex justify-center mt-6">
-  <button
-    onClick={() => setButtonAi(!buttonAi)}
-    className="w-[500px] flex items-center justify-center gap-3 py-4 
+            <div className="w-full flex justify-center mt-6">
+              <button
+                onClick={() => setButtonAi(!buttonAi)}
+                className="w-[500px] flex items-center justify-center gap-3 py-4 
     bg-[#F5C45E] text-[#102E50] text-lg font-bold rounded-xl shadow-md
     hover:bg-[#E78B48] hover:text-[#FFF6E9] transition-all duration-200 
     focus:outline-none focus:ring-2 focus:ring-[#E78B48] focus:ring-offset-2"
-  >
-    <Sparkles className="h-6 w-6" />
-    {buttonAi ? "Hide Analysis" : "Analyze using AI"}
-  </button>
-</div>  
+              >
+                <Sparkles className="h-6 w-6" />
+                {buttonAi ? "Hide Analysis" : "Analyze using AI"}
+              </button>
+            </div>
 
             {buttonAi && (
               <OrdersSummary
@@ -365,11 +362,7 @@ function OrdersManagementCustomer() {
                   <div className="flex-shrink-0">
                     <img
                       src={
-                        order.product_image
-                          ? order.product_image.startsWith("http")
-                            ? order.product_image
-                            : `http://localhost:${port}${order.product_image}`
-                          : defaultImg
+                        order.product_image ? order.product_image : defaultImg
                       }
                       alt={order.productName}
                       className="w-full lg:w-40 h-40 object-cover rounded-lg border-2 border-[#E78B48] shadow-sm"
@@ -495,7 +488,7 @@ function OrdersManagementCustomer() {
                       <img
                         src={
                           order.provider_profile_image
-                            ? `http://localhost:${port}${order.provider_profile_image}`
+                            ? order.provider_profile_image
                             : `https://ui-avatars.com/api/?name=${order.provider_firstname}+${order.provider_lastname}&background=random&color=fff`
                         }
                         onClick={(e) => {

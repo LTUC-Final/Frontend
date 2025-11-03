@@ -22,7 +22,7 @@ console.log("userID:", userID);
         <img
           src={
             review.profile_image
-              ? `http://localhost:${port}${review.profile_image}`
+              ?review.profile_image
               : `https://ui-avatars.com/api/?name=${review.customer_firstname}+${review.customer_lastname ?? ""}&background=E78B48&color=fff`
           }
           alt={`${review.customer_firstname} ${review.customer_lastname ?? ""}`}

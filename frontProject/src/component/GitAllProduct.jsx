@@ -95,13 +95,16 @@ export default function GitAllProduct() {
               {/* Image */}
               <div className="w-full aspect-[4/3] overflow-hidden bg-[#102E50]/5">
                 <img
-                  src={
-                    card.image
-                      ? card.image.startsWith("http")
-                        ? card.image
-                        : `http://localhost:${port}${card.image}`
-                      : defaultImg
-                  }
+                src={
+  card.image
+    ? card.image.includes("firebase") || card.image.includes("googleapis")
+      ? card.image
+      : card.image.startsWith("http")
+      ? card.image
+      : `http://localhost:${port}${card.image}`
+    : defaultImg
+}
+
                   alt={card.name}
                   className="w-full h-full object-cover transition duration-300 group-hover:scale-105 cursor-pointer"
                   onClick={() => {

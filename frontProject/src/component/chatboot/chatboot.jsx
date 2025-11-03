@@ -26,9 +26,6 @@ export default function ChatBoot() {
     "/cancel",
   ];
 
-
-
-
   const showChat =
     allowedPaths.includes(path) ||
     path.startsWith("/profile/") ||
@@ -43,8 +40,8 @@ export default function ChatBoot() {
         <>
           <button
             onClick={() => setIsOpen(true)}
-                    className={`fixed bottom-8 right-8 h-16 w-16 rounded-full bg-gradient-to-br from-[#102E50] to-[#102E50]/90 text-[#F5C45E] shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-[0_0_30px_rgba(245,196,94,0.5)] hover:from-[#F5C45E] hover:to-[#E78B48] hover:text-[#102E50] z-50 ${isOpen ? "scale-0 opacity-0" : "scale-100 opacity-100"
-
+            className={`fixed bottom-8 right-8 h-16 w-16 rounded-full bg-gradient-to-br from-[#102E50] to-[#102E50]/90 text-[#F5C45E] shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-[0_0_30px_rgba(245,196,94,0.5)] hover:from-[#F5C45E] hover:to-[#E78B48] hover:text-[#102E50] z-50 ${
+              isOpen ? "scale-0 opacity-0" : "scale-100 opacity-100"
             }`}
           >
             <MessageCircle size={24} />
