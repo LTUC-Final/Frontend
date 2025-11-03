@@ -1,194 +1,1358 @@
+
+
 // import axios from "axios";
-// import { useEffect, useState } from "react";
+// import { useEffect, useMemo, useState, useCallback } from "react";
 // import { useSelector } from "react-redux";
 // import { useNavigate } from "react-router-dom";
+// import Swal from "sweetalert2";
 // import defaultImg from "../assets/NoImage.png";
-// import AddTOFav from "./AddToFav";
 // import ReactionPicker from "./reaction";
 // import { useAddToCart } from "./AddToCart";
 
 // export default function GitAllProduct() {
 //   const navigate = useNavigate();
-//   const port = import.meta.env.VITE_PORT;
-//   const [cards, setCards] = useState([]);
-//   const CusData = useSelector((state) => state.UserInfo);
-//   const [textSearch, setTextSearch] = useState("");
-//   const [selectore, setSelectore] = useState("");
 //   const { AddToCart } = useAddToCart();
-//   const number = 0;
+//   const CusData = useSelector((s) => s.UserInfo);
+//   const uid = CusData?.user?.user_id;
+//   const role = CusData?.user?.role;
+//   const token = useSelector((s) => s.UserInfo?.token);
+//   const isLogged = Boolean(token);
 
-//   console.log(selectore);
-//   console.log(selectore);
+//   const port = import.meta.env.VITE_PORT;
+//   const apiBase = useMemo(() => `http://localhost:${port}`, [port]);
 
-//   console.log("asdallllllllsd", CusData);
+//   const [cards, setCards] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [textSearch, setTextSearch] = useState("");
+//   const [debouncedSearch, setDebouncedSearch] = useState("");
+//   const [selectore, setSelectore] = useState("");
+//   const [openReactions, setOpenReactions] = useState({});
+//   const [favIds, setFavIds] = useState(new Set());
+//   const [cartIds, setCartIds] = useState(new Set());
 
-//   console.log(cards);
-//   console.log(textSearch);
-
-//   const resultOfFilter = cards.filter((card) => {
-//     const FilterByName = card.name
-//       .toLowerCase()
-//       .includes(textSearch.toLowerCase());
-//     const FilterBySelete =
-//       !selectore ||
-//       card.category_name.toLowerCase() === selectore.toLowerCase();
-//     return FilterByName && FilterBySelete;
-//   });
-
-//   useEffect(() => {
-//     const feactData = async () => {
-//       try {
-//         let res = await axios.get(
-//           `http://localhost:${port}/api/ShowCardInUserDashboard/${CusData.user.user_id}`
-//         );
-//         setCards(res.data);
-//       } catch (error) {
-//         console.log(error);
-//       }
-//     };
-//     feactData();
+//   const withMutedAlerts = useCallback(async (fn) => {
+//     const prev = window.alert;
+//     window.alert = () => {};
+//     try {
+//       return await fn();
+//     } finally {
+//       window.alert = prev;
+//     }
 //   }, []);
 
-//   return (
-//     <div className="min-h-screen bg-[#FFF6E9] px-3 sm:px-4 md:px-6 py-6 md:py-8">
-//       <div className="mx-auto w-full max-w-7xl">
-//         {/* Search & Filter */}
-//         <div className="mb-6 sm:mb-8 bg-white/80 backdrop-blur rounded-2xl shadow-sm ring-1 ring-[#102E50]/10 p-3 sm:p-4">
-//           <div className="flex flex-col md:flex-row gap-3 sm:gap-4">
-//             <input
-//               type="text"
-//               placeholder="Search by name..."
-//               value={textSearch}
-//               onChange={(e) => setTextSearch(e.target.value)}
-//               className="w-full md:flex-1 h-11 px-4 rounded-xl border border-[#102E50]/15 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#F5C45E] focus:border-transparent transition"
-//             />
+//   const alertError = useCallback(async (message) => {
+//     await Swal.fire({
+//       title: "Error",
+//       text: message,
+//       icon: "error",
+//       confirmButtonText: "OK",
+//       confirmButtonColor: "#BE3D2A",
+//       background: "#FFF6E9",
+//       color: "#102E50",
+//     });
+//   }, []);
 
-//             <div className="flex items-center gap-2 sm:gap-3">
-//               <label className="text-sm font-semibold text-[#102E50]">
-//                 Category
-//               </label>
-//               <select
-//                 value={selectore}
-//                 onChange={(e) => setSelectore(e.target.value)}
-//                 className="h-11 px-4 rounded-xl border border-[#102E50]/15 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#F5C45E] focus:border-transparent transition"
-//               >
-//                 <option value="">All</option>
-//                 {[...new Set(cards.map((card) => card.category_name))].map(
-//                   (category, idx) => (
-//                     <option key={idx} value={category}>
-//                       {category}
-//                     </option>
-//                   )
-//                 )}
-//               </select>
+//   const alertSuccess = useCallback(async (title, text) => {
+//     await Swal.fire({
+//       title,
+//       text,
+//       icon: "success",
+//       confirmButtonText: "OK",
+//       confirmButtonColor: "#102E50",
+//       background: "#FFF6E9",
+//       color: "#102E50",
+//     });
+//   }, []);
+
+//   useEffect(() => {
+//     const t = setTimeout(() => setDebouncedSearch(textSearch), 250);
+//     return () => clearTimeout(t);
+//   }, [textSearch]);
+
+//   useEffect(() => {
+//     const run = async () => {
+//       if (!uid) return;
+//       try {
+//         setLoading(true);
+//         const res = await axios.get(`${apiBase}/api/ShowCardInUserDashboard/${uid}`);
+//         setCards(Array.isArray(res.data) ? res.data : []);
+//       } catch {
+//         setCards([]);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+//     run();
+//   }, [apiBase, uid]);
+
+//   const loadFavs = useCallback(async () => {
+//     try {
+//       if (!token) return;
+//       const { data } = await axios.get(`${apiBase}/api/wishlist`.replace("/api/api", "/api"), {
+//         headers: { Authorization: `Bearer ${token}` },
+//       });
+//       const list = Array.isArray(data?.items) ? data.items : [];
+//       setFavIds(new Set(list.map((x) => Number(x.product_id))));
+//     } catch {}
+//   }, [apiBase, token]);
+
+//   const loadCartIds = useCallback(async () => {
+//     try {
+//       if (!uid || !token) return;
+//       const res = await axios.get(`${apiBase}/api/carts/products/${uid}`.replace("/api/api", "/api"), {
+//         headers: { Authorization: `Bearer ${token}` },
+//       });
+//       const list = Array.isArray(res.data?.cards) ? res.data.cards : [];
+//       setCartIds(new Set(list.map((c) => Number(c.product_id))));
+//     } catch {}
+//   }, [apiBase, token, uid]);
+
+//   useEffect(() => {
+//     loadFavs();
+//     loadCartIds();
+//   }, [loadFavs, loadCartIds]);
+
+//   const categories = useMemo(
+//     () => [...new Set(cards.map((c) => c?.category_name).filter(Boolean))],
+//     [cards]
+//   );
+
+//   const toImg = useCallback(
+//     (img) => {
+//       if (!img) return defaultImg;
+//       const s = String(img).trim();
+//       if (s.startsWith("http")) return s;
+//       return `${apiBase}${s.startsWith("/") ? "" : "/"}${s}`;
+//     },
+//     [apiBase]
+//   );
+
+//   const money = useMemo(() => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }), []);
+
+//   const filtered = cards.filter((card) => {
+//     const byName = (card?.name || "").toLowerCase().includes(debouncedSearch.toLowerCase());
+//     const byCat = !selectore || (card?.category_name || "").toLowerCase() === String(selectore).toLowerCase();
+//     return byName && byCat;
+//   });
+
+//   const field =
+//     "h-12 px-4 rounded-2xl bg-white/95 text-[#0f2a47] placeholder-[#0f2a47]/60 text-sm outline-none ring-1 ring-[#0f2a47]/15 focus:ring-2 focus:ring-[#F5C45E] transition";
+
+//   const iconBtnBase = "w-7 h-7 rounded-md grid place-items-center shadow hover:shadow-md active:scale-95 transition";
+//   const heartInactive = "bg-white ring-1 ring-[#BE3D2A]/30 text-[#BE3D2A]";
+//   const heartActive = "bg-[#BE3D2A] text-white";
+//   const cartInactive = "bg-white ring-1 ring-[#102E50]/30 text-[#102E50]";
+//   const cartActive = "bg-[#102E50] text-[#FFF6E9]";
+
+//   const totalReactions = (rc) => {
+//     if (!rc || typeof rc !== "object") return 0;
+//     return Object.values(rc).reduce((a, b) => a + Number(b || 0), 0);
+//   };
+
+//   return (
+//     <div className="min-h-screen bg-[#FFF6E9] text-[#0f2a47]">
+//       <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 pb-8 md:pb-10">
+//         <div className="sticky top-0 z-20 pt-4 pb-4 bg-[#FFF6E9]/95 backdrop-blur supports-[backdrop-filter]:bg-[#FFF6E9]/80">
+//           <div className="rounded-[1.6rem] p-[1.2px] bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]">
+//             <div className="rounded-[1.6rem] bg-white/95">
+//               <div className="p-4 sm:p-6 flex flex-col gap-4">
+//                 <div className="flex flex-col md:flex-row gap-3 md:gap-4">
+//                   <div className="flex-1 relative">
+//                     <span className="absolute inset-y-0 left-3 flex items-center text-[#0f2a47]/60 pointer-events-none">
+//                       <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79L19 20.49 20.49 19 15.5 14ZM9.5 14A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14Z"/></svg>
+//                     </span>
+//                     <input
+//                       value={textSearch}
+//                       onChange={(e) => setTextSearch(e.target.value)}
+//                       placeholder="Search services or providers"
+//                       className={`${field} w-full pl-10`}
+//                       aria-label="Search services or providers"
+//                     />
+//                   </div>
+//                   <div className="flex items-center gap-2 sm:gap-3">
+//                     <span className="text-sm font-semibold">Category</span>
+//                     <select
+//                       value={selectore}
+//                       onChange={(e) => setSelectore(e.target.value)}
+//                       className={field}
+//                       aria-label="Select category"
+//                     >
+//                       <option value="">All</option>
+//                       {categories.map((cat, i) => (
+//                         <option key={i} value={cat}>{cat}</option>
+//                       ))}
+//                     </select>
+//                     <button
+//                       onClick={() => {
+//                         setTextSearch("");
+//                         setSelectore("");
+//                       }}
+//                       className="h-12 px-4 rounded-2xl bg-white text-[#0f2a47] text-sm font-semibold ring-1 ring-[#0f2a47]/15 hover:ring-[#F5C45E] transition"
+//                       aria-label="Reset filters"
+//                     >
+//                       Reset
+//                     </button>
+//                   </div>
+//                 </div>
+
+//                 <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pt-1">
+//                   <button
+//                     onClick={() => setSelectore("")}
+//                     className={`px-4 h-10 rounded-xl text-sm font-semibold ring-1 transition ${selectore === "" ? "bg-[#102E50] text-[#FFF6E9] ring-transparent" : "bg-white text-[#0f2a47] ring-[#0f2a47]/15 hover:ring-[#F5C45E]"}`}
+//                     aria-pressed={selectore === ""}
+//                     aria-label="Filter All"
+//                   >
+//                     All
+//                   </button>
+//                   {categories.map((cat) => (
+//                     <button
+//                       key={cat}
+//                       onClick={() => setSelectore(cat)}
+//                       className={`px-4 h-10 rounded-xl text-sm font-semibold ring-1 transition ${selectore === cat ? "bg-[#102E50] text-[#FFF6E9] ring-transparent" : "bg-white text-[#0f2a47] ring-[#0f2a47]/15 hover:ring-[#F5C45E]"}`}
+//                       aria-pressed={selectore === cat}
+//                       aria-label={`Filter ${cat}`}
+//                     >
+//                       {cat}
+//                     </button>
+//                   ))}
+//                 </div>
+//               </div>
 //             </div>
 //           </div>
 //         </div>
 
-//         {/* Grid */}
-//         <div className="grid gap-3 sm:gap-4 md:gap-5 grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-//           {resultOfFilter.map((card, idx) => (
-//             <div
-//               key={idx}
-//               className="group rounded-xl sm:rounded-2xl bg-white shadow-sm ring-1 ring-[#102E50]/10 hover:ring-[#F5C45E] transition overflow-hidden"
-//             >
-//               {/* Image */}
-//               <div className="w-full aspect-[4/3] overflow-hidden bg-[#102E50]/5">
-//                 <img
-//                   src={
-//                     card.image
-//                       ? card.image.startsWith("http")
-//                         ? card.image
-//                         : `http://localhost:${port}${card.image}`
-//                       : defaultImg
-//                   }
-//                   alt={card.name}
-//                   className="w-full h-full object-cover transition duration-300 group-hover:scale-105 cursor-pointer"
-//                   onClick={() => {
-//                     navigate("/productdatails", { state: card });
-//                   }}
-//                 />
+//         {loading ? (
+//           <div className="mt-6 grid gap-4 sm:gap-5 md:gap-6 grid-cols-1 xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+//             {Array.from({ length: 8 }).map((_, i) => (
+//               <div key={i} className="rounded-2xl overflow-hidden bg-white ring-1 ring-[#0f2a47]/10 animate-pulse">
+//                 <div className="w-full h-60 sm:h-64 md:h-72 bg-[#0f2a47]/10" />
+//                 <div className="p-5 space-y-3">
+//                   <div className="h-5 w-2/3 bg-[#0f2a47]/10 rounded" />
+//                   <div className="h-4 w-1/2 bg-[#0f2a47]/10 rounded" />
+//                   <div className="h-10 w-full bg-[#0f2a47]/10 rounded-2xl" />
+//                 </div>
 //               </div>
+//             ))}
+//           </div>
+//         ) : (
+//           <>
+//             <div className="mt-6 grid gap-4 sm:gap-5 md:gap-6 grid-cols-1 xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+//               {filtered.map((card, i) => {
+//                 const pid = Number(card?.product_id);
+//                 const isFav = favIds.has(pid);
+//                 const inCart = cartIds.has(pid);
+//                 const rcCount = totalReactions(card?.reaction_counts);
 
-//               {/* Body */}
-//               <div className="p-3 sm:p-4">
-//                 <div className="flex items-start justify-between gap-2">
-//                   <div className="min-w-0">
-//                     <h3 className="font-semibold text-[#102E50] text-sm sm:text-base line-clamp-1">
-//                       {card.name}
-//                     </h3>
-//                     <p className="text-xs sm:text-sm text-[#102E50]/70 line-clamp-1">
-//                       {card.firstname} {card.lastname}
-//                     </p>
-//                   </div>
-//                   <span className="shrink-0 rounded-md bg-[#F5C45E] text-[#102E50] text-[10px] sm:text-xs font-semibold px-2 py-0.5 sm:px-2.5 sm:py-1">
-//                     {card.location || "Location"}
-//                   </span>
-//                 </div>
+//                 return (
+//                   <button
+//                     key={i}
+//                     onClick={() =>
+//                       isLogged
+//                         ? navigate(`/productdatails?product_id=${pid}`, { state: { product_id: pid } })
+//                         : navigate("/login")
+//                     }
+//                     className="group rounded-2xl bg-white ring-1 ring-[#102E50]/10 hover:ring-[#F5C45E] shadow-[0_14px_50px_rgba(16,46,80,0.10)] overflow-hidden text-left transition"
+//                   >
+//                     <div className="relative w-full h-60 sm:h-64 md:h-72 bg-[#0f2a47]/5">
+//                       <img
+//                         src={toImg(card?.image)}
+//                         alt={card?.name || "Product image"}
+//                         loading="lazy"
+//                         decoding="async"
+//                         className="w-full h-full object-cover object-center transition duration-500 group-hover:scale-[1.03]"
+//                         onError={(e) => {
+//                           e.currentTarget.src = defaultImg;
+//                         }}
+//                       />
+//                       <div className="absolute left-3 top-3 inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-[10px] font-bold bg-white/90 text-[#102E50] ring-1 ring-[#102E50]/10">
+//                         <span className="w-1.5 h-1.5 rounded-full bg-[#F5C45E]" />
+//                         {card?.category_name}
+//                       </div>
+//                     </div>
 
-//                 <div className="mt-2 sm:mt-3 text-[#102E50]">
-//                   <span className="text-base sm:text-lg font-extrabold">
-//                     ${card.price}
-//                   </span>
-//                 </div>
+//                     <div className="px-2.5 sm:px-3 py-2 bg-[#F5C45E]/18 ring-1 ring-[#F5C45E]/35 flex items-center gap-2 justify-between">
+//                       <span className="shrink-0 inline-flex items-center rounded-lg bg-white/90 text-[#102E50] ring-1 ring-[#102E50]/10 text-[11px] sm:text-xs font-extrabold px-2 py-1">
+//                         {money.format(card?.price || 0)}
+//                       </span>
 
-//                 {CusData.user.role === "customer" && (
-//                   <div className="mt-3 sm:mt-4 flex flex-col xs:flex-row gap-2">
-//                     <button
-//                       onClick={() => AddTOFav(card, CusData)}
-//                       className="w-full xs:w-auto px-3 sm:px-4 py-2 rounded-lg sm:rounded-xl bg-[#BE3D2A] text-white text-sm sm:text-base font-semibold shadow hover:shadow-md active:scale-[0.99] transition"
-//                     >
-//                       Add to Favorites
-//                     </button>
-//                     <button
-//                       onClick={() => AddToCart(card, CusData)}
-//                       className="w-full xs:w-auto px-3 sm:px-4 py-2 rounded-lg sm:rounded-xl bg-[#102E50] text-[#FFF6E9] text-sm sm:text-base font-semibold shadow hover:shadow-md active:scale-[0.99] transition"
-//                     >
-//                       Add to Cart
-//                     </button>
-//                   </div>
-//                 )}
+//                       <span className="min-w-0 text-[#0f2a47] font-semibold text-[11px] sm:text-xs leading-tight truncate">
+//                         {card?.name}
+//                       </span>
 
-//                 {/* Reaction buttons styled wrapper */}
-//                 <div
-//                   className="mt-3 sm:mt-4
-//                     [&_button]:px-3 [&_button]:h-9 [&_button]:rounded-lg
-//                     [&_button]:bg-[#102E50]/5 [&_button]:text-[#102E50] [&_button]:text-sm [&_button]:font-semibold
-//                     [&_button]:ring-1 [&_button]:ring-[#102E50]/10
-//                     [&_button]:hover:bg-[#F5C45E]/20 [&_button]:hover:ring-[#F5C45E]
-//                     [&_button]:transition [&_button]:shadow-sm [&_button]:active:scale-[0.98]
-//                     [&_button]:disabled:opacity-50 [&_button]:disabled:cursor-not-allowed
-//                     [&_.count]:text-xs [&_.count]:text-[#102E50]/70 [&_.count]:ml-1"
-//                 >
-//                   <ReactionPicker
-//                     card={card}
-//                     product_id={card.product_id}
-//                     userId={CusData.user.user_id}
-//                     onReactionUpdate={(
-//                       product_id,
-//                       reactionCounts,
-//                       selectedReaction
-//                     ) => {
-//                       setCards((prevCards) =>
-//                         prevCards.map((c) =>
-//                           c.product_id === product_id
-//                             ? {
-//                                 ...c,
-//                                 reaction_counts: reactionCounts,
-//                                 selectedReaction: selectedReaction,
+//                       {role === "customer" && (
+//                         <div className="shrink-0 flex items-center gap-2">
+//                           <span
+//                             onClick={async (e) => {
+//                               e.stopPropagation();
+//                               try {
+//                                 await withMutedAlerts(() => window.AddTOFav ? window.AddTOFav(card, CusData) : Promise.reject(new Error("AddTOFav not provided")));
+//                                 const next = new Set(favIds);
+//                                 if (isFav) next.delete(pid);
+//                                 else next.add(pid);
+//                                 setFavIds(next);
+//                                 await alertSuccess("Updated", isFav ? "Removed from favorites." : "Added to favorites.");
+//                               } catch (e2) {
+//                                 const m = e2?.response?.data?.error || e2?.message || "Failed to update favorite";
+//                                 await alertError(m);
 //                               }
-//                             : c
-//                         )
-//                       );
-//                     }}
-//                   />
+//                             }}
+//                             className={`${iconBtnBase} ${isFav ? heartActive : heartInactive}`}
+//                             title={isFav ? "In favorites" : "Add to favorites"}
+//                             aria-label="Favorite"
+//                           >
+//                             <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="currentColor" aria-hidden="true">
+//                               <path d="M12 21s-6.72-4.32-9.33-7.38A5.5 5.5 0 0 1 12 5.24a5.5 5.5 0 0 1 9.33 8.38C18.72 16.68 12 21 12 21Z" />
+//                             </svg>
+//                           </span>
+
+//                           <span
+//                             onClick={async (e) => {
+//                               e.stopPropagation();
+//                               try {
+//                                 if (inCart) {
+//                                   const r = await Swal.fire({
+//                                     title: "Already in cart",
+//                                     text: "Remove this item from your cart?",
+//                                     icon: "info",
+//                                     showCancelButton: true,
+//                                     confirmButtonText: "Remove",
+//                                     cancelButtonText: "Keep",
+//                                     confirmButtonColor: "#BE3D2A",
+//                                     cancelButtonColor: "#102E50",
+//                                     background: "#FFF6E9",
+//                                     color: "#102E50",
+//                                   });
+//                                   if (!r.isConfirmed) return;
+//                                 }
+//                                 await withMutedAlerts(() => AddToCart(card, CusData));
+//                                 const next = new Set(cartIds);
+//                                 if (inCart) next.delete(pid);
+//                                 else next.add(pid);
+//                                 setCartIds(next);
+//                                 await alertSuccess(inCart ? "Removed from cart" : "Added to cart", inCart ? "Item removed." : "Item added successfully.");
+//                               } catch (e2) {
+//                                 const m = e2?.response?.data?.error || e2?.message || "Failed to update cart";
+//                                 await alertError(m);
+//                               }
+//                             }}
+//                             className={`${iconBtnBase} ${inCart ? cartActive : cartInactive}`}
+//                             title={inCart ? "In cart" : "Add to cart"}
+//                             aria-label="Add to Cart"
+//                           >
+//                             <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+//                               <circle cx="9" cy="21" r="1" />
+//                               <circle cx="20" cy="21" r="1" />
+//                               <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h7.72a2 2 0 0 0 2-1.61L23 6H6" />
+//                             </svg>
+//                           </span>
+//                         </div>
+//                       )}
+//                     </div>
+
+//                     <div className="px-4 sm:px-5 pb-4 sm:pb-5">
+//                       <button
+//                         onClick={(e) => {
+//                           e.stopPropagation();
+//                           setOpenReactions((prev) => ({ ...prev, [pid]: !prev[pid] }));
+//                         }}
+//                         className="w-full h-10 rounded-xl bg-white text-[#0f2a47] text-sm font-semibold ring-1 ring-[#F5C45E]/40 hover:ring-[#F5C45E] transition inline-flex items-center justify-center gap-2"
+//                         aria-expanded={Boolean(openReactions[pid])}
+//                         title="Reactions"
+//                       >
+//                         <span className="text-base">🙂</span>
+//                         <span>Reactions</span>
+//                         <span className="inline-flex items-center justify-center min-w-[26px] h-6 px-2 rounded-full text-xs font-bold bg-[#F5C45E]/20 ring-1 ring-[#F5C45E]/50">
+//                           {rcCount}
+//                         </span>
+//                       </button>
+//                       {openReactions[pid] && (
+//                         <div className="mt-3 rounded-2xl bg-[#F5C45E]/15 ring-1 ring-[#F5C45E]/40 px-3 py-2" onClick={(e) => e.stopPropagation()}>
+//                           <div className="flex flex-wrap gap-2">
+//                             <ReactionPicker
+//                               card={card}
+//                               product_id={pid}
+//                               userId={uid}
+//                               onReactionUpdate={(product_id, reactionCounts, selectedReaction) => {
+//                                 setCards((prev) =>
+//                                   prev.map((c) =>
+//                                     c.product_id === product_id ? { ...c, reaction_counts: reactionCounts, selectedReaction } : c
+//                                   )
+//                                 );
+//                               }}
+//                             />
+//                           </div>
+//                         </div>
+//                       )}
+//                     </div>
+
+//                     <div className="h-0.5 w-full bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]" />
+//                   </button>
+//                 );
+//               })}
+//             </div>
+
+//             {!loading && filtered.length === 0 && (
+//               <div className="text-center text-[#0f2a47] mt-14">
+//                 <div className="inline-flex items-center gap-3 px-5 py-3 rounded-2xl bg-white ring-1 ring-[#0f2a47]/10">
+//                   <span className="w-2 h-2 rounded-full bg-[#F5C45E] animate-pulse" />
+//                   No results. Try another search or category.
 //                 </div>
 //               </div>
+//             )}
+//           </>
+//         )}
 
-//               {/* Accent bar */}
-//               <div className="h-1 w-full bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]" />
+//         <div className="mt-10 text-center">
+//           <button
+//             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+//             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white text-[#0f2a47] ring-1 ring-[#0f2a47]/10 hover:ring-[#F5C45E] transition"
+//             aria-label="Back to top"
+//           >
+//             <span className="w-2 h-2 rounded-full bg-[#F5C45E] animate-pulse" />
+//             Back to top
+//           </button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+
+
+
+
+
+
+
+
+// import axios from "axios";
+// import { useEffect, useMemo, useState, useCallback } from "react";
+// import { useSelector } from "react-redux";
+// import { useNavigate } from "react-router-dom";
+// import Swal from "sweetalert2";
+// import defaultImg from "../assets/NoImage.png";
+// import { useAddToCart } from "./AddToCart";
+
+// export default function GitAllProduct() {
+//   const navigate = useNavigate();
+//   const { AddToCart } = useAddToCart();
+//   const CusData = useSelector((s) => s.UserInfo);
+//   const uid = CusData?.user?.user_id;
+//   const role = CusData?.user?.role;
+//   const token = useSelector((s) => s.UserInfo?.token);
+//   const isLogged = Boolean(token);
+
+//   const port = import.meta.env.VITE_PORT;
+//   const apiBase = useMemo(() => `http://localhost:${port}`, [port]);
+
+//   const [cards, setCards] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [textSearch, setTextSearch] = useState("");
+//   const [debouncedSearch, setDebouncedSearch] = useState("");
+//   const [selectore, setSelectore] = useState("");
+//   const [favIds, setFavIds] = useState(new Set());
+//   const [cartIds, setCartIds] = useState(new Set());
+
+//   const withMutedAlerts = useCallback(async (fn) => {
+//     const prev = window.alert;
+//     window.alert = () => {};
+//     try {
+//       return await fn();
+//     } finally {
+//       window.alert = prev;
+//     }
+//   }, []);
+
+//   const alertError = useCallback(async (message) => {
+//     await Swal.fire({
+//       title: "Error",
+//       text: message,
+//       icon: "error",
+//       confirmButtonText: "OK",
+//       confirmButtonColor: "#BE3D2A",
+//       background: "#FFF6E9",
+//       color: "#102E50",
+//     });
+//   }, []);
+
+//   const alertSuccess = useCallback(async (title, text) => {
+//     await Swal.fire({
+//       title,
+//       text,
+//       icon: "success",
+//       confirmButtonText: "OK",
+//       confirmButtonColor: "#102E50",
+//       background: "#FFF6E9",
+//       color: "#102E50",
+//     });
+//   }, []);
+
+//   useEffect(() => {
+//     const t = setTimeout(() => setDebouncedSearch(textSearch), 250);
+//     return () => clearTimeout(t);
+//   }, [textSearch]);
+
+//   useEffect(() => {
+//     const run = async () => {
+//       if (!uid) return;
+//       try {
+//         setLoading(true);
+//         const res = await axios.get(`${apiBase}/api/ShowCardInUserDashboard/${uid}`);
+//         setCards(Array.isArray(res.data) ? res.data : []);
+//       } catch {
+//         setCards([]);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+//     run();
+//   }, [apiBase, uid]);
+
+//   const loadFavs = useCallback(async () => {
+//     try {
+//       if (!token) return;
+//       const { data } = await axios.get(`${apiBase}/api/wishlist`.replace("/api/api", "/api"), {
+//         headers: { Authorization: `Bearer ${token}` },
+//       });
+//       const list = Array.isArray(data?.items) ? data.items : [];
+//       setFavIds(new Set(list.map((x) => Number(x.product_id))));
+//     } catch {}
+//   }, [apiBase, token]);
+
+//   const loadCartIds = useCallback(async () => {
+//     try {
+//       if (!uid || !token) return;
+//       const res = await axios.get(`${apiBase}/api/carts/products/${uid}`.replace("/api/api", "/api"), {
+//         headers: { Authorization: `Bearer ${token}` },
+//       });
+//       const list = Array.isArray(res.data?.cards) ? res.data.cards : [];
+//       setCartIds(new Set(list.map((c) => Number(c.product_id))));
+//     } catch {}
+//   }, [apiBase, token, uid]);
+
+//   useEffect(() => {
+//     loadFavs();
+//     loadCartIds();
+//   }, [loadFavs, loadCartIds]);
+
+//   const categories = useMemo(
+//     () => [...new Set(cards.map((c) => c?.category_name).filter(Boolean))],
+//     [cards]
+//   );
+
+//   const toImg = useCallback(
+//     (img) => {
+//       if (!img) return defaultImg;
+//       const s = String(img).trim();
+//       if (s.startsWith("http")) return s;
+//       return `${apiBase}${s.startsWith("/") ? "" : "/"}${s}`;
+//     },
+//     [apiBase]
+//   );
+
+//   const money = useMemo(() => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }), []);
+
+//   const filtered = cards.filter((card) => {
+//     const byName = (card?.name || "").toLowerCase().includes(debouncedSearch.toLowerCase());
+//     const byCat = !selectore || (card?.category_name || "").toLowerCase() === String(selectore).toLowerCase();
+//     return byName && byCat;
+//   });
+
+//   const field =
+//     "h-12 px-4 rounded-2xl bg-white/95 text-[#0f2a47] placeholder-[#0f2a47]/60 text-sm outline-none ring-1 ring-[#0f2a47]/15 focus:ring-2 focus:ring-[#F5C45E] transition";
+
+//   const iconBtnBase = "w-7 h-7 rounded-md grid place-items-center shadow hover:shadow-md active:scale-95 transition";
+//   const heartInactive = "bg-white ring-1 ring-[#BE3D2A]/30 text-[#BE3D2A]";
+//   const heartActive = "bg-[#BE3D2A] text-white";
+//   const cartInactive = "bg-white ring-1 ring-[#102E50]/30 text-[#102E50]";
+//   const cartActive = "bg-[#102E50] text-[#FFF6E9]";
+
+//   const handleReact = useCallback(
+//     async (e, product_id, reactionKey) => {
+//       e.stopPropagation();
+//       if (!isLogged) {
+//         navigate("/login");
+//         return;
+//       }
+//       const allowed = ["love", "support", "proud"];
+//       if (!allowed.includes(reactionKey)) return;
+
+//       const prevCards = cards;
+//       const nextCards = cards.map((c) => {
+//         if (Number(c.product_id) !== Number(product_id)) return c;
+//         const prevSelected = c.selectedReaction || null;
+//         const counts = { love: 0, support: 0, proud: 0, ...(c.reaction_counts || {}) };
+//         if (prevSelected && counts[prevSelected] > 0) counts[prevSelected] = Number(counts[prevSelected]) - 1;
+//         let newSelected = reactionKey;
+//         if (prevSelected === reactionKey) {
+//           newSelected = null;
+//         } else {
+//           counts[reactionKey] = Number(counts[reactionKey] || 0) + 1;
+//         }
+//         return { ...c, reaction_counts: counts, selectedReaction: newSelected };
+//       });
+
+//       setCards(nextCards);
+
+//       try {
+//         const currentSelected =
+//           nextCards.find((c) => Number(c.product_id) === Number(product_id))?.selectedReaction || null;
+//         await axios.post(
+//           `${apiBase}/api/products/${product_id}/react`,
+//           { reaction: currentSelected },
+//           { headers: { Authorization: `Bearer ${token}` } }
+//         );
+//       } catch (err) {
+//         setCards(prevCards);
+//         const m = err?.response?.data?.error || "Failed to react on this product";
+//         await alertError(m);
+//       }
+//     },
+//     [apiBase, token, isLogged, navigate, cards, alertError]
+//   );
+
+//   return (
+//     <div className="min-h-screen bg-[#FFF6E9] text-[#0f2a47]">
+//       <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 pb-8 md:pb-10">
+//         <div className="sticky top-0 z-20 pt-4 pb-4 bg-[#FFF6E9]/95 backdrop-blur supports-[backdrop-filter]:bg-[#FFF6E9]/80">
+//           <div className="rounded-[1.6rem] p-[1.2px] bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]">
+//             <div className="rounded-[1.6rem] bg-white/95">
+//               <div className="p-4 sm:p-6 flex flex-col gap-4">
+//                 <div className="flex flex-col md:flex-row gap-3 md:gap-4">
+//                   <div className="flex-1 relative">
+//                     <span className="absolute inset-y-0 left-3 flex items-center text-[#0f2a47]/60 pointer-events-none">
+//                       <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79L19 20.49 20.49 19 15.5 14ZM9.5 14A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14Z"/></svg>
+//                     </span>
+//                     <input
+//                       value={textSearch}
+//                       onChange={(e) => setTextSearch(e.target.value)}
+//                       placeholder="Search services or providers"
+//                       className={`${field} w-full pl-10`}
+//                       aria-label="Search services or providers"
+//                     />
+//                   </div>
+//                   <div className="flex items-center gap-2 sm:gap-3">
+//                     <span className="text-sm font-semibold">Category</span>
+//                     <select
+//                       value={selectore}
+//                       onChange={(e) => setSelectore(e.target.value)}
+//                       className={field}
+//                       aria-label="Select category"
+//                     >
+//                       <option value="">All</option>
+//                       {categories.map((cat, i) => (
+//                         <option key={i} value={cat}>{cat}</option>
+//                       ))}
+//                     </select>
+//                     <button
+//                       onClick={() => {
+//                         setTextSearch("");
+//                         setSelectore("");
+//                       }}
+//                       className="h-12 px-4 rounded-2xl bg-white text-[#0f2a47] text-sm font-semibold ring-1 ring-[#0f2a47]/15 hover:ring-[#F5C45E] transition"
+//                       aria-label="Reset filters"
+//                     >
+//                       Reset
+//                     </button>
+//                   </div>
+//                 </div>
+
+//                 <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pt-1">
+//                   <button
+//                     onClick={() => setSelectore("")}
+//                     className={`px-4 h-10 rounded-xl text-sm font-semibold ring-1 transition ${selectore === "" ? "bg-[#102E50] text-[#FFF6E9] ring-transparent" : "bg-white text-[#0f2a47] ring-[#0f2a47]/15 hover:ring-[#F5C45E]"}`}
+//                     aria-pressed={selectore === ""}
+//                     aria-label="Filter All"
+//                   >
+//                     All
+//                   </button>
+//                   {categories.map((cat) => (
+//                     <button
+//                       key={cat}
+//                       onClick={() => setSelectore(cat)}
+//                       className={`px-4 h-10 rounded-xl text-sm font-semibold ring-1 transition ${selectore === cat ? "bg-[#102E50] text-[#FFF6E9] ring-transparent" : "bg-white text-[#0f2a47] ring-[#0f2a47]/15 hover:ring-[#F5C45E]"}`}
+//                       aria-pressed={selectore === cat}
+//                       aria-label={`Filter ${cat}`}
+//                     >
+//                       {cat}
+//                     </button>
+//                   ))}
+//                 </div>
+//               </div>
 //             </div>
-//           ))}
+//           </div>
+//         </div>
+
+//         {loading ? (
+//           <div className="mt-6 grid gap-4 sm:gap-5 md:gap-6 grid-cols-1 xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+//             {Array.from({ length: 8 }).map((_, i) => (
+//               <div key={i} className="rounded-2xl overflow-hidden bg-white ring-1 ring-[#0f2a47]/10 animate-pulse">
+//                 <div className="w-full h-60 sm:h-64 md:h-72 bg-[#0f2a47]/10" />
+//                 <div className="p-5 space-y-3">
+//                   <div className="h-5 w-2/3 bg-[#0f2a47]/10 rounded" />
+//                   <div className="h-4 w-1/2 bg-[#0f2a47]/10 rounded" />
+//                   <div className="h-10 w-full bg-[#0f2a47]/10 rounded-2xl" />
+//                 </div>
+//               </div>
+//             ))}
+//           </div>
+//         ) : (
+//           <>
+//             <div className="mt-6 grid gap-4 sm:gap-5 md:gap-6 grid-cols-1 xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+//               {filtered.map((card, i) => {
+//                 const pid = Number(card?.product_id);
+//                 const isFav = favIds.has(pid);
+//                 const inCart = cartIds.has(pid);
+
+//                 return (
+//                   <button
+//                     key={i}
+//                     onClick={() =>
+//                       isLogged
+//                         ? navigate(`/productdatails?product_id=${pid}`, { state: { product_id: pid } })
+//                         : navigate("/login")
+//                     }
+//                     className="group rounded-2xl bg-white ring-1 ring-[#102E50]/10 hover:ring-[#F5C45E] shadow-[0_14px_50px_rgba(16,46,80,0.10)] overflow-hidden text-left transition"
+//                   >
+//                     <div className="relative w-full h-60 sm:h-64 md:h-72 bg-[#0f2a47]/5">
+//                       <img
+//                         src={toImg(card?.image)}
+//                         alt={card?.name || "Product image"}
+//                         loading="lazy"
+//                         decoding="async"
+//                         className="w-full h-full object-cover object-center transition duration-500 group-hover:scale-[1.03]"
+//                         onError={(e) => {
+//                           e.currentTarget.src = defaultImg;
+//                         }}
+//                       />
+//                       <div className="absolute left-3 top-3 inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-[10px] font-bold bg-white/90 text-[#102E50] ring-1 ring-[#102E50]/10">
+//                         <span className="w-1.5 h-1.5 rounded-full bg-[#F5C45E]" />
+//                         {card?.category_name}
+//                       </div>
+//                     </div>
+
+//                     <div className="px-2.5 sm:px-3 py-2 bg-[#F5C45E]/18 ring-1 ring-[#F5C45E]/35 flex items-center gap-2 justify-between">
+//                       <span className="shrink-0 inline-flex items-center rounded-lg bg-white/90 text-[#102E50] ring-1 ring-[#102E50]/10 text-[11px] sm:text-xs font-extrabold px-2 py-1">
+//                         {money.format(card?.price || 0)}
+//                       </span>
+
+//                       <span className="min-w-0 text-[#0f2a47] font-semibold text-[11px] sm:text-xs leading-tight truncate">
+//                         {card?.name}
+//                       </span>
+
+//                       {role === "customer" && (
+//                         <div className="shrink-0 flex items-center gap-2">
+//                           <span
+//                             onClick={async (e) => {
+//                               e.stopPropagation();
+//                               try {
+//                                 await withMutedAlerts(() => window.AddTOFav ? window.AddTOFav(card, CusData) : Promise.reject(new Error("AddTOFav not provided")));
+//                                 const next = new Set(favIds);
+//                                 if (isFav) next.delete(pid);
+//                                 else next.add(pid);
+//                                 setFavIds(next);
+//                                 await alertSuccess("Updated", isFav ? "Removed from favorites." : "Added to favorites.");
+//                               } catch (e2) {
+//                                 const m = e2?.response?.data?.error || e2?.message || "Failed to update favorite";
+//                                 await alertError(m);
+//                               }
+//                             }}
+//                             className={`${iconBtnBase} ${isFav ? heartActive : heartInactive}`}
+//                             title={isFav ? "In favorites" : "Add to favorites"}
+//                             aria-label="Favorite"
+//                           >
+//                             <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="currentColor" aria-hidden="true">
+//                               <path d="M12 21s-6.72-4.32-9.33-7.38A5.5 5.5 0 0 1 12 5.24a5.5 5.5 0 0 1 9.33 8.38C18.72 16.68 12 21 12 21Z" />
+//                             </svg>
+//                           </span>
+
+//                           <span
+//                             onClick={async (e) => {
+//                               e.stopPropagation();
+//                               try {
+//                                 if (inCart) {
+//                                   const r = await Swal.fire({
+//                                     title: "Already in cart",
+//                                     text: "Remove this item from your cart?",
+//                                     icon: "info",
+//                                     showCancelButton: true,
+//                                     confirmButtonText: "Remove",
+//                                     cancelButtonText: "Keep",
+//                                     confirmButtonColor: "#BE3D2A",
+//                                     cancelButtonColor: "#102E50",
+//                                     background: "#FFF6E9",
+//                                     color: "#102E50",
+//                                   });
+//                                   if (!r.isConfirmed) return;
+//                                 }
+//                                 await withMutedAlerts(() => AddToCart(card, CusData));
+//                                 const next = new Set(cartIds);
+//                                 if (inCart) next.delete(pid);
+//                                 else next.add(pid);
+//                                 setCartIds(next);
+//                                 await alertSuccess(inCart ? "Removed from cart" : "Added to cart", inCart ? "Item removed." : "Item added successfully.");
+//                               } catch (e2) {
+//                                 const m = e2?.response?.data?.error || e2?.message || "Failed to update cart";
+//                                 await alertError(m);
+//                               }
+//                             }}
+//                             className={`${iconBtnBase} ${inCart ? cartActive : cartInactive}`}
+//                             title={inCart ? "In cart" : "Add to cart"}
+//                             aria-label="Add to Cart"
+//                           >
+//                             <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+//                               <circle cx="9" cy="21" r="1" />
+//                               <circle cx="20" cy="21" r="1" />
+//                               <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h7.72a2 2 0 0 0 2-1.61L23 6H6" />
+//                             </svg>
+//                           </span>
+//                         </div>
+//                       )}
+//                     </div>
+
+
+
+
+
+
+
+
+
+
+//                     <div className="px-4 sm:px-5 pb-4 sm:pb-5">
+//                       <div className="h-10 w-full rounded-xl bg-white ring-1 ring-[#102E50]/10 flex items-center justify-around">
+//                         <button
+//                           onClick={(e) => handleReact(e, pid, "love")}
+//                           className={`text-xs font-extrabold inline-flex items-center gap-1 ${
+//                             card.selectedReaction === "love" ? "text-[#BE3D2A]" : "text-[#BE3D2A]/80 hover:text-[#BE3D2A]"
+//                           }`}
+//                           title="Love"
+//                           aria-label="Love reaction"
+//                         >
+//                           <span>❤️</span>
+//                           <span>{card.reaction_counts?.love || 0}</span>
+//                         </button>
+//                         <button
+//                           onClick={(e) => handleReact(e, pid, "support")}
+//                           className={`text-xs font-extrabold inline-flex items-center gap-1 ${
+//                             card.selectedReaction === "support" ? "text-[#16A34A]" : "text-[#16A34A]/80 hover:text-[#16A34A]"
+//                           }`}
+//                           title="Support"
+//                           aria-label="Support reaction"
+//                         >
+//                           <span>🤝</span>
+//                           <span>{card.reaction_counts?.support || 0}</span>
+//                         </button>
+//                         <button
+//                           onClick={(e) => handleReact(e, pid, "proud")}
+//                           className={`text-xs font-extrabold inline-flex items-center gap-1 ${
+//                             card.selectedReaction === "proud" ? "text-[#F5C45E]" : "text-[#F5C45E]/80 hover:text-[#F5C45E]"
+//                           }`}
+//                           title="Proud"
+//                           aria-label="Proud reaction"
+//                         >
+//                           <span>⭐</span>
+//                           <span>{card.reaction_counts?.proud || 0}</span>
+//                         </button>
+//                       </div>
+//                     </div>
+
+
+//                     <div className="h-0.5 w-full bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]" />
+//                   </button>
+//                 );
+//               })}
+//             </div>
+
+//             {!loading && filtered.length === 0 && (
+//               <div className="text-center text-[#0f2a47] mt-14">
+//                 <div className="inline-flex items-center gap-3 px-5 py-3 rounded-2xl bg-white ring-1 ring-[#0f2a47]/10">
+//                   <span className="w-2 h-2 rounded-full bg-[#F5C45E] animate-pulse" />
+//                   No results. Try another search or category.
+//                 </div>
+//               </div>
+//             )}
+//           </>
+//         )}
+
+//         <div className="mt-10 text-center">
+//           <button
+//             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+//             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white text-[#0f2a47] ring-1 ring-[#0f2a47]/10 hover:ring-[#F5C45E] transition"
+//             aria-label="Back to top"
+//           >
+//             <span className="w-2 h-2 rounded-full bg-[#F5C45E] animate-pulse" />
+//             Back to top
+//           </button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+
+
+
+//اوبشن بي B 
+// import axios from "axios";
+// import { useEffect, useMemo, useState, useCallback } from "react";
+// import { useSelector } from "react-redux";
+// import { useNavigate } from "react-router-dom";
+// import Swal from "sweetalert2";
+// import defaultImg from "../assets/NoImage.png";
+// import { useAddToCart } from "./AddToCart";
+
+// export default function GitAllProduct() {
+//   const navigate = useNavigate();
+//   const { AddToCart } = useAddToCart();
+//   const CusData = useSelector((s) => s.UserInfo);
+//   const uid = CusData?.user?.user_id;
+//   const role = CusData?.user?.role;
+//   const token = useSelector((s) => s.UserInfo?.token);
+//   const isLogged = Boolean(token);
+
+//   const port = import.meta.env.VITE_PORT;
+//   const apiBase = useMemo(() => `http://localhost:${port}`, [port]);
+
+//   const [cards, setCards] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [textSearch, setTextSearch] = useState("");
+//   const [debouncedSearch, setDebouncedSearch] = useState("");
+//   const [selectore, setSelectore] = useState("");
+//   const [favIds, setFavIds] = useState(new Set());
+//   const [cartIds, setCartIds] = useState(new Set());
+
+//   const withMutedAlerts = useCallback(async (fn) => {
+//     const prev = window.alert;
+//     window.alert = () => {};
+//     try {
+//       return await fn();
+//     } finally {
+//       window.alert = prev;
+//     }
+//   }, []);
+
+//   const alertError = useCallback(async (message) => {
+//     await Swal.fire({
+//       title: "Error",
+//       text: message,
+//       icon: "error",
+//       confirmButtonText: "OK",
+//       confirmButtonColor: "#BE3D2A",
+//       background: "#FFF6E9",
+//       color: "#102E50",
+//     });
+//   }, []);
+
+//   const alertSuccess = useCallback(async (title, text) => {
+//     await Swal.fire({
+//       title,
+//       text,
+//       icon: "success",
+//       confirmButtonText: "OK",
+//       confirmButtonColor: "#102E50",
+//       background: "#FFF6E9",
+//       color: "#102E50",
+//     });
+//   }, []);
+
+//   useEffect(() => {
+//     const t = setTimeout(() => setDebouncedSearch(textSearch), 250);
+//     return () => clearTimeout(t);
+//   }, [textSearch]);
+
+//   useEffect(() => {
+//     const run = async () => {
+//       if (!uid) return;
+//       try {
+//         setLoading(true);
+//         const res = await axios.get(`${apiBase}/api/ShowCardInUserDashboard/${uid}`);
+//         setCards(Array.isArray(res.data) ? res.data : []);
+//       } catch {
+//         setCards([]);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+//     run();
+//   }, [apiBase, uid]);
+
+//   const loadFavs = useCallback(async () => {
+//     try {
+//       if (!token) return;
+//       const { data } = await axios.get(`${apiBase}/api/wishlist`.replace("/api/api", "/api"), {
+//         headers: { Authorization: `Bearer ${token}` },
+//       });
+//       const list = Array.isArray(data?.items) ? data.items : [];
+//       setFavIds(new Set(list.map((x) => Number(x.product_id))));
+//     } catch {}
+//   }, [apiBase, token]);
+
+//   const loadCartIds = useCallback(async () => {
+//     try {
+//       if (!uid || !token) return;
+//       const res = await axios.get(`${apiBase}/api/carts/products/${uid}`.replace("/api/api", "/api"), {
+//         headers: { Authorization: `Bearer ${token}` },
+//       });
+//       const list = Array.isArray(res.data?.cards) ? res.data.cards : [];
+//       setCartIds(new Set(list.map((c) => Number(c.product_id))));
+//     } catch {}
+//   }, [apiBase, token, uid]);
+
+//   useEffect(() => {
+//     loadFavs();
+//     loadCartIds();
+//   }, [loadFavs, loadCartIds]);
+
+//   const categories = useMemo(
+//     () => [...new Set(cards.map((c) => c?.category_name).filter(Boolean))],
+//     [cards]
+//   );
+
+//   const toImg = useCallback(
+//     (img) => {
+//       if (!img) return defaultImg;
+//       const s = String(img).trim();
+//       if (s.startsWith("http")) return s;
+//       return `${apiBase}${s.startsWith("/") ? "" : "/"}${s}`;
+//     },
+//     [apiBase]
+//   );
+
+//   const money = useMemo(() => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }), []);
+
+//   const filtered = cards.filter((card) => {
+//     const byName = (card?.name || "").toLowerCase().includes(debouncedSearch.toLowerCase());
+//     const byCat = !selectore || (card?.category_name || "").toLowerCase() === String(selectore).toLowerCase();
+//     return byName && byCat;
+//   });
+
+//   const field =
+//     "h-12 px-4 rounded-2xl bg-white/95 text-[#0f2a47] placeholder-[#0f2a47]/60 text-sm outline-none ring-1 ring-[#0f2a47]/15 focus:ring-2 focus:ring-[#F5C45E] transition";
+
+//   const iconBtnBase = "w-7 h-7 rounded-md grid place-items-center shadow hover:shadow-md active:scale-95 transition";
+//   const heartInactive = "bg-white ring-1 ring-[#BE3D2A]/30 text-[#BE3D2A]";
+//   const heartActive = "bg-[#BE3D2A] text-white";
+//   const cartInactive = "bg-white ring-1 ring-[#102E50]/30 text-[#102E50]";
+//   const cartActive = "bg-[#102E50] text-[#FFF6E9]";
+
+//   const handleReact = useCallback(
+//     async (e, product_id, reactionKey) => {
+//       e.stopPropagation();
+//       if (!isLogged) {
+//         navigate("/login");
+//         return;
+//       }
+//       const allowed = ["love", "support", "proud"];
+//       if (!allowed.includes(reactionKey)) return;
+
+//       const prevCards = cards;
+//       const nextCards = cards.map((c) => {
+//         if (Number(c.product_id) !== Number(product_id)) return c;
+//         const prevSelected = c.selectedReaction || null;
+//         const counts = { love: 0, support: 0, proud: 0, ...(c.reaction_counts || {}) };
+//         if (prevSelected && counts[prevSelected] > 0) counts[prevSelected] = Number(counts[prevSelected]) - 1;
+//         let newSelected = reactionKey;
+//         if (prevSelected === reactionKey) {
+//           newSelected = null;
+//         } else {
+//           counts[reactionKey] = Number(counts[reactionKey] || 0) + 1;
+//         }
+//         return { ...c, reaction_counts: counts, selectedReaction: newSelected };
+//       });
+
+//       setCards(nextCards);
+
+//       try {
+//         const currentSelected =
+//           nextCards.find((c) => Number(c.product_id) === Number(product_id))?.selectedReaction || null;
+//         await axios.post(
+//           `${apiBase}/api/products/${product_id}/react`,
+//           { reaction: currentSelected },
+//           { headers: { Authorization: `Bearer ${token}` } }
+//         );
+//       } catch (err) {
+//         setCards(prevCards);
+//         const m = err?.response?.data?.error || "Failed to react on this product";
+//         await alertError(m);
+//       }
+//     },
+//     [apiBase, token, isLogged, navigate, cards, alertError]
+//   );
+
+//   return (
+//     <div className="min-h-screen bg-[#FFF6E9] text-[#0f2a47]">
+//       <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 pb-8 md:pb-10">
+//         <div className="sticky top-0 z-20 pt-4 pb-4 bg-[#FFF6E9]/95 backdrop-blur supports-[backdrop-filter]:bg-[#FFF6E9]/80">
+//           <div className="rounded-[1.6rem] p-[1.2px] bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]">
+//             <div className="rounded-[1.6rem] bg-white/95">
+//               <div className="p-4 sm:p-6 flex flex-col gap-4">
+//                 <div className="flex flex-col md:flex-row gap-3 md:gap-4">
+//                   <div className="flex-1 relative">
+//                     <span className="absolute inset-y-0 left-3 flex items-center text-[#0f2a47]/60 pointer-events-none">
+//                       <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79L19 20.49 20.49 19 15.5 14ZM9.5 14A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14Z"/></svg>
+//                     </span>
+//                     <input
+//                       value={textSearch}
+//                       onChange={(e) => setTextSearch(e.target.value)}
+//                       placeholder="Search services or providers"
+//                       className={`${field} w-full pl-10`}
+//                       aria-label="Search services or providers"
+//                     />
+//                   </div>
+//                   <div className="flex items-center gap-2 sm:gap-3">
+//                     <span className="text-sm font-semibold">Category</span>
+//                     <select
+//                       value={selectore}
+//                       onChange={(e) => setSelectore(e.target.value)}
+//                       className={field}
+//                       aria-label="Select category"
+//                     >
+//                       <option value="">All</option>
+//                       {categories.map((cat, i) => (
+//                         <option key={i} value={cat}>{cat}</option>
+//                       ))}
+//                     </select>
+//                     <button
+//                       onClick={() => {
+//                         setTextSearch("");
+//                         setSelectore("");
+//                       }}
+//                       className="h-12 px-4 rounded-2xl bg-white text-[#0f2a47] text-sm font-semibold ring-1 ring-[#0f2a47]/15 hover:ring-[#F5C45E] transition"
+//                       aria-label="Reset filters"
+//                     >
+//                       Reset
+//                     </button>
+//                   </div>
+//                 </div>
+
+//                 <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pt-1">
+//                   <button
+//                     onClick={() => setSelectore("")}
+//                     className={`px-4 h-10 rounded-xl text-sm font-semibold ring-1 transition ${selectore === "" ? "bg-[#102E50] text-[#FFF6E9] ring-transparent" : "bg-white text-[#0f2a47] ring-[#0f2a47]/15 hover:ring-[#F5C45E]"}`}
+//                     aria-pressed={selectore === ""}
+//                     aria-label="Filter All"
+//                   >
+//                     All
+//                   </button>
+//                   {categories.map((cat) => (
+//                     <button
+//                       key={cat}
+//                       onClick={() => setSelectore(cat)}
+//                       className={`px-4 h-10 rounded-xl text-sm font-semibold ring-1 transition ${selectore === cat ? "bg-[#102E50] text-[#FFF6E9] ring-transparent" : "bg-white text-[#0f2a47] ring-[#0f2a47]/15 hover:ring-[#F5C45E]"}`}
+//                       aria-pressed={selectore === cat}
+//                       aria-label={`Filter ${cat}`}
+//                     >
+//                       {cat}
+//                     </button>
+//                   ))}
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+
+//         {loading ? (
+//           <div className="mt-6 grid gap-4 sm:gap-5 md:gap-6 grid-cols-1 xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+//             {Array.from({ length: 8 }).map((_, i) => (
+//               <div key={i} className="rounded-2xl overflow-hidden bg-white ring-1 ring-[#0f2a47]/10 animate-pulse">
+//                 <div className="w-full h-60 sm:h-64 md:h-72 bg-[#0f2a47]/10" />
+//                 <div className="p-5 space-y-3">
+//                   <div className="h-5 w-2/3 bg-[#0f2a47]/10 rounded" />
+//                   <div className="h-4 w-1/2 bg-[#0f2a47]/10 rounded" />
+//                   <div className="h-10 w-full bg-[#0f2a47]/10 rounded-2xl" />
+//                 </div>
+//               </div>
+//             ))}
+//           </div>
+//         ) : (
+//           <>
+//             <div className="mt-6 grid gap-4 sm:gap-5 md:gap-6 grid-cols-1 xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+//               {filtered.map((card, i) => {
+//                 const pid = Number(card?.product_id);
+//                 const isFav = favIds.has(pid);
+//                 const inCart = cartIds.has(pid);
+//                 const rcCount =
+//                   Number(card?.reaction_counts?.love || 0) +
+//                   Number(card?.reaction_counts?.support || 0) +
+//                   Number(card?.reaction_counts?.proud || 0);
+
+//                 return (
+//                   <button
+//                     key={i}
+//                     onClick={() =>
+//                       isLogged
+//                         ? navigate(`/productdatails?product_id=${pid}`, { state: { product_id: pid } })
+//                         : navigate("/login")
+//                     }
+//                     className="group rounded-2xl bg-white ring-1 ring-[#102E50]/10 hover:ring-[#F5C45E] shadow-[0_14px_50px_rgba(16,46,80,0.10)] overflow-hidden text-left transition"
+//                   >
+//                     <div className="relative w-full h-60 sm:h-64 md:h-72 bg-[#0f2a47]/5">
+//                       <img
+//                         src={toImg(card?.image)}
+//                         alt={card?.name || "Product image"}
+//                         loading="lazy"
+//                         decoding="async"
+//                         className="w-full h-full object-cover object-center transition duration-500 group-hover:scale-[1.03]"
+//                         onError={(e) => {
+//                           e.currentTarget.src = defaultImg;
+//                         }}
+//                       />
+//                       <div className="absolute left-3 top-3 inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-[10px] font-bold bg-white/90 text-[#102E50] ring-1 ring-[#102E50]/10">
+//                         <span className="w-1.5 h-1.5 rounded-full bg-[#F5C45E]" />
+//                         {card?.category_name}
+//                       </div>
+
+//                       <div
+//                         className="absolute inset-x-3 bottom-3 flex items-center justify-between gap-2 rounded-xl backdrop-blur bg-white/70 ring-1 ring-[#102E50]/10 px-2 py-1.5"
+//                         onClick={(e)=>e.stopPropagation()}
+//                       >
+//                         <div className="flex items-center gap-2">
+//                           <button
+//                             onClick={(e)=>handleReact(e, pid, "love")}
+//                             className={`text-xs font-extrabold inline-flex items-center gap-1 ${
+//                               card.selectedReaction === "love" ? "text-[#BE3D2A]" : "text-[#BE3D2A]/80 hover:text-[#BE3D2A]"
+//                             }`}
+//                             title="Love"
+//                             aria-label="Love reaction"
+//                           >
+//                             <span>❤️</span>
+//                             <span>{card.reaction_counts?.love || 0}</span>
+//                           </button>
+//                           <button
+//                             onClick={(e)=>handleReact(e, pid, "support")}
+//                             className={`text-xs font-extrabold inline-flex items-center gap-1 ${
+//                               card.selectedReaction === "support" ? "text-[#16A34A]" : "text-[#16A34A]/80 hover:text-[#16A34A]"
+//                             }`}
+//                             title="Support"
+//                             aria-label="Support reaction"
+//                           >
+//                             <span>🤝</span>
+//                             <span>{card.reaction_counts?.support || 0}</span>
+//                           </button>
+//                           <button
+//                             onClick={(e)=>handleReact(e, pid, "proud")}
+//                             className={`text-xs font-extrabold inline-flex items-center gap-1 ${
+//                               card.selectedReaction === "proud" ? "text-[#F5C45E]" : "text-[#F5C45E]/80 hover:text-[#F5C45E]"
+//                             }`}
+//                             title="Proud"
+//                             aria-label="Proud reaction"
+//                           >
+//                             <span>⭐</span>
+//                             <span>{card.reaction_counts?.proud || 0}</span>
+//                           </button>
+//                         </div>
+//                         <span className="inline-flex items-center justify-center min-w-[26px] h-6 px-2 rounded-full text-xs font-bold bg-[#F5C45E]/20 ring-1 ring-[#F5C45E]/50">
+//                           {rcCount}
+//                         </span>
+//                       </div>
+//                     </div>
+
+//                     <div className="px-2.5 sm:px-3 py-2 bg-[#F5C45E]/18 ring-1 ring-[#F5C45E]/35 flex items-center gap-2 justify-between">
+//                       <span className="shrink-0 inline-flex items-center rounded-lg bg-white/90 text-[#102E50] ring-1 ring-[#102E50]/10 text-[11px] sm:text-xs font-extrabold px-2 py-1">
+//                         {money.format(card?.price || 0)}
+//                       </span>
+
+//                       <span className="min-w-0 text-[#0f2a47] font-semibold text-[11px] sm:text-xs leading-tight truncate">
+//                         {card?.name}
+//                       </span>
+
+//                       {role === "customer" && (
+//                         <div className="shrink-0 flex items-center gap-2">
+//                           <span
+//                             onClick={async (e) => {
+//                               e.stopPropagation();
+//                               try {
+//                                 await withMutedAlerts(() => window.AddTOFav ? window.AddTOFav(card, CusData) : Promise.reject(new Error("AddTOFav not provided")));
+//                                 const next = new Set(favIds);
+//                                 if (isFav) next.delete(pid);
+//                                 else next.add(pid);
+//                                 setFavIds(next);
+//                                 await alertSuccess("Updated", isFav ? "Removed from favorites." : "Added to favorites.");
+//                               } catch (e2) {
+//                                 const m = e2?.response?.data?.error || e2?.message || "Failed to update favorite";
+//                                 await alertError(m);
+//                               }
+//                             }}
+//                             className={`${iconBtnBase} ${isFav ? heartActive : heartInactive}`}
+//                             title={isFav ? "In favorites" : "Add to favorites"}
+//                             aria-label="Favorite"
+//                           >
+//                             <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="currentColor" aria-hidden="true">
+//                               <path d="M12 21s-6.72-4.32-9.33-7.38A5.5 5.5 0 0 1 12 5.24a5.5 5.5 0 0 1 9.33 8.38C18.72 16.68 12 21 12 21Z" />
+//                             </svg>
+//                           </span>
+
+//                           <span
+//                             onClick={async (e) => {
+//                               e.stopPropagation();
+//                               try {
+//                                 if (inCart) {
+//                                   const r = await Swal.fire({
+//                                     title: "Already in cart",
+//                                     text: "Remove this item from your cart?",
+//                                     icon: "info",
+//                                     showCancelButton: true,
+//                                     confirmButtonText: "Remove",
+//                                     cancelButtonText: "Keep",
+//                                     confirmButtonColor: "#BE3D2A",
+//                                     cancelButtonColor: "#102E50",
+//                                     background: "#FFF6E9",
+//                                     color: "#102E50",
+//                                   });
+//                                   if (!r.isConfirmed) return;
+//                                 }
+//                                 await withMutedAlerts(() => AddToCart(card, CusData));
+//                                 const next = new Set(cartIds);
+//                                 if (inCart) next.delete(pid);
+//                                 else next.add(pid);
+//                                 setCartIds(next);
+//                                 await alertSuccess(inCart ? "Removed from cart" : "Added to cart", inCart ? "Item removed." : "Item added successfully.");
+//                               } catch (e2) {
+//                                 const m = e2?.response?.data?.error || e2?.message || "Failed to update cart";
+//                                 await alertError(m);
+//                               }
+//                             }}
+//                             className={`${iconBtnBase} ${inCart ? cartActive : cartInactive}`}
+//                             title={inCart ? "In cart" : "Add to cart"}
+//                             aria-label="Add to Cart"
+//                           >
+//                             <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+//                               <circle cx="9" cy="21" r="1" />
+//                               <circle cx="20" cy="21" r="1" />
+//                               <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h7.72a2 2 0 0 0 2-1.61L23 6H6" />
+//                             </svg>
+//                           </span>
+//                         </div>
+//                       )}
+//                     </div>
+
+//                     <div className="h-0.5 w-full bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]" />
+//                   </button>
+//                 );
+//               })}
+//             </div>
+
+//             {!loading && filtered.length === 0 && (
+//               <div className="text-center text-[#0f2a47] mt-14">
+//                 <div className="inline-flex items-center gap-3 px-5 py-3 rounded-2xl bg-white ring-1 ring-[#0f2a47]/10">
+//                   <span className="w-2 h-2 rounded-full bg-[#F5C45E] animate-pulse" />
+//                   No results. Try another search or category.
+//                 </div>
+//               </div>
+//             )}
+//           </>
+//         )}
+
+//         <div className="mt-10 text-center">
+//           <button
+//             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+//             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white text-[#0f2a47] ring-1 ring-[#0f2a47]/10 hover:ring-[#F5C45E] transition"
+//             aria-label="Back to top"
+//           >
+//             <span className="w-2 h-2 rounded-full bg-[#F5C45E] animate-pulse" />
+//             Back to top
+//           </button>
 //         </div>
 //       </div>
 //     </div>
@@ -204,12 +1368,1678 @@
 
 
 
+// import axios from "axios";
+// import { useEffect, useMemo, useState, useCallback } from "react";
+// import { useSelector } from "react-redux";
+// import { useNavigate } from "react-router-dom";
+// import Swal from "sweetalert2";
+// import defaultImg from "../assets/NoImage.png";
+// import ReactionPicker from "./reaction";
+// import { useAddToCart } from "./AddToCart";
+
+// export default function GitAllProduct() {
+//   const navigate = useNavigate();
+//   const { AddToCart } = useAddToCart();
+//   const CusData = useSelector((s) => s.UserInfo);
+//   const uid = CusData?.user?.user_id;
+//   const role = CusData?.user?.role;
+//   const token = useSelector((s) => s.UserInfo?.token);
+//   const isLogged = Boolean(token);
+
+//   const port = import.meta.env.VITE_PORT;
+//   const apiBase = useMemo(() => `http://localhost:${port}`, [port]);
+
+//   const [cards, setCards] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [textSearch, setTextSearch] = useState("");
+//   const [debouncedSearch, setDebouncedSearch] = useState("");
+//   const [selectore, setSelectore] = useState("");
+//   const [favIds, setFavIds] = useState(new Set());
+//   const [cartIds, setCartIds] = useState(new Set());
+
+//   const withMutedAlerts = useCallback(async (fn) => {
+//     const prev = window.alert;
+//     window.alert = () => {};
+//     try {
+//       return await fn();
+//     } finally {
+//       window.alert = prev;
+//     }
+//   }, []);
+
+//   const alertError = useCallback(async (message) => {
+//     await Swal.fire({
+//       title: "Error",
+//       text: message,
+//       icon: "error",
+//       confirmButtonText: "OK",
+//       confirmButtonColor: "#BE3D2A",
+//       background: "#FFF6E9",
+//       color: "#102E50",
+//     });
+//   }, []);
+
+//   const alertSuccess = useCallback(async (title, text) => {
+//     await Swal.fire({
+//       title,
+//       text,
+//       icon: "success",
+//       confirmButtonText: "OK",
+//       confirmButtonColor: "#102E50",
+//       background: "#FFF6E9",
+//       color: "#102E50",
+//     });
+//   }, []);
+
+//   useEffect(() => {
+//     const t = setTimeout(() => setDebouncedSearch(textSearch), 250);
+//     return () => clearTimeout(t);
+//   }, [textSearch]);
+
+//   useEffect(() => {
+//     const run = async () => {
+//       if (!uid) return;
+//       try {
+//         setLoading(true);
+//         const res = await axios.get(`${apiBase}/api/ShowCardInUserDashboard/${uid}`);
+//         setCards(Array.isArray(res.data) ? res.data : []);
+//       } catch {
+//         setCards([]);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+//     run();
+//   }, [apiBase, uid]);
+
+//   const loadFavs = useCallback(async () => {
+//     try {
+//       if (!token) return;
+//       const { data } = await axios.get(`${apiBase}/api/wishlist`.replace("/api/api", "/api"), {
+//         headers: { Authorization: `Bearer ${token}` },
+//       });
+//       const list = Array.isArray(data?.items) ? data.items : [];
+//       setFavIds(new Set(list.map((x) => Number(x.product_id))));
+//     } catch {}
+//   }, [apiBase, token]);
+
+//   const loadCartIds = useCallback(async () => {
+//     try {
+//       if (!uid || !token) return;
+//       const res = await axios.get(`${apiBase}/api/carts/products/${uid}`.replace("/api/api", "/api"), {
+//         headers: { Authorization: `Bearer ${token}` },
+//       });
+//       const list = Array.isArray(res.data?.cards) ? res.data.cards : [];
+//       setCartIds(new Set(list.map((c) => Number(c.product_id))));
+//     } catch {}
+//   }, [apiBase, token, uid]);
+
+//   useEffect(() => {
+//     loadFavs();
+//     loadCartIds();
+//   }, [loadFavs, loadCartIds]);
+
+//   const categories = useMemo(
+//     () => [...new Set(cards.map((c) => c?.category_name).filter(Boolean))],
+//     [cards]
+//   );
+
+//   const toImg = useCallback(
+//     (img) => {
+//       if (!img) return defaultImg;
+//       const s = String(img).trim();
+//       if (s.startsWith("http")) return s;
+//       return `${apiBase}${s.startsWith("/") ? "" : "/"}${s}`;
+//     },
+//     [apiBase]
+//   );
+
+//   const money = useMemo(() => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }), []);
+
+//   const filtered = cards.filter((card) => {
+//     const byName = (card?.name || "").toLowerCase().includes(debouncedSearch.toLowerCase());
+//     const byCat = !selectore || (card?.category_name || "").toLowerCase() === String(selectore).toLowerCase();
+//     return byName && byCat;
+//   });
+
+//   const field =
+//     "h-12 px-4 rounded-2xl bg-white/95 text-[#0f2a47] placeholder-[#0f2a47]/60 text-sm outline-none ring-1 ring-[#0f2a47]/15 focus:ring-2 focus:ring-[#F5C45E] transition";
+
+//   const iconBtnBase = "w-7 h-7 rounded-md grid place-items-center shadow hover:shadow-md active:scale-95 transition";
+//   const heartInactive = "bg-white ring-1 ring-[#BE3D2A]/30 text-[#BE3D2A]";
+//   const heartActive = "bg-[#BE3D2A] text-white";
+//   const cartInactive = "bg-white ring-1 ring-[#102E50]/30 text-[#102E50]";
+//   const cartActive = "bg-[#102E50] text-[#FFF6E9]";
+
+//   return (
+//     <div className="min-h-screen bg-[#FFF6E9] text-[#0f2a47]">
+//       <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 pb-8 md:pb-10">
+//         <div className="sticky top-0 z-20 pt-4 pb-4 bg-[#FFF6E9]/95 backdrop-blur supports-[backdrop-filter]:bg-[#FFF6E9]/80">
+//           <div className="rounded-[1.6rem] p-[1.2px] bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]">
+//             <div className="rounded-[1.6rem] bg-white/95">
+//               <div className="p-4 sm:px-6 sm:py-6 flex flex-col gap-4">
+//                 <div className="flex flex-col md:flex-row gap-3 md:gap-4">
+//                   <div className="flex-1 relative">
+//                     <span className="absolute inset-y-0 left-3 flex items-center text-[#0f2a47]/60 pointer-events-none">
+//                       <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79L19 20.49 20.49 19 15.5 14ZM9.5 14A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14Z"/></svg>
+//                     </span>
+//                     <input
+//                       value={textSearch}
+//                       onChange={(e) => setTextSearch(e.target.value)}
+//                       placeholder="Search services or providers"
+//                       className={`${field} w-full pl-10`}
+//                       aria-label="Search services or providers"
+//                     />
+//                   </div>
+//                   <div className="flex items-center gap-2 sm:gap-3">
+//                     <span className="text-sm font-semibold">Category</span>
+//                     <select
+//                       value={selectore}
+//                       onChange={(e) => setSelectore(e.target.value)}
+//                       className={field}
+//                       aria-label="Select category"
+//                     >
+//                       <option value="">All</option>
+//                       {categories.map((cat, i) => (
+//                         <option key={i} value={cat}>{cat}</option>
+//                       ))}
+//                     </select>
+//                     <button
+//                       onClick={() => {
+//                         setTextSearch("");
+//                         setSelectore("");
+//                       }}
+//                       className="h-12 px-4 rounded-2xl bg-white text-[#0f2a47] text-sm font-semibold ring-1 ring-[#0f2a47]/15 hover:ring-[#F5C45E] transition"
+//                       aria-label="Reset filters"
+//                     >
+//                       Reset
+//                     </button>
+//                   </div>
+//                 </div>
+
+//                 <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pt-1">
+//                   <button
+//                     onClick={() => setSelectore("")}
+//                     className={`px-4 h-10 rounded-xl text-sm font-semibold ring-1 transition ${selectore === "" ? "bg-[#102E50] text-[#FFF6E9] ring-transparent" : "bg-white text-[#0f2a47] ring-[#0f2a47]/15 hover:ring-[#F5C45E]"}`}
+//                     aria-pressed={selectore === ""}
+//                     aria-label="Filter All"
+//                   >
+//                     All
+//                   </button>
+//                   {categories.map((cat) => (
+//                     <button
+//                       key={cat}
+//                       onClick={() => setSelectore(cat)}
+//                       className={`px-4 h-10 rounded-xl text-sm font-semibold ring-1 transition ${selectore === cat ? "bg-[#102E50] text-[#FFF6E9] ring-transparent" : "bg-white text-[#0f2a47] ring-[#0f2a47]/15 hover:ring-[#F5C45E]"}`}
+//                       aria-pressed={selectore === cat}
+//                       aria-label={`Filter ${cat}`}
+//                     >
+//                       {cat}
+//                     </button>
+//                   ))}
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+
+//         {loading ? (
+//           <div className="mt-6 grid gap-4 sm:gap-5 md:gap-6 grid-cols-1 xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+//             {Array.from({ length: 8 }).map((_, i) => (
+//               <div key={i} className="rounded-2xl overflow-hidden bg-white ring-1 ring-[#0f2a47]/10 animate-pulse">
+//                 <div className="w-full h-60 sm:h-64 md:h-72 bg-[#0f2a47]/10" />
+//                 <div className="p-5 space-y-3">
+//                   <div className="h-5 w-2/3 bg-[#0f2a47]/10 rounded" />
+//                   <div className="h-4 w-1/2 bg-[#0f2a47]/10 rounded" />
+//                   <div className="h-10 w-full bg-[#0f2a47]/10 rounded-2xl" />
+//                 </div>
+//               </div>
+//             ))}
+//           </div>
+//         ) : (
+//           <>
+//             <div className="mt-6 grid gap-4 sm:gap-5 md:gap-6 grid-cols-1 xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+//               {filtered.map((card, i) => {
+//                 const pid = Number(card?.product_id);
+//                 const isFav = favIds.has(pid);
+//                 const inCart = cartIds.has(pid);
+//                 const rcCount =
+//                   Number(card?.reaction_counts?.love || 0) +
+//                   Number(card?.reaction_counts?.support || 0) +
+//                   Number(card?.reaction_counts?.proud || 0);
+
+//                 return (
+//                   <button
+//                     key={i}
+//                     onClick={() =>
+//                       isLogged
+//                         ? navigate(`/productdatails?product_id=${pid}`, { state: { product_id: pid } })
+//                         : navigate("/login")
+//                     }
+//                     className="group rounded-2xl bg-white ring-1 ring-[#102E50]/10 hover:ring-[#F5C45E] shadow-[0_14px_50px_rgba(16,46,80,0.10)] overflow-hidden text-left transition"
+//                   >
+//                     <div className="relative w-full h-60 sm:h-64 md:h-72 bg-[#0f2a47]/5">
+//                       <img
+//                         src={toImg(card?.image)}
+//                         alt={card?.name || "Product image"}
+//                         loading="lazy"
+//                         decoding="async"
+//                         className="w-full h-full object-cover object-center transition duration-500 group-hover:scale-[1.03]"
+//                         onError={(e) => {
+//                           e.currentTarget.src = defaultImg;
+//                         }}
+//                       />
+//                       <div className="absolute left-3 top-3 inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-[10px] font-bold bg-white/90 text-[#102E50] ring-1 ring-[#102E50]/10">
+//                         <span className="w-1.5 h-1.5 rounded-full bg-[#F5C45E]" />
+//                         {card?.category_name}
+//                       </div>
+
+//                       <div
+//                         className="absolute inset-x-3 bottom-3 flex items-center justify-between gap-2 rounded-xl backdrop-blur bg-white/70 ring-1 ring-[#102E50]/10 px-2 py-1.5"
+//                         onClick={(e)=>e.stopPropagation()}
+//                       >
+//                         <div className="flex items-center">
+//                           <ReactionPicker
+//                             card={card}
+//                             product_id={pid}
+//                             userId={uid}
+//                             onReactionUpdate={(product_id, reactionCounts, selectedReaction) => {
+//                               setCards((prev) =>
+//                                 prev.map((c) =>
+//                                   c.product_id === product_id ? { ...c, reaction_counts: reactionCounts, selectedReaction } : c
+//                                 )
+//                               );
+//                             }}
+//                           />
+//                         </div>
+//                         <span className="inline-flex items-center justify-center min-w-[26px] h-6 px-2 rounded-full text-xs font-bold bg-[#F5C45E]/20 ring-1 ring-[#F5C45E]/50">
+//                           {rcCount}
+//                         </span>
+//                       </div>
+//                     </div>
+
+//                     <div className="px-2.5 sm:px-3 py-2 bg-[#F5C45E]/18 ring-1 ring-[#F5C45E]/35 flex items-center gap-2 justify-between">
+//                       <span className="shrink-0 inline-flex items-center rounded-lg bg-white/90 text-[#102E50] ring-1 ring-[#102E50]/10 text-[11px] sm:text-xs font-extrabold px-2 py-1">
+//                         {money.format(card?.price || 0)}
+//                       </span>
+
+//                       <span className="min-w-0 text-[#0f2a47] font-semibold text-[11px] sm:text-xs leading-tight truncate">
+//                         {card?.name}
+//                       </span>
+
+//                       {role === "customer" && (
+//                         <div className="shrink-0 flex items-center gap-2">
+//                           <span
+//                             onClick={async (e) => {
+//                               e.stopPropagation();
+//                               try {
+//                                 await withMutedAlerts(() => window.AddTOFav ? window.AddTOFav(card, CusData) : Promise.reject(new Error("AddTOFav not provided")));
+//                                 const next = new Set(favIds);
+//                                 if (isFav) next.delete(pid);
+//                                 else next.add(pid);
+//                                 setFavIds(next);
+//                                 await alertSuccess("Updated", isFav ? "Removed from favorites." : "Added to favorites.");
+//                               } catch (e2) {
+//                                 const m = e2?.response?.data?.error || e2?.message || "Failed to update favorite";
+//                                 await alertError(m);
+//                               }
+//                             }}
+//                             className={`${iconBtnBase} ${isFav ? heartActive : heartInactive}`}
+//                             title={isFav ? "In favorites" : "Add to favorites"}
+//                             aria-label="Favorite"
+//                           >
+//                             <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="currentColor" aria-hidden="true">
+//                               <path d="M12 21s-6.72-4.32-9.33-7.38A5.5 5.5 0 0 1 12 5.24a5.5 5.5 0 0 1 9.33 8.38C18.72 16.68 12 21 12 21Z" />
+//                             </svg>
+//                           </span>
+
+//                           <span
+//                             onClick={async (e) => {
+//                               e.stopPropagation();
+//                               try {
+//                                 if (inCart) {
+//                                   const r = await Swal.fire({
+//                                     title: "Already in cart",
+//                                     text: "Remove this item from your cart?",
+//                                     icon: "info",
+//                                     showCancelButton: true,
+//                                     confirmButtonText: "Remove",
+//                                     cancelButtonText: "Keep",
+//                                     confirmButtonColor: "#BE3D2A",
+//                                     cancelButtonColor: "#102E50",
+//                                     background: "#FFF6E9",
+//                                     color: "#102E50",
+//                                   });
+//                                   if (!r.isConfirmed) return;
+//                                 }
+//                                 await withMutedAlerts(() => AddToCart(card, CusData));
+//                                 const next = new Set(cartIds);
+//                                 if (inCart) next.delete(pid);
+//                                 else next.add(pid);
+//                                 setCartIds(next);
+//                                 await alertSuccess(inCart ? "Removed from cart" : "Added to cart", inCart ? "Item removed." : "Item added successfully.");
+//                               } catch (e2) {
+//                                 const m = e2?.response?.data?.error || e2?.message || "Failed to update cart";
+//                                 await alertError(m);
+//                               }
+//                             }}
+//                             className={`${iconBtnBase} ${inCart ? cartActive : cartInactive}`}
+//                             title={inCart ? "In cart" : "Add to cart"}
+//                             aria-label="Add to Cart"
+//                           >
+//                             <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+//                               <circle cx="9" cy="21" r="1" />
+//                               <circle cx="20" cy="21" r="1" />
+//                               <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h7.72a2 2 0 0 0 2-1.61L23 6H6" />
+//                             </svg>
+//                           </span>
+//                         </div>
+//                       )}
+//                     </div>
+
+//                     <div className="h-0.5 w-full bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]" />
+//                   </button>
+//                 );
+//               })}
+//             </div>
+
+//             {!loading && filtered.length === 0 && (
+//               <div className="text-center text-[#0f2a47] mt-14">
+//                 <div className="inline-flex items-center gap-3 px-5 py-3 rounded-2xl bg-white ring-1 ring-[#0f2a47]/10">
+//                   <span className="w-2 h-2 rounded-full bg-[#F5C45E] animate-pulse" />
+//                   No results. Try another search or category.
+//                 </div>
+//               </div>
+//             )}
+//           </>
+//         )}
+
+//         <div className="mt-10 text-center">
+//           <button
+//             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+//             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white text-[#0f2a47] ring-1 ring-[#0f2a47]/10 hover:ring-[#F5C45E] transition"
+//             aria-label="Back to top"
+//           >
+//             <span className="w-2 h-2 rounded-full bg-[#F5C45E] animate-pulse" />
+//             Back to top
+//           </button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+
+
+
+
+
+
+// import axios from "axios";
+// import { useEffect, useMemo, useState, useCallback } from "react";
+// import { useSelector } from "react-redux";
+// import { useNavigate } from "react-router-dom";
+// import Swal from "sweetalert2";
+// import defaultImg from "../assets/NoImage.png";
+// import ReactionPicker from "./reaction";
+// import { useAddToCart } from "./AddToCart";
+
+// export default function GitAllProduct() {
+//   const navigate = useNavigate();
+//   const { AddToCart } = useAddToCart();
+//   const CusData = useSelector((s) => s.UserInfo);
+//   const uid = CusData?.user?.user_id;
+//   const role = CusData?.user?.role;
+//   const token = useSelector((s) => s.UserInfo?.token);
+//   const isLogged = Boolean(token);
+
+//   const port = import.meta.env.VITE_PORT;
+//   const apiBase = useMemo(() => `http://localhost:${port}`, [port]);
+
+//   const [cards, setCards] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [textSearch, setTextSearch] = useState("");
+//   const [debouncedSearch, setDebouncedSearch] = useState("");
+//   const [selectore, setSelectore] = useState("");
+//   const [favIds, setFavIds] = useState(new Set());
+//   const [cartIds, setCartIds] = useState(new Set());
+
+//   const withMutedAlerts = useCallback(async (fn) => {
+//     const prev = window.alert;
+//     window.alert = () => {};
+//     try {
+//       return await fn();
+//     } finally {
+//       window.alert = prev;
+//     }
+//   }, []);
+
+//   const alertError = useCallback(async (message) => {
+//     await Swal.fire({
+//       title: "Error",
+//       text: message,
+//       icon: "error",
+//       confirmButtonText: "OK",
+//       confirmButtonColor: "#BE3D2A",
+//       background: "#FFF6E9",
+//       color: "#102E50",
+//     });
+//   }, []);
+
+//   const alertSuccess = useCallback(async (title, text) => {
+//     await Swal.fire({
+//       title,
+//       text,
+//       icon: "success",
+//       confirmButtonText: "OK",
+//       confirmButtonColor: "#102E50",
+//       background: "#FFF6E9",
+//       color: "#102E50",
+//     });
+//   }, []);
+
+//   useEffect(() => {
+//     const t = setTimeout(() => setDebouncedSearch(textSearch), 250);
+//     return () => clearTimeout(t);
+//   }, [textSearch]);
+
+//   useEffect(() => {
+//     const run = async () => {
+//       if (!uid) return;
+//       try {
+//         setLoading(true);
+//         const res = await axios.get(`${apiBase}/api/ShowCardInUserDashboard/${uid}`);
+//         setCards(Array.isArray(res.data) ? res.data : []);
+//       } catch {
+//         setCards([]);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+//     run();
+//   }, [apiBase, uid]);
+
+//   const loadFavs = useCallback(async () => {
+//     try {
+//       if (!token) return;
+//       const { data } = await axios.get(`${apiBase}/api/wishlist`.replace("/api/api", "/api"), {
+//         headers: { Authorization: `Bearer ${token}` },
+//       });
+//       const list = Array.isArray(data?.items) ? data.items : [];
+//       setFavIds(new Set(list.map((x) => Number(x.product_id))));
+//     } catch {}
+//   }, [apiBase, token]);
+
+//   const loadCartIds = useCallback(async () => {
+//     try {
+//       if (!uid || !token) return;
+//       const res = await axios.get(`${apiBase}/api/carts/products/${uid}`.replace("/api/api", "/api"), {
+//         headers: { Authorization: `Bearer ${token}` },
+//       });
+//       const list = Array.isArray(res.data?.cards) ? res.data.cards : [];
+//       setCartIds(new Set(list.map((c) => Number(c.product_id))));
+//     } catch {}
+//   }, [apiBase, token, uid]);
+
+//   useEffect(() => {
+//     loadFavs();
+//     loadCartIds();
+//   }, [loadFavs, loadCartIds]);
+
+//   const categories = useMemo(
+//     () => [...new Set(cards.map((c) => c?.category_name).filter(Boolean))],
+//     [cards]
+//   );
+
+//   const toImg = useCallback(
+//     (img) => {
+//       if (!img) return defaultImg;
+//       const s = String(img).trim();
+//       if (s.startsWith("http")) return s;
+//       return `${apiBase}${s.startsWith("/") ? "" : "/"}${s}`;
+//     },
+//     [apiBase]
+//   );
+
+//   const money = useMemo(() => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }), []);
+
+//   const filtered = cards.filter((card) => {
+//     const byName = (card?.name || "").toLowerCase().includes(debouncedSearch.toLowerCase());
+//     const byCat = !selectore || (card?.category_name || "").toLowerCase() === String(selectore).toLowerCase();
+//     return byName && byCat;
+//   });
+
+//   const field =
+//     "h-12 px-4 rounded-2xl bg-white/95 text-[#0f2a47] placeholder-[#0f2a47]/60 text-sm outline-none ring-1 ring-[#0f2a47]/15 focus:ring-2 focus:ring-[#F5C45E] transition";
+
+//   const iconBtnBase = "w-7 h-7 rounded-md grid place-items-center shadow hover:shadow-md active:scale-95 transition";
+//   const heartInactive = "bg-white ring-1 ring-[#BE3D2A]/30 text-[#BE3D2A]";
+//   const heartActive = "bg-[#BE3D2A] text-white";
+//   const cartInactive = "bg-white ring-1 ring-[#102E50]/30 text-[#102E50]";
+//   const cartActive = "bg-[#102E50] text-[#FFF6E9]";
+
+//   return (
+//     <div className="min-h-screen bg-[#FFF6E9] text-[#0f2a47]">
+//       <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 pb-8 md:pb-10">
+//         <div className="sticky top-0 z-20 pt-4 pb-4 bg-[#FFF6E9]/95 backdrop-blur supports-[backdrop-filter]:bg-[#FFF6E9]/80">
+//           <div className="rounded-[1.6rem] p-[1.2px] bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]">
+//             <div className="rounded-[1.6rem] bg-white/95">
+//               <div className="p-4 sm:px-6 sm:py-6 flex flex-col gap-4">
+//                 <div className="flex flex-col md:flex-row gap-3 md:gap-4">
+//                   <div className="flex-1 relative">
+//                     <span className="absolute inset-y-0 left-3 flex items-center text-[#0f2a47]/60 pointer-events-none">
+//                       <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79L19 20.49 20.49 19 15.5 14ZM9.5 14A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14Z"/></svg>
+//                     </span>
+//                     <input
+//                       value={textSearch}
+//                       onChange={(e) => setTextSearch(e.target.value)}
+//                       placeholder="Search services or providers"
+//                       className={`${field} w-full pl-10`}
+//                       aria-label="Search services or providers"
+//                     />
+//                   </div>
+//                   <div className="flex items-center gap-2 sm:gap-3">
+//                     <span className="text-sm font-semibold">Category</span>
+//                     <select
+//                       value={selectore}
+//                       onChange={(e) => setSelectore(e.target.value)}
+//                       className={field}
+//                       aria-label="Select category"
+//                     >
+//                       <option value="">All</option>
+//                       {categories.map((cat, i) => (
+//                         <option key={i} value={cat}>{cat}</option>
+//                       ))}
+//                     </select>
+//                     <button
+//                       onClick={() => {
+//                         setTextSearch("");
+//                         setSelectore("");
+//                       }}
+//                       className="h-12 px-4 rounded-2xl bg-white text-[#0f2a47] text-sm font-semibold ring-1 ring-[#0f2a47]/15 hover:ring-[#F5C45E] transition"
+//                       aria-label="Reset filters"
+//                     >
+//                       Reset
+//                     </button>
+//                   </div>
+//                 </div>
+
+//                 <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pt-1">
+//                   <button
+//                     onClick={() => setSelectore("")}
+//                     className={`px-4 h-10 rounded-xl text-sm font-semibold ring-1 transition ${selectore === "" ? "bg-[#102E50] text-[#FFF6E9] ring-transparent" : "bg-white text-[#0f2a47] ring-[#0f2a47]/15 hover:ring-[#F5C45E]"}`}
+//                     aria-pressed={selectore === ""}
+//                     aria-label="Filter All"
+//                   >
+//                     All
+//                   </button>
+//                   {categories.map((cat) => (
+//                     <button
+//                       key={cat}
+//                       onClick={() => setSelectore(cat)}
+//                       className={`px-4 h-10 rounded-xl text-sm font-semibold ring-1 transition ${selectore === cat ? "bg-[#102E50] text-[#FFF6E9] ring-transparent" : "bg-white text-[#0f2a47] ring-[#0f2a47]/15 hover:ring-[#F5C45E]"}`}
+//                       aria-pressed={selectore === cat}
+//                       aria-label={`Filter ${cat}`}
+//                     >
+//                       {cat}
+//                     </button>
+//                   ))}
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+
+//         {loading ? (
+//           <div className="mt-6 grid gap-4 sm:gap-5 md:gap-6 grid-cols-1 xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+//             {Array.from({ length: 8 }).map((_, i) => (
+//               <div key={i} className="rounded-2xl overflow-hidden bg-white ring-1 ring-[#0f2a47]/10 animate-pulse">
+//                 <div className="w-full h-60 sm:h-64 md:h-72 bg-[#0f2a47]/10" />
+//                 <div className="p-5 space-y-3">
+//                   <div className="h-5 w-2/3 bg-[#0f2a47]/10 rounded" />
+//                   <div className="h-4 w-1/2 bg-[#0f2a47]/10 rounded" />
+//                   <div className="h-10 w-full bg-[#0f2a47]/10 rounded-2xl" />
+//                 </div>
+//               </div>
+//             ))}
+//           </div>
+//         ) : (
+//           <>
+//             <div className="mt-6 grid gap-4 sm:gap-5 md:gap-6 grid-cols-1 xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+//               {filtered.map((card, i) => {
+//                 const pid = Number(card?.product_id);
+//                 const isFav = favIds.has(pid);
+//                 const inCart = cartIds.has(pid);
+//                 const rcCount =
+//                   Number(card?.reaction_counts?.love || 0) +
+//                   Number(card?.reaction_counts?.support || 0) +
+//                   Number(card?.reaction_counts?.proud || 0);
+
+//                 return (
+//                   <button
+//                     key={i}
+//                     onClick={() =>
+//                       isLogged
+//                         ? navigate(`/productdatails?product_id=${pid}`, { state: { product_id: pid } })
+//                         : navigate("/login")
+//                     }
+//                     className="group rounded-2xl bg-white ring-1 ring-[#102E50]/10 hover:ring-[#F5C45E] shadow-[0_14px_50px_rgba(16,46,80,0.10)] overflow-visible text-left transition"
+//                   >
+//                     <div className="relative w-full h-60 sm:h-64 md:h-72 bg-[#0f2a47]/5 overflow-visible">
+//                       <img
+//                         src={toImg(card?.image)}
+//                         alt={card?.name || "Product image"}
+//                         loading="lazy"
+//                         decoding="async"
+//                         className="w-full h-full object-cover object-center transition duration-500 group-hover:scale-[1.03]"
+//                         onError={(e) => {
+//                           e.currentTarget.src = defaultImg;
+//                         }}
+//                       />
+
+//                       <div className="absolute left-3 top-3 inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-[10px] font-bold bg-white/90 text-[#102E50] ring-1 ring-[#102E50]/10">
+//                         <span className="w-1.5 h-1.5 rounded-full bg-[#F5C45E]" />
+//                         {card?.category_name}
+//                       </div>
+
+//                       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-white/80 via-white/40 to-transparent" />
+
+//                       <div
+//                         className="absolute inset-x-3 bottom-3 flex items-center justify-between gap-2 rounded-xl backdrop-blur bg-white/70 ring-1 ring-[#102E50]/10 px-2 py-1.5 h-12 overflow-visible z-20"
+//                         onClick={(e)=>e.stopPropagation()}
+//                       >
+//                         <div className="relative overflow-visible z-30 pointer-events-auto">
+//                           <div className="inline-flex items-center gap-2">
+//                             <div className="h-8">
+//                               <div className="inline-flex items-center gap-2 h-8 px-2 rounded-lg bg-white/90 ring-1 ring-[#102E50]/15 shadow-sm">
+//                                 <ReactionPicker
+//                                   card={card}
+//                                   product_id={pid}
+//                                   userId={uid}
+//                                   onReactionUpdate={(product_id, reactionCounts, selectedReaction) => {
+//                                     setCards((prev) =>
+//                                       prev.map((c) =>
+//                                         c.product_id === product_id ? { ...c, reaction_counts: reactionCounts, selectedReaction } : c
+//                                       )
+//                                     );
+//                                   }}
+//                                 />
+//                               </div>
+//                             </div>
+//                             <span className="inline-flex items-center justify-center min-w-[28px] h-6 px-2 rounded-full text-xs font-bold bg-[#F5C45E]/20 ring-1 ring-[#F5C45E]/50">
+//                               {rcCount}
+//                             </span>
+//                           </div>
+//                         </div>
+
+//                         <div className="relative flex items-center gap-2 pointer-events-auto">
+//                           <span className="sr-only">Actions</span>
+//                         </div>
+//                       </div>
+//                     </div>
+
+//                     <div className="px-2.5 sm:px-3 py-2 bg-[#F5C45E]/18 ring-1 ring-[#F5C45E]/35 flex items-center gap-2 justify-between">
+//                       <span className="shrink-0 inline-flex items-center rounded-lg bg-white/90 text-[#102E50] ring-1 ring-[#102E50]/10 text-[11px] sm:text-xs font-extrabold px-2 py-1">
+//                         {money.format(card?.price || 0)}
+//                       </span>
+
+//                       <span className="min-w-0 text-[#0f2a47] font-semibold text-[11px] sm:text-xs leading-tight truncate">
+//                         {card?.name}
+//                       </span>
+
+//                       {role === "customer" && (
+//                         <div className="shrink-0 flex items-center gap-2">
+//                           <span
+//                             onClick={async (e) => {
+//                               e.stopPropagation();
+//                               try {
+//                                 await withMutedAlerts(() => window.AddTOFav ? window.AddTOFav(card, CusData) : Promise.reject(new Error("AddTOFav not provided")));
+//                                 const next = new Set(favIds);
+//                                 if (isFav) next.delete(pid);
+//                                 else next.add(pid);
+//                                 setFavIds(next);
+//                                 await alertSuccess("Updated", isFav ? "Removed from favorites." : "Added to favorites.");
+//                               } catch (e2) {
+//                                 const m = e2?.response?.data?.error || e2?.message || "Failed to update favorite";
+//                                 await alertError(m);
+//                               }
+//                             }}
+//                             className={`${iconBtnBase} ${isFav ? heartActive : heartInactive}`}
+//                             title={isFav ? "In favorites" : "Add to favorites"}
+//                             aria-label="Favorite"
+//                           >
+//                             <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="currentColor" aria-hidden="true">
+//                               <path d="M12 21s-6.72-4.32-9.33-7.38A5.5 5.5 0 0 1 12 5.24a5.5 5.5 0 0 1 9.33 8.38C18.72 16.68 12 21 12 21Z" />
+//                             </svg>
+//                           </span>
+
+//                           <span
+//                             onClick={async (e) => {
+//                               e.stopPropagation();
+//                               try {
+//                                 if (inCart) {
+//                                   const r = await Swal.fire({
+//                                     title: "Already in cart",
+//                                     text: "Remove this item from your cart?",
+//                                     icon: "info",
+//                                     showCancelButton: true,
+//                                     confirmButtonText: "Remove",
+//                                     cancelButtonText: "Keep",
+//                                     confirmButtonColor: "#BE3D2A",
+//                                     cancelButtonColor: "#102E50",
+//                                     background: "#FFF6E9",
+//                                     color: "#102E50",
+//                                   });
+//                                   if (!r.isConfirmed) return;
+//                                 }
+//                                 await withMutedAlerts(() => AddToCart(card, CusData));
+//                                 const next = new Set(cartIds);
+//                                 if (inCart) next.delete(pid);
+//                                 else next.add(pid);
+//                                 setCartIds(next);
+//                                 await alertSuccess(inCart ? "Removed from cart" : "Added to cart", inCart ? "Item removed." : "Item added successfully.");
+//                               } catch (e2) {
+//                                 const m = e2?.response?.data?.error || e2?.message || "Failed to update cart";
+//                                 await alertError(m);
+//                               }
+//                             }}
+//                             className={`${iconBtnBase} ${inCart ? cartActive : cartInactive}`}
+//                             title={inCart ? "In cart" : "Add to cart"}
+//                             aria-label="Add to Cart"
+//                           >
+//                             <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+//                               <circle cx="9" cy="21" r="1" />
+//                               <circle cx="20" cy="21" r="1" />
+//                               <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h7.72a2 2 0 0 0 2-1.61L23 6H6" />
+//                             </svg>
+//                           </span>
+//                         </div>
+//                       )}
+//                     </div>
+
+//                     <div className="h-0.5 w-full bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]" />
+//                   </button>
+//                 );
+//               })}
+//             </div>
+
+//             {!loading && filtered.length === 0 && (
+//               <div className="text-center text-[#0f2a47] mt-14">
+//                 <div className="inline-flex items-center gap-3 px-5 py-3 rounded-2xl bg-white ring-1 ring-[#0f2a47]/10">
+//                   <span className="w-2 h-2 rounded-full bg-[#F5C45E] animate-pulse" />
+//                   No results. Try another search or category.
+//                 </div>
+//               </div>
+//             )}
+//           </>
+//         )}
+
+//         <div className="mt-10 text-center">
+//           <button
+//             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+//             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white text-[#0f2a47] ring-1 ring-[#0f2a47]/10 hover:ring-[#F5C45E] transition"
+//             aria-label="Back to top"
+//           >
+//             <span className="w-2 h-2 rounded-full bg-[#F5C45E] animate-pulse" />
+//             Back to top
+//           </button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+
+
+
+
+
+
+// import axios from "axios";
+// import { useEffect, useMemo, useState, useCallback } from "react";
+// import { useSelector } from "react-redux";
+// import { useNavigate } from "react-router-dom";
+// import Swal from "sweetalert2";
+// import defaultImg from "../assets/NoImage.png";
+// import ReactionPicker from "./reaction";
+// import { useAddToCart } from "./AddToCart";
+
+// export default function GitAllProduct() {
+//   const navigate = useNavigate();
+//   const { AddToCart } = useAddToCart();
+//   const CusData = useSelector((s) => s.UserInfo);
+//   const uid = CusData?.user?.user_id;
+//   const role = CusData?.user?.role;
+//   const token = useSelector((s) => s.UserInfo?.token);
+//   const isLogged = Boolean(token);
+
+//   const port = import.meta.env.VITE_PORT;
+//   const apiBase = useMemo(() => `http://localhost:${port}`, [port]);
+
+//   const [cards, setCards] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [textSearch, setTextSearch] = useState("");
+//   const [debouncedSearch, setDebouncedSearch] = useState("");
+//   const [selectore, setSelectore] = useState("");
+//   const [favIds, setFavIds] = useState(new Set());
+//   const [cartIds, setCartIds] = useState(new Set());
+
+//   const withMutedAlerts = useCallback(async (fn) => {
+//     const prev = window.alert;
+//     window.alert = () => {};
+//     try {
+//       return await fn();
+//     } finally {
+//       window.alert = prev;
+//     }
+//   }, []);
+
+//   const alertError = useCallback(async (message) => {
+//     await Swal.fire({
+//       title: "Error",
+//       text: message,
+//       icon: "error",
+//       confirmButtonText: "OK",
+//       confirmButtonColor: "#BE3D2A",
+//       background: "#FFF6E9",
+//       color: "#102E50",
+//     });
+//   }, []);
+
+//   const alertSuccess = useCallback(async (title, text) => {
+//     await Swal.fire({
+//       title,
+//       text,
+//       icon: "success",
+//       confirmButtonText: "OK",
+//       confirmButtonColor: "#102E50",
+//       background: "#FFF6E9",
+//       color: "#102E50",
+//     });
+//   }, []);
+
+//   useEffect(() => {
+//     const t = setTimeout(() => setDebouncedSearch(textSearch), 250);
+//     return () => clearTimeout(t);
+//   }, [textSearch]);
+
+//   useEffect(() => {
+//     const run = async () => {
+//       if (!uid) return;
+//       try {
+//         setLoading(true);
+//         const res = await axios.get(`${apiBase}/api/ShowCardInUserDashboard/${uid}`);
+//         setCards(Array.isArray(res.data) ? res.data : []);
+//       } catch {
+//         setCards([]);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+//     run();
+//   }, [apiBase, uid]);
+
+//   const loadFavs = useCallback(async () => {
+//     try {
+//       if (!token) return;
+//       const { data } = await axios.get(`${apiBase}/api/wishlist`.replace("/api/api", "/api"), {
+//         headers: { Authorization: `Bearer ${token}` },
+//       });
+//       const list = Array.isArray(data?.items) ? data.items : [];
+//       setFavIds(new Set(list.map((x) => Number(x.product_id))));
+//     } catch {}
+//   }, [apiBase, token]);
+
+//   const loadCartIds = useCallback(async () => {
+//     try {
+//       if (!uid || !token) return;
+//       const res = await axios.get(`${apiBase}/api/carts/products/${uid}`.replace("/api/api", "/api"), {
+//         headers: { Authorization: `Bearer ${token}` },
+//       });
+//       const list = Array.isArray(res.data?.cards) ? res.data.cards : [];
+//       setCartIds(new Set(list.map((c) => Number(c.product_id))));
+//     } catch {}
+//   }, [apiBase, token, uid]);
+
+//   useEffect(() => {
+//     loadFavs();
+//     loadCartIds();
+//   }, [loadFavs, loadCartIds]);
+
+//   const categories = useMemo(
+//     () => [...new Set(cards.map((c) => c?.category_name).filter(Boolean))],
+//     [cards]
+//   );
+
+//   const toImg = useCallback(
+//     (img) => {
+//       if (!img) return defaultImg;
+//       const s = String(img).trim();
+//       if (s.startsWith("http")) return s;
+//       return `${apiBase}${s.startsWith("/") ? "" : "/"}${s}`;
+//     },
+//     [apiBase]
+//   );
+
+//   const money = useMemo(() => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }), []);
+
+//   const filtered = cards.filter((card) => {
+//     const byName = (card?.name || "").toLowerCase().includes(debouncedSearch.toLowerCase());
+//     const byCat = !selectore || (card?.category_name || "").toLowerCase() === String(selectore).toLowerCase();
+//     return byName && byCat;
+//   });
+
+//   const field =
+//     "h-12 px-4 rounded-2xl bg-white/95 text-[#0f2a47] placeholder-[#0f2a47]/60 text-sm outline-none ring-1 ring-[#0f2a47]/15 focus:ring-2 focus:ring-[#F5C45E] transition";
+
+//   const iconBtnBase = "w-7 h-7 rounded-md grid place-items-center shadow hover:shadow-md active:scale-95 transition";
+//   const heartInactive = "bg-white ring-1 ring-[#BE3D2A]/30 text-[#BE3D2A]";
+//   const heartActive = "bg-[#BE3D2A] text-white";
+//   const cartInactive = "bg-white ring-1 ring-[#102E50]/30 text-[#102E50]";
+//   const cartActive = "bg-[#102E50] text-[#FFF6E9]";
+
+//   return (
+//     <div className="min-h-screen bg-[#FFF6E9] text-[#0f2a47]">
+//       <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 pb-8 md:pb-10">
+//         <div className="sticky top-0 z-20 pt-4 pb-4 bg-[#FFF6E9]/95 backdrop-blur supports-[backdrop-filter]:bg-[#FFF6E9]/80">
+//           <div className="rounded-[1.6rem] p-[1.2px] bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]">
+//             <div className="rounded-[1.6rem] bg-white/95">
+//               <div className="p-4 sm:px-6 sm:py-6 flex flex-col gap-4">
+//                 <div className="flex flex-col md:flex-row gap-3 md:gap-4">
+//                   <div className="flex-1 relative">
+//                     <span className="absolute inset-y-0 left-3 flex items-center text-[#0f2a47]/60 pointer-events-none">
+//                       <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79L19 20.49 20.49 19 15.5 14ZM9.5 14A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14Z"/></svg>
+//                     </span>
+//                     <input
+//                       value={textSearch}
+//                       onChange={(e) => setTextSearch(e.target.value)}
+//                       placeholder="Search services or providers"
+//                       className={`${field} w-full pl-10`}
+//                       aria-label="Search services or providers"
+//                     />
+//                   </div>
+//                   <div className="flex items-center gap-2 sm:gap-3">
+//                     <span className="text-sm font-semibold">Category</span>
+//                     <select
+//                       value={selectore}
+//                       onChange={(e) => setSelectore(e.target.value)}
+//                       className={field}
+//                       aria-label="Select category"
+//                     >
+//                       <option value="">All</option>
+//                       {categories.map((cat, i) => (
+//                         <option key={i} value={cat}>{cat}</option>
+//                       ))}
+//                     </select>
+//                     <button
+//                       onClick={() => {
+//                         setTextSearch("");
+//                         setSelectore("");
+//                       }}
+//                       className="h-12 px-4 rounded-2xl bg-white text-[#0f2a47] text-sm font-semibold ring-1 ring-[#0f2a47]/15 hover:ring-[#F5C45E] transition"
+//                       aria-label="Reset filters"
+//                     >
+//                       Reset
+//                     </button>
+//                   </div>
+//                 </div>
+
+//                 <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pt-1">
+//                   <button
+//                     onClick={() => setSelectore("")}
+//                     className={`px-4 h-10 rounded-xl text-sm font-semibold ring-1 transition ${selectore === "" ? "bg-[#102E50] text-[#FFF6E9] ring-transparent" : "bg-white text-[#0f2a47] ring-[#0f2a47]/15 hover:ring-[#F5C45E]"}`}
+//                     aria-pressed={selectore === ""}
+//                     aria-label="Filter All"
+//                   >
+//                     All
+//                   </button>
+//                   {categories.map((cat) => (
+//                     <button
+//                       key={cat}
+//                       onClick={() => setSelectore(cat)}
+//                       className={`px-4 h-10 rounded-xl text-sm font-semibold ring-1 transition ${selectore === cat ? "bg-[#102E50] text-[#FFF6E9] ring-transparent" : "bg-white text-[#0f2a47] ring-[#0f2a47]/15 hover:ring-[#F5C45E]"}`}
+//                       aria-pressed={selectore === cat}
+//                       aria-label={`Filter ${cat}`}
+//                     >
+//                       {cat}
+//                     </button>
+//                   ))}
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+
+//         {loading ? (
+//           <div className="mt-6 grid gap-4 sm:gap-5 md:gap-6 grid-cols-1 xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+//             {Array.from({ length: 8 }).map((_, i) => (
+//               <div key={i} className="rounded-2xl overflow-hidden bg-white ring-1 ring-[#0f2a47]/10 animate-pulse">
+//                 <div className="w-full h-60 sm:h-64 md:h-72 bg-[#0f2a47]/10" />
+//                 <div className="p-5 space-y-3">
+//                   <div className="h-5 w-2/3 bg-[#0f2a47]/10 rounded" />
+//                   <div className="h-4 w-1/2 bg-[#0f2a47]/10 rounded" />
+//                   <div className="h-10 w-full bg-[#0f2a47]/10 rounded-2xl" />
+//                 </div>
+//               </div>
+//             ))}
+//           </div>
+//         ) : (
+//           <>
+//             <div className="mt-6 grid gap-4 sm:gap-5 md:gap-6 grid-cols-1 xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+//               {filtered.map((card, i) => {
+//                 const pid = Number(card?.product_id);
+//                 const isFav = favIds.has(pid);
+//                 const inCart = cartIds.has(pid);
+//                 const rcCount =
+//                   Number(card?.reaction_counts?.love || 0) +
+//                   Number(card?.reaction_counts?.support || 0) +
+//                   Number(card?.reaction_counts?.proud || 0);
+
+//                 return (
+//                   <button
+//                     key={i}
+//                     onClick={() =>
+//                       isLogged
+//                         ? navigate(`/productdatails?product_id=${pid}`, { state: { product_id: pid } })
+//                         : navigate("/login")
+//                     }
+//                     className="group rounded-2xl bg-white ring-1 ring-[#102E50]/10 hover:ring-[#F5C45E] shadow-[0_14px_50px_rgba(16,46,80,0.10)] overflow-hidden text-left transition"
+//                   >
+//                     <div className="relative w-full h-60 sm:h-64 md:h-72 bg-[#0f2a47]/5 overflow-visible">
+//                       <img
+//                         src={toImg(card?.image)}
+//                         alt={card?.name || "Product image"}
+//                         loading="lazy"
+//                         decoding="async"
+//                         className="w-full h-full object-cover object-center transition duration-500 group-hover:scale-[1.03]"
+//                         onError={(e) => {
+//                           e.currentTarget.src = defaultImg;
+//                         }}
+//                       />
+
+//                       <div className="absolute left-3 top-3 inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-[10px] font-bold bg-white/90 text-[#102E50] ring-1 ring-[#102E50]/10">
+//                         <span className="w-1.5 h-1.5 rounded-full bg-[#F5C45E]" />
+//                         {card?.category_name}
+//                       </div>
+
+//                       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white/90 via-white/40 to-transparent" />
+
+//                       <div className="absolute top-3 right-3 flex items-center gap-2 z-30">
+//                         <div
+//                           className="pointer-events-auto rounded-full bg-white/90 ring-1 ring-[#102E50]/10 shadow-sm backdrop-blur px-2 py-1 flex items-center gap-1"
+//                           onClick={(e)=>e.stopPropagation()}
+//                         >
+//                           <ReactionPicker
+//                             card={card}
+//                             product_id={pid}
+//                             userId={uid}
+//                             onReactionUpdate={(product_id, reactionCounts, selectedReaction) => {
+//                               setCards((prev) =>
+//                                 prev.map((c) =>
+//                                   c.product_id === product_id ? { ...c, reaction_counts: reactionCounts, selectedReaction } : c
+//                                 )
+//                               );
+//                             }}
+//                           />
+//                         </div>
+//                         <span className="inline-flex items-center justify-center min-w-[26px] h-6 px-2 rounded-full text-xs font-bold bg-[#F5C45E]/20 ring-1 ring-[#F5C45E]/50">
+//                           {rcCount}
+//                         </span>
+//                       </div>
+//                     </div>
+
+//                     <div className="px-2.5 sm:px-3 py-2 bg-[#F5C45E]/18 ring-1 ring-[#F5C45E]/35 flex items-center gap-2 justify-between">
+//                       <span className="shrink-0 inline-flex items-center rounded-lg bg-white/90 text-[#102E50] ring-1 ring-[#102E50]/10 text-[11px] sm:text-xs font-extrabold px-2 py-1">
+//                         {money.format(card?.price || 0)}
+//                       </span>
+
+//                       <span className="min-w-0 text-[#0f2a47] font-semibold text-[11px] sm:text-xs leading-tight truncate">
+//                         {card?.name}
+//                       </span>
+
+//                       {role === "customer" && (
+//                         <div className="shrink-0 flex items-center gap-2">
+//                           <span
+//                             onClick={async (e) => {
+//                               e.stopPropagation();
+//                               try {
+//                                 await withMutedAlerts(() => window.AddTOFav ? window.AddTOFav(card, CusData) : Promise.reject(new Error("AddTOFav not provided")));
+//                                 const next = new Set(favIds);
+//                                 if (isFav) next.delete(pid);
+//                                 else next.add(pid);
+//                                 setFavIds(next);
+//                                 await alertSuccess("Updated", isFav ? "Removed from favorites." : "Added to favorites.");
+//                               } catch (e2) {
+//                                 const m = e2?.response?.data?.error || e2?.message || "Failed to update favorite";
+//                                 await alertError(m);
+//                               }
+//                             }}
+//                             className={`${iconBtnBase} ${isFav ? heartActive : heartInactive}`}
+//                             title={isFav ? "In favorites" : "Add to favorites"}
+//                             aria-label="Favorite"
+//                           >
+//                             <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="currentColor" aria-hidden="true">
+//                               <path d="M12 21s-6.72-4.32-9.33-7.38A5.5 5.5 0 0 1 12 5.24a5.5 5.5 0 0 1 9.33 8.38C18.72 16.68 12 21 12 21Z" />
+//                             </svg>
+//                           </span>
+
+//                           <span
+//                             onClick={async (e) => {
+//                               e.stopPropagation();
+//                               try {
+//                                 if (inCart) {
+//                                   const r = await Swal.fire({
+//                                     title: "Already in cart",
+//                                     text: "Remove this item from your cart?",
+//                                     icon: "info",
+//                                     showCancelButton: true,
+//                                     confirmButtonText: "Remove",
+//                                     cancelButtonText: "Keep",
+//                                     confirmButtonColor: "#BE3D2A",
+//                                     cancelButtonColor: "#102E50",
+//                                     background: "#FFF6E9",
+//                                     color: "#102E50",
+//                                   });
+//                                   if (!r.isConfirmed) return;
+//                                 }
+//                                 await withMutedAlerts(() => AddToCart(card, CusData));
+//                                 const next = new Set(cartIds);
+//                                 if (inCart) next.delete(pid);
+//                                 else next.add(pid);
+//                                 setCartIds(next);
+//                                 await alertSuccess(inCart ? "Removed from cart" : "Added to cart", inCart ? "Item removed." : "Item added successfully.");
+//                               } catch (e2) {
+//                                 const m = e2?.response?.data?.error || e2?.message || "Failed to update cart";
+//                                 await alertError(m);
+//                               }
+//                             }}
+//                             className={`${iconBtnBase} ${inCart ? cartActive : cartInactive}`}
+//                             title={inCart ? "In cart" : "Add to cart"}
+//                             aria-label="Add to Cart"
+//                           >
+//                             <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+//                               <circle cx="9" cy="21" r="1" />
+//                               <circle cx="20" cy="21" r="1" />
+//                               <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h7.72a2 2 0 0 0 2-1.61L23 6H6" />
+//                             </svg>
+//                           </span>
+//                         </div>
+//                       )}
+//                     </div>
+
+//                     <div className="h-0.5 w-full bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]" />
+//                   </button>
+//                 );
+//               })}
+//             </div>
+
+//             {!loading && filtered.length === 0 && (
+//               <div className="text-center text-[#0f2a47] mt-14">
+//                 <div className="inline-flex items-center gap-3 px-5 py-3 rounded-2xl bg-white ring-1 ring-[#0f2a47]/10">
+//                   <span className="w-2 h-2 rounded-full bg-[#F5C45E] animate-pulse" />
+//                   No results. Try another search or category.
+//                 </div>
+//               </div>
+//             )}
+//           </>
+//         )}
+
+//         <div className="mt-10 text-center">
+//           <button
+//             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+//             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white text-[#0f2a47] ring-1 ring-[#0f2a47]/10 hover:ring-[#F5C45E] transition"
+//             aria-label="Back to top"
+//           >
+//             <span className="w-2 h-2 rounded-full bg-[#F5C45E] animate-pulse" />
+//             Back to top
+//           </button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+
+
+
+
+
+// import axios from "axios";
+// import { useEffect, useMemo, useState, useCallback } from "react";
+// import { useSelector } from "react-redux";
+// import { useNavigate } from "react-router-dom";
+// import Swal from "sweetalert2";
+// import defaultImg from "../assets/NoImage.png";
+// import ReactionPicker from "./reaction";
+// import { useAddToCart } from "./AddToCart";
+
+// export default function GitAllProduct() {
+//   const navigate = useNavigate();
+//   const { AddToCart } = useAddToCart();
+//   const CusData = useSelector((s) => s.UserInfo);
+//   const uid = CusData?.user?.user_id;
+//   const role = CusData?.user?.role;
+//   const token = useSelector((s) => s.UserInfo?.token);
+//   const isLogged = Boolean(token);
+
+//   const port = import.meta.env.VITE_PORT;
+//   const apiBase = useMemo(() => `http://localhost:${port}`, [port]);
+
+//   const [cards, setCards] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [textSearch, setTextSearch] = useState("");
+//   const [debouncedSearch, setDebouncedSearch] = useState("");
+//   const [selectore, setSelectore] = useState("");
+//   const [favIds, setFavIds] = useState(new Set());
+//   const [cartIds, setCartIds] = useState(new Set());
+
+//   const withMutedAlerts = useCallback(async (fn) => {
+//     const prev = window.alert;
+//     window.alert = () => {};
+//     try {
+//       return await fn();
+//     } finally {
+//       window.alert = prev;
+//     }
+//   }, []);
+
+//   const alertError = useCallback(async (message) => {
+//     await Swal.fire({
+//       title: "Error",
+//       text: message,
+//       icon: "error",
+//       confirmButtonText: "OK",
+//       confirmButtonColor: "#BE3D2A",
+//       background: "#FFF6E9",
+//       color: "#102E50",
+//     });
+//   }, []);
+
+//   const alertSuccess = useCallback(async (title, text) => {
+//     await Swal.fire({
+//       title,
+//       text,
+//       icon: "success",
+//       confirmButtonText: "OK",
+//       confirmButtonColor: "#102E50",
+//       background: "#FFF6E9",
+//       color: "#102E50",
+//     });
+//   }, []);
+
+//   useEffect(() => {
+//     const t = setTimeout(() => setDebouncedSearch(textSearch), 250);
+//     return () => clearTimeout(t);
+//   }, [textSearch]);
+
+//   useEffect(() => {
+//     const run = async () => {
+//       if (!uid) return;
+//       try {
+//         setLoading(true);
+//         const res = await axios.get(`${apiBase}/api/ShowCardInUserDashboard/${uid}`);
+//         setCards(Array.isArray(res.data) ? res.data : []);
+//       } catch {
+//         setCards([]);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+//     run();
+//   }, [apiBase, uid]);
+
+//   const loadFavs = useCallback(async () => {
+//     try {
+//       if (!token) return;
+//       const { data } = await axios.get(`${apiBase}/api/wishlist`.replace("/api/api", "/api"), {
+//         headers: { Authorization: `Bearer ${token}` },
+//       });
+//       const list = Array.isArray(data?.items) ? data.items : [];
+//       setFavIds(new Set(list.map((x) => Number(x.product_id))));
+//     } catch {}
+//   }, [apiBase, token]);
+
+//   const loadCartIds = useCallback(async () => {
+//     try {
+//       if (!uid || !token) return;
+//       const res = await axios.get(`${apiBase}/api/carts/products/${uid}`.replace("/api/api", "/api"), {
+//         headers: { Authorization: `Bearer ${token}` },
+//       });
+//       const list = Array.isArray(res.data?.cards) ? res.data.cards : [];
+//       setCartIds(new Set(list.map((c) => Number(c.product_id))));
+//     } catch {}
+//   }, [apiBase, token, uid]);
+
+//   useEffect(() => {
+//     loadFavs();
+//     loadCartIds();
+//   }, [loadFavs, loadCartIds]);
+
+//   const categories = useMemo(
+//     () => [...new Set(cards.map((c) => c?.category_name).filter(Boolean))],
+//     [cards]
+//   );
+
+//   const toImg = useCallback(
+//     (img) => {
+//       if (!img) return defaultImg;
+//       const s = String(img).trim();
+//       if (s.startsWith("http")) return s;
+//       return `${apiBase}${s.startsWith("/") ? "" : "/"}${s}`;
+//     },
+//     [apiBase]
+//   );
+
+//   const money = useMemo(() => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }), []);
+
+//   const filtered = cards.filter((card) => {
+//     const byName = (card?.name || "").toLowerCase().includes(debouncedSearch.toLowerCase());
+//     const byCat = !selectore || (card?.category_name || "").toLowerCase() === String(selectore).toLowerCase();
+//     return byName && byCat;
+//   });
+
+//   const field =
+//     "h-12 px-4 rounded-2xl bg-white/95 text-[#0f2a47] placeholder-[#0f2a47]/60 text-sm outline-none ring-1 ring-[#0f2a47]/15 focus:ring-2 focus:ring-[#F5C45E] transition";
+
+//   const iconBtnBase = "w-7 h-7 rounded-md grid place-items-center shadow hover:shadow-md active:scale-95 transition";
+//   const heartInactive = "bg-white ring-1 ring-[#BE3D2A]/30 text-[#BE3D2A]";
+//   const heartActive = "bg-[#BE3D2A] text-white";
+//   const cartInactive = "bg-white ring-1 ring-[#102E50]/30 text-[#102E50]";
+//   const cartActive = "bg-[#102E50] text-[#FFF6E9]";
+
+//   return (
+//     <div className="min-h-screen bg-[#FFF6E9] text-[#0f2a47]">
+//       <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 pb-8 md:pb-10">
+//         <div className="sticky top-0 z-20 pt-4 pb-4 bg-[#FFF6E9]/95 backdrop-blur supports-[backdrop-filter]:bg-[#FFF6E9]/80">
+//           <div className="rounded-[1.6rem] p-[1.2px] bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]">
+//             <div className="rounded-[1.6rem] bg-white/95">
+//               <div className="p-4 sm:px-6 sm:py-6 flex flex-col gap-4">
+//                 <div className="flex flex-col md:flex-row gap-3 md:gap-4">
+//                   <div className="flex-1 relative">
+//                     <span className="absolute inset-y-0 left-3 flex items-center text-[#0f2a47]/60 pointer-events-none">
+//                       <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79L19 20.49 20.49 19 15.5 14ZM9.5 14A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14Z"/></svg>
+//                     </span>
+//                     <input
+//                       value={textSearch}
+//                       onChange={(e) => setTextSearch(e.target.value)}
+//                       placeholder="Search services or providers"
+//                       className={`${field} w-full pl-10`}
+//                       aria-label="Search services or providers"
+//                     />
+//                   </div>
+//                   <div className="flex items-center gap-2 sm:gap-3">
+//                     <span className="text-sm font-semibold">Category</span>
+//                     <select
+//                       value={selectore}
+//                       onChange={(e) => setSelectore(e.target.value)}
+//                       className={field}
+//                       aria-label="Select category"
+//                     >
+//                       <option value="">All</option>
+//                       {categories.map((cat, i) => (
+//                         <option key={i} value={cat}>{cat}</option>
+//                       ))}
+//                     </select>
+//                     <button
+//                       onClick={() => {
+//                         setTextSearch("");
+//                         setSelectore("");
+//                       }}
+//                       className="h-12 px-4 rounded-2xl bg-white text-[#0f2a47] text-sm font-semibold ring-1 ring-[#0f2a47]/15 hover:ring-[#F5C45E] transition"
+//                       aria-label="Reset filters"
+//                     >
+//                       Reset
+//                     </button>
+//                   </div>
+//                 </div>
+
+//                 <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pt-1">
+//                   <button
+//                     onClick={() => setSelectore("")}
+//                     className={`px-4 h-10 rounded-xl text-sm font-semibold ring-1 transition ${selectore === "" ? "bg-[#102E50] text-[#FFF6E9] ring-transparent" : "bg-white text-[#0f2a47] ring-[#0f2a47]/15 hover:ring-[#F5C45E]"}`}
+//                     aria-pressed={selectore === ""}
+//                     aria-label="Filter All"
+//                   >
+//                     All
+//                   </button>
+//                   {categories.map((cat) => (
+//                     <button
+//                       key={cat}
+//                       onClick={() => setSelectore(cat)}
+//                       className={`px-4 h-10 rounded-xl text-sm font-semibold ring-1 transition ${selectore === cat ? "bg-[#102E50] text-[#FFF6E9] ring-transparent" : "bg-white text-[#0f2a47] ring-[#0f2a47]/15 hover:ring-[#F5C45E]"}`}
+//                       aria-pressed={selectore === cat}
+//                       aria-label={`Filter ${cat}`}
+//                     >
+//                       {cat}
+//                     </button>
+//                   ))}
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+
+//         {loading ? (
+//           <div className="mt-6 grid gap-4 sm:gap-5 md:gap-6 grid-cols-1 xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+//             {Array.from({ length: 8 }).map((_, i) => (
+//               <div key={i} className="rounded-2xl overflow-hidden bg-white ring-1 ring-[#0f2a47]/10 animate-pulse">
+//                 <div className="w-full h-60 sm:h-64 md:h-72 bg-[#0f2a47]/10" />
+//                 <div className="p-5 space-y-3">
+//                   <div className="h-5 w-2/3 bg-[#0f2a47]/10 rounded" />
+//                   <div className="h-4 w-1/2 bg-[#0f2a47]/10 rounded" />
+//                   <div className="h-10 w-full bg-[#0f2a47]/10 rounded-2xl" />
+//                 </div>
+//               </div>
+//             ))}
+//           </div>
+//         ) : (
+//           <>
+//             <div className="mt-6 grid gap-4 sm:gap-5 md:gap-6 grid-cols-1 xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+//               {filtered.map((card, i) => {
+//                 const pid = Number(card?.product_id);
+//                 const isFav = favIds.has(pid);
+//                 const inCart = cartIds.has(pid);
+
+//                 const love = Number(card?.reaction_counts?.love || 0);
+//                 const support = Number(card?.reaction_counts?.support || 0);
+//                 const proud = Number(card?.reaction_counts?.proud || 0);
+
+//                 return (
+//                   <button
+//                     key={i}
+//                     onClick={() =>
+//                       isLogged
+//                         ? navigate(`/productdatails?product_id=${pid}`, { state: { product_id: pid } })
+//                         : navigate("/login")
+//                     }
+//                     className="group rounded-2xl bg-white ring-1 ring-[#102E50]/10 hover:ring-[#F5C45E] shadow-[0_14px_50px_rgba(16,46,80,0.10)] overflow-hidden text-left transition"
+//                   >
+//                     <div className="relative w-full h-60 sm:h-64 md:h-72 bg-[#0f2a47]/5 overflow-visible">
+//                       <img
+//                         src={toImg(card?.image)}
+//                         alt={card?.name || "Product image"}
+//                         loading="lazy"
+//                         decoding="async"
+//                         className="w-full h-full object-cover object-center transition duration-500 group-hover:scale-[1.03]"
+//                         onError={(e) => {
+//                           e.currentTarget.src = defaultImg;
+//                         }}
+//                       />
+
+//                       <div className="absolute left-3 top-3 inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-[10px] font-bold bg-white/90 text-[#102E50] ring-1 ring-[#102E50]/10">
+//                         <span className="w-1.5 h-1.5 rounded-full bg-[#F5C45E]" />
+//                         {card?.category_name}
+//                       </div>
+
+//                       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white/90 via-white/40 to-transparent" />
+//                     </div>
+
+//                     <div className="px-2.5 sm:px-3 py-2 bg-[#F5C45E]/18 ring-1 ring-[#F5C45E]/35 flex items-center gap-2 justify-between">
+//                       <span className="shrink-0 inline-flex items-center rounded-lg bg-white/90 text-[#102E50] ring-1 ring-[#102E50]/10 text-[11px] sm:text-xs font-extrabold px-2 py-1">
+//                         {money.format(card?.price || 0)}
+//                       </span>
+
+//                       <span className="min-w-0 text-[#0f2a47] font-semibold text-[11px] sm:text-xs leading-tight truncate">
+//                         {card?.name}
+//                       </span>
+
+//                       {role === "customer" && (
+//                         <div className="shrink-0 flex items-center gap-2">
+//                           <span
+//                             onClick={async (e) => {
+//                               e.stopPropagation();
+//                               try {
+//                                 await withMutedAlerts(() => window.AddTOFav ? window.AddTOFav(card, CusData) : Promise.reject(new Error("AddTOFav not provided")));
+//                                 const next = new Set(favIds);
+//                                 if (isFav) next.delete(pid);
+//                                 else next.add(pid);
+//                                 setFavIds(next);
+//                                 await alertSuccess("Updated", isFav ? "Removed from favorites." : "Added to favorites.");
+//                               } catch (e2) {
+//                                 const m = e2?.response?.data?.error || e2?.message || "Failed to update favorite";
+//                                 await alertError(m);
+//                               }
+//                             }}
+//                             className={`${iconBtnBase} ${isFav ? heartActive : heartInactive}`}
+//                             title={isFav ? "In favorites" : "Add to favorites"}
+//                             aria-label="Favorite"
+//                           >
+//                             <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="currentColor" aria-hidden="true">
+//                               <path d="M12 21s-6.72-4.32-9.33-7.38A5.5 5.5 0 0 1 12 5.24a5.5 5.5 0 0 1 9.33 8.38C18.72 16.68 12 21 12 21Z" />
+//                             </svg>
+//                           </span>
+
+//                           <span
+//                             onClick={async (e) => {
+//                               e.stopPropagation();
+//                               try {
+//                                 if (inCart) {
+//                                   const r = await Swal.fire({
+//                                     title: "Already in cart",
+//                                     text: "Remove this item from your cart?",
+//                                     icon: "info",
+//                                     showCancelButton: true,
+//                                     confirmButtonText: "Remove",
+//                                     cancelButtonText: "Keep",
+//                                     confirmButtonColor: "#BE3D2A",
+//                                     cancelButtonColor: "#102E50",
+//                                     background: "#FFF6E9",
+//                                     color: "#102E50",
+//                                   });
+//                                   if (!r.isConfirmed) return;
+//                                 }
+//                                 await withMutedAlerts(() => AddToCart(card, CusData));
+//                                 const next = new Set(cartIds);
+//                                 if (inCart) next.delete(pid);
+//                                 else next.add(pid);
+//                                 setCartIds(next);
+//                                 await alertSuccess(inCart ? "Removed from cart" : "Added to cart", inCart ? "Item removed." : "Item added successfully.");
+//                               } catch (e2) {
+//                                 const m = e2?.response?.data?.error || e2?.message || "Failed to update cart";
+//                                 await alertError(m);
+//                               }
+//                             }}
+//                             className={`${iconBtnBase} ${inCart ? cartActive : cartInactive}`}
+//                             title={inCart ? "In cart" : "Add to cart"}
+//                             aria-label="Add to Cart"
+//                           >
+//                             <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+//                               <circle cx="9" cy="21" r="1" />
+//                               <circle cx="20" cy="21" r="1" />
+//                               <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h7.72a2 2 0 0 0 2-1.61L23 6H6" />
+//                             </svg>
+//                           </span>
+//                         </div>
+//                       )}
+//                     </div>
+
+//                     <div className="h-0.5 w-full bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]" />
+
+//                     <div className="px-2.5 sm:px-3 py-2.5 bg-white/95 flex items-center justify-between">
+//                       <div className="flex items-center gap-2 sm:gap-3">
+//                         <span className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-semibold px-2 py-1 rounded-lg ring-1 ring-[#102E50]/15 bg-white">
+//                           <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="#102E50"><path d="M2 12h4l3 7 4-14 3 7h6"/></svg>
+//                           {support}
+//                         </span>
+//                         <span className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-semibold px-2 py-1 rounded-lg ring-1 ring-[#F5C45E]/40 bg-[#F5C45E]/15">
+//                           <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="#F5C45E"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.62L12 2 9.19 8.62 2 9.24l5.46 4.73L5.82 21z"/></svg>
+//                           {proud}
+//                         </span>
+//                         <span className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-semibold px-2 py-1 rounded-lg ring-1 ring-[#BE3D2A]/30 bg-[#BE3D2A]/10">
+//                           <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="#BE3D2A"><path d="M12 21s-6.72-4.32-9.33-7.38A5.5 5.5 0 0 1 12 5.24a5.5 5.5 0 0 1 9.33 8.38C18.72 16.68 12 21 12 21Z"/></svg>
+//                           {love}
+//                         </span>
+//                       </div>
+
+//                       <div
+//                         className="shrink-0"
+//                         onClick={(e) => e.stopPropagation()}
+//                         title="React"
+//                         aria-label="Open reactions"
+//                       >
+//                         <div className="rounded-xl bg-[#102E50] text-[#FFF6E9] text-[11px] sm:text-xs font-bold px-3 py-1.5 hover:opacity-95 active:scale-95 transition inline-flex items-center gap-1.5">
+//                           <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor"><path d="M12 22c4.97 0 9-3.58 9-8 0-2.5-1.2-4.74-3.18-6.24l.82-3.26-3.03.82C14.3 4.43 13.17 4 12 4c-4.97 0-9 3.58-9 8s4.03 10 9 10Z"/></svg>
+//                           React
+//                         </div>
+//                         <div className="hidden">
+//                           <ReactionPicker
+//                             card={card}
+//                             product_id={pid}
+//                             userId={uid}
+//                             onReactionUpdate={(product_id, reactionCounts, selectedReaction) => {
+//                               setCards((prev) =>
+//                                 prev.map((c) =>
+//                                   c.product_id === product_id ? { ...c, reaction_counts: reactionCounts, selectedReaction } : c
+//                                 )
+//                               );
+//                             }}
+//                           />
+//                         </div>
+//                       </div>
+//                     </div>
+//                   </button>
+//                 );
+//               })}
+//             </div>
+
+//             {!loading && filtered.length === 0 && (
+//               <div className="text-center text-[#0f2a47] mt-14">
+//                 <div className="inline-flex items-center gap-3 px-5 py-3 rounded-2xl bg-white ring-1 ring-[#0f2a47]/10">
+//                   <span className="w-2 h-2 rounded-full bg-[#F5C45E] animate-pulse" />
+//                   No results. Try another search or category.
+//                 </div>
+//               </div>
+//             )}
+//           </>
+//         )}
+
+//         <div className="mt-10 text-center">
+//           <button
+//             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+//             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white text-[#0f2a47] ring-1 ring-[#0f2a47]/10 hover:ring-[#F5C45E] transition"
+//             aria-label="Back to top"
+//           >
+//             <span className="w-2 h-2 rounded-full bg-[#F5C45E] animate-pulse" />
+//             Back to top
+//           </button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+
+
+
+
+
+
 import axios from "axios";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 import defaultImg from "../assets/NoImage.png";
-import AddTOFav from "./AddToFav";
 import ReactionPicker from "./reaction";
 import { useAddToCart } from "./AddToCart";
 
@@ -219,14 +3049,56 @@ export default function GitAllProduct() {
   const CusData = useSelector((s) => s.UserInfo);
   const uid = CusData?.user?.user_id;
   const role = CusData?.user?.role;
-
+  const token = useSelector((s) => s.UserInfo?.token);
+  const isLogged = Boolean(token);
   const port = import.meta.env.VITE_PORT;
   const apiBase = useMemo(() => `http://localhost:${port}`, [port]);
-
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [textSearch, setTextSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [selectore, setSelectore] = useState("");
+  const [favIds, setFavIds] = useState(new Set());
+  const [cartIds, setCartIds] = useState(new Set());
+
+  const withMutedAlerts = useCallback(async (fn) => {
+    const prev = window.alert;
+    window.alert = () => {};
+    try {
+      return await fn();
+    } finally {
+      window.alert = prev;
+    }
+  }, []);
+
+  const alertError = useCallback(async (message) => {
+    await Swal.fire({
+      title: "Error",
+      text: message,
+      icon: "error",
+      confirmButtonText: "OK",
+      confirmButtonColor: "#BE3D2A",
+      background: "#FFF6E9",
+      color: "#102E50",
+    });
+  }, []);
+
+  const alertSuccess = useCallback(async (title, text) => {
+    await Swal.fire({
+      title,
+      text,
+      icon: "success",
+      confirmButtonText: "OK",
+      confirmButtonColor: "#102E50",
+      background: "#FFF6E9",
+      color: "#102E50",
+    });
+  }, []);
+
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedSearch(textSearch), 250);
+    return () => clearTimeout(t);
+  }, [textSearch]);
 
   useEffect(() => {
     const run = async () => {
@@ -244,70 +3116,99 @@ export default function GitAllProduct() {
     run();
   }, [apiBase, uid]);
 
-  const categories = useMemo(
-    () => [...new Set(cards.map((c) => c?.category_name).filter(Boolean))],
-    [cards]
+  const loadFavs = useCallback(async () => {
+    try {
+      if (!token) return;
+      const { data } = await axios.get(`${apiBase}/api/wishlist`.replace("/api/api", "/api"), {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const list = Array.isArray(data?.items) ? data.items : [];
+      setFavIds(new Set(list.map((x) => Number(x.product_id))));
+    } catch {}
+  }, [apiBase, token]);
+
+  const loadCartIds = useCallback(async () => {
+    try {
+      if (!uid || !token) return;
+      const res = await axios.get(`${apiBase}/api/carts/products/${uid}`.replace("/api/api", "/api"), {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const list = Array.isArray(res.data?.cards) ? res.data.cards : [];
+      setCartIds(new Set(list.map((c) => Number(c.product_id))));
+    } catch {}
+  }, [apiBase, token, uid]);
+
+  useEffect(() => {
+    loadFavs();
+    loadCartIds();
+  }, [loadFavs, loadCartIds]);
+
+  const categories = useMemo(() => [...new Set(cards.map((c) => c?.category_name).filter(Boolean))], [cards]);
+
+  const toImg = useCallback(
+    (img) => {
+      if (!img) return defaultImg;
+      const s = String(img).trim();
+      if (s.startsWith("http")) return s;
+      return `${apiBase}${s.startsWith("/") ? "" : "/"}${s}`;
+    },
+    [apiBase]
   );
 
-  const toImg = (img) => (img ? (String(img).startsWith("http") ? img : `${apiBase}${img}`) : defaultImg);
+  const money = useMemo(() => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }), []);
 
   const filtered = cards.filter((card) => {
-    const byName = (card?.name || "").toLowerCase().includes(textSearch.toLowerCase());
+    const byName = (card?.name || "").toLowerCase().includes(debouncedSearch.toLowerCase());
     const byCat = !selectore || (card?.category_name || "").toLowerCase() === String(selectore).toLowerCase();
     return byName && byCat;
   });
 
-  const field =
-    "h-12 px-4 rounded-2xl bg-white/95 text-[#0f2a47] placeholder-[#0f2a47]/60 text-sm outline-none ring-1 ring-[#0f2a47]/15 focus:ring-2 focus:ring-[#F5C45E] transition";
+  const field = "h-12 px-4 rounded-2xl bg-white/95 text-[#0f2a47] placeholder-[#0f2a47]/60 text-sm outline-none ring-1 ring-[#0f2a47]/15 focus:ring-2 focus:ring-[#F5C45E] transition";
+  const iconBtnBase = "w-7 h-7 rounded-md grid place-items-center shadow hover:shadow-md active:scale-95 transition";
+  const heartInactive = "bg-white ring-1 ring-[#BE3D2A]/30 text-[#BE3D2A]";
+  const heartActive = "bg-[#BE3D2A] text-white";
+  const cartInactive = "bg-white ring-1 ring-[#102E50]/30 text-[#102E50]";
+  const cartActive = "bg-[#102E50] text-[#FFF6E9]";
 
   return (
-    <div className="min-h-screen bg-[linear-gradient(180deg,#0b1f37_0%,#0f2a47_45%,#0b1f37_100%)] text-[#0f2a47]">
-      <style>{`
-        @keyframes orbit {from{transform:rotate(0)}to{transform:rotate(360deg)}}
-        @media (prefers-reduced-motion: reduce){*{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}}
-      `}</style>
-
-      <div className="relative">
-        <div className="absolute -top-32 -left-24 w-[32rem] h-[32rem] rounded-full blur-3xl opacity-30 pointer-events-none" style={{ background: "conic-gradient(from 0deg,#F5C45E22,#E78B4822,#BE3D2A22,#102E5022,#F5C45E22)", animation: "orbit 40s linear infinite" }} />
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 md:py-10">
-        <div className="rounded-[1.6rem] p-[1.2px] bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]">
-          <div className="rounded-[1.6rem] bg-white/95 backdrop-blur-md">
-            <div className="p-4 sm:p-6 flex flex-col gap-4">
-              <div className="flex flex-col md:flex-row gap-3 md:gap-4">
-                <div className="flex-1 relative">
-                  <span className="absolute inset-y-0 left-3 flex items-center text-[#0f2a47]/60">
-                    <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27A6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79L19 20.49 20.49 19 15.5 14ZM9.5 14A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14Z"/></svg>
-                  </span>
-                  <input value={textSearch} onChange={(e) => setTextSearch(e.target.value)} placeholder="Search services or providers" className={`${field} w-full pl-10`} />
+    <div className="min-h-screen bg-[#FFF6E9] text-[#0f2a47]">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 pb-8 md:pb-10">
+        <div className="sticky top-0 z-20 pt-4 pb-4 bg-[#FFF6E9]/95 backdrop-blur supports-[backdrop-filter]:bg-[#FFF6E9]/80">
+          <div className="rounded-[1.6rem] p-[1.2px] bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]">
+            <div className="rounded-[1.6rem] bg-white/95">
+              <div className="p-4 sm:px-6 sm:py-6 flex flex-col gap-4">
+                <div className="flex flex-col md:flex-row gap-3 md:gap-4">
+                  <div className="flex-1 relative">
+                    <span className="absolute inset-y-0 left-3 flex items-center text-[#0f2a47]/60 pointer-events-none">
+                      <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79L19 20.49 20.49 19 15.5 14ZM9.5 14A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14Z"/></svg>
+                    </span>
+                    <input value={textSearch} onChange={(e) => setTextSearch(e.target.value)} placeholder="Search services or providers" className={`${field} w-full pl-10`} aria-label="Search services or providers" />
+                  </div>
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <span className="text-sm font-semibold">Category</span>
+                    <select value={selectore} onChange={(e) => setSelectore(e.target.value)} className={field} aria-label="Select category">
+                      <option value="">All</option>
+                      {categories.map((cat, i) => (<option key={i} value={cat}>{cat}</option>))}
+                    </select>
+                    <button onClick={() => { setTextSearch(""); setSelectore(""); }} className="h-12 px-4 rounded-2xl bg-white text-[#0f2a47] text-sm font-semibold ring-1 ring-[#0f2a47]/15 hover:ring-[#F5C45E] transition" aria-label="Reset filters">Reset</button>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <span className="text-sm font-semibold">Category</span>
-                  <select value={selectore} onChange={(e) => setSelectore(e.target.value)} className={`${field}`}>
-                    <option value="">All</option>
-                    {categories.map((cat, i) => (
-                      <option key={i} value={cat}>{cat}</option>
-                    ))}
-                  </select>
+                <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pt-1">
+                  <button onClick={() => setSelectore("")} className={`px-4 h-10 rounded-xl text-sm font-semibold ring-1 transition ${selectore === "" ? "bg-[#102E50] text-[#FFF6E9] ring-transparent" : "bg-white text-[#0f2a47] ring-[#0f2a47]/15 hover:ring-[#F5C45E]"}`} aria-pressed={selectore === ""} aria-label="Filter All">All</button>
+                  {categories.map((cat) => (
+                    <button key={cat} onClick={() => setSelectore(cat)} className={`px-4 h-10 rounded-xl text-sm font-semibold ring-1 transition ${selectore === cat ? "bg-[#102E50] text-[#FFF6E9] ring-transparent" : "bg-white text-[#0f2a47] ring-[#0f2a47]/15 hover:ring-[#F5C45E]"}`} aria-pressed={selectore === cat} aria-label={`Filter ${cat}`}>{cat}</button>
+                  ))}
                 </div>
-              </div>
-
-              <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pt-1">
-                <button onClick={() => setSelectore("")} className={`px-4 h-10 rounded-xl text-sm font-semibold ring-1 transition ${selectore === "" ? "bg-[#102E50] text-[#FFF6E9] ring-transparent" : "bg-white text-[#0f2a47] ring-[#0f2a47]/15 hover:ring-[#F5C45E]"}`}>All</button>
-                {categories.map((cat) => (
-                  <button key={cat} onClick={() => setSelectore(cat)} className={`px-4 h-10 rounded-xl text-sm font-semibold ring-1 transition ${selectore === cat ? "bg-[#102E50] text-[#FFF6E9] ring-transparent" : "bg-white text-[#0f2a47] ring-[#0f2a47]/15 hover:ring-[#F5C45E]"}`}>{cat}</button>
-                ))}
               </div>
             </div>
           </div>
         </div>
 
         {loading ? (
-          <div className="mt-8 grid gap-5 sm:gap-6 lg:gap-7 grid-cols-1 xxs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+          <div className="mt-6 grid gap-4 sm:gap-5 md:gap-6 grid-cols-1 xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
             {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="rounded-3xl overflow-hidden bg-white shadow-[0_10px_30px_rgba(10,30,53,0.18)] ring-1 ring-[#0f2a47]/10 animate-pulse">
-                <div className="w-full aspect-[4/3] bg-[#0f2a47]/10" />
+              <div key={i} className="rounded-2xl overflow-hidden bg-white ring-1 ring-[#0f2a47]/10 animate-pulse">
+                <div className="w-full h-60 sm:h-64 md:h-72 bg-[#0f2a47]/10" />
                 <div className="p-5 space-y-3">
                   <div className="h-5 w-2/3 bg-[#0f2a47]/10 rounded" />
                   <div className="h-4 w-1/2 bg-[#0f2a47]/10 rounded" />
@@ -317,67 +3218,119 @@ export default function GitAllProduct() {
             ))}
           </div>
         ) : (
-          <div className="mt-8 grid gap-5 sm:gap-6 lg:gap-7 grid-cols-1 xxs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-            {filtered.map((card, i) => (
-              <div key={i} className="group rounded-3xl overflow-hidden bg-white shadow-[0_10px_30px_rgba(10,30,53,0.18)] ring-1 ring-[#0f2a47]/10 hover:ring-[#F5C45E] transition">
-                <div className="relative w-full aspect-[4/3] bg-[#0f2a47]/5">
-                  <img src={toImg(card?.image)} alt={card?.name} className="w-full h-full object-cover transition duration-500 group-hover:scale-105 cursor-pointer" onClick={() => navigate("/productdatails", { state: card })} />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/0 to-transparent" />
-                  <div className="absolute top-3 right-3 flex flex-col gap-2">
-                    {role === "customer" && (
-                      <>
-                        <button onClick={() => AddTOFav(card, CusData)} className="w-10 h-10 rounded-2xl bg-white/95 backdrop-blur text-[#BE3D2A] ring-1 ring-[#BE3D2A]/20 hover:bg-[#BE3D2A] hover:text-white transition grid place-items-center" title="Favorite">
-                          <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor"><path d="M12 21s-6.72-4.32-9.33-7.38A5.5 5.5 0 0 1 12 5.24a5.5 5.5 0 0 1 9.33 8.38C18.72 16.68 12 21 12 21Z" /></svg>
-                        </button>
-                        <button onClick={() => AddToCart(card, CusData)} className="w-10 h-10 rounded-2xl bg-[#102E50] text-[#FFF6E9] hover:bg-[#F5C45E] hover:text-[#102E50] transition grid place-items-center" title="Add to Cart">
-                          <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor"><path d="M6.2 6l.52 2H20a1 1 0 0 1 .96 1.27l-1.8 6A2 2 0 0 1 17.25 17H8a2 2 0 0 1-1.94-1.52L4.1 6.84A1 1 0 0 1 5.07 6h1.13ZM7 20a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm10 0a2 2 0 1 0 .001 3.999A2 2 0 0 0 17 20Z" /></svg>
-                        </button>
-                      </>
-                    )}
-                  </div>
-                  <div className="absolute left-4 right-4 bottom-3 flex items-center justify-between">
-                    <div className="max-w-[72%]">
-                      <h3 className="text-white font-extrabold text-lg leading-tight line-clamp-1">{card?.name}</h3>
-                      <p className="text-white/85 text-xs line-clamp-1">{card?.firstname} {card?.lastname}</p>
+          <>
+            <div className="mt-6 grid gap-4 sm:gap-5 md:gap-6 grid-cols-1 xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+              {filtered.map((card, i) => {
+                const pid = Number(card?.product_id);
+                const isFav = favIds.has(pid);
+                const inCart = cartIds.has(pid);
+
+                return (
+                  <button
+                    key={i}
+                    onClick={() => (isLogged ? navigate(`/productdatails?product_id=${pid}`, { state: { product_id: pid } }) : navigate("/login"))}
+                    className="group rounded-2xl bg-white ring-1 ring-[#102E50]/10 hover:ring-[#F5C45E] shadow-[0_14px_50px_rgba(16,46,80,0.10)] overflow-hidden text-left transition"
+                  >
+                    <div className="relative w-full h-60 sm:h-64 md:h-72 bg-[#0f2a47]/5 overflow-visible">
+                      <img
+                        src={toImg(card?.image)}
+                        alt={card?.name || "Product image"}
+                        loading="lazy"
+                        decoding="async"
+                        className="w-full h-full object-cover object-center transition duration-500 group-hover:scale-[1.03]"
+                        onError={(e) => {
+                          e.currentTarget.src = defaultImg;
+                        }}
+                      />
+                      <div className="absolute left-3 top-3 inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-[10px] font-bold bg-white/90 text-[#102E50] ring-1 ring-[#102E50]/10">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#F5C45E]" />
+                        {card?.category_name}
+                      </div>
                     </div>
-                    <span className="shrink-0 rounded-xl bg-[#F5C45E] text-[#102E50] text-[10px] sm:text-xs font-extrabold px-2.5 py-1">{card?.location || "Location"}</span>
-                  </div>
-                </div>
 
-                <div className="p-5">
-                  <div className="flex items-center justify-between">
-                    <span className="text-2xl font-black text-[#0f2a47]">${card?.price}</span>
-                    <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-semibold bg-[#0f2a47]/5 text-[#0f2a47] ring-1 ring-[#0f2a47]/10">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#F5C45E]" />
-                      {card?.category_name}
-                    </span>
-                  </div>
+                    <div className="px-2.5 sm:px-3 py-2 bg-[#F5C45E]/18 ring-1 ring-[#F5C45E]/35 flex items-center gap-2 justify-between">
+                      <span className="shrink-0 inline-flex items-center rounded-lg bg-white/90 text-[#102E50] ring-1 ring-[#102E50]/10 text-[11px] sm:text-xs font-extrabold px-2 py-1">
+                        {money.format(card?.price || 0)}
+                      </span>
+                      <span className="min-w-0 text-[#0f2a47] font-semibold text-[11px] sm:text-xs leading-tight truncate">
+                        {card?.name}
+                      </span>
+                      {role === "customer" && (
+                        <div className="shrink-0 flex items-center gap-2">
+                          <span
+                            onClick={async (e) => {
+                              e.stopPropagation();
+                              try {
+                                await withMutedAlerts(() => (window.AddTOFav ? window.AddTOFav(card, CusData) : Promise.reject(new Error("AddTOFav not provided"))));
+                                const next = new Set(favIds);
+                                if (isFav) next.delete(pid);
+                                else next.add(pid);
+                                setFavIds(next);
+                                await alertSuccess("Updated", isFav ? "Removed from favorites." : "Added to favorites.");
+                              } catch (e2) {
+                                const m = e2?.response?.data?.error || e2?.message || "Failed to update favorite";
+                                await alertError(m);
+                              }
+                            }}
+                            className={`${iconBtnBase} ${isFav ? heartActive : heartInactive}`}
+                            title={isFav ? "In favorites" : "Add to favorites"}
+                            aria-label="Favorite"
+                          >
+                            <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="currentColor" aria-hidden="true">
+                              <path d="M12 21s-6.72-4.32-9.33-7.38A5.5 5.5 0 0 1 12 5.24a5.5 5.5 0 0 1 9.33 8.38C18.72 16.68 12 21 12 21Z" />
+                            </svg>
+                          </span>
+                          <span
+                            onClick={async (e) => {
+                              e.stopPropagation();
+                              try {
+                                if (inCart) {
+                                  const r = await Swal.fire({
+                                    title: "Already in cart",
+                                    text: "Remove this item from your cart?",
+                                    icon: "info",
+                                    showCancelButton: true,
+                                    confirmButtonText: "Remove",
+                                    cancelButtonText: "Keep",
+                                    confirmButtonColor: "#BE3D2A",
+                                    cancelButtonColor: "#102E50",
+                                    background: "#FFF6E9",
+                                    color: "#102E50",
+                                  });
+                                  if (!r.isConfirmed) return;
+                                }
+                                await withMutedAlerts(() => AddToCart(card, CusData));
+                                const next = new Set(cartIds);
+                                if (inCart) next.delete(pid);
+                                else next.add(pid);
+                                setCartIds(next);
+                                await alertSuccess(inCart ? "Removed from cart" : "Added to cart", inCart ? "Item removed." : "Item added successfully.");
+                              } catch (e2) {
+                                const m = e2?.response?.data?.error || e2?.message || "Failed to update cart";
+                                await alertError(m);
+                              }
+                            }}
+                            className={`${iconBtnBase} ${inCart ? cartActive : cartInactive}`}
+                            title={inCart ? "In cart" : "Add to cart"}
+                            aria-label="Add to Cart"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <circle cx="9" cy="21" r="1" />
+                              <circle cx="20" cy="21" r="1" />
+                              <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h7.72a2 2 0 0 0 2-1.61L23 6H6" />
+                            </svg>
+                          </span>
+                        </div>
+                      )}
+                    </div>
 
-                  <div className="mt-4 grid grid-cols-3 gap-2">
-                    <button onClick={() => navigate("/productdatails", { state: card })} className="col-span-1 inline-flex items-center justify-center gap-2 px-3 py-2.5 rounded-2xl bg-white text-[#0f2a47] font-semibold text-sm ring-1 ring-[#0f2a47]/15 hover:ring-[#F5C45E] transition">
-                      <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor"><path d="M12 6a6 6 0 0 1 6 6 6 6 0 1 1-6-6Zm0-2a8 8 0 1 0 0 16 8 8 0 0 0 0-16Zm1 5h-2v5h5v-2h-3V9Z"/></svg>
-                      Details
-                    </button>
-                    {role === "customer" && (
-                      <>
-                        <button onClick={() => AddTOFav(card, CusData)} className="inline-flex items-center justify-center gap-2 px-3 py-2.5 rounded-2xl bg-white text-[#BE3D2A] font-semibold text-sm ring-1 ring-[#BE3D2A]/30 hover:bg-[#BE3D2A] hover:text-white transition">
-                          <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor"><path d="M12 21s-6.72-4.32-9.33-7.38A5.5 5.5 0 0 1 12 5.24a5.5 5.5 0 0 1 9.33 8.38C18.72 16.68 12 21 12 21Z" /></svg>
-                          Favorite
-                        </button>
-                        <button onClick={() => AddToCart(card, CusData)} className="inline-flex items-center justify-center gap-2 px-3 py-2.5 rounded-2xl bg-[#102E50] text-[#FFF6E9] font-semibold text-sm hover:bg-[#F5C45E] hover:text-[#102E50] transition">
-                          <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor"><path d="M6.2 6l.52 2H20a1 1 0 0 1 .96 1.27l-1.8 6A2 2 0 0 1 17.25 17H8a2 2 0 0 1-1.94-1.52L4.1 6.84A1 1 0 0 1 5.07 6h1.13ZM7 20a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm10 0a2 2 0 1 0 .001 3.999A2 2 0 0 0 17 20Z" /></svg>
-                          Cart
-                        </button>
-                      </>
-                    )}
-                  </div>
+                    <div className="h-0.5 w-full bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]" />
 
-                  <div className="mt-4 rounded-2xl ring-1 ring-[#0f2a47]/10 bg-[#0f2a47]/5 p-2.5">
-                    <div className="text-[11px] font-semibold text-[#0f2a47]/70 mb-2 px-1">Reactions</div>
-                    <div className="[&_button]:px-3 [&_button]:h-9 [&_button]:rounded-xl [&_button]:bg-white [&_button]:text-[#0f2a47] [&_button]:text-sm [&_button]:font-semibold [&_button]:ring-1 [&_button]:ring-[#0f2a47]/10 [&_button]:hover:bg-[#F5C45E]/15 [&_button]:hover:ring-[#F5C45E] [&_button]:transition [&_button]:shadow-sm [&_.count]:text-xs [&_.count]:text-[#0f2a47]/70 flex flex-wrap gap-2">
+                    <div className="px-2.5 sm:px-3 py-2.5 bg-white/95" onClick={(e) => e.stopPropagation()}>
                       <ReactionPicker
+                        variant="inline"
+                        product_id={pid}
                         card={card}
-                        product_id={card?.product_id}
                         userId={uid}
                         onReactionUpdate={(product_id, reactionCounts, selectedReaction) => {
                           setCards((prev) =>
@@ -388,26 +3341,24 @@ export default function GitAllProduct() {
                         }}
                       />
                     </div>
-                  </div>
-                </div>
-
-                <div className="h-1 w-full bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]" />
-              </div>
-            ))}
-          </div>
-        )}
-
-        {!loading && filtered.length === 0 && (
-          <div className="text-center text-white/90 mt-14">
-            <div className="inline-flex items-center gap-3 px-5 py-3 rounded-2xl bg-white/10 ring-1 ring-white/20 backdrop-blur">
-              <span className="w-2 h-2 rounded-full bg-[#F5C45E] animate-pulse" />
-              No results. Try another search or category.
+                  </button>
+                );
+              })}
             </div>
-          </div>
+
+            {!loading && filtered.length === 0 && (
+              <div className="text-center text-[#0f2a47] mt-14">
+                <div className="inline-flex items-center gap-3 px-5 py-3 rounded-2xl bg-white ring-1 ring-[#0f2a47]/10">
+                  <span className="w-2 h-2 rounded-full bg-[#F5C45E] animate-pulse" />
+                  No results. Try another search or category.
+                </div>
+              </div>
+            )}
+          </>
         )}
 
         <div className="mt-10 text-center">
-          <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white text-[#0f2a47] ring-1 ring-[#0f2a47]/10 hover:ring-[#F5C45E] transition">
+          <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white text-[#0f2a47] ring-1 ring-[#0f2a47]/10 hover:ring-[#F5C45E] transition" aria-label="Back to top">
             <span className="w-2 h-2 rounded-full bg-[#F5C45E] animate-pulse" />
             Back to top
           </button>
@@ -416,4 +3367,5 @@ export default function GitAllProduct() {
     </div>
   );
 }
+
 

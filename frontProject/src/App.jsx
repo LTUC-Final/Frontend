@@ -14,9 +14,9 @@ import MainDashBoard from "./pages/mainDashBoard/mainDashBoard";
 import Profile from "./pages/Profile";
 import Register from "./pages/register/register";
 import WishList from "./pages/wishlist/wishlist";
-import Forget from "./pages/forgetpassword/forget";
-import VerifyOtp from "./pages/forgetpassword/verify_otp";
-import ResetPassword from "./pages/forgetpassword/reset_password";
+// import Forget from "./pages/forgetpassword/forget";
+// import VerifyOtp from "./pages/forgetpassword/verify_otp";
+// import ResetPassword from "./pages/forgetpassword/reset_password";
 import About from "./pages/About";
 
 import OrdersManagementCustomer from "./pages/order/order";
@@ -26,6 +26,8 @@ import { useSelector } from "react-redux";
 import ChatBoot from "./component/chatboot/chatboot";
 import LiveChat from "./component/LiveChat/LiveChat";
 import MessagesSlice from "./component/LiveChat/MessagesSlice";
+import MessagesLayout from "./component/LiveChat/MessagesLayout";
+
 // import { CountRequest } from "./contexts/countRequest";
 import ProtectedRoute from "./component/ProdectRoute";
 import { CountRequestProvider } from "./contexts/CountRequestProvider";
@@ -74,13 +76,18 @@ function App() {
 
             <Route path="/register" element={<Register />} />
 
-            <Route path="/forget" element={<Forget />} />
+            {/* <Route path="/forget" element={<Forget />} />
               <Route path="/verify_otp" element={<VerifyOtp />} />
-              <Route path="/reset_password" element={<ResetPassword />} />
+              <Route path="/reset_password" element={<ResetPassword />} /> */}
 
             <Route element={<ProtectedRoute />}>
               <Route path="/profile/:user_id" element={<Profile />} />
-              <Route path="/LiveChat/:user_id" element={<LiveChat />} />
+              {/* <Route path="/LiveChat/:user_id" element={<LiveChat />} /> */}
+              <Route element={<MessagesLayout />}>
+  <Route path="/Messages" element={<></>} />
+  <Route path="/LiveChat/:user_id" element={<LiveChat />} />
+</Route>
+
               <Route
                 path="/providerDashboard"
                 element={<ProductForm></ProductForm>}
@@ -90,7 +97,8 @@ function App() {
               <Route path="/favorite" element={<WishList />} />
               <Route path="/productdatails" element={<CardDeatils />} />
               <Route path="/userDashboard" element={<GitAllProduct />} />
-              <Route path="/Messages" element={<MessagesSlice />} />
+              {/* <Route path="/Messages" element={<MessagesSlice />} /> */}
+              
               <Route
                 path="/cart"
                 element={
