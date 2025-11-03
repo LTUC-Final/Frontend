@@ -2,6 +2,7 @@
   "dependencies": {
     "@stripe/stripe-js": "^7.9.0",
     "easyinvoice": "^3.0.47",
+    "firebase": "^12.5.0",
     "openai": "^5.23.0",
     "recharts": "^3.2.1",
     "sweetalert2": "^11.23.0",

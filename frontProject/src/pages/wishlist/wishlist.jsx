@@ -219,13 +219,7 @@
 //   );
 // }
 
-
-
 // /////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
 
 import axios from "axios";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -234,6 +228,7 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useAddToCart } from "../../component/AddToCart.jsx";
 import AddTOFav from "../../component/AddToFav.jsx";
+import NoImage from "../../assets/NoImage.png";
 
 export default function WishList() {
   const token = useSelector((s) => s.UserInfo.token);
@@ -343,7 +338,10 @@ export default function WishList() {
       await withMutedAlerts(() =>
         AddTOFav({ product_id: p.product_id }, { user })
       );
-      await alertSuccess("Removed", `${p.name ?? "Item"} removed from wishlist.`);
+      await alertSuccess(
+        "Removed",
+        `${p.name ?? "Item"} removed from wishlist.`
+      );
       setTimeout(load, 200);
     } catch (e) {
       setItems(prev);
@@ -446,18 +444,11 @@ export default function WishList() {
             >
               <div className="flex-1 min-h-[220px] md:min-h-[260px] lg:min-h-[280px] bg-[#102E50]/5 grid place-items-center">
                 <img
-                  src={
-                    p.image
-                      ? p.image.startsWith("http")
-                        ? p.image
-                        : `http://localhost:${port}${p.image}`
-                      : "https://via.placeholder.com/800x600?text=No+Image"
-                  }
+                  src={p.image ? p.image : NoImage}
                   alt={p.name || "wishlist item"}
                   className="max-h-full max-w-full object-contain"
                   onError={(e) => {
-                    e.currentTarget.src =
-                      "https://via.placeholder.com/800x600?text=No+Image";
+                    e.currentTarget.src = NoImage;
                   }}
                 />
               </div>
@@ -534,9 +525,4 @@ export default function WishList() {
   );
 }
 
-
 //
-
-
-
-

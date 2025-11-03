@@ -115,10 +115,7 @@ export default function ActivitiesList({ user_id }) {
 
                       src={
                         act.image
-                          ? act.image.startsWith("http")
-                            ? act.image
-                            : `http://localhost:${port}${act.image}`
-                          : `../src/assets/NoImage.png`
+                          ? act.image:`../src/assets/NoImage.png`
                       }
                       alt={act.product_name}
                       className="w-20 h-20 rounded-lg object-cover flex-none"

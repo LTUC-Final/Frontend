@@ -4,9 +4,21 @@ import { useContext, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 
+import {
+  CreditCard,
+  FileText,
+  Heart,
+  Home,
+  Info,
+  LayoutDashboard,
+  LogOut,
+  MessageSquare,
+  ShoppingBag,
+  ShoppingCart,
+  User,
+} from "lucide-react";
+import Logo from "../../assets/Logo1.png";
 import { CountRequest } from "../../contexts/CountRequestContext";
-import { Home, User, LayoutDashboard, FileText, ShoppingBag, Heart, ShoppingCart, MessageSquare, LogOut, Sparkles, Info, CreditCard } from "lucide-react";
-import Logo from "../../assets/Logo1.png"
 
 export default function NavigationBar({ onScroll }) {
   const cartCount = useSelector((state) => state.UserInfo.cartItem);
@@ -29,7 +41,9 @@ export default function NavigationBar({ onScroll }) {
   const userId = user?.user_id;
 
   const getIcon = (name, isTopNav = false) => {
-    const iconProps = isTopNav ? { size: 22, strokeWidth: 2.5 } : { size: 18, strokeWidth: 2.5 };
+    const iconProps = isTopNav
+      ? { size: 22, strokeWidth: 2.5 }
+      : { size: 18, strokeWidth: 2.5 };
     switch (name) {
       case "Home":
         return <Home {...iconProps} />;
@@ -59,46 +73,27 @@ export default function NavigationBar({ onScroll }) {
   };
 
   const navItems = [
-    { name: "Home", 
-      href: "/mainDashBoard" },
-    { name: "About",
-       href: "/about" },
-    { name: "My Profile", 
-      href: `/profile/${userId}`,
-       position: "right" },
-    { name: "Dashboard",
-       href: "/providerDashboard",
-        roles: ["provider"] },
-    { name: "Dashboard",
-       href: "/userDashboard",
-        roles: ["customer"] },
-    { name: "Requests", 
-      href: "/requestProvider",
-       roles: ["provider"] },
-    { name: "Order", 
-      href: "/orderCustomer", 
-      roles: ["customer"] },
+    { name: "Home", href: "/mainDashBoard" },
+    { name: "About", href: "/About" },
+    { name: "My Profile", href: `/profile/${userId}`, position: "right" },
+    { name: "Dashboard", href: "/providerDashboard", roles: ["provider"] },
+    { name: "Dashboard", href: "/userDashboard", roles: ["customer"] },
+    { name: "Requests", href: "/requestProvider", roles: ["provider"] },
+    { name: "Order", href: "/orderCustomer", roles: ["customer"] },
     { name: "Favorite", href: "/favorite", roles: ["customer"] },
-    { name: "Cart", 
-      href: "/cart", 
-      roles: ["customer"] },
-     {
+    { name: "Cart", href: "/cart", roles: ["customer"] },
+    {
       name: "Payment",
       href: "/payments",
       roles: ["customer"],
     },
-     {
+    {
       name: "Payment",
       href: "/paymentsProvider",
       roles: ["provider"],
     },
-    { name: "Messages", 
-      href: "/messages", 
-      roles: ["customer",
-         "provider"] },
-    { name: "Log out", 
-      href: "/logout", 
-      position: "right" },
+    { name: "Messages", href: "/messages", roles: ["customer", "provider"] },
+    { name: "Log out", href: "/logout", position: "right" },
   ];
 
   const navItem = navItems.filter(
@@ -106,13 +101,15 @@ export default function NavigationBar({ onScroll }) {
   );
 
   // Left items: Dashboard, Home, About
-  const leftItems = navItem.filter((item) => 
-    item.name === "Dashboard" || item.name === "Home" || item.name === "About"
+  const leftItems = navItem.filter(
+    (item) =>
+      item.name === "Dashboard" || item.name === "Home" || item.name === "About"
   );
 
   // Sidebar items: Everything except Dashboard, Home, About
-  const sidebarItems = navItem.filter((item) => 
-    item.name !== "Dashboard" && item.name !== "Home" && item.name !== "About"
+  const sidebarItems = navItem.filter(
+    (item) =>
+      item.name !== "Dashboard" && item.name !== "Home" && item.name !== "About"
   );
 
   return (
@@ -172,10 +169,14 @@ export default function NavigationBar({ onScroll }) {
             >
               {/* Animated gradient ring */}
               <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#F5C45E] via-[#E78B48] to-[#BE3D2A] opacity-75 group-hover:opacity-100 transition-opacity duration-300 animate-pulse"></div>
-              
+
               {/* Inner circle */}
               <div className="relative flex items-center justify-center w-12 h-12 rounded-full bg-[#102E50] border-2 border-[#F5C45E]/30 group-hover:border-[#F5C45E] transition-all duration-300 shadow-lg">
-                <User size={22} strokeWidth={2.5} className="text-[#F5C45E] group-hover:scale-110 transition-transform duration-300" />
+                <User
+                  size={22}
+                  strokeWidth={2.5}
+                  className="text-[#F5C45E] group-hover:scale-110 transition-transform duration-300"
+                />
               </div>
             </div>
           </div>
@@ -248,7 +249,7 @@ export default function NavigationBar({ onScroll }) {
           isSidebarOpen ? "translate-x-0" : "translate-x-full"
         }`}
         style={{
-          borderImage: 'linear-gradient(to right, #F5C45E, #E78B48, #BE3D2A) 1'
+          borderImage: "linear-gradient(to right, #F5C45E, #E78B48, #BE3D2A) 1",
         }}
         onMouseEnter={() => setIsSidebarOpen(true)}
         onMouseLeave={() => setIsSidebarOpen(false)}
@@ -270,10 +271,11 @@ export default function NavigationBar({ onScroll }) {
                   onClick={() => setIsSidebarOpen(false)}
                 >
                   {isActive && (
-                    <div 
+                    <div
                       className="absolute left-0 right-0 bottom-0 h-0.5"
                       style={{
-                        background: 'linear-gradient(to right, #F5C45E, #E78B48, #BE3D2A)'
+                        background:
+                          "linear-gradient(to right, #F5C45E, #E78B48, #BE3D2A)",
                       }}
                     ></div>
                   )}
@@ -586,4 +588,3 @@ export default function NavigationBar({ onScroll }) {
 //     </nav>
 //   );
 // }
-

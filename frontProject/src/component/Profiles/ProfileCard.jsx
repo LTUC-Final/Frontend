@@ -6,11 +6,17 @@ import { useNavigate } from "react-router-dom";
 import RatingDisplay from "../../component/Profiles/RatingDisplay.jsx";
 import useProviderReviews from "../../hooks/useProviderReviews.jsx";
 import ActivitiesList from "../activity.jsx";
+import DeleteProfileImage from "./DeleteProfileImage.jsx";
 import EditImage from "./EditImage.jsx";
 import EditProfile from "./EditProfile";
-import DeleteProfileImage from "./DeleteProfileImage.jsx";
 
 export default function ProfileCard({ data, refreshTrigger, user_id }) {
+
+  console.log("data")
+    console.log(data)
+
+      console.log("data")
+
   const [isEditing, setIsEditing] = useState(false);
   const [refresh, setRefresh] = useState(0);
   const user = useSelector((state) => state.UserInfo.user);
@@ -50,9 +56,7 @@ export default function ProfileCard({ data, refreshTrigger, user_id }) {
             <img
               src={
                 profile.profile_image
-                  ? `http://localhost:${port}${
-                      profile.profile_image
-                    }?t=${Date.now()}`
+                  ? profile.profile_image
                   : `https://ui-avatars.com/api/?name=${profile.firstname}+${profile.lastname}&background=random&color=fff`
               }
               alt={`${profile.firstname || "User"} ${profile.lastname || ""}`}
@@ -64,7 +68,7 @@ export default function ProfileCard({ data, refreshTrigger, user_id }) {
               <>
                 {/* Hover Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 ease-in-out pointer-events-none" />
-                
+
                 {/* Button Container */}
                 <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-2 pb-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300 ease-in-out transform translate-y-2 group-hover:translate-y-0 z-30">
                   <div className="flex items-center gap-1 bg-white/95 backdrop-blur-sm rounded-full px-1.5 py-1 shadow-lg">
@@ -234,7 +238,10 @@ export default function ProfileCard({ data, refreshTrigger, user_id }) {
                 className="absolute bottom-2 right-2 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full shadow-lg hover:scale-110 active:scale-95 transition-all duration-200 hover:shadow-2xl group"
                 style={{ background: "#BE3D2A", color: "#FFF6E9" }}
               >
-                <Edit2 size={18} className="sm:w-5 sm:h-5 group-hover:rotate-12 transition-transform duration-200" />
+                <Edit2
+                  size={18}
+                  className="sm:w-5 sm:h-5 group-hover:rotate-12 transition-transform duration-200"
+                />
               </button>
             )}
           </div>

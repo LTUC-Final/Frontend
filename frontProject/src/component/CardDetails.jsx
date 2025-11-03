@@ -57,8 +57,7 @@ export default function CardDeatils() {
               <div className="flex items-center gap-4">
                 <img
                   src={
-                    review.customer_profile_image &&
-                    review.customer_profile_image.startsWith("http")
+                    review.customer_profile_image
                       ? review.customer_profile_image
                       : `https://ui-avatars.com/api/?name=${review.customer_name}+${review.customerlastname}&background=random&color=fff`
                   }
