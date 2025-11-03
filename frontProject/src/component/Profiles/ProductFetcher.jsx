@@ -1,13 +1,17 @@
-import { useEffect, useState } from "react";
 import axios from "axios";
-import ProductCard from "./ProductCard";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import ProductCard from "./ProductCard";
 
-export default function ProductFetcher({ profile, refreshTrigger }) {
+export default function ProductFetcher({ profile, refreshTrigger, user_id }) {
   const [product, setProduct] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const uuu = user_id;
 
+  console.log("uuuuuuuuuuuuuu");
+  console.log(uuu);
+  console.log("uuuuuuuuuuuuuuu");
   const user = useSelector((state) => state.UserInfo.user);
 
   useEffect(() => {
@@ -48,11 +52,13 @@ export default function ProductFetcher({ profile, refreshTrigger }) {
     <div className="max-w-7xl mx-auto px-4">
       {loading && <p className="text-center text-[#102E50] my-4">Loading...</p>}
       {error && <p className="text-center text-red-500 my-4">{error}</p>}
-      
+
       {!loading && !error && product.length === 0 && (
         <div className="flex flex-col items-center justify-center text-center py-12 text-[#102E50]">
           <p className="text-xl font-semibold mb-2">No products found</p>
-          <p className="text-sm opacity-70">You haven’t listed any products yet.</p>
+          <p className="text-sm opacity-70">
+            You haven’t listed any products yet.
+          </p>
         </div>
       )}
 
@@ -65,6 +71,7 @@ export default function ProductFetcher({ profile, refreshTrigger }) {
             user={user}
             onDelete={handleDeleteProduct}
             onUpdate={handleUpdate}
+            user_id={uuu}
           />
         ))}
       </div>

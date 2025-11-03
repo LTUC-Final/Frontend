@@ -9,13 +9,13 @@ import "./index.css";
 import store, { customPersisor } from "./redux/userInfo/store.js";
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
+//  <StrictMode>
     <Provider store={store}>
       <PersistGate loading={null} persistor={customPersisor}>
         <BrowserRouter>
             <App />{" "}
         </BrowserRouter>
       </PersistGate>
-    </Provider>{" "}
-  </StrictMode>
+    </Provider>
+//  </StrictMode>
 );

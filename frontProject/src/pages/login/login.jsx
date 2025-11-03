@@ -383,6 +383,7 @@ export default function LoginPage() {
         email: String(email || "").trim().toLowerCase(),
         password,
       });
+      const { user } = response.data;
 
       // خذ user و token مباشرة من نفس الريسبونس
       const { user, token } = response.data;
@@ -394,6 +395,15 @@ export default function LoginPage() {
       const cartRes = await axios.get(
         `http://localhost:${port}/api/carts/products/${user.user_id}`,
         { headers: { Authorization: `Bearer ${token}` } }
+      dispatch(
+        setUserInfo({
+          user: response.data.user,
+          token: response.data.token,
+        })
+      );
+
+      const res = await axios.get(
+        `http://localhost:${port}/api/carts/products/${user.user_id}`
       );
 
       dispatch(

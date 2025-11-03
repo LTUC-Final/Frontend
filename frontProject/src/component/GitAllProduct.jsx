@@ -3233,7 +3233,16 @@ export default function GitAllProduct() {
                   >
                     <div className="relative w-full h-60 sm:h-64 md:h-72 bg-[#0f2a47]/5 overflow-visible">
                       <img
-                        src={toImg(card?.image)}
+                        // src={toImg(card?.image)}
+                        src={
+  card.image
+    ? card.image.includes("firebase") || card.image.includes("googleapis")
+      ? card.image
+      : card.image.startsWith("http")
+      ? card.image
+      : `http://localhost:${port}${card.image}`
+    : defaultImg
+}
                         alt={card?.name || "Product image"}
                         loading="lazy"
                         decoding="async"

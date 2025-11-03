@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = { user: null, token: null, cartItem: 0 };
+const initialState = { user: null, token: null, cartItem: 0, reqItem: 0 };
 
 const UserInfoSlice = createSlice({
   name: "UserInfo",
@@ -14,6 +14,9 @@ const UserInfoSlice = createSlice({
       state.user = null;
       state.token = null;
     },
+    clearCartItem: (state) => {
+      state.cartItem = 0;
+    },
     setCartItem: (state, action) => {
       state.cartItem = Number(action.payload.cartItem);
     },
@@ -22,6 +25,9 @@ const UserInfoSlice = createSlice({
     },
     incrementCartItem: (state) => {
       state.cartItem += 1;
+    },
+    setReqItem: (state, action) => {
+      state.reqItem = Number(action.payload.reqItem);
     },
   },
 });
@@ -32,6 +38,8 @@ export const {
   incrementCartItem,
   decrementCartItem,
   setCartItem,
+  setReqItem,
+  clearCartItem,
 } = UserInfoSlice.actions;
 
 export default UserInfoSlice.reducer;

@@ -311,7 +311,7 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useAddToCart } from "../../component/AddToCart.jsx";
 import AddTOFav from "../../component/AddToFav.jsx";
-import defaultImg from "../../assets/NoImage.png";
+import NoImage from "../../assets/NoImage.png";
 
 export default function WishList() {
   const token = useSelector((s) => s.UserInfo.token);
@@ -524,11 +524,11 @@ export default function WishList() {
               >
                 <div className="relative w-full h-56 sm:h-60 md:h-64 bg-[#0f2a47]/5">
                   <img
-                    src={toImg(p.image)}
+                     src={p.image ? p.image : NoImage}
                     alt={p.name || "wishlist item"}
                     className="w-full h-full object-cover object-center scale-[1.03] transition duration-500 group-hover:scale-[1.06]"
                     onLoad={(e) => handleImgLoad(key, e)}
-                    onError={(e) => (e.currentTarget.src = defaultImg)}
+                    onError={(e) => (e.currentTarget.src = NoImage)}
                     loading="lazy"
                     decoding="async"
                   />
