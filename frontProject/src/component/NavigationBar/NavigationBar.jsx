@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext, useState } from "react";
+import { useContext, useState , useRef, useCallback  } from "react";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 
@@ -39,6 +39,24 @@ export default function NavigationBar({ onScroll }) {
   const { user } = useSelector((state) => state.UserInfo);
   const userRole = user?.role;
   const userId = user?.user_id;
+
+
+  const closeTimer = useRef(null);
+
+const handleMouseEnter = useCallback(() => {
+  clearTimeout(closeTimer.current);
+  closeTimer.current = null;
+  setIsSidebarOpen(true);
+}, []);
+
+const handleMouseLeave = useCallback(() => {
+  clearTimeout(closeTimer.current);
+  closeTimer.current = setTimeout(() => {
+    setIsSidebarOpen(false);
+  }, 200);
+}, []);
+
+
 
   const getIcon = (name, isTopNav = false) => {
     const iconProps = isTopNav
@@ -149,11 +167,10 @@ export default function NavigationBar({ onScroll }) {
           <div className="hidden lg:flex items-center gap-8">
             {leftItems.map((item, index) => {
               const isActive = location.pathname === item.href;
-              const linkClasses = `relative flex items-center gap-5 px-5 py-3 text-base font-normal transition-all duration-300 rounded-lg ${
-                isActive
-                  ? "text-[#F5C45E] bg-[#F5C45E]/10 shadow-md"
-                  : "text-[#FFF6E9] hover:text-[#F5C45E] hover:bg-[#F5C45E]/5 hover:shadow-md"
-              } ml-4`;
+              const linkClasses = `relative flex items-center gap-5 px-5 py-3 text-base font-normal transition-all duration-300 rounded-lg ${isActive
+                ? "text-[#F5C45E] bg-[#F5C45E]/10 shadow-md"
+                : "text-[#FFF6E9] hover:text-[#F5C45E] hover:bg-[#F5C45E]/5 hover:shadow-md"
+                } ml-4`;
 
               return (
                 <div className="relative group" key={index}>
@@ -164,11 +181,7 @@ export default function NavigationBar({ onScroll }) {
                   >
                     {getIcon(item.name, true)}
 
-                    {item.name !== "Messages" &&
-                      item.name !== "Requests" &&
-                      item.name !== "Cart" && (
-                        <span className="flex-1">{item.name}</span>
-                      )}
+                    {item.name !== "Messages" && item.name !== "Requests" && item.name !== "Cart" && (<span className="flex-1">{item.name}</span>)}
                     {item.name === "Cart" && cartCount > 0 && (
                       <span className="absolute -top-[2px] right-1/2 translate-x-[24px] translate-y-[4px] bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
                         {cartCount}
@@ -193,8 +206,9 @@ export default function NavigationBar({ onScroll }) {
           <div className="hidden lg:block relative ml-8">
             <div
               className="relative flex items-center justify-center w-14 h-14 cursor-pointer group"
-              onMouseEnter={() => setIsSidebarOpen(true)}
-              onMouseLeave={() => setIsSidebarOpen(false)}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+
             >
               {/* Animated gradient ring */}
               <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#F5C45E] via-[#E78B48] to-[#BE3D2A] opacity-75 group-hover:opacity-100 transition-opacity duration-300 animate-pulse"></div>
@@ -247,11 +261,10 @@ export default function NavigationBar({ onScroll }) {
               <Link
                 key={index}
                 to={item.href}
-                className={`flex items-center gap-3 px-6 py-4 no-underline font-medium transition-all duration-300 ${
-                  isActive
-                    ? "text-[#F5C45E] bg-[#F5C45E]/10 border-l-4 border-l-[#F5C45E]"
-                    : "text-[#FFF6E9] hover:text-[#F5C45E] hover:bg-[#F5C45E]/5"
-                }`}
+                className={`flex items-center gap-3 px-6 py-4 no-underline font-medium transition-all duration-300 ${isActive
+                  ? "text-[#F5C45E] bg-[#F5C45E]/10 border-l-4 border-l-[#F5C45E]"
+                  : "text-[#FFF6E9] hover:text-[#F5C45E] hover:bg-[#F5C45E]/5"
+                  }`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 {getIcon(item.name)}
@@ -274,15 +287,18 @@ export default function NavigationBar({ onScroll }) {
 
       {/* Sidebar Navigation - Desktop Only */}
       <div
-        className={`hidden lg:block fixed top-0 right-0 h-full w-72 bg-[#102E50] shadow-2xl transition-transform duration-300 z-[999] border-t-2 border-transparent ${
-          isSidebarOpen ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`hidden lg:block fixed top-0 right-0 h-full w-72 bg-[#102E50] shadow-2xl transition-transform duration-300 z-[400] border-t-2 border-transparent ${isSidebarOpen ? "translate-x-0" : "translate-x-full"
+          }`}
         style={{
           borderImage: "linear-gradient(to right, #F5C45E, #E78B48, #BE3D2A) 1",
         }}
-        onMouseEnter={() => setIsSidebarOpen(true)}
-        onMouseLeave={() => setIsSidebarOpen(false)}
+
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+
+
       >
+
         <div className="flex flex-col h-full pt-20 pb-6">
           {/* Sidebar Items */}
           <div className="flex-1 overflow-y-auto py-6">
@@ -292,11 +308,10 @@ export default function NavigationBar({ onScroll }) {
                 <Link
                   key={index}
                   to={item.href}
-                  className={`flex items-center gap-4 px-6 py-4 no-underline font-medium transition-all duration-300 relative ${
-                    isActive
-                      ? "text-[#F5C45E] bg-[#F5C45E]/10"
-                      : "text-[#FFF6E9] hover:text-[#F5C45E] hover:bg-[#F5C45E]/5"
-                  }`}
+                  className={`flex items-center gap-4 px-6 py-4 no-underline font-medium transition-all duration-300 relative ${isActive
+                    ? "text-[#F5C45E] bg-[#F5C45E]/10"
+                    : "text-[#FFF6E9] hover:text-[#F5C45E] hover:bg-[#F5C45E]/5"
+                    }`}
                   onClick={() => setIsSidebarOpen(false)}
                 >
                   {isActive && (
@@ -321,11 +336,8 @@ export default function NavigationBar({ onScroll }) {
                       </span>
                     )}
                   </div>
-                  {item.name !== "Messages" &&
-                    item.name !== "Requests" &&
-                    item.name !== "Cart" && (
-                      <span className="flex-1">{item.name}</span>
-                    )}
+                  {item.name !== "Messages" && item.name !== "Requests" && item.name !== "Cart" && (<span className="flex-1">{item.name}</span>)}
+
                 </Link>
               );
             })}
@@ -335,11 +347,12 @@ export default function NavigationBar({ onScroll }) {
 
       {/* Sidebar Overlay */}
       {isSidebarOpen && (
-        <div
-          className="hidden lg:block fixed inset-0 bg-black/20 z-[998]"
-          onMouseEnter={() => setIsSidebarOpen(false)}
-        ></div>
-      )}
+  <div
+    className="hidden lg:block fixed inset-0 bg-black/20 z-[398]" // z-index lower than sidebar (400)
+    onClick={() => setIsSidebarOpen(false)}
+    style={{ pointerEvents: isSidebarOpen ? "auto" : "none" }}
+  ></div>
+)}
     </>
   );
 }
