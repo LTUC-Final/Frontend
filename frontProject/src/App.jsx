@@ -29,6 +29,7 @@ import MessagesSlice from "./component/LiveChat/MessagesSlice";
 // import { CountRequest } from "./contexts/countRequest";
 import ProtectedRoute from "./component/ProdectRoute";
 import { CountRequestProvider } from "./contexts/CountRequestProvider";
+import About1 from "./pages/About1";
 import CancelPage from "./pages/CancelPage";
 import CartPage from "./pages/cart/page";
 import PaymentsPage from "./pages/PaymentsPage";
@@ -128,6 +129,7 @@ function App() {
           <Route path="/verify_otp" element={<VerifyOtp />} />
           <Route path="/reset_password" element={<ResetPassword />} /> */}
               <Route path="/About" element={<About />} />{" "}
+              <Route path="/About1" element={<About1 />} />{" "}
             </Route>
           </Routes>
         </Layout>

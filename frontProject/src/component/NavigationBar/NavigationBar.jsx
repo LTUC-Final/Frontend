@@ -99,7 +99,6 @@ export default function NavigationBar({ onScroll }) {
   // .filter((item) => !item.roles || item.roles.includes(userRole))
   // .filter((item) => item.name !== "Messages" && item.name !== "Requests");
 
-
   const navItem = navItems.filter(
     (item) => !item.roles || item.roles.includes(userRole)
   );
@@ -107,13 +106,23 @@ export default function NavigationBar({ onScroll }) {
   // Left items: Dashboard, Home, About
   const leftItems = navItem.filter(
     (item) =>
-      item.name === "Dashboard" || item.name === "Home" || item.name === "About" || item.name == "Messages" || item.name == "Requests" || item.name == "Cart"
+      item.name === "Dashboard" ||
+      item.name === "Home" ||
+      item.name === "About" ||
+      item.name == "Messages" ||
+      item.name == "Requests" ||
+      item.name == "Cart"
   );
 
   // Sidebar items: Everything except Dashboard, Home, About
   const sidebarItems = navItem.filter(
     (item) =>
-      item.name !== "Dashboard" && item.name !== "Home" && item.name !== "About" && item.name !== "Messages" && item.name !== "Requests" && item.name !== "Cart"
+      item.name !== "Dashboard" &&
+      item.name !== "Home" &&
+      item.name !== "About" &&
+      item.name !== "Messages" &&
+      item.name !== "Requests" &&
+      item.name !== "Cart"
   );
 
   return (
@@ -140,10 +149,11 @@ export default function NavigationBar({ onScroll }) {
           <div className="hidden lg:flex items-center gap-8">
             {leftItems.map((item, index) => {
               const isActive = location.pathname === item.href;
-              const linkClasses = `relative flex items-center gap-5 px-5 py-3 text-base font-normal transition-all duration-300 rounded-lg ${isActive
+              const linkClasses = `relative flex items-center gap-5 px-5 py-3 text-base font-normal transition-all duration-300 rounded-lg ${
+                isActive
                   ? "text-[#F5C45E] bg-[#F5C45E]/10 shadow-md"
                   : "text-[#FFF6E9] hover:text-[#F5C45E] hover:bg-[#F5C45E]/5 hover:shadow-md"
-                } ml-4`;
+              } ml-4`;
 
               return (
                 <div className="relative group" key={index}>
@@ -154,18 +164,22 @@ export default function NavigationBar({ onScroll }) {
                   >
                     {getIcon(item.name, true)}
 
-                    {item.name !== "Messages" && item.name !=="Requests" && item.name !== "Cart"&& (<span className="flex-1">{item.name}</span>)}
+                    {item.name !== "Messages" &&
+                      item.name !== "Requests" &&
+                      item.name !== "Cart" && (
+                        <span className="flex-1">{item.name}</span>
+                      )}
                     {item.name === "Cart" && cartCount > 0 && (
-               <span className="absolute -top-[2px] right-1/2 translate-x-[24px] translate-y-[4px] bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
-  {cartCount}
-</span>
-                )}
-                {item.name === "Requests" && ReqCount > 0 && (
-                  <span className="absolute -top-[2px] right-1/2 translate-x-[24px] translate-y-[4px] bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
-                    {ReqCount}
-                  </span>
-                )}
-                
+                      <span className="absolute -top-[2px] right-1/2 translate-x-[24px] translate-y-[4px] bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                        {cartCount}
+                      </span>
+                    )}
+                    {item.name === "Requests" && ReqCount > 0 && (
+                      <span className="absolute -top-[2px] right-1/2 translate-x-[24px] translate-y-[4px] bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                        {ReqCount}
+                      </span>
+                    )}
+
                     {isActive && (
                       <div className="absolute -bottom-1 left-0 right-0 h-1 bg-[#F5C45E] rounded-full shadow-lg"></div>
                     )}
@@ -203,16 +217,19 @@ export default function NavigationBar({ onScroll }) {
           >
             <div className="flex flex-col gap-1">
               <span
-                className={`w-5 h-0.5 bg-[#F5C45E] transition-all duration-300 rounded-sm ${isMenuOpen ? "rotate-45 translate-y-[6px]" : ""
-                  }`}
+                className={`w-5 h-0.5 bg-[#F5C45E] transition-all duration-300 rounded-sm ${
+                  isMenuOpen ? "rotate-45 translate-y-[6px]" : ""
+                }`}
               ></span>
               <span
-                className={`w-5 h-0.5 bg-[#F5C45E] transition-all duration-300 rounded-sm ${isMenuOpen ? "opacity-0" : ""
-                  }`}
+                className={`w-5 h-0.5 bg-[#F5C45E] transition-all duration-300 rounded-sm ${
+                  isMenuOpen ? "opacity-0" : ""
+                }`}
               ></span>
               <span
-                className={`w-5 h-0.5 bg-[#F5C45E] transition-all duration-300 rounded-sm ${isMenuOpen ? "-rotate-45 -translate-y-[6px]" : ""
-                  }`}
+                className={`w-5 h-0.5 bg-[#F5C45E] transition-all duration-300 rounded-sm ${
+                  isMenuOpen ? "-rotate-45 -translate-y-[6px]" : ""
+                }`}
               ></span>
             </div>
           </button>
@@ -220,8 +237,9 @@ export default function NavigationBar({ onScroll }) {
 
         {/* Mobile Navigation */}
         <div
-          className={`lg:hidden flex flex-col bg-[#102E50] border-t border-[#F5C45E]/20 overflow-hidden transition-[max-height] duration-300 ${isMenuOpen ? "max-h-[600px]" : "max-h-0"
-            }`}
+          className={`lg:hidden flex flex-col bg-[#102E50] border-t border-[#F5C45E]/20 overflow-hidden transition-[max-height] duration-300 ${
+            isMenuOpen ? "max-h-[600px]" : "max-h-0"
+          }`}
         >
           {navItem.map((item, index) => {
             const isActive = location.pathname === item.href;
@@ -229,10 +247,11 @@ export default function NavigationBar({ onScroll }) {
               <Link
                 key={index}
                 to={item.href}
-                className={`flex items-center gap-3 px-6 py-4 no-underline font-medium transition-all duration-300 ${isActive
+                className={`flex items-center gap-3 px-6 py-4 no-underline font-medium transition-all duration-300 ${
+                  isActive
                     ? "text-[#F5C45E] bg-[#F5C45E]/10 border-l-4 border-l-[#F5C45E]"
                     : "text-[#FFF6E9] hover:text-[#F5C45E] hover:bg-[#F5C45E]/5"
-                  }`}
+                }`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 {getIcon(item.name)}
@@ -255,8 +274,9 @@ export default function NavigationBar({ onScroll }) {
 
       {/* Sidebar Navigation - Desktop Only */}
       <div
-        className={`hidden lg:block fixed top-0 right-0 h-full w-72 bg-[#102E50] shadow-2xl transition-transform duration-300 z-[999] border-t-2 border-transparent ${isSidebarOpen ? "translate-x-0" : "translate-x-full"
-          }`}
+        className={`hidden lg:block fixed top-0 right-0 h-full w-72 bg-[#102E50] shadow-2xl transition-transform duration-300 z-[999] border-t-2 border-transparent ${
+          isSidebarOpen ? "translate-x-0" : "translate-x-full"
+        }`}
         style={{
           borderImage: "linear-gradient(to right, #F5C45E, #E78B48, #BE3D2A) 1",
         }}
@@ -272,10 +292,11 @@ export default function NavigationBar({ onScroll }) {
                 <Link
                   key={index}
                   to={item.href}
-                  className={`flex items-center gap-4 px-6 py-4 no-underline font-medium transition-all duration-300 relative ${isActive
+                  className={`flex items-center gap-4 px-6 py-4 no-underline font-medium transition-all duration-300 relative ${
+                    isActive
                       ? "text-[#F5C45E] bg-[#F5C45E]/10"
                       : "text-[#FFF6E9] hover:text-[#F5C45E] hover:bg-[#F5C45E]/5"
-                    }`}
+                  }`}
                   onClick={() => setIsSidebarOpen(false)}
                 >
                   {isActive && (
@@ -300,8 +321,11 @@ export default function NavigationBar({ onScroll }) {
                       </span>
                     )}
                   </div>
-                  {item.name !== "Messages" && item.name !== "Requests"&& item.name !== "Cart" &&(<span className="flex-1">{item.name}</span>)}
-                  
+                  {item.name !== "Messages" &&
+                    item.name !== "Requests" &&
+                    item.name !== "Cart" && (
+                      <span className="flex-1">{item.name}</span>
+                    )}
                 </Link>
               );
             })}
