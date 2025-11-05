@@ -37,6 +37,7 @@ import ProductForm from "./pages/ProviderDashBoard/providerDashboard";
 import ProviderPaymentsPage from "./pages/ProviderPaymentPage";
 import OrdersManagementProvider from "./pages/request/pageReq";
 import SuccessPage from "./pages/SuccessPage";
+import MainDashBoard1 from "./pages/mainDashBoard/mainDashBoard1";
 function App() {
   const [cart, setCart] = useState([]);
   const CusData = useSelector((state) => state.UserInfo);
@@ -87,7 +88,8 @@ function App() {
                 element={<ProductForm></ProductForm>}
               />
               {/* <Route path="/userDashboard" element={<h1>كفووو userDashboard</h1>} /> */}
-              <Route path="/mainDashBoard" element={<MainDashBoard />} />
+              <Route path="/mainDashBoard" element={<MainDashBoard />} />{" "}
+              <Route path="/mainDashBoard1" element={<MainDashBoard1 />} />
               <Route path="/favorite" element={<WishList />} />
               <Route path="/productdatails" element={<CardDeatils />} />
               <Route path="/userDashboard" element={<GitAllProduct />} />

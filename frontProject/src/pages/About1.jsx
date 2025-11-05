@@ -1,8 +1,10 @@
 import { motion } from "framer-motion";
 import { Heart, Lightbulb, Shield, TrendingUp, Zap } from "lucide-react";
+import hussamImage from "../assets/210363062.jpeg";
 import imag2 from "../assets/diverse-entrepreneurs-and-creators-working-togethe (1).jpg";
 import imag1 from "../assets/jordanian-creators-collaborating-and-crafting-beau (1).jpg";
-import imag3 from "../assets/professional-portrait-of- (1).jpg";
+import omarImage from "../assets/WhatsApp Image 2024-08-12 at 5.01.26 PM.jpeg";
+
 const fadeStagger = {
   hidden: { opacity: 0 },
   show: { opacity: 1, transition: { staggerChildren: 0.12 } },
@@ -62,23 +64,25 @@ export default function About1() {
     {
       name: "Omar Alqaraan",
       role: "Founder & Strategy",
-      link: "https://www.linkedin.com/in/omar-alqaran",
-      imge: imag3,
+      link: "https://www.linkedin.com/in/omar-essam-quraan-5a917a210/",
+      imge: omarImage,
+    },
+    {
+      name: "Hossam Ibrahim",
+      role: "Product Manager",
+      link: "https://www.linkedin.com/in/hussam-ibrahim-93049a181/",
+      imge: hussamImage,
     },
     {
       name: "Adan Aljboor",
       role: "Lead Developer",
       link: "https://www.linkedin.com/in/adan-aljuboor",
     },
+
     {
       name: "Jawhara Shahaltoukh",
       role: "Design Lead",
       link: "https://www.linkedin.com/in/jawhara-shahaltoukh",
-    },
-    {
-      name: "Hossam Ibrahim",
-      role: "Product Manager",
-      link: "https://www.linkedin.com/in/hossam-ibrahim",
     },
   ];
 
@@ -107,9 +111,9 @@ export default function About1() {
             className="space-y-8 text-center"
           >
             <motion.div variants={fadeUp}>
-              <span className="inline-block px-4 py-2 bg-white/60 backdrop-blur-sm rounded-full text-sm font-medium text-[#102E50]">
+              {/* <span className="inline-block px-4 py-2 bg-white/60 backdrop-blur-sm rounded-full text-sm font-medium text-[#102E50]">
                 Welcome to BidayaMart
-              </span>
+              </span> */}
             </motion.div>
             <motion.h1
               variants={fadeUp}
@@ -124,7 +128,7 @@ export default function About1() {
               variants={fadeUp}
               className="max-w-2xl mx-auto text-lg md:text-xl text-[#102E50]/80 leading-relaxed"
             >
-              BidayaMart is home to Jordanian creators and small businesses. We
+              Bidaya is home to Jordanian creators and small businesses. We
               connect new ideas with real customers, turning first beginnings
               into success stories.
             </motion.p>
@@ -351,7 +355,7 @@ export default function About1() {
                       {member.name}
                     </h4>
                     <p className="text-sm text-[#102E50]/60 mb-4 flex-grow">
-                      {member.role}
+                      {/* {member.role} */}
                     </p>
                     <div className="flex items-center gap-2 text-[#102E50]/70 group-hover:text-[#E78B48] transition-colors duration-300">
                       <span className="text-sm font-medium">LinkedIn</span>
