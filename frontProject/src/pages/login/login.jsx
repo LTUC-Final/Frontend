@@ -307,6 +307,7 @@ const allowedDomains = new Set([
   "icloud.com",
 ]);
 
+
 function validEmail(emailRaw) {
   const email = String(emailRaw || "").trim().toLowerCase();
   if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(email)) return false;
@@ -385,16 +386,16 @@ export default function LoginPage() {
       });
       const { user } = response.data;
 
-      // خذ user و token مباشرة من نفس الريسبونس
-      const { user, token } = response.data;
+      // // خذ user و token مباشرة من نفس الريسبونس
+      // const { user, token } = response.data;
 
-      // خزّنهم بالريدكس
-      dispatch(setUserInfo({ user, token }));
+      // // خزّنهم بالريدكس
+      // dispatch(setUserInfo({ user, token }));
 
-      // 2) جيب السلة باستخدام user_id من الريسبونس + مرر التوكن بالهيدر
-      const cartRes = await axios.get(
-        `http://localhost:${port}/api/carts/products/${user.user_id}`,
-        { headers: { Authorization: `Bearer ${token}` } }
+      // // 2) جيب السلة باستخدام user_id من الريسبونس + مرر التوكن بالهيدر
+      // const cartRes = await axios.get(
+      //   `http://localhost:${port}/api/carts/products/${user.user_id}`,
+      //   { headers: { Authorization: `Bearer ${token}` } }
       dispatch(
         setUserInfo({
           user: response.data.user,
@@ -406,11 +407,17 @@ export default function LoginPage() {
         `http://localhost:${port}/api/carts/products/${user.user_id}`
       );
 
-      dispatch(
+
+        dispatch(
         setCartItem({
-          cartItem: Number(Array.isArray(cartRes.data) ? cartRes.data.length : cartRes.data?.length || 0),
+          cartItem: Number(res.data.length),
         })
       );
+      // dispatch(
+      //   setCartItem({
+      //     cartItem: Number(Array.isArray(cartRes.data) ? cartRes.data.length : cartRes.data?.length || 0),
+      //   })
+      // );
 
       Swal.fire({
         title: response?.data?.message || "Login successful",
