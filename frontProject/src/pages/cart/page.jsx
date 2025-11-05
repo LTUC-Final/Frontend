@@ -130,13 +130,11 @@ export default function CartPage() {
 
   const updateQuantity = (cart_id, change) => {
     setCart(
-      cart
-        .map((p) =>
-          p.cart_id === cart_id
-            ? { ...p, quantity: Math.max(0, p.quantity + change) }
-            : p
-        )
-        .filter((p) => p.quantity > 0)
+      cart.map((p) =>
+        p.cart_id === cart_id
+          ? { ...p, quantity: Math.max(1, p.quantity + change) }
+          : p
+      )
     );
   };
 

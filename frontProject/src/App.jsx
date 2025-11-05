@@ -29,6 +29,7 @@ import MessagesSlice from "./component/LiveChat/MessagesSlice";
 // import { CountRequest } from "./contexts/countRequest";
 import ProtectedRoute from "./component/ProdectRoute";
 import { CountRequestProvider } from "./contexts/CountRequestProvider";
+import About1 from "./pages/About1";
 import CancelPage from "./pages/CancelPage";
 import CartPage from "./pages/cart/page";
 import PaymentsPage from "./pages/PaymentsPage";
@@ -36,6 +37,7 @@ import ProductForm from "./pages/ProviderDashBoard/providerDashboard";
 import ProviderPaymentsPage from "./pages/ProviderPaymentPage";
 import OrdersManagementProvider from "./pages/request/pageReq";
 import SuccessPage from "./pages/SuccessPage";
+import MainDashBoard1 from "./pages/mainDashBoard/mainDashBoard1";
 function App() {
   const [cart, setCart] = useState([]);
   const CusData = useSelector((state) => state.UserInfo);
@@ -86,7 +88,8 @@ function App() {
                 element={<ProductForm></ProductForm>}
               />
               {/* <Route path="/userDashboard" element={<h1>كفووو userDashboard</h1>} /> */}
-              <Route path="/mainDashBoard" element={<MainDashBoard />} />
+              <Route path="/mainDashBoard" element={<MainDashBoard />} />{" "}
+              <Route path="/mainDashBoard1" element={<MainDashBoard1 />} />
               <Route path="/favorite" element={<WishList />} />
               <Route path="/productdatails" element={<CardDeatils />} />
               <Route path="/userDashboard" element={<GitAllProduct />} />
@@ -128,6 +131,7 @@ function App() {
           <Route path="/verify_otp" element={<VerifyOtp />} />
           <Route path="/reset_password" element={<ResetPassword />} /> */}
               <Route path="/About" element={<About />} />{" "}
+              <Route path="/About1" element={<About1 />} />{" "}
             </Route>
           </Routes>
         </Layout>

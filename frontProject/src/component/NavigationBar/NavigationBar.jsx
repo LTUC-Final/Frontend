@@ -117,7 +117,6 @@ const handleMouseLeave = useCallback(() => {
   // .filter((item) => !item.roles || item.roles.includes(userRole))
   // .filter((item) => item.name !== "Messages" && item.name !== "Requests");
 
-
   const navItem = navItems.filter(
     (item) => !item.roles || item.roles.includes(userRole)
   );
@@ -125,13 +124,23 @@ const handleMouseLeave = useCallback(() => {
   // Left items: Dashboard, Home, About
   const leftItems = navItem.filter(
     (item) =>
-      item.name === "Dashboard" || item.name === "Home" || item.name === "About" || item.name == "Messages" || item.name == "Requests" || item.name == "Cart"
+      item.name === "Dashboard" ||
+      item.name === "Home" ||
+      item.name === "About" ||
+      item.name == "Messages" ||
+      item.name == "Requests" ||
+      item.name == "Cart"
   );
 
   // Sidebar items: Everything except Dashboard, Home, About
   const sidebarItems = navItem.filter(
     (item) =>
-      item.name !== "Dashboard" && item.name !== "Home" && item.name !== "About" && item.name !== "Messages" && item.name !== "Requests" && item.name !== "Cart"
+      item.name !== "Dashboard" &&
+      item.name !== "Home" &&
+      item.name !== "About" &&
+      item.name !== "Messages" &&
+      item.name !== "Requests" &&
+      item.name !== "Cart"
   );
 
   return (
@@ -222,16 +231,19 @@ const handleMouseLeave = useCallback(() => {
           >
             <div className="flex flex-col gap-1">
               <span
-                className={`w-5 h-0.5 bg-[#F5C45E] transition-all duration-300 rounded-sm ${isMenuOpen ? "rotate-45 translate-y-[6px]" : ""
-                  }`}
+                className={`w-5 h-0.5 bg-[#F5C45E] transition-all duration-300 rounded-sm ${
+                  isMenuOpen ? "rotate-45 translate-y-[6px]" : ""
+                }`}
               ></span>
               <span
-                className={`w-5 h-0.5 bg-[#F5C45E] transition-all duration-300 rounded-sm ${isMenuOpen ? "opacity-0" : ""
-                  }`}
+                className={`w-5 h-0.5 bg-[#F5C45E] transition-all duration-300 rounded-sm ${
+                  isMenuOpen ? "opacity-0" : ""
+                }`}
               ></span>
               <span
-                className={`w-5 h-0.5 bg-[#F5C45E] transition-all duration-300 rounded-sm ${isMenuOpen ? "-rotate-45 -translate-y-[6px]" : ""
-                  }`}
+                className={`w-5 h-0.5 bg-[#F5C45E] transition-all duration-300 rounded-sm ${
+                  isMenuOpen ? "-rotate-45 -translate-y-[6px]" : ""
+                }`}
               ></span>
             </div>
           </button>
@@ -239,8 +251,9 @@ const handleMouseLeave = useCallback(() => {
 
         {/* Mobile Navigation */}
         <div
-          className={`lg:hidden flex flex-col bg-[#102E50] border-t border-[#F5C45E]/20 overflow-hidden transition-[max-height] duration-300 ${isMenuOpen ? "max-h-[600px]" : "max-h-0"
-            }`}
+          className={`lg:hidden flex flex-col bg-[#102E50] border-t border-[#F5C45E]/20 overflow-hidden transition-[max-height] duration-300 ${
+            isMenuOpen ? "max-h-[600px]" : "max-h-0"
+          }`}
         >
           {navItem.map((item, index) => {
             const isActive = location.pathname === item.href;
