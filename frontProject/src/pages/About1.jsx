@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
 import { Heart, Lightbulb, Shield, TrendingUp, Zap } from "lucide-react";
-import hussamImage from "../assets/210363062.jpeg";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import imag2 from "../assets/diverse-entrepreneurs-and-creators-working-togethe (1).jpg";
 import imag1 from "../assets/jordanian-creators-collaborating-and-crafting-beau (1).jpg";
-import omarImage from "../assets/WhatsApp Image 2024-08-12 at 5.01.26 PM.jpeg";
 
 const fadeStagger = {
   hidden: { opacity: 0 },
@@ -59,7 +59,22 @@ export default function About1() {
       color: "from-[#E78B48] to-[#102E50]",
     },
   ];
-
+  const token = useSelector((state) => state.UserInfo.token);
+  const role = useSelector((state) => state.UserInfo.user.role);
+  const navigate = useNavigate();
+  const handleGetStarted = () => {
+    if (!token) {
+      navigate("/login");
+    } else {
+      if (role === "provider") {
+        navigate("/providerDashboard");
+      } else if (role === "customer") {
+        navigate("/userDashboard");
+      } else {
+        navigate("/");
+      }
+    }
+  };
   const team = [
     {
       name: "Omar Alqaraan",
@@ -290,7 +305,10 @@ export default function About1() {
                 BidayaMart isn't just a marketplace—it's a movement celebrating
                 Jordanian talent and entrepreneurship.
               </motion.p>
-              <motion.div variants={fadeStagger} className="space-y-4 pt-4 text-[#FFF6E9] ">
+              <motion.div
+                variants={fadeStagger}
+                className="space-y-4 pt-4 text-[#FFF6E9] "
+              >
                 {[
                   "Connect directly with customers who believe in your vision",
                   "Access tools and resources to grow your business",
@@ -307,7 +325,9 @@ export default function About1() {
                         ✓
                       </span>
                     </div>
-                    <span className="text-[#102E50]/80 text-lg text-[#FFF6E9] ">{point}</span>
+                    <span className="text-[#102E50]/80 text-lg text-[#FFF6E9] ">
+                      {point}
+                    </span>
                   </motion.div>
                 ))}
               </motion.div>
@@ -420,6 +440,7 @@ export default function About1() {
               }}
               whileTap={{ scale: 0.98 }}
               className="px-10 py-4 bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#102E50] text-white font-semibold rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300"
+              onClick={handleGetStarted}
             >
               Get Started Today
             </motion.button>
