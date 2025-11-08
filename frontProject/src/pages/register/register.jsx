@@ -152,12 +152,13 @@ export default function Register() {
 
     try {
       setLoading(true);
-      // const port = import.meta.env.VITE_PORT;
-      const port = import.meta.env.VITE_API_URL;
+      
+      // const port = import.meta.env.VITE_API_URL;
 
+      const port = import.meta.env.VITE_PORT;
       const normalizedPhone = normalizePhoneJordan(phone);
 
-      const res = await axios.post(`${port}/api/register`, {
+      const res = await axios.post(`http://localhost:${port}/api/register`, {
         firstname: squeezeSpaces(firstname),
         lastname: squeezeSpaces(lastname),
         email: String(email || "").trim().toLowerCase(),
