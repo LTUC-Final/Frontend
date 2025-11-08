@@ -106,7 +106,7 @@ export default function LoginPage() {
       );
 
       const res = await axios.get(
-        `http://localhost:${port}/api/carts/products/${user.user_id}`
+        `https://backend-a2qq.onrender.com/api/carts/products/${user.user_id}`
       );
 
       dispatch(
