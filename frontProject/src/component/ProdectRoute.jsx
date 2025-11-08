@@ -31,6 +31,16 @@ import { Navigate, Outlet } from "react-router-dom";
 export default function ProtectedRoute() {
   const persisted = localStorage.getItem("persist:UserInfo");
   let token;
+  const publicRoutes = [
+    "/mainDashBoard",
+    "/About",
+    "/mainDashBoard1",
+    "/About1",
+  ];
+
+  if (publicRoutes.includes(location.pathname)) {
+    return <Outlet />;
+  }
   if (persisted) {
     try {
       const parsedPersist = JSON.parse(persisted);
