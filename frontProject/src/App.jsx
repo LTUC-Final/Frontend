@@ -68,12 +68,8 @@ function App() {
 
   return (
     <div>
-      {" "}
-      <CountRequestProvider>
-        <Layout
-        //  cartCount={cart.length}
-        >
-          <Routes>
+      <Layout>
+        <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/" element={<h1>Alquraan </h1>} />
             <Route path="/logout" element={<Logout />} />
@@ -137,7 +133,6 @@ function App() {
         </Layout>
         <ChatBoot></ChatBoot>
         <Footer></Footer>{" "}
-      </CountRequestProvider>
     </div>
   );
 }

@@ -1,4 +1,8 @@
 {
+  "scripts": {
+    "build": "cd frontProject && npm install && npm run build",
+    "start": "cd frontProject && npm run start"
+  },
   "dependencies": {
     "@stripe/stripe-js": "^7.9.0",
     "easyinvoice": "^3.0.47",
