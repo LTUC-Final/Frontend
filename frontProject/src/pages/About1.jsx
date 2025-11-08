@@ -60,7 +60,7 @@ export default function About1() {
     },
   ];
   const token = useSelector((state) => state.UserInfo.token);
-  const role = useSelector((state) => state.UserInfo.user.role);
+  const role = useSelector((state) => state.UserInfo?.user?.role);
   const navigate = useNavigate();
   const handleGetStarted = () => {
     if (!token) {
