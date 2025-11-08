@@ -10,6 +10,7 @@ import store, { customPersisor } from "./redux/userInfo/store.js";
 
 createRoot(document.getElementById("root")).render(
 //  <StrictMode>
+<CountRequest.Provider value={{ value: 0 }}>
     <Provider store={store}>
       <PersistGate loading={null} persistor={customPersisor}>
         <BrowserRouter>
@@ -17,5 +18,6 @@ createRoot(document.getElementById("root")).render(
         </BrowserRouter>
       </PersistGate>
     </Provider>
+    </CountRequest.Provider>
 //  </StrictMode>
 );
