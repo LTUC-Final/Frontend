@@ -1,9 +1,10 @@
 import axios from "axios";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 export default function useSuggestions() {
     const [decText, setDecText] = useState([])
-     const CusData = useSelector((state) => state.UserInfo);
+    const CusData = useSelector((state) => state.UserInfo);
 
   const token = CusData.token;
 

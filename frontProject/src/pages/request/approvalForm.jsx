@@ -2,11 +2,12 @@
 
 import axios from "axios"
 import { useState } from "react"
+import { useSelector } from "react-redux"
 
 export default function ApprovalForm({ cart_id, orderId, port, onSuccess }) {
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
-   const CusData = useSelector((state) => state.UserInfo);
+  const CusData = useSelector((state) => state.UserInfo);
 
   const token = CusData.token;
 

@@ -6,20 +6,23 @@ import { BrowserRouter } from "react-router-dom";
 import { PersistGate } from "redux-persist/integration/react";
 import App from "./App.jsx";
 import "./index.css";
+import { CountRequest } from "./contexts/CountRequestContext.jsx";
 import store, { customPersisor } from "./redux/userInfo/store.js";
 function Root() {
   const [count, setCount] = useState(0);
 
   return (
-    <CountRequest.Provider value={{ value: count, setCount }}>
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={customPersisor}>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
-        </PersistGate>
-      </Provider>
-    </CountRequest.Provider>
+    <ChakraProvider>
+      <CountRequest.Provider value={{ value: count, setCount }}>
+        <Provider store={store}>
+          <PersistGate loading={null} persistor={customPersisor}>
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
+          </PersistGate>
+        </Provider>
+      </CountRequest.Provider>
+    </ChakraProvider>
   );
 }
 
