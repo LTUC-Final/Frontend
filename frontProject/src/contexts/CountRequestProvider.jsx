@@ -1,55 +1,3 @@
-// import axios from "axios";
-// import { useEffect, useState } from "react";
-// import { useSelector } from "react-redux";
-// import { CountRequest } from "./CountRequestContext";
-
-// export function CountRequestProvider({ children }) {
-//   const [value, setValue] = useState(null);
-
-//   const { user } = useSelector((state) => state.UserInfo);
-//   const provider_id = user?.provider?.provider_id;
-//   const role = user?.role;
-//   console.log("ssssssfffffffffffffffffffffffffffffffffffffffffffffffffff");
-//   console.log(role);
-//   console.log("ssssssfffffffffffffffffffffffffffffffffffffffffffffffffff");
-
-//   const port = import.meta.env.VITE_PORT;
-//   const persistedData = JSON.parse(localStorage.getItem("persist:UserInfo"));
-//   const CusData = useSelector((state) => state.UserInfo);
-
-//   const token = CusData.token;
-//   useEffect(() => {
-//     if (role === "provider" && provider_id) {
-//       const sendRequest = async () => {
-//         try {
-//           const response = await axios.get(
-//             `http://localhost:${port}/getAllOrderProvider/${provider_id}`,
-//             {
-//               headers: {
-//                 "Content-Type": "application/json",
-//                 Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-//               },
-//             }
-//           );
-//           setValue(response.data.ordersCount);
-//           localStorage.setItem("count", response.data.ordersCount);
-//         } catch (error) {
-//           console.error("Error:", error);
-//         }
-//       };
-
-//       sendRequest();
-
-//       const intervalId = setInterval(sendRequest, 1000*60);
-
-//       return () => clearInterval(intervalId);
-//     }
-//   }, []);
-
-//   return (
-//     <CountRequest.Provider value={{ value }}>{children}</CountRequest.Provider>
-//   );
-// }
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -63,14 +11,9 @@ export function CountRequestProvider({ children }) {
   const { user } = useSelector((state) => state.UserInfo);
   const provider_id = user?.provider?.provider_id;
   const role = user?.role;
-  console.log("ssssssfffffffffffffffffffffffffffffffffffffffffffffffffff");
-  console.log(role);
-  console.log("ssssssfffffffffffffffffffffffffffffffffffffffffffffffffff");
 
-  const port = import.meta.env.VITE_PORT;
-  const persistedData = JSON.parse(localStorage.getItem("persist:UserInfo"));
+  const apiUrl = import.meta.env.VITE_API_URL || 'https://backend-a2qq.onrender.com';
   const CusData = useSelector((state) => state.UserInfo);
-
   const token = CusData.token;
 
   useEffect(() => {
@@ -78,7 +21,7 @@ export function CountRequestProvider({ children }) {
       const sendRequest = async () => {
         try {
           const response = await axios.get(
-            `http://localhost:${port}/getAllOrderProvider/${provider_id}`,
+            `${apiUrl}/getAllOrderProvider/${provider_id}`,
             {
               headers: {
                 "Content-Type": "application/json",
@@ -93,38 +36,16 @@ export function CountRequestProvider({ children }) {
             })
           );
           localStorage.setItem("count", response.data.ordersCount);
-          // console.log(
-          //   "ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
-          // );
-          // console.log(
-          //   "ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
-          // );
-          // console.log(
-          //   "ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
-          // );
-          // console.log(response.data.ordersCount);
-
-          // console.log(
-          //   "ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
-          // );
-          // console.log(
-          //   "ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
-          // );
-          // console.log(
-          //   "ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
-          // );
         } catch (error) {
-          console.error("Error:", error);
+          console.error("Error fetching order count:", error);
         }
       };
 
       sendRequest();
-
-      const intervalId = setInterval(sendRequest, 1000);
-
+      const intervalId = setInterval(sendRequest, 1000 * 60); // Poll every minute
       return () => clearInterval(intervalId);
     }
-  }, [provider_id, role, token, dispatch]);
+  }, [provider_id, role, token, dispatch, apiUrl]);
 
   return (
     <CountRequest.Provider value={{ value }}>{children}</CountRequest.Provider>
