@@ -102,7 +102,7 @@ export default function About1() {
   ];
 
   return (
-    <main className="min-h-screen  bg-[#102E50] overflow-hidden">
+    <main className="min-h-screen  bg-[#FFF6E9] overflow-hidden">
       {/* ---------------- HERO SECTION ---------------- */}
       <section className="relative overflow-hidden pt-12 pb-32 md:pt-12 md:pb-40 bg-[#102E50] ">
         <div
@@ -197,7 +197,7 @@ export default function About1() {
             <motion.div
               key={i}
               variants={fadeUp}
-              className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-[#FFF6E9] p-8 md:p-10 hover:border-[#F5C45E]/50"
+              className="group bg-white rounded-2xl  transition-all duration-300 border border-[#FFF6E9] p-8 md:p-10 hover:border-[#F5C45E]/50"
             >
               <div
                 className={`h-1.5 w-20 rounded-full bg-gradient-to-r ${card.color} mb-6`}
@@ -214,7 +214,7 @@ export default function About1() {
       </section>
 
       {/* ---------------- VALUES SECTION ---------------- */}
-      <section className="relative py-16 md:py-1 bg-gradient-to-b bg-[#102E50]">
+      <section className="relative py-16 md:py-1 bg-gradient-to-b bg-[#FFF6E9]">
         <div className="max-w-7xl mx-auto px-6 md:px-8">
           <motion.div
             initial="hidden"
@@ -223,10 +223,10 @@ export default function About1() {
             variants={fadeStagger}
           >
             <motion.div variants={fadeUp} className="mb-16 md:mb-1">
-              <h2 className="text-4xl md:text-5xl font-bold text-[#102E50] mb-4 text-[#FFF6E9] ">
+              <h2 className="text-4xl md:text-5xl font-bold text-[#102E50] mb-4 text-[#102E50] ">
                 Our Values
               </h2>
-              <p className="text-lg text-[#FFF6E9] ">
+              <p className="text-lg text-[#102E50] ">
                 Built on principles that guide every decision we make
               </p>
             </motion.div>
@@ -274,7 +274,7 @@ export default function About1() {
       </section>
 
       {/* ---------------- COMMUNITY SECTION ---------------- */}
-      <section className="relative py-24 md:py-15 bg-[#102E50]">
+      <section className="relative py-24 md:py-15 bg-[#FFF6E9]">
         <div className="max-w-7xl mx-auto px-6 md:px-8">
           <motion.div
             initial="hidden"
@@ -300,14 +300,14 @@ export default function About1() {
               </motion.h2>
               <motion.p
                 variants={fadeUp}
-                className="text-lg text-[#FFF6E9]  leading-relaxed"
+                className="text-lg text-[#102E50]  leading-relaxed"
               >
                 BidayaMart isn't just a marketplace—it's a movement celebrating
                 Jordanian talent and entrepreneurship.
               </motion.p>
               <motion.div
                 variants={fadeStagger}
-                className="space-y-4 pt-4 text-[#FFF6E9] "
+                className="space-y-4 pt-4 text-[#102E50] "
               >
                 {[
                   "Connect directly with customers who believe in your vision",
@@ -318,14 +318,14 @@ export default function About1() {
                   <motion.div
                     key={idx}
                     variants={fadeUp}
-                    className="flex gap-4 items-start text-[#FFF6E9] "
+                    className="flex gap-4 items-start text-[#102E50] "
                   >
                     <div className="flex-shrink-0 mt-1 w-6 h-6 rounded-full bg-gradient-to-r from-[#F5C45E] to-[#E78B48] flex items-center justify-center">
                       <span className="text-white text-sm font-semibold">
                         ✓
                       </span>
                     </div>
-                    <span className="text-[#102E50]/80 text-lg text-[#FFF6E9] ">
+                    <span className="text-[#102E50]/80 text-lg text-[#102E50] ">
                       {point}
                     </span>
                   </motion.div>
@@ -337,7 +337,7 @@ export default function About1() {
       </section>
 
       {/* ---------------- TEAM SECTION ---------------- */}
-      <section className="relative py-16 md:py-20 bg-gradient-to-b bg-[#102E50]">
+      <section className="relative py-16 md:py-20 bg-gradient-to-b bg-[#FFF6E9]">
         <div className="max-w-7xl mx-auto px-6 md:px-8">
           <motion.div
             initial="hidden"
@@ -349,10 +349,10 @@ export default function About1() {
               variants={fadeUp}
               className="mb-16 md:mb-20 text-center"
             >
-              <h2 className="text-4xl md:text-5xl font-bold text-[#102E50] mb-4 text-[#FFF6E9] ">
+              <h2 className="text-4xl md:text-5xl font-bold text-[#102E50] mb-4  ">
                 The Team Behind Bedaya
               </h2>
-              <p className="text-lg text-[#102E50]/70 max-w-2xl mx-auto text-[#FFF6E9] ">
+              <p className="text-lg text-[#102E50]/70 max-w-2xl mx-auto  ">
                 Passionate individuals dedicated to supporting Jordanian
                 creativity and innovation
               </p>
@@ -376,7 +376,7 @@ export default function About1() {
                             ? member.imge
                             : `https://ui-avatars.com/api/?name=${encodeURIComponent(
                                 member.name
-                              )}&background=F5C45E&color=102E50`
+                              )}&background=102E50&color=FFF6E9`
                         }
                         alt={member.name}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
@@ -411,7 +411,7 @@ export default function About1() {
       </section>
 
       {/* ---------------- CTA SECTION ---------------- */}
-      <section className="relative py-20 md:py-28 text-[#FFF6E9]  bg-[#102E50]">
+      <section className="relative py-20 md:py-28 text-[#FFF6E9]  bg-[#FFF6E9]">
         <div className="max-w-4xl mx-auto px-6 md:px-8 text-center text-[#FFF6E9] ">
           <motion.div
             initial="hidden"
@@ -421,7 +421,7 @@ export default function About1() {
           >
             <motion.h2
               variants={fadeUp}
-              className="text-4xl md:text-5xl font-bold text-[#102E50] mb-6 text-[#FFF6E9] "
+              className="text-4xl md:text-5xl font-bold text-[#102E50] mb-6  "
             >
               Ready to Start Your Journey?
             </motion.h2>
