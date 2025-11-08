@@ -39,9 +39,8 @@ import OrdersManagementProvider from "./pages/request/pageReq";
 import SuccessPage from "./pages/SuccessPage";
 import MainDashBoard1 from "./pages/mainDashBoard/mainDashBoard1";
 function App() {
-  const [cart, setCart] = useState([]);
   const CusData = useSelector((state) => state.UserInfo);
-  const port = import.meta.env.VITE_PORT;
+  const apiUrl = import.meta.env.VITE_API_URL || 'https://backend-a2qq.onrender.com';
 
   // const fetchCart = async () => {
   //   if (!CusData?.user?.user_id) return;

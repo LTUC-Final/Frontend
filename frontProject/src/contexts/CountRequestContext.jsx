@@ -1,11 +1,7 @@
 import { createContext } from "react";
 
-const defaultValue = {
+export const CountRequest = createContext({
   value: 0,
-  reqItem: 0
-};
-
-export const CountRequest = createContext(defaultValue);
-
-// Provide a default Context.Provider value
-CountRequest.defaultValue = defaultValue;
+  reqItem: 0,
+  setValue: () => {}
+});
