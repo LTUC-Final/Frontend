@@ -23,8 +23,7 @@ import { CountRequest } from "../../contexts/CountRequestContext";
 export default function NavigationBar({ onScroll }) {
   const cartCount = useSelector((state) => state.UserInfo.cartItem);
   const ReqCount = useSelector((state) => state.UserInfo.reqItem);
-  const countContext = useContext(CountRequest);
-  const value = countContext?.value ?? 0;
+  const { value = 0 } = useContext(CountRequest) || {};
 
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
