@@ -114,6 +114,10 @@ Task:
     });
 
     setReport(summary);
+     const CusData = useSelector((state) => state.UserInfo);
+
+  const token = CusData.token;
+
 
     // إرسال كل البيانات للـ AI لتوليد رسائل مختلفة لكل status
     const userMessage = JSON.stringify(summary, null, 2);
@@ -121,7 +125,13 @@ Task:
     const newMessagesForServer = [...messages, userMsgObj];
 
     try {
-      const reply = await axios.post(`http://localhost:${port}/ai`, newMessagesForServer);
+      const reply = await axios.post(`https://backend-a2qq.onrender.com/ai`, {newMessagesForServer}, {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+              },
+            }
+);
       const replyText = typeof reply.data === "string" ? reply.data : JSON.stringify(reply.data, null, 2);
       setMessages((cur) => [...cur, userMsgObj, { role: "assistant", content: replyText }]);
     } catch (error) {

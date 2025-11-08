@@ -12,6 +12,10 @@ export default function EditProduct({ product, productId, onCancel, onUpdate }) 
     location: "",
   });
   const [imageFile, setImageFile] = useState(null);
+   const CusData = useSelector((state) => state.UserInfo);
+
+  const token = CusData.token;
+
  
   const port = import.meta.env.VITE_PORT;
  
@@ -71,17 +75,19 @@ export default function EditProduct({ product, productId, onCancel, onUpdate }) 
     }
  
     try {
-      const endpoint = `http://localhost:${port}/api/provider/updateProduct/${productId}`;
+      const endpoint = `https://backend-a2qq.onrender.com/api/provider/updateProduct/${productId}`;
  
       const formData = new FormData();
       Object.keys(form).forEach((key) => formData.append(key, form[key]));
       if (imageFile) formData.append("image", imageFile);
  
-      const { data } = await axios.patch(endpoint, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
+      const { data } = await axios.patch(endpoint, formData,  {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+              },
+            
+
       });
  
       if (onUpdate) onUpdate(data);

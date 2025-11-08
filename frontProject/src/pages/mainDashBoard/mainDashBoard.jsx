@@ -11,7 +11,7 @@ export default function MainDashBoard() {
 
   const apiBase =
     import.meta.env.VITE_API ||
-    `http://localhost:${import.meta.env.VITE_PORT}/api`;
+    `https://backend-a2qq.onrender.com/api`;
 
   const [slideIndex, setSlideIndex] = useState(0);
   const [topOrders, setTopOrders] = useState([]);

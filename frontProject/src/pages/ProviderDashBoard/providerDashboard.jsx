@@ -8,6 +8,10 @@ import useSuggestions from "../../hooks/SuggestionsInputdesc";
 export default function ProductForm() {
   const { user } = useSelector((state) => state.UserInfo);
   const { decText, SuggestionsInputdesc } = useSuggestions();
+   const CusData = useSelector((state) => state.UserInfo);
+
+  const token = CusData.token;
+
 
   const providerId = user?.provider?.provider_id;
   const [formData, setFormData] = useState({
@@ -29,7 +33,13 @@ export default function ProductForm() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get(`http://localhost:${port}/getAllCategory`);
+        const response = await axios.get(`https://backend-a2qq.onrender.com/getAllCategory`, {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+              },
+            }
+);
         setCategories(response.data);
         if (response.data.length > 0) {
           setFormData((prev) => ({
@@ -82,9 +92,14 @@ export default function ProductForm() {
         if (value !== null) submitData.append(key, value);
       });
 
-      const response = await axios.post(`http://localhost:${port}/postItem`, submitData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const response = await axios.post(`https://backend-a2qq.onrender.com/postItem`, submitData,  {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+              },
+            }
+
+      );
 
       if (response.status === 200) {
         setFormData((prev) => ({ ...prev, name: "", price: "", description: "", image: null, location: "" }));

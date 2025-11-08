@@ -6,6 +6,10 @@ import { Trash2 } from "lucide-react";
 export default function DeleteProfileImage({ onDeleted }) {
   const user = useSelector((state) => state.UserInfo.user);
   const userId = user?.user_id;
+   const CusData = useSelector((state) => state.UserInfo);
+
+  const token = CusData.token;
+
 
   const handleDelete = async () => {
     if (!userId) return;
@@ -36,7 +40,13 @@ export default function DeleteProfileImage({ onDeleted }) {
 
     try {
       const res = await axios.delete(
-        `http://localhost:5000/api/deleteProfileImage/${userId}`
+        `https://backend-a2qq.onrender.com/api/deleteProfileImage/${userId}`, {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+              },
+            }
+
       );
 
       Swal.fire({

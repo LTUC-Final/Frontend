@@ -40,6 +40,11 @@ Task:
   async function sendMessage(text) {
     console.log("text");
 
+     const CusData = useSelector((state) => state.UserInfo);
+
+  const token = CusData.token;
+
+
     console.log(text);
     console.log("text");
 
@@ -87,8 +92,14 @@ Task:
       console.log("111111111");
 
       const reply = await axios.post(
-        `http://localhost:${port}/ai`,
-        newMessages
+        `https://backend-a2qq.onrender.com/ai`,
+        {newMessages}, {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+              },
+            }
+
       );
       console.log("2222222222222222");
 

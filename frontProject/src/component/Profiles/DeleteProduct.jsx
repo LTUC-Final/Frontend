@@ -20,7 +20,7 @@ export default function DeleteProduct({ productId, providerId, productName, onDe
 
     try {
       const port = import.meta.env.VITE_PORT;
-      const endpoint = `http://localhost:${port}/api/provider/deleteProduct/${providerId}/${productId}`;
+      const endpoint = `https://backend-a2qq.onrender.com/api/provider/deleteProduct/${providerId}/${productId}`;
 
       await axios.delete(endpoint, {
         headers: {

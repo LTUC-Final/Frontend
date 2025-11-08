@@ -5,10 +5,20 @@ import { useState } from "react";
 
 export default function ButtonStatus({ orderId, setOrders, port, onSuccess }) {
   const [selectedDate, setSelectedDate] = useState("");
+   const CusData = useSelector((state) => state.UserInfo);
+
+  const token = CusData.token;
+
 
   function updateOrderStatus(order_id, newStatus) {
     axios
-      .put(`http://localhost:${port}/updateStatusOrder/${newStatus}/${order_id}`)
+      .put(`https://backend-a2qq.onrender.com/updateStatusOrder/${newStatus}/${order_id}`, {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+              },
+            }
+)
       .then((response) => {
         console.log(response.data);
         setOrders((prevOrders) =>
@@ -23,7 +33,13 @@ export default function ButtonStatus({ orderId, setOrders, port, onSuccess }) {
 
   function updateOrderDilvary(order_id, selectedDate) {
     axios
-      .put(`http://localhost:${port}/delivary/${selectedDate}/${order_id}`)
+      .put(`https://backend-a2qq.onrender.com/delivary/${selectedDate}/${order_id}`, {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+              },
+            }
+)
       .then((response) => {
         console.log(response.data);
         setOrders((prevOrders) =>

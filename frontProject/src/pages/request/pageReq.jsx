@@ -25,6 +25,10 @@ import ApprovalForm from "./approvalForm";
 import ButtonStatus from "./ButtonStatues";
 import DownLoadAllOrder from "./downLoadAllOrders";
 import PrintInvoiceButton from "./printInvoice";
+ const CusData = useSelector((state) => state.UserInfo);
+
+  const token = CusData.token;
+
 
 const statusClasses = {
   pending: "text-[#E78B48] bg-[#FFF6E9] border-2 border-[#E78B48]",
@@ -98,13 +102,14 @@ function OrdersManagementProvider() {
       );
 
       const response = await axios.get(
-        `http://localhost:${port}/getAllOrderProvider/${provider_id}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-          },
-        }
+        `https://backend-a2qq.onrender.com/getAllOrderProvider/${provider_id}`,
+         {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+              },
+            }
+
       );
 
       const mappedOrders = response.data.orders.map((order) => ({
@@ -197,7 +202,13 @@ function OrdersManagementProvider() {
   function deleteOrder(order_id, cart_id) {
     try {
       axios.put(
-        `http://localhost:${port}/updateStatusOrder/rejected/${order_id}/${cart_id}`
+        `https://backend-a2qq.onrender.com/updateStatusOrder/rejected/${order_id}/${cart_id}`, {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+              },
+            }
+
       );
       setOrders((prevOrders) =>
         prevOrders.map((o) =>

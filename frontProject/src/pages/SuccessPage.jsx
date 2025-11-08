@@ -89,13 +89,25 @@ export default function SuccessPage() {
         if (!sessionId) return console.error("No session_id found in URL");
 
         const { data } = await axios.post(
-          `http://localhost:${port}/save-payment`,
-          { session_id: sessionId }
+          `https://backend-a2qq.onrender.com/save-payment`,
+          { session_id: sessionId , 
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+              },
+            
+ }
         );
 
         console.log(" Payment saved successfully:", data);
         const ress = await axios.post(
-          `http://localhost:${port}/moveApprovedCartToOrders/${user.user_id}`
+          `https://backend-a2qq.onrender.com/moveApprovedCartToOrders/${user.user_id}`, {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+              },
+            }
+
         );
         // const res = await axios.get(
         //   `http://localhost:${port}/api/carts/products/${user.user_id}`

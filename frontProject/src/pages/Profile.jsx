@@ -46,11 +46,22 @@ export default function Profile() {
       setIsMyReview(found);
     }
 
+     const CusData = useSelector((state) => state.UserInfo);
+
+  const token = CusData.token;
+
+
     const fetchProfile = async () => {
       try {
         const port = import.meta.env.VITE_PORT;
-        const endpoint = `http://localhost:${port}/api/provider/getProviderProfile/${user_id}`;
-        const { data } = await axios.get(endpoint);
+        const endpoint = `https://backend-a2qq.onrender.com/api/provider/getProviderProfile/${user_id}`;
+        const { data } = await axios.get(endpoint, {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+              },
+            }
+);
         setProfile(data);
         console.log("Fetched profile:", data);
       } catch (err) {

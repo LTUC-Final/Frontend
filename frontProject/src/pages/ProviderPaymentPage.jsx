@@ -244,13 +244,23 @@ export default function ProviderPaymentsPage() {
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState("restricted");
   const [refresh, setRefresh] = useState(false);
+   const CusData = useSelector((state) => state.UserInfo);
+
+  const token = CusData.token;
+
   const port = import.meta.env.VITE_PORT;
 
   useEffect(() => {
     const fetchProviderData = async () => {
       try {
         const { data } = await axios.get(
-          `http://localhost:${port}/provider/${user.provider.provider_id}`
+          `https://backend-a2qq.onrender.com/provider/${user.provider.provider_id}`, {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+              },
+            }
+
         );
         setBalance(data.total_balance);
         setPayments(data.payments);
@@ -357,17 +367,35 @@ export default function ProviderPaymentsPage() {
 
       try {
         accountStatus = await axios.get(
-          `http://localhost:${port}/check-account-status/${user.provider.provider_id}`
+          `https://backend-a2qq.onrender.com/check-account-status/${user.provider.provider_id}`, {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+              },
+            }
+
         );
       } catch (err) {
         if (err.response && err.response.status === 404) {
           setMessage(" Creating your new Stripe account...");
           await axios.post(
-            `http://localhost:${port}/create-stripe-account/${user.provider.provider_id}`
+            `https://backend-a2qq.onrender.com/create-stripe-account/${user.provider.provider_id}`, {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+              },
+            }
+
           );
           setMessage(" Creating onboarding link...");
           const onboard = await axios.get(
-            `http://localhost:${port}/create-account-link/${user.provider.provider_id}`
+            `https://backend-a2qq.onrender.com/create-account-link/${user.provider.provider_id}`, {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+              },
+            }
+
           );
 
           setMessage("➡️ Redirecting you to Stripe setup...");
@@ -386,7 +414,13 @@ export default function ProviderPaymentsPage() {
         );
 
         const onboard = await axios.get(
-          `http://localhost:${port}/create-account-link/${user.provider.provider_id}`
+          `https://backend-a2qq.onrender.com/create-account-link/${user.provider.provider_id}`, {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+              },
+            }
+
         );
         window.location.href = onboard.data.url;
 
@@ -394,7 +428,13 @@ export default function ProviderPaymentsPage() {
         await delay(2 * 60 * 1000);
 
         const checkAgain = await axios.get(
-          `http://localhost:${port}/check-account-status/${user.provider.provider_id}`
+          `https://backend-a2qq.onrender.com/check-account-status/${user.provider.provider_id}`, {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+              },
+            }
+
         );
 
         if (checkAgain.data.status !== "enabled") {
@@ -407,8 +447,14 @@ export default function ProviderPaymentsPage() {
       if (balance > 0) {
         setMessage(" Transferring funds to your Stripe account...");
         await axios.post(
-          `http://localhost:${port}/transfer-to-provider/${user.provider.provider_id}`,
-          { amount: balance }
+          `https://backend-a2qq.onrender.com/transfer-to-provider/${user.provider.provider_id}`,
+          { amount: balance , 
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+              },
+            
+ }
         );
         setMessage(" Funds transferred successfully!");
         setRefresh((prev) => !prev);
