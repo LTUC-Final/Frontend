@@ -7,16 +7,18 @@ import { PersistGate } from "redux-persist/integration/react";
 import App from "./App.jsx";
 import "./index.css";
 import store, { customPersisor } from "./redux/userInfo/store.js";
+import { CountRequestProvider } from "./contexts/CountRequestProvider";
 
 createRoot(document.getElementById("root")).render(
-//  <StrictMode>
-
+  <StrictMode>
     <Provider store={store}>
       <PersistGate loading={null} persistor={customPersisor}>
         <BrowserRouter>
-            <App />{" "}
+          <CountRequestProvider>
+            <App />
+          </CountRequestProvider>
         </BrowserRouter>
       </PersistGate>
     </Provider>
-//  </StrictMode>
+  </StrictMode>
 );
