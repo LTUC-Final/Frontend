@@ -4,7 +4,6 @@ export default async function AddTOFav(card, CusData) {
     const port = import.meta.env.VITE_PORT;
     console.log(card);
     
- const CusData = useSelector((state) => state.UserInfo);
 
   const token = CusData.token;
 
