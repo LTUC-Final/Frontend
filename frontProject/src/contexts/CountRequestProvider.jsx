@@ -48,6 +48,8 @@ export function CountRequestProvider({ children }) {
   }, [provider_id, role, token, dispatch, apiUrl]);
 
   return (
-    <CountRequest.Provider value={{ value }}>{children}</CountRequest.Provider>
+    <CountRequest.Provider value={{ value, setValue }}>
+      {children}
+    </CountRequest.Provider>
   );
 }
