@@ -36,6 +36,9 @@ export default function ActivitiesList({ user_id }) {
   console.log("vvvvvvvvvvvvvvvvvvvvvvvvvvvvv");
   console.log(userId);
   console.log(user_id);
+   const CusData = useSelector((state) => state.UserInfo);
+
+  const token = CusData.token;
 
   console.log("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv");
   useEffect(() => {
@@ -44,7 +47,14 @@ export default function ActivitiesList({ user_id }) {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:${port}/getUserReactions/${user_id}`
+          `https://backend-a2qq.onrender.com/getUserReactions/${user_id}`,
+           {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+              },
+            }
+
         );
         setActivities(response.data);
         console.log("ddddddddddddddddddddddddddddddddddddddddddddddddddddddd");

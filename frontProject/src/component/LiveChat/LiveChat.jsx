@@ -16,6 +16,14 @@ export default function LiveChat() {
   const MessageEndRef = useRef(null);
   const messageContainerRef = useRef(null);
   const [autoScroll, setAutoScroll] = useState(true);
+   const CusData = useSelector((state) => state.UserInfo);
+
+  const token = CusData.token;
+
+  const socketURL = import.meta.env.VITE_API_URL
+  ? "https://backend-a2qq.onrender.com"
+  : `http://localhost:${port}`;
+
   const { sender, reciver } = location.state || {};
 console.log("sadasdasd",sender);
 console.log("wwqq",reciver);
@@ -27,10 +35,18 @@ console.log("set messages",messages);
     if (!sender || !reciver) return;
     const fetchMessages = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:${port}/api/getmessages`,
-          { params: { senderId: sender.user_id || sender , receiveId: reciver.user_id || reciver } }
-        );
+        const res = await axios.get(`${socketURL}`,
+  {
+    params: {
+      senderId: sender.user_id || sender,
+      receiveId: reciver.user_id || reciver,
+    },
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+    },
+  }
+);
         console.log("sadasinofoinwq",res.data);
         
         setMessages(res.data);
@@ -45,7 +61,9 @@ console.log("set messages",messages);
 
   useEffect(() => {
     if (!sender) return;
-    socketRef.current = io(`http://localhost:${port}`);
+      socketRef.current = io(`${socketURL}`, {
+    transports: ["websocket"], 
+  });
     socketRef.current.emit("register", sender.user_id);
     socketRef.current.on("receive_message", (msg) => {
       setMessages((prev) => [...prev, msg]);
@@ -65,8 +83,14 @@ console.log("set messages",messages);
     socketRef.current?.emit("send-message", messageData);
     try {
       await axios.post(
-        `http://localhost:${port}/api/send-messages`,
-        messageData
+        `${socketURL}`,{
+        messageData}, {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+              },
+            }
+
       );
       setTextMessage("");
     } catch (error) {

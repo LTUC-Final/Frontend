@@ -15,11 +15,21 @@ export default function DetailsOfCards({ Id }) {
   const navigate = useNavigate();
   const { AddToCart } = useAddToCart();
 
+
+  const token = CusData.token;
+
+
   useEffect(() => {
     const gitdetails = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:${port}/api/DetailsOfCardInfo/${Id}`
+          `https://backend-a2qq.onrender.com/api/DetailsOfCardInfo/${Id}`, {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+              },
+            }
+
         );
         setDataCard(res.data);
       } catch (error) {

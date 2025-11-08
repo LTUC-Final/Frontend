@@ -12,6 +12,10 @@ export default function FeedbackCard({
   const [rating, setRating] = useState(0);
   const [hoveredRating, setHoveredRating] = useState(0);
   const [comment, setComment] = useState("");
+   const CusData = useSelector((state) => state.UserInfo);
+
+  const token = CusData.token;
+
 
   const getRatingText = (value) => {
     switch (value) {
@@ -38,7 +42,7 @@ export default function FeedbackCard({
 
     try {
       const response = await axios.post(
-        `http://localhost:${port}/customerWriteReviewOfProdactOrder`,
+        `https://backend-a2qq.onrender.com/customerWriteReviewOfProdactOrder`,
         {
           product_id: orderInfo.product_id,
           customer_id: orderInfo.customer_id,
@@ -46,7 +50,13 @@ export default function FeedbackCard({
           review_text: comment,
           add_customer_review: orderInfo.add_customer_review,
           order_id: orderInfo.order_id,
-        }
+        }, {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+              },
+            }
+
       );
       onSubmit?.();
       setRating(0);

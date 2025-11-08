@@ -15,6 +15,11 @@ export default function EditProfile({ profile, onUpdate, onCancel }) {
     skills: profile.role === "provider" ? profile.skills || "" : "",
   });
 
+   const CusData = useSelector((state) => state.UserInfo);
+
+  const token = CusData.token;
+
+
   useEffect(() => {
     if (profile) {
       setForm({
@@ -94,14 +99,18 @@ export default function EditProfile({ profile, onUpdate, onCancel }) {
       if (profile.role === "provider") {
         payload.bio = form.bio;
         payload.skills = form.skills;
-        endpoint = `http://localhost:${port}/api/provider/updateProviderProfile/${profile.user_id}`;
+        endpoint = `https://backend-a2qq.onrender.com/api/provider/updateProviderProfile/${profile.user_id}`;
       } else {
-        endpoint = `http://localhost:${port}/api/user/updateUserProfile/${profile.user_id}`;
+        endpoint = `https://backend-a2qq.onrender.com/api/user/updateUserProfile/${profile.user_id}`;
       }
 
       const { data: updatedProfile } = await axios.put(endpoint, payload, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+              },
+            
+});
 
       onUpdate({ ...profile, ...updatedProfile.updated });
      Swal.fire({

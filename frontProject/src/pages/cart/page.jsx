@@ -90,11 +90,21 @@ export default function CartPage() {
   const port = import.meta.env.VITE_PORT;
   const dispatch = useDispatch();
 
+  const token = CusData.token;
+
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:${port}/api/carts/products/${CusData.user.user_id}`
+          `https://backend-a2qq.onrender.com/api/carts/products/${CusData.user.user_id}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+            },
+          }
+
         );
         setCart(res.data.cards);
         console.log("sssssssssssssssssssss");
@@ -170,25 +180,32 @@ export default function CartPage() {
         prev.map((item) =>
           item.cart_id === cart_id
             ? {
-                ...item,
-                custom_requirement,
-                provider_response: null,
-                quantityLocked: true,
+              ...item,
+              custom_requirement,
+              provider_response: null,
+              quantityLocked: true,
 
-                // sendedtoprovider: true,
-              }
+              // sendedtoprovider: true,
+            }
             : item
         )
       );
-      await axios.put(`http://localhost:${port}/updateTheCustomReqAndToOrder`, {
+      await axios.put(`https://backend-a2qq.onrender.com/updateTheCustomReqAndToOrder`, {
         cart_id,
         custom_requirement,
         Prodact_id: product_id,
         provider_id,
         quntity: quantity,
         price: cart_price,
-        user_id,
-      });
+        user_id,},{
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+        },
+      },
+
+
+      );
       setCart((prev) =>
         prev.map((item) =>
           item.cart_id === cart_id ? { ...item, sendedtoprovider: true } : item
@@ -207,8 +224,15 @@ export default function CartPage() {
     alert("Approved!");
     try {
       await axios.put(
-        `http://localhost:${port}/changeStatusPayOfProdactAfterApprove`,
-        { cart_id, user_id: customer_id }
+        `https://backend-a2qq.onrender.com/changeStatusPayOfProdactAfterApprove`,
+        {
+          cart_id, user_id: customer_id},{
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+          },
+        }
+
       );
       setCart((prevCart) =>
         prevCart.map((p) =>
@@ -224,8 +248,14 @@ export default function CartPage() {
     alert("Rejected!");
     try {
       await axios.put(
-        `http://localhost:${port}/changeStatusPayOfProdactAfterRejected/${cart_id}`,
-        { cart_id, user_id: customer_id }
+        `https://backend-a2qq.onrender.com/changeStatusPayOfProdactAfterRejected/${cart_id}`,
+        { cart_id, user_id: customer_id }, {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+              },
+            }
+
       );
       setCart((prevCart) => prevCart.filter((p) => p.cart_id !== cart_id));
       dispatch(decrementCartItem({ number: 1 }));
@@ -237,7 +267,13 @@ export default function CartPage() {
   const deleteItemCart = async (cart_id) => {
     const port = import.meta.env.VITE_PORT;
     try {
-      await axios.delete(`http://localhost:${port}/deleteCard/${cart_id}`);
+      await axios.delete(`https://backend-a2qq.onrender.com/deleteCard/${cart_id}`, {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+              },
+            }
+);
 
       setCart((prevCart) =>
         prevCart.filter((item) => item.cart_id !== cart_id)
@@ -267,10 +303,22 @@ export default function CartPage() {
     setShowCheckout(false);
     try {
       const ress = await axios.post(
-        `http://localhost:${port}/moveApprovedCartToOrders/${CusData.user.user_id}`
+        `https://backend-a2qq.onrender.com/moveApprovedCartToOrders/${CusData.user.user_id}`, {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+              },
+            }
+
       );
       const res = await axios.get(
-        `http://localhost:${port}/api/carts/products/${CusData.user.user_id}`
+        `https://backend-a2qq.onrender.com/api/carts/products/${CusData.user.user_id}`, {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+              },
+            }
+
       );
       dispatch(decrementCartItem({ number: ress.data.length }));
       console.log("ress.data.length");
@@ -292,12 +340,18 @@ export default function CartPage() {
       "Content-Type": "application/json",
     };
     const response = await axios.post(
-      `http://localhost:${port}/api/payments/create-checkout-session`,
+      `https://backend-a2qq.onrender.com/api/payments/create-checkout-session`,
       {
         products: cart,
         email: user.email,
         customer_id: user.user_id,
-      }
+      }, {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+              },
+            }
+
     );
     const session = response.data;
     const resulte = await stripe.redirectToCheckout({ sessionId: session.id });
@@ -330,13 +384,19 @@ export default function CartPage() {
 
     try {
       const response = await axios.post(
-        `http://localhost:${port}/api/payments/create-multi-provider-sessions`,
+        `https://backend-a2qq.onrender.com/api/payments/create-multi-provider-sessions`,
         {
           products: cart,
           email: user.email,
           customer_id: user.user_id,
         },
-        { headers: { "Content-Type": "application/json" } }
+        {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+              },
+            }
+
       );
 
       const sessions = response.data.sessions;
@@ -362,13 +422,19 @@ export default function CartPage() {
 
     try {
       const response = await axios.post(
-        `http://localhost:${port}/api/payments/create-multi-provider-sessions`,
+        `https://backend-a2qq.onrender.com/api/payments/create-multi-provider-sessions`,
         {
           products: cart,
           email: user.email,
           customer_id: user.user_id,
         },
-        { headers: { "Content-Type": "application/json" } }
+         {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+              },
+            }
+
       );
 
       const sessions = response.data.sessions;
@@ -406,13 +472,19 @@ export default function CartPage() {
       });
 
       const response = await axios.post(
-        `http://localhost:${port}/api/payments/create-multi-provider-sessions`,
+        `https://backend-a2qq.onrender.com/api/payments/create-multi-provider-sessions`,
         {
           products: cart,
           email: user.email,
           customer_id: user.user_id,
         },
-        { headers: { "Content-Type": "application/json" } }
+         {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+              },
+            }
+
       );
 
       const sessions = response.data.sessions;
@@ -460,13 +532,19 @@ export default function CartPage() {
     );
     try {
       const { data } = await axios.post(
-        `http://localhost:${port}/api/payments/create-checkout-session-all`,
+        `https://backend-a2qq.onrender.com/api/payments/create-checkout-session-all`,
         {
           products: cart,
           email: user.email,
           customer_id: user.user_id,
         },
-        { headers: { "Content-Type": "application/json" } }
+         {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+              },
+            }
+
       );
 
       await stripe.redirectToCheckout({ sessionId: data.id });
@@ -525,7 +603,7 @@ export default function CartPage() {
                           </p>
 
                           {product.provider_response &&
-                          product.status_pay === "Approve" ? (
+                            product.status_pay === "Approve" ? (
                             <div className="px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-[#FFF6E9] border border-[#F5C45E]/50 text-[#102E50]">
                               <span className="text-sm font-semibold">
                                 Provider Message:
@@ -553,9 +631,9 @@ export default function CartPage() {
                             Quantity:
                           </span>
                           {product.provider_response ||
-                          product.status_pay !== "Approve" ||
-                          product.sendedtoprovider ||
-                          product.quantityLocked ? (
+                            product.status_pay !== "Approve" ||
+                            product.sendedtoprovider ||
+                            product.quantityLocked ? (
                             <span className="w-10 text-center font-semibold text-[#102E50] bg-[#FFF6E9] rounded-lg border border-[#F5C45E]/50 py-1">
                               {product.quantity}
                             </span>
@@ -587,7 +665,7 @@ export default function CartPage() {
                         </div>
 
                         {product.provider_response &&
-                        product.status_pay !== "Approve" ? (
+                          product.status_pay !== "Approve" ? (
                           <div className="space-y-3 sm:space-y-4">
                             <div className="px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-[#FFF6E9] border border-[#F5C45E]/50 text-[#102E50]">
                               <span className="text-sm font-semibold">
@@ -664,26 +742,26 @@ export default function CartPage() {
                                 />
                                 {responseProviders[product.cart_id]
                                   ?.content && (
-                                  <div className="flex gap-3">
-                                    <Button
-                                      onClick={() =>
-                                        sendTheCustomerReqAndToOrder({
-                                          cart_id: product.cart_id,
-                                          product_id: product.product_id,
-                                          provider_id: product.provider_id,
-                                          cart_price: product.cart_price,
-                                          custom_requirement:
-                                            responseProviders[product.cart_id]
-                                              ?.content,
-                                          quantity: product.quantity,
-                                          user_id: product.customer_id,
-                                        })
-                                      }
-                                    >
-                                      Send To Provider
-                                    </Button>
-                                  </div>
-                                )}
+                                    <div className="flex gap-3">
+                                      <Button
+                                        onClick={() =>
+                                          sendTheCustomerReqAndToOrder({
+                                            cart_id: product.cart_id,
+                                            product_id: product.product_id,
+                                            provider_id: product.provider_id,
+                                            cart_price: product.cart_price,
+                                            custom_requirement:
+                                              responseProviders[product.cart_id]
+                                                ?.content,
+                                            quantity: product.quantity,
+                                            user_id: product.customer_id,
+                                          })
+                                        }
+                                      >
+                                        Send To Provider
+                                      </Button>
+                                    </div>
+                                  )}
                               </>
                             ) : product.custom_requirement &&
                               product.provider_response ? (

@@ -45,16 +45,28 @@ export function useAddToCart() {
   const dispatch = useDispatch();
   const port = import.meta.env.VITE_PORT;
 
+  const CusData = useSelector((state) => state.UserInfo);
+
+  const token = CusData.token;
+
+
   const AddToCart = async (card, CusData) => {
     try {
-      const res = await axios.post(`http://localhost:${port}/api/AddCart`, {
+      const res = await axios.post(`https://backend-a2qq.onrender.com/api/AddCart`, {
         customer_id: Number(CusData.user.user_id),
         provider_id: card.provider_id,
         product_id: card.product_id,
         quantity: 1,
         details_order_user: card.details_order_user,
         price: card.price,
-      });
+      },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+          },
+        }
+      );
 
       if (res.data === "Product added to cart") {
         dispatch(incrementCartItem());

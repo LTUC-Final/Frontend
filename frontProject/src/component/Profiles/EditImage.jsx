@@ -9,6 +9,10 @@ export default function EditImage({ userId, onUpdate }) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
 
+   const CusData = useSelector((state) => state.UserInfo);
+
+  const token = CusData.token;
+
   const handleFileSelect = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -24,11 +28,15 @@ export default function EditImage({ userId, onUpdate }) {
     try {
       setIsUploading(true);
       const response = await axios.put(
-        `http://localhost:${port}/api/provider/updateProviderProfile/${userId}`,
+        `https://backend-a2qq.onrender.com/api/provider/updateProviderProfile/${userId}`,
         formData,
         {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+              },
+            }
+
       );
 
       onUpdate(response.data.updated.profile_image);

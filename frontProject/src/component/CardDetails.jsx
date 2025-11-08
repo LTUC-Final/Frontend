@@ -11,11 +11,22 @@ export default function CardDeatils() {
   const [cardRev, setCardRev] = useState([]);
   const navigate = useNavigate();
 
+   const CusData = useSelector((state) => state.UserInfo);
+
+  const token = CusData.token;
+
+
   useEffect(() => {
     const HandelReviews = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:${port}/api/ReviewsProduct/${card.product_id}`
+          `https://backend-a2qq.onrender.com/api/ReviewsProduct/${card.product_id}`, {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+              },
+            }
+
         );
         setCardRev(res.data);
         console.log("vvvvvvvvvvvvvvvvvvvvvvvvvvvvv");

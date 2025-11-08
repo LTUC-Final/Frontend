@@ -240,9 +240,13 @@ export default function WishList() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [cartIds, setCartIds] = useState(new Set());
+   const CusData = useSelector((state) => state.UserInfo);
+
+  const token1 = CusData.token;
+
 
   const port = import.meta.env.VITE_PORT;
-  const apiBase = useMemo(() => `http://localhost:${port}/api`, [port]);
+  const apiBase = useMemo(() => `https://backend-a2qq.onrender.com/api`, [port]);
 
   const withMutedAlerts = useCallback(async (fn) => {
     const prev = window.alert;
@@ -294,9 +298,13 @@ export default function WishList() {
   const load = useCallback(async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get(`${apiBase}/wishlist`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const { data } = await axios.get(`${apiBase}/wishlist`,  {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token1.replace(/^"|"$/g, "")}`,
+              },
+            }
+);
       setItems(Array.isArray(data?.items) ? data.items : []);
     } catch (e) {
       const m =

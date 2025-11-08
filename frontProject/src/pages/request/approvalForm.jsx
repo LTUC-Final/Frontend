@@ -6,6 +6,10 @@ import { useState } from "react"
 export default function ApprovalForm({ cart_id, orderId, port, onSuccess }) {
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
+   const CusData = useSelector((state) => state.UserInfo);
+
+  const token = CusData.token;
+
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -18,16 +22,28 @@ export default function ApprovalForm({ cart_id, orderId, port, onSuccess }) {
     try {
       setLoading(true)
 
-      await axios.put(`http://localhost:${port}/updatePriceAndResponse/${orderId}`, {
+      await axios.put(`https://backend-a2qq.onrender.com/updatePriceAndResponse/${orderId}`, {
         response_from_provider: textValue,
         price: priceValue,
-      })
+      }, {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+              },
+            }
+)
 
-      await axios.put(`http://localhost:${port}/sendResponseProviderToCart`, {
+      await axios.put(`https://backend-a2qq.onrender.com/sendResponseProviderToCart`, {
         response_from_provider: textValue,
         price: priceValue,
         cart_id: cart_id,
-      })
+      }, {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+              },
+            }
+)
 
       if (onSuccess) {
         onSuccess({
