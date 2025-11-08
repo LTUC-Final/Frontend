@@ -104,13 +104,7 @@ export default function EditProfile({ profile, onUpdate, onCancel }) {
         endpoint = `https://backend-a2qq.onrender.com/api/user/updateUserProfile/${profile.user_id}`;
       }
 
-      const { data: updatedProfile } = await axios.put(endpoint, payload, {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            
-});
+      const { data: updatedProfile } = await axios.put(endpoint, payload);
 
       onUpdate({ ...profile, ...updatedProfile.updated });
      Swal.fire({

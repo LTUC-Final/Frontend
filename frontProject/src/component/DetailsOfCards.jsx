@@ -23,12 +23,7 @@ export default function DetailsOfCards({ Id }) {
     const gitdetails = async () => {
       try {
         const res = await axios.get(
-          `https://backend-a2qq.onrender.com/api/DetailsOfCardInfo/${Id}`, {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            }
+          `https://backend-a2qq.onrender.com/api/DetailsOfCardInfo/${Id}`
 
         );
         setDataCard(res.data);

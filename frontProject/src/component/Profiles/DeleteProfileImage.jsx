@@ -40,13 +40,7 @@ export default function DeleteProfileImage({ onDeleted }) {
 
     try {
       const res = await axios.delete(
-        `https://backend-a2qq.onrender.com/api/deleteProfileImage/${userId}`, {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            }
-
+        `https://backend-a2qq.onrender.com/api/deleteProfileImage/${userId}`
       );
 
       Swal.fire({

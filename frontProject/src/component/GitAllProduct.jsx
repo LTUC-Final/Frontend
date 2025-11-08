@@ -42,13 +42,7 @@ export default function GitAllProduct() {
     const feactData = async () => {
       try {
         let res = await axios.get(
-          `https://backend-a2qq.onrender.com/api/ShowCardInUserDashboard/${CusData.user.user_id}`, {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            }
-
+          `https://backend-a2qq.onrender.com/api/ShowCardInUserDashboard/${CusData.user.user_id}`
         );
         setCards(res.data);
       } catch (error) {

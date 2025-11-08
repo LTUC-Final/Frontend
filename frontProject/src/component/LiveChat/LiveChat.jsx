@@ -40,11 +40,7 @@ console.log("set messages",messages);
     params: {
       senderId: sender.user_id || sender,
       receiveId: reciver.user_id || reciver,
-    },
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-    },
+    }
   }
 );
         console.log("sadasinofoinwq",res.data);
@@ -84,12 +80,7 @@ console.log("set messages",messages);
     try {
       await axios.post(
         `${socketURL}`,{
-        messageData}, {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            }
+        messageData}
 
       );
       setTextMessage("");

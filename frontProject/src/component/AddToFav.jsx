@@ -12,12 +12,7 @@ export default async function AddTOFav(card, CusData) {
         const res = await axios.post(`https://backend-a2qq.onrender.com/api/addfav`, {
             customer_id: Number(CusData.user.user_id),
             product_id: card.product_id,
-        }, {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            }
+        }
 );
         console.log("Backend response:", res);   
 

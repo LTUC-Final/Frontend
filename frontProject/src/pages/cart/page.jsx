@@ -97,14 +97,7 @@ export default function CartPage() {
     const fetchData = async () => {
       try {
         const res = await axios.get(
-          `https://backend-a2qq.onrender.com/api/carts/products/${CusData.user.user_id}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-            },
-          }
-
+          `https://backend-a2qq.onrender.com/api/carts/products/${CusData.user.user_id}`
         );
         setCart(res.data.cards);
         console.log("sssssssssssssssssssss");
@@ -197,12 +190,7 @@ export default function CartPage() {
         provider_id,
         quntity: quantity,
         price: cart_price,
-        user_id,},{
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-        },
-      },
+        user_id,}
 
 
       );
@@ -226,12 +214,7 @@ export default function CartPage() {
       await axios.put(
         `https://backend-a2qq.onrender.com/changeStatusPayOfProdactAfterApprove`,
         {
-          cart_id, user_id: customer_id},{
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-          },
-        }
+          cart_id, user_id: customer_id}
 
       );
       setCart((prevCart) =>
@@ -249,13 +232,7 @@ export default function CartPage() {
     try {
       await axios.put(
         `https://backend-a2qq.onrender.com/changeStatusPayOfProdactAfterRejected/${cart_id}`,
-        { cart_id, user_id: customer_id }, {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            }
-
+        { cart_id, user_id: customer_id }
       );
       setCart((prevCart) => prevCart.filter((p) => p.cart_id !== cart_id));
       dispatch(decrementCartItem({ number: 1 }));
@@ -267,12 +244,7 @@ export default function CartPage() {
   const deleteItemCart = async (cart_id) => {
     const port = import.meta.env.VITE_PORT;
     try {
-      await axios.delete(`https://backend-a2qq.onrender.com/deleteCard/${cart_id}`, {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            }
+      await axios.delete(`https://backend-a2qq.onrender.com/deleteCard/${cart_id}`
 );
 
       setCart((prevCart) =>
@@ -303,21 +275,11 @@ export default function CartPage() {
     setShowCheckout(false);
     try {
       const ress = await axios.post(
-        `https://backend-a2qq.onrender.com/moveApprovedCartToOrders/${CusData.user.user_id}`, {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            }
+        `https://backend-a2qq.onrender.com/moveApprovedCartToOrders/${CusData.user.user_id}`
 
       );
       const res = await axios.get(
-        `https://backend-a2qq.onrender.com/api/carts/products/${CusData.user.user_id}`, {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            }
+        `https://backend-a2qq.onrender.com/api/carts/products/${CusData.user.user_id}`
 
       );
       dispatch(decrementCartItem({ number: ress.data.length }));
@@ -345,12 +307,7 @@ export default function CartPage() {
         products: cart,
         email: user.email,
         customer_id: user.user_id,
-      }, {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            }
+      }
 
     );
     const session = response.data;
@@ -389,13 +346,7 @@ export default function CartPage() {
           products: cart,
           email: user.email,
           customer_id: user.user_id,
-        },
-        {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            }
+        }
 
       );
 
@@ -427,13 +378,7 @@ export default function CartPage() {
           products: cart,
           email: user.email,
           customer_id: user.user_id,
-        },
-         {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            }
+        }
 
       );
 
@@ -477,13 +422,7 @@ export default function CartPage() {
           products: cart,
           email: user.email,
           customer_id: user.user_id,
-        },
-         {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            }
+        }
 
       );
 
@@ -537,13 +476,7 @@ export default function CartPage() {
           products: cart,
           email: user.email,
           customer_id: user.user_id,
-        },
-         {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            }
+        }
 
       );
 

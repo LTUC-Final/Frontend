@@ -93,12 +93,7 @@ Task:
 
       const reply = await axios.post(
         `https://backend-a2qq.onrender.com/ai`,
-        {newMessages}, {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            }
+        {newMessages}
 
       );
       console.log("2222222222222222");

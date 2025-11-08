@@ -26,24 +26,14 @@ export default function ApprovalForm({ cart_id, orderId, port, onSuccess }) {
       await axios.put(`https://backend-a2qq.onrender.com/updatePriceAndResponse/${orderId}`, {
         response_from_provider: textValue,
         price: priceValue,
-      }, {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            }
+      }
 )
 
       await axios.put(`https://backend-a2qq.onrender.com/sendResponseProviderToCart`, {
         response_from_provider: textValue,
         price: priceValue,
         cart_id: cart_id,
-      }, {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            }
+      }
 )
 
       if (onSuccess) {

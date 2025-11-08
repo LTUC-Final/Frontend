@@ -90,24 +90,12 @@ export default function SuccessPage() {
 
         const { data } = await axios.post(
           `https://backend-a2qq.onrender.com/save-payment`,
-          { session_id: sessionId , 
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            
- }
+          { session_id: sessionId }
         );
 
         console.log(" Payment saved successfully:", data);
         const ress = await axios.post(
-          `https://backend-a2qq.onrender.com/moveApprovedCartToOrders/${user.user_id}`, {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            }
-
+          `https://backend-a2qq.onrender.com/moveApprovedCartToOrders/${user.user_id}`
         );
         // const res = await axios.get(
         //   `http://localhost:${port}/api/carts/products/${user.user_id}`

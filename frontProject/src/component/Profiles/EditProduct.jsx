@@ -81,14 +81,7 @@ export default function EditProduct({ product, productId, onCancel, onUpdate }) 
       Object.keys(form).forEach((key) => formData.append(key, form[key]));
       if (imageFile) formData.append("image", imageFile);
  
-      const { data } = await axios.patch(endpoint, formData,  {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            
-
-      });
+      const { data } = await axios.patch(endpoint, formData);
  
       if (onUpdate) onUpdate(data);
  
