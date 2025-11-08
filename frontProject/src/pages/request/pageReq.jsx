@@ -102,13 +102,7 @@ function OrdersManagementProvider() {
       );
 
       const response = await axios.get(
-        `https://backend-a2qq.onrender.com/getAllOrderProvider/${provider_id}`,
-         {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            }
+        `https://backend-a2qq.onrender.com/getAllOrderProvider/${provider_id}`
 
       );
 
@@ -202,12 +196,7 @@ function OrdersManagementProvider() {
   function deleteOrder(order_id, cart_id) {
     try {
       axios.put(
-        `https://backend-a2qq.onrender.com/updateStatusOrder/rejected/${order_id}/${cart_id}`, {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            }
+        `https://backend-a2qq.onrender.com/updateStatusOrder/rejected/${order_id}/${cart_id}`
 
       );
       setOrders((prevOrders) =>

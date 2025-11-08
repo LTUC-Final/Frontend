@@ -285,9 +285,7 @@ export default function WishList() {
   const loadCart = useCallback(async () => {
     try {
       if (!userId) return;
-      const res = await axios.get(`${apiBase}/carts/products/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await axios.get(`${apiBase}/carts/products/${userId}`);
       const list = Array.isArray(res.data?.cards) ? res.data.cards : [];
       setCartIds(new Set(list.map((c) => Number(c.product_id))));
     } catch (err) {
@@ -298,12 +296,7 @@ export default function WishList() {
   const load = useCallback(async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get(`${apiBase}/wishlist`,  {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token1.replace(/^"|"$/g, "")}`,
-              },
-            }
+      const { data } = await axios.get(`${apiBase}/wishlist`
 );
       setItems(Array.isArray(data?.items) ? data.items : []);
     } catch (e) {

@@ -16,12 +16,7 @@ export default function PaymentsPage() {
     const fetchPayments = async () => {
       try {
         const { data } = await axios.get(
-          `https://backend-a2qq.onrender.com/history/${user.user_id}`, {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            }
+          `https://backend-a2qq.onrender.com/history/${user.user_id}`
 
         );
         setPayments(data);

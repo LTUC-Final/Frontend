@@ -55,13 +55,7 @@ export default function Profile() {
       try {
         const port = import.meta.env.VITE_PORT;
         const endpoint = `https://backend-a2qq.onrender.com/api/provider/getProviderProfile/${user_id}`;
-        const { data } = await axios.get(endpoint, {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            }
-);
+        const { data } = await axios.get(endpoint);
         setProfile(data);
         console.log("Fetched profile:", data);
       } catch (err) {

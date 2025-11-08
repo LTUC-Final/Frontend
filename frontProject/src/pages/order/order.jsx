@@ -102,13 +102,7 @@ function OrdersManagementCustomer() {
     const fetchOrders = async () => {
       try {
         const response = await axios.get(
-          `https://backend-a2qq.onrender.com/getAllOrderInCustomer/${userId}`, {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            }
-
+          `https://backend-a2qq.onrender.com/getAllOrderInCustomer/${userId}`
         );
         console.log("this is res", response.data);
         setDataMesg(response.data);
@@ -199,12 +193,7 @@ function OrdersManagementCustomer() {
       setLoading(true);
       const res = await axios.post(`https://backend-a2qq.onrender.com/ai2`, {
         input: orders,
-      }, {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            }
+      }
 );
 
       setReply(res.data.result);

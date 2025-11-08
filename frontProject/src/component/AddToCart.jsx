@@ -59,13 +59,7 @@ export function useAddToCart() {
         quantity: 1,
         details_order_user: card.details_order_user,
         price: card.price,
-      },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-          },
-        }
+      }
       );
 
       if (res.data === "Product added to cart") {

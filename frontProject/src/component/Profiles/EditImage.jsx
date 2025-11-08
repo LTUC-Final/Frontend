@@ -30,12 +30,7 @@ export default function EditImage({ userId, onUpdate }) {
       const response = await axios.put(
         `https://backend-a2qq.onrender.com/api/provider/updateProviderProfile/${userId}`,
         formData,
-        {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            }
+      
 
       );
 

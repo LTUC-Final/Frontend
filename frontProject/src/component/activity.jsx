@@ -47,13 +47,7 @@ export default function ActivitiesList({ user_id }) {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://backend-a2qq.onrender.com/getUserReactions/${user_id}`,
-           {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            }
+          `https://backend-a2qq.onrender.com/getUserReactions/${user_id}`
 
         );
         setActivities(response.data);

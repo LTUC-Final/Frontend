@@ -244,9 +244,7 @@ export default function ProviderPaymentsPage() {
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState("restricted");
   const [refresh, setRefresh] = useState(false);
-   const CusData = useSelector((state) => state.UserInfo);
-
-  const token = CusData.token;
+ 
 
   const port = import.meta.env.VITE_PORT;
 
@@ -254,12 +252,7 @@ export default function ProviderPaymentsPage() {
     const fetchProviderData = async () => {
       try {
         const { data } = await axios.get(
-          `https://backend-a2qq.onrender.com/provider/${user.provider.provider_id}`, {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            }
+          `https://backend-a2qq.onrender.com/provider/${user.provider.provider_id}`
 
         );
         setBalance(data.total_balance);
@@ -367,34 +360,19 @@ export default function ProviderPaymentsPage() {
 
       try {
         accountStatus = await axios.get(
-          `https://backend-a2qq.onrender.com/check-account-status/${user.provider.provider_id}`, {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            }
+          `https://backend-a2qq.onrender.com/check-account-status/${user.provider.provider_id}`
 
         );
       } catch (err) {
         if (err.response && err.response.status === 404) {
           setMessage(" Creating your new Stripe account...");
           await axios.post(
-            `https://backend-a2qq.onrender.com/create-stripe-account/${user.provider.provider_id}`, {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            }
+            `https://backend-a2qq.onrender.com/create-stripe-account/${user.provider.provider_id}`
 
           );
           setMessage(" Creating onboarding link...");
           const onboard = await axios.get(
-            `https://backend-a2qq.onrender.com/create-account-link/${user.provider.provider_id}`, {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            }
+            `https://backend-a2qq.onrender.com/create-account-link/${user.provider.provider_id}`
 
           );
 
@@ -414,12 +392,7 @@ export default function ProviderPaymentsPage() {
         );
 
         const onboard = await axios.get(
-          `https://backend-a2qq.onrender.com/create-account-link/${user.provider.provider_id}`, {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            }
+          `https://backend-a2qq.onrender.com/create-account-link/${user.provider.provider_id}`,
 
         );
         window.location.href = onboard.data.url;
@@ -428,12 +401,7 @@ export default function ProviderPaymentsPage() {
         await delay(2 * 60 * 1000);
 
         const checkAgain = await axios.get(
-          `https://backend-a2qq.onrender.com/check-account-status/${user.provider.provider_id}`, {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            }
+          `https://backend-a2qq.onrender.com/check-account-status/${user.provider.provider_id}`
 
         );
 
@@ -448,13 +416,7 @@ export default function ProviderPaymentsPage() {
         setMessage(" Transferring funds to your Stripe account...");
         await axios.post(
           `https://backend-a2qq.onrender.com/transfer-to-provider/${user.provider.provider_id}`,
-          { amount: balance , 
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            
- }
+          { amount: balance }
         );
         setMessage(" Funds transferred successfully!");
         setRefresh((prev) => !prev);

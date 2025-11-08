@@ -30,12 +30,7 @@ export default function ProductForm() {
       if (!token) return; // Don't make the request if there's no token
       
       try {
-        const response = await axios.get(`https://backend-a2qq.onrender.com/getAllCategory`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-          },
-        });
+        const response = await axios.get(`https://backend-a2qq.onrender.com/getAllCategory`);
         setCategories(response.data);
         if (response.data.length > 0) {
           setFormData((prev) => ({
@@ -88,12 +83,7 @@ export default function ProductForm() {
         if (value !== null) submitData.append(key, value);
       });
 
-      const response = await axios.post(`https://backend-a2qq.onrender.com/postItem`, submitData,  {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            }
+      const response = await axios.post(`https://backend-a2qq.onrender.com/postItem`, submitData
 
       );
 

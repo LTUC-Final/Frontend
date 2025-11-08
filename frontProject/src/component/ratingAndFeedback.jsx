@@ -50,12 +50,7 @@ export default function FeedbackCard({
           review_text: comment,
           add_customer_review: orderInfo.add_customer_review,
           order_id: orderInfo.order_id,
-        }, {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            }
+        }
 
       );
       onSubmit?.();

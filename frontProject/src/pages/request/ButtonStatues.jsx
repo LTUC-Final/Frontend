@@ -13,12 +13,7 @@ export default function ButtonStatus({ orderId, setOrders, port, onSuccess }) {
 
   function updateOrderStatus(order_id, newStatus) {
     axios
-      .put(`https://backend-a2qq.onrender.com/updateStatusOrder/${newStatus}/${order_id}`, {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            }
+      .put(`https://backend-a2qq.onrender.com/updateStatusOrder/${newStatus}/${order_id}`
 )
       .then((response) => {
         console.log(response.data);
@@ -34,12 +29,7 @@ export default function ButtonStatus({ orderId, setOrders, port, onSuccess }) {
 
   function updateOrderDilvary(order_id, selectedDate) {
     axios
-      .put(`https://backend-a2qq.onrender.com/delivary/${selectedDate}/${order_id}`, {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            }
+      .put(`https://backend-a2qq.onrender.com/delivary/${selectedDate}/${order_id}`
 )
       .then((response) => {
         console.log(response.data);

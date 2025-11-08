@@ -22,11 +22,7 @@ export default function DeleteProduct({ productId, providerId, productName, onDe
       const port = import.meta.env.VITE_PORT;
       const endpoint = `https://backend-a2qq.onrender.com/api/provider/deleteProduct/${providerId}/${productId}`;
 
-      await axios.delete(endpoint, {
-        headers: {
-          Authorization: `Bearer ${token.replace(/"/g, "")}`, // remove extra quotes if any
-        },
-      });
+      await axios.delete(endpoint)
 
       onDelete(productId);
 

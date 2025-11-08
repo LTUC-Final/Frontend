@@ -67,12 +67,7 @@ export default function AddReview({ providerID, user , onReviewAdded }) {
       const port = import.meta.env.VITE_PORT;
       const endpoint = `https://backend-a2qq.onrender.com/api/provider/postReview/${providerID}/${user.user_id}`;
       const payload = { rating, review_text: comment };
-      const res = await axios.post(endpoint, payload ,  {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            }
+      const res = await axios.post(endpoint, payload
 );
 
       // ✅ Add the new review to local state to hide form immediately
