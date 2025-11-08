@@ -6,13 +6,8 @@ import Swal from "sweetalert2";
 import useSuggestions from "../../hooks/SuggestionsInputdesc";
 
 export default function ProductForm() {
-  const { user } = useSelector((state) => state.UserInfo);
+  const { user, token } = useSelector((state) => state.UserInfo);
   const { decText, SuggestionsInputdesc } = useSuggestions();
-   const CusData = useSelector((state) => state.UserInfo);
-
-  const token = CusData.token;
-
-
   const providerId = user?.provider?.provider_id;
   const [formData, setFormData] = useState({
     type: "product",
@@ -32,14 +27,15 @@ export default function ProductForm() {
 
   useEffect(() => {
     const fetchCategories = async () => {
+      if (!token) return; // Don't make the request if there's no token
+      
       try {
         const response = await axios.get(`https://backend-a2qq.onrender.com/getAllCategory`, {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-            }
-);
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
+          },
+        });
         setCategories(response.data);
         if (response.data.length > 0) {
           setFormData((prev) => ({
@@ -53,7 +49,7 @@ export default function ProductForm() {
     };
 
     fetchCategories();
-  }, []);
+  }, [token]); // Add token as a dependency
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({
