@@ -1,5 +1,5 @@
 import { ChakraProvider } from "@chakra-ui/react";
-import { StrictMode, useState } from "react";
+import { StrictMode, useState, createContext } from "react";
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
@@ -26,5 +26,9 @@ function Root() {
   );
 }
 
-createRoot(document.getElementById("root")).render(<Root />);
+createRoot(document.getElementById("root")).render(
+  <StrictMode>
+    <Root />
+  </StrictMode>
+);
 

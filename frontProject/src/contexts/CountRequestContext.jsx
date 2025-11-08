@@ -1,6 +1,8 @@
 import { createContext } from "react";
 
-export const CountRequest = createContext({
+const defaultValue = {
   value: 0,
   setCount: () => {},
-});
+};
+
+export const CountRequest = createContext(defaultValue);
