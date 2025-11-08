@@ -26,6 +26,8 @@ export default function NavigationBar({ onScroll }) {
   const { value } = useContext(CountRequest);
   const ReqCount = useSelector((state) => state.UserInfo.reqItem);
 
+  console.log(CountRequest);
+  
   console.log(
     "ssssssssssssssssssssssssssssssssssssssssssssssssssssssvvvvvvvvvvvssssssssssssssssss"
   );
