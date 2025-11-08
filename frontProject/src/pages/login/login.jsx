@@ -90,7 +90,7 @@ export default function LoginPage() {
     try {
       setLoading(true);
       const port = import.meta.env.VITE_PORT;
-      const response = await axios.post(`http://localhost:${port}/api/login`, {
+      const response = await axios.post(`https://backend-a2qq.onrender.com/api/login`, {
         email: String(email || "")
           .trim()
           .toLowerCase(),
