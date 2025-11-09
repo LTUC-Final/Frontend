@@ -57,6 +57,8 @@ export default function Profile() {
         console.error("Error fetching profile:", err);
       }
     };
+    console.log(fetchProfile);
+    
 
     fetchProfile();
   }, [user, navigate, user_id, refresh]);

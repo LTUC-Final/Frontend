@@ -78,7 +78,7 @@ export function CountRequestProvider({ children }) {
       const sendRequest = async () => {
         try {
           const response = await axios.get(
-            `http://localhost:${port}/getAllOrderProvider/${provider_id}`,
+            `https://backend-a2qq.onrender.com/getAllOrderProvider/${provider_id}`,
             {
               headers: {
                 "Content-Type": "application/json",
