@@ -87,7 +87,7 @@ Task:
       console.log("111111111");
 
       const reply = await axios.post(
-        `http://localhost:${port}/ai`,
+        `https://backend-a2qq.onrender.com/ai`,
         newMessages
       );
       console.log("2222222222222222");
