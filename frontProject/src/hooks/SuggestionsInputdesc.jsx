@@ -11,7 +11,7 @@ export default function useSuggestions() {
         const port = import.meta.env.VITE_PORT;
 
         try {
-            const response = await axios.post(`http://localhost:${port}/api/ai`, { text })
+            const response = await axios.post(`https://backend-a2qq.onrender.com/api/ai`, { text })
             console.log(response);
 
             const suggestionsArray = Array.isArray(response.data.suggestion)
