@@ -12,7 +12,7 @@ export default function MessagesSlice() {
   useEffect(() => {
     const getMessages = async () => {
       try {
-        const res = await axios.get(`http://localhost:${port}/api/Messages`, {
+        const res = await axios.get(`https://backend-a2qq.onrender.com/api/Messages`, {
           params: { userId: user.user.user_id },
         });
         setMessages(res.data);

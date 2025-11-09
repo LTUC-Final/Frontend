@@ -28,7 +28,7 @@ console.log("set messages",messages);
     const fetchMessages = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:${port}/api/getmessages`,
+          `https://backend-a2qq.onrender.com/api/getmessages`,
           { params: { senderId: sender.user_id || sender , receiveId: reciver.user_id || reciver } }
         );
         console.log("sadasinofoinwq",res.data);
@@ -45,7 +45,7 @@ console.log("set messages",messages);
 
   useEffect(() => {
     if (!sender) return;
-    socketRef.current = io(`http://localhost:${port}`);
+    socketRef.current = io(`https://backend-a2qq.onrender.com`);
     socketRef.current.emit("register", sender.user_id);
     socketRef.current.on("receive_message", (msg) => {
       setMessages((prev) => [...prev, msg]);
@@ -65,7 +65,7 @@ console.log("set messages",messages);
     socketRef.current?.emit("send-message", messageData);
     try {
       await axios.post(
-        `http://localhost:${port}/api/send-messages`,
+        `https://backend-a2qq.onrender.com/api/send-messages`,
         messageData
       );
       setTextMessage("");
