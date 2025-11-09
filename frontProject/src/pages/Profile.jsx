@@ -49,7 +49,7 @@ export default function Profile() {
     const fetchProfile = async () => {
       try {
         const port = import.meta.env.VITE_PORT;
-        const endpoint = `http://localhost:${port}/api/provider/getProviderProfile/${user_id}`;
+        const endpoint = `https://backend-a2qq.onrender.com/api/provider/getProviderProfile/${user_id}`;
         const { data } = await axios.get(endpoint);
         setProfile(data);
         console.log("Fetched profile:", data);
