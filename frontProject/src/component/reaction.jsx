@@ -74,7 +74,7 @@ export default function ReactionPicker({
   const onReact = async (product_id, reactionType) => {
     try {
       const { data } = await axios.post(
-        `http://localhost:${port}/api/product/reaction`,
+        `https://backend-a2qq.onrender.com/api/product/reaction`,
         {
           product_id,
           userId,
