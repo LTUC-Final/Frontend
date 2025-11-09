@@ -18,12 +18,12 @@ export default function ApprovalForm({ cart_id, orderId, port, onSuccess }) {
     try {
       setLoading(true)
 
-      await axios.put(`http://localhost:${port}/updatePriceAndResponse/${orderId}`, {
+      await axios.put(`https://backend-a2qq.onrender.com/updatePriceAndResponse/${orderId}`, {
         response_from_provider: textValue,
         price: priceValue,
       })
 
-      await axios.put(`http://localhost:${port}/sendResponseProviderToCart`, {
+      await axios.put(`https://backend-a2qq.onrender.com/sendResponseProviderToCart`, {
         response_from_provider: textValue,
         price: priceValue,
         cart_id: cart_id,
