@@ -98,7 +98,7 @@ function OrdersManagementProvider() {
       );
 
       const response = await axios.get(
-        `http://localhost:${port}/getAllOrderProvider/${provider_id}`,
+        `https://backend-a2qq.onrender.com/getAllOrderProvider/${provider_id}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -197,7 +197,7 @@ function OrdersManagementProvider() {
   function deleteOrder(order_id, cart_id) {
     try {
       axios.put(
-        `http://localhost:${port}/updateStatusOrder/rejected/${order_id}/${cart_id}`
+        `https://backend-a2qq.onrender.com/updateStatusOrder/rejected/${order_id}/${cart_id}`
       );
       setOrders((prevOrders) =>
         prevOrders.map((o) =>
