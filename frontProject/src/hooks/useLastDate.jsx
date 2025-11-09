@@ -121,7 +121,7 @@ Task:
     const newMessagesForServer = [...messages, userMsgObj];
 
     try {
-      const reply = await axios.post(`http://localhost:${port}/ai`, newMessagesForServer);
+      const reply = await axios.post(`https://backend-a2qq.onrender.com/ai`, newMessagesForServer);
       const replyText = typeof reply.data === "string" ? reply.data : JSON.stringify(reply.data, null, 2);
       setMessages((cur) => [...cur, userMsgObj, { role: "assistant", content: replyText }]);
     } catch (error) {

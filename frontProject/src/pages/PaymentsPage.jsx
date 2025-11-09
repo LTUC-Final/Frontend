@@ -12,7 +12,7 @@ export default function PaymentsPage() {
     const fetchPayments = async () => {
       try {
         const { data } = await axios.get(
-          `http://localhost:${port}/history/${user.user_id}`
+          `https://backend-a2qq.onrender.com/history/${user.user_id}`
         );
         setPayments(data);
       } catch (error) {
