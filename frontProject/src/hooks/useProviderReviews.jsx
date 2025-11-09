@@ -18,6 +18,8 @@ export default function useProviderReviews(providerId, refreshTrigger ,isMyRevie
         console.error("Error fetching reviews:", error);
       }
     }
+    console.log("Asdasd");
+    
 
     fetchReviews();
   }, [providerId, refreshTrigger , isMyReview]);
