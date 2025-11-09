@@ -1,9 +1,10 @@
+
 import { motion } from "framer-motion";
 import { Heart, Lightbulb, Shield, TrendingUp, Zap } from "lucide-react";
-import hussamImage from "../assets/210363062.jpeg";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import imag2 from "../assets/diverse-entrepreneurs-and-creators-working-togethe (1).jpg";
 import imag1 from "../assets/jordanian-creators-collaborating-and-crafting-beau (1).jpg";
-import omarImage from "../assets/WhatsApp Image 2024-08-12 at 5.01.26 PM.jpeg";
 
 const fadeStagger = {
   hidden: { opacity: 0 },
@@ -59,19 +60,34 @@ export default function About1() {
       color: "from-[#E78B48] to-[#102E50]",
     },
   ];
-
+  const token = useSelector((state) => state.UserInfo.token);
+  const role = useSelector((state) => state.UserInfo?.user?.role);
+  const navigate = useNavigate();
+  const handleGetStarted = () => {
+    if (!token) {
+      navigate("/login");
+    } else {
+      if (role === "provider") {
+        navigate("/providerDashboard");
+      } else if (role === "customer") {
+        navigate("/userDashboard");
+      } else {
+        navigate("/");
+      }
+    }
+  };
   const team = [
     {
       name: "Omar Alqaraan",
       role: "Founder & Strategy",
       link: "https://www.linkedin.com/in/omar-essam-quraan-5a917a210/",
-      imge: omarImage,
+      // imge: omarImage,
     },
     {
       name: "Hossam Ibrahim",
       role: "Product Manager",
       link: "https://www.linkedin.com/in/hussam-ibrahim-93049a181/",
-      imge: hussamImage,
+      // imge: hussamImage,
     },
     {
       name: "Adan Aljboor",
@@ -87,10 +103,18 @@ export default function About1() {
   ];
 
   return (
-    <main className="min-h-screen bg-[#FFF6E9] overflow-hidden">
+    <main className="min-h-screen  bg-[#FFF6E9] overflow-hidden">
       {/* ---------------- HERO SECTION ---------------- */}
-      <section className="relative overflow-hidden pt-20 pb-32 md:pt-32 md:pb-40">
-        <div className="absolute inset-0 opacity-20">
+      <section className="relative overflow-hidden pt-12 pb-32 md:pt-12 md:pb-40 bg-[#102E50] ">
+        <div
+          className="absolute inset-0 opacity-15"
+          style={{
+            backgroundImage:
+              "radial-gradient(#F5C45E 1px, transparent 1px), radial-gradient(#E78B48 1px, transparent 1px)",
+            backgroundSize: "26px 26px, 32px 32px",
+            backgroundPosition: "0 0, 13px 13px",
+          }}
+        >
           <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-gradient-to-br from-[#F5C45E] to-[#E78B48] blur-3xl" />
           <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-gradient-to-tr from-[#102E50] to-[#E78B48] blur-3xl" />
         </div>
@@ -110,33 +134,34 @@ export default function About1() {
             variants={fadeStagger}
             className="space-y-8 text-center"
           >
-            <motion.div variants={fadeUp}>
-              {/* <span className="inline-block px-4 py-2 bg-white/60 backdrop-blur-sm rounded-full text-sm font-medium text-[#102E50]">
-                Welcome to BidayaMart
-              </span> */}
-            </motion.div>
             <motion.h1
               variants={fadeUp}
-              className="text-5xl md:text-6xl lg:text-7xl font-bold text-[#102E50] leading-tight tracking-tight"
+              className="text-5xl md:text-6xl lg:text-7xl font-bold text-[#FFF6E9] leading-tight tracking-tight"
             >
               Every Idea Deserves{" "}
-              <span className="bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#102E50] bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A] bg-clip-text text-transparent ">
                 a Stage
               </span>
             </motion.h1>
             <motion.p
               variants={fadeUp}
-              className="max-w-2xl mx-auto text-lg md:text-xl text-[#102E50]/80 leading-relaxed"
+              className="max-w-2xl mx-auto text-lg md:text-xl text-[#E8ECF1] leading-relaxed opacity-90"
             >
               Bidaya is home to Jordanian creators and small businesses. We
               connect new ideas with real customers, turning first beginnings
               into success stories.
             </motion.p>
-            <motion.div variants={scaleIn} className="mt-12 mx-auto max-w-2xl">
+
+            {/* <motion.div variants={scaleIn} className="mt-2 mx-auto max-w-2xl"> */}
+            <motion.div
+              variants={scaleIn}
+              className="mt-6 mx-auto max-w-xs sm:max-w-sm md:max-w-md"
+            >
               <img
                 src={imag1}
                 alt="Local creators and entrepreneurs collaborating"
-                className="w-full h-auto rounded-2xl shadow-2xl"
+                // className="w-full max-w-xs sm:max-w-sm md:max-w-md h-auto mx-auto rounded-2xl shadow-2xl"
+                className="w-full max-w-xs sm:max-w-sm md:max-w-lg h-auto max-h-90 mx-auto rounded-2xl  object-cover"
               />
             </motion.div>
           </motion.div>
@@ -144,7 +169,8 @@ export default function About1() {
       </section>
 
       {/* ---------------- MISSION & VISION ---------------- */}
-      <section className="relative max-w-7xl mx-auto px-6 md:px-8 -mt-16 mb-24">
+      <section className="relative max-w-7xl mx-auto px-6 md:px-8 -mt-16 mb-15 ">
+        {/* margin buttom  mission and vission   */}
         <motion.div
           initial="hidden"
           whileInView="show"
@@ -172,7 +198,7 @@ export default function About1() {
             <motion.div
               key={i}
               variants={fadeUp}
-              className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-[#FFF6E9] p-8 md:p-10 hover:border-[#F5C45E]/50"
+              className="group bg-white rounded-2xl  transition-all duration-300 border border-[#FFF6E9] p-8 md:p-10 hover:border-[#F5C45E]/50"
             >
               <div
                 className={`h-1.5 w-20 rounded-full bg-gradient-to-r ${card.color} mb-6`}
@@ -189,7 +215,7 @@ export default function About1() {
       </section>
 
       {/* ---------------- VALUES SECTION ---------------- */}
-      <section className="relative py-24 md:py-32 bg-gradient-to-b from-white/50 to-transparent">
+      <section className="relative py-16 md:py-1 bg-gradient-to-b bg-[#FFF6E9]">
         <div className="max-w-7xl mx-auto px-6 md:px-8">
           <motion.div
             initial="hidden"
@@ -197,11 +223,11 @@ export default function About1() {
             viewport={{ once: true, amount: 0.2 }}
             variants={fadeStagger}
           >
-            <motion.div variants={fadeUp} className="mb-16 md:mb-20">
-              <h2 className="text-4xl md:text-5xl font-bold text-[#102E50] mb-4">
+            <motion.div variants={fadeUp} className="mb-16 md:mb-1">
+              <h2 className="text-4xl md:text-5xl font-bold text-[#102E50] mb-4 text-[#102E50] ">
                 Our Values
               </h2>
-              <p className="text-lg text-[#102E50]/70">
+              <p className="text-lg text-[#102E50] ">
                 Built on principles that guide every decision we make
               </p>
             </motion.div>
@@ -249,7 +275,7 @@ export default function About1() {
       </section>
 
       {/* ---------------- COMMUNITY SECTION ---------------- */}
-      <section className="relative py-24 md:py-32">
+      <section className="relative py-24 md:py-15 bg-[#FFF6E9]">
         <div className="max-w-7xl mx-auto px-6 md:px-8">
           <motion.div
             initial="hidden"
@@ -258,13 +284,14 @@ export default function About1() {
             variants={fadeStagger}
             className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
           >
-            <motion.div variants={scaleIn}>
+            <motion.div variants={scaleIn} className="flex justify-center">
               <img
                 src={imag2}
                 alt="Our vibrant community"
-                className="w-full h-auto rounded-2xl shadow-xl"
+                className="w-full max-w-sm md:max-w-md lg:max-w-lg h-auto rounded-2xl shadow-xl object-cover"
               />
             </motion.div>
+
             <motion.div variants={fadeStagger} className="space-y-6">
               <motion.h2
                 variants={fadeUp}
@@ -274,12 +301,15 @@ export default function About1() {
               </motion.h2>
               <motion.p
                 variants={fadeUp}
-                className="text-lg text-[#102E50]/75 leading-relaxed"
+                className="text-lg text-[#102E50]  leading-relaxed"
               >
                 BidayaMart isn't just a marketplace—it's a movement celebrating
                 Jordanian talent and entrepreneurship.
               </motion.p>
-              <motion.div variants={fadeStagger} className="space-y-4 pt-4">
+              <motion.div
+                variants={fadeStagger}
+                className="space-y-4 pt-4 text-[#102E50] "
+              >
                 {[
                   "Connect directly with customers who believe in your vision",
                   "Access tools and resources to grow your business",
@@ -289,14 +319,16 @@ export default function About1() {
                   <motion.div
                     key={idx}
                     variants={fadeUp}
-                    className="flex gap-4 items-start"
+                    className="flex gap-4 items-start text-[#102E50] "
                   >
                     <div className="flex-shrink-0 mt-1 w-6 h-6 rounded-full bg-gradient-to-r from-[#F5C45E] to-[#E78B48] flex items-center justify-center">
                       <span className="text-white text-sm font-semibold">
                         ✓
                       </span>
                     </div>
-                    <span className="text-[#102E50]/80 text-lg">{point}</span>
+                    <span className="text-[#102E50]/80 text-lg text-[#102E50] ">
+                      {point}
+                    </span>
                   </motion.div>
                 ))}
               </motion.div>
@@ -306,7 +338,7 @@ export default function About1() {
       </section>
 
       {/* ---------------- TEAM SECTION ---------------- */}
-      <section className="relative py-24 md:py-32 bg-gradient-to-b from-white/50 to-[#FFF6E9]">
+      <section className="relative py-16 md:py-20 bg-gradient-to-b bg-[#FFF6E9]">
         <div className="max-w-7xl mx-auto px-6 md:px-8">
           <motion.div
             initial="hidden"
@@ -318,10 +350,10 @@ export default function About1() {
               variants={fadeUp}
               className="mb-16 md:mb-20 text-center"
             >
-              <h2 className="text-4xl md:text-5xl font-bold text-[#102E50] mb-4">
-                The Team Behind BidayaMart
+              <h2 className="text-4xl md:text-5xl font-bold text-[#102E50] mb-4  ">
+                The Team Behind Bedaya
               </h2>
-              <p className="text-lg text-[#102E50]/70 max-w-2xl mx-auto">
+              <p className="text-lg text-[#102E50]/70 max-w-2xl mx-auto  ">
                 Passionate individuals dedicated to supporting Jordanian
                 creativity and innovation
               </p>
@@ -345,7 +377,7 @@ export default function About1() {
                             ? member.imge
                             : `https://ui-avatars.com/api/?name=${encodeURIComponent(
                                 member.name
-                              )}&background=F5C45E&color=102E50`
+                              )}&background=102E50&color=FFF6E9`
                         }
                         alt={member.name}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
@@ -380,8 +412,8 @@ export default function About1() {
       </section>
 
       {/* ---------------- CTA SECTION ---------------- */}
-      <section className="relative py-20 md:py-28">
-        <div className="max-w-4xl mx-auto px-6 md:px-8 text-center">
+      <section className="relative py-20 md:py-28 text-[#FFF6E9]  bg-[#FFF6E9]">
+        <div className="max-w-4xl mx-auto px-6 md:px-8 text-center text-[#FFF6E9] ">
           <motion.div
             initial="hidden"
             whileInView="show"
@@ -390,7 +422,7 @@ export default function About1() {
           >
             <motion.h2
               variants={fadeUp}
-              className="text-4xl md:text-5xl font-bold text-[#102E50] mb-6"
+              className="text-4xl md:text-5xl font-bold text-[#102E50] mb-6  "
             >
               Ready to Start Your Journey?
             </motion.h2>
@@ -409,6 +441,7 @@ export default function About1() {
               }}
               whileTap={{ scale: 0.98 }}
               className="px-10 py-4 bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#102E50] text-white font-semibold rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300"
+              onClick={handleGetStarted}
             >
               Get Started Today
             </motion.button>

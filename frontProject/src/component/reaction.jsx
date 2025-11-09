@@ -50,10 +50,6 @@ export default function ReactionPicker({
   const [isAnimating, setIsAnimating] = useState(false);
   const [hoveredReaction, setHoveredReaction] = useState(null);
   const pickerRef = useRef(null);
-   const CusData = useSelector((state) => state.UserInfo);
-
-  const token = CusData.token;
-
 
   // Close popup when clicking outside
   useEffect(() => {
@@ -78,13 +74,12 @@ export default function ReactionPicker({
   const onReact = async (product_id, reactionType) => {
     try {
       const { data } = await axios.post(
-        `https://backend-a2qq.onrender.com/api/product/reaction`,
+        `http://localhost:${port}/api/product/reaction`,
         {
           product_id,
           userId,
           type: reactionType,
         }
-
       );
 
       setSelectedReaction(data.selectedReaction);

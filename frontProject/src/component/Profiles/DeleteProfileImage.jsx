@@ -1,3 +1,4 @@
+
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
 import axios from "axios";
@@ -6,10 +7,6 @@ import { Trash2 } from "lucide-react";
 export default function DeleteProfileImage({ onDeleted }) {
   const user = useSelector((state) => state.UserInfo.user);
   const userId = user?.user_id;
-   const CusData = useSelector((state) => state.UserInfo);
-
-  const token = CusData.token;
-
 
   const handleDelete = async () => {
     if (!userId) return;
@@ -40,7 +37,7 @@ export default function DeleteProfileImage({ onDeleted }) {
 
     try {
       const res = await axios.delete(
-        `https://backend-a2qq.onrender.com/api/deleteProfileImage/${userId}`
+        `http://localhost:5000/api/deleteProfileImage/${userId}`
       );
 
       Swal.fire({

@@ -8,22 +8,12 @@ export default function MessagesSlice() {
   const [Messages, setMessages] = useState([]);
   const port = import.meta.env.VITE_PORT;
   const navigate = useNavigate();
- const CusData = useSelector((state) => state.UserInfo);
-
-  const token = CusData.token;
 
   useEffect(() => {
     const getMessages = async () => {
       try {
-        const res = await axios.get(`https://backend-a2qq.onrender.com/api/Messages`, {
+        const res = await axios.get(`http://localhost:${port}/api/Messages`, {
           params: { userId: user.user.user_id },
-           
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token.replace(/^"|"$/g, "")}`,
-              },
-           
-
         });
         setMessages(res.data);
       } catch (error) {

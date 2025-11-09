@@ -22,10 +22,6 @@ Keep output concise, positive, and encouraging.
   ]);
 
   const port = import.meta.env.VITE_PORT;
-   const CusData = useSelector((state) => state.UserInfo);
-
-  const token = CusData.token;
-
 
   async function sendMessageSupportProvider() {
     // alert(status);
@@ -51,9 +47,8 @@ Keep supporting them — you are an essential part of their success story!`,
       console.log("111111111");
 
       const reply = await axios.post(
-        `https://backend-a2qq.onrender.com/ai`,
-        {newMessages}
-
+        `http://localhost:${port}/ai`,
+        newMessages
       );
       console.log("2222222222222222");
 

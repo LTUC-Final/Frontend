@@ -6,8 +6,9 @@ import Swal from "sweetalert2";
 import useSuggestions from "../../hooks/SuggestionsInputdesc";
 
 export default function ProductForm() {
-  const { user, token } = useSelector((state) => state.UserInfo);
+  const { user } = useSelector((state) => state.UserInfo);
   const { decText, SuggestionsInputdesc } = useSuggestions();
+
   const providerId = user?.provider?.provider_id;
   const [formData, setFormData] = useState({
     type: "product",
@@ -27,10 +28,8 @@ export default function ProductForm() {
 
   useEffect(() => {
     const fetchCategories = async () => {
-      if (!token) return; // Don't make the request if there's no token
-      
       try {
-        const response = await axios.get(`https://backend-a2qq.onrender.com/getAllCategory`);
+        const response = await axios.get(`http://localhost:${port}/getAllCategory`);
         setCategories(response.data);
         if (response.data.length > 0) {
           setFormData((prev) => ({
@@ -44,7 +43,7 @@ export default function ProductForm() {
     };
 
     fetchCategories();
-  }, [token]); // Add token as a dependency
+  }, []);
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({
@@ -83,9 +82,9 @@ export default function ProductForm() {
         if (value !== null) submitData.append(key, value);
       });
 
-      const response = await axios.post(`https://backend-a2qq.onrender.com/postItem`, submitData
-
-      );
+      const response = await axios.post(`http://localhost:${port}/postItem`, submitData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       if (response.status === 200) {
         setFormData((prev) => ({ ...prev, name: "", price: "", description: "", image: null, location: "" }));

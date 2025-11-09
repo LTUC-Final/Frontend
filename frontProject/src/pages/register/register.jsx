@@ -152,19 +152,16 @@ export default function Register() {
 
     try {
       setLoading(true);
-
-      // const port = import.meta.env.VITE_API_URL;
-
-      // const port = import.meta.env.VITE_PORT;
+      const port = import.meta.env.VITE_PORT;
       const normalizedPhone = normalizePhoneJordan(phone);
 
-      const res = await axios.post(`https://backend-a2qq.onrender.com/api/register`, {
+      const res = await axios.post(`http://localhost:${port}/api/register`, {
         firstname: squeezeSpaces(firstname),
         lastname: squeezeSpaces(lastname),
         email: String(email || "").trim().toLowerCase(),
         password,
         role,
-        phone: normalizedPhone
+        phone: normalizedPhone,
       });
 
       Swal.fire({
@@ -261,7 +258,7 @@ export default function Register() {
                   <div className="relative">
                     <span className="absolute inset-y-0 left-3 flex items-center text-[#102E50]/70">
                       <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor">
-                        <path d="M12 12a5 5 1 1 0-5-5 5 5 0 0 0 5 5Zm-8 9a8 8 0 1 1 16 0v1H4Z" />
+                        <path d="M12 12a5 5 1 1 0-5-5 5 5 0 0 0 5 5Zm-8 9a8 8 0 1 1 16 0v1H4Z"/>
                       </svg>
                     </span>
                     <input
@@ -283,7 +280,7 @@ export default function Register() {
                   <div className="relative">
                     <span className="absolute inset-y-0 left-3 flex items-center text-[#102E50]/70">
                       <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor">
-                        <path d="M12 12a5 5 1 1 0-5-5 5 5 0 0 0 5 5Zm-8 9a8 8 0 1 1 16 0v1H4Z" />
+                        <path d="M12 12a5 5 1 1 0-5-5 5 5 0 0 0 5 5Zm-8 9a8 8 0 1 1 16 0v1H4Z"/>
                       </svg>
                     </span>
                     <input
@@ -306,7 +303,7 @@ export default function Register() {
                 <div className="relative">
                   <span className="absolute inset-y-0 left-3 flex items-center text-[#102E50]/70">
                     <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor">
-                      <path d="M2 6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v.35L12 12 2 6.35V6Zm0 3.1V18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9.1l-9.37 5.25a2 2 0 0 1-1.96 0Z" />
+                      <path d="M2 6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v.35L12 12 2 6.35V6Zm0 3.1V18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9.1l-9.37 5.25a2 2 0 0 1-1.96 0Z"/>
                     </svg>
                   </span>
                   <input
@@ -328,7 +325,7 @@ export default function Register() {
                 <div className="relative">
                   <span className="absolute inset-y-0 left-3 flex items-center text-[#102E50]/70">
                     <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor">
-                      <path d="M6.6 10.8a15.5 15.5 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1.1-.2c1.2.5 2.5.8 3.9.8a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.3 21 3 13.7 3 4a1 1 0 0 1 1-1h2.1a1 1 0 0 1 1 1c0 1.4.3 2.7.8 3.9.2.4.1.9-.2 1.1Z" />
+                      <path d="M6.6 10.8a15.5 15.5 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1.1-.2c1.2.5 2.5.8 3.9.8a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.3 21 3 13.7 3 4a1 1 0 0 1 1-1h2.1a1 1 0 0 1 1 1c0 1.4.3 2.7.8 3.9.2.4.1.9-.2 1.1Z"/>
                     </svg>
                   </span>
                   <input
@@ -350,7 +347,7 @@ export default function Register() {
                 <div className="relative">
                   <span className="absolute inset-y-0 left-3 flex items-center text-[#102E50]/70">
                     <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor">
-                      <path d="M12 1a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5Zm-3 8V6a3 3 0 1 1 6 0v3Z" />
+                      <path d="M12 1a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5Zm-3 8V6a3 3 0 1 1 6 0v3Z"/>
                     </svg>
                   </span>
                   <input
@@ -391,7 +388,7 @@ export default function Register() {
                 <div className="relative">
                   <span className="absolute inset-y-0 left-3 flex items-center text-[#102E50]/70">
                     <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor">
-                      <path d="M12 1a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5Zm-3 8V6a3 3 0 1 1 6 0v3Z" />
+                      <path d="M12 1a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5Zm-3 8V6a3 3 0 1 1 6 0v3Z"/>
                     </svg>
                   </span>
                   <input
@@ -431,7 +428,7 @@ export default function Register() {
                       <div className="absolute top-2 right-2 hidden peer-checked:block">
                         <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-[#102E50] text-[#FFF6E9]">
                           <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="currentColor">
-                            <path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z" />
+                            <path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/>
                           </svg>
                         </span>
                       </div>
@@ -467,7 +464,7 @@ export default function Register() {
                       <div className="absolute top-2 right-2 hidden peer-checked:block">
                         <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-[#102E50] text-[#FFF6E9]">
                           <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="currentColor">
-                            <path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z" />
+                            <path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/>
                           </svg>
                         </span>
                       </div>

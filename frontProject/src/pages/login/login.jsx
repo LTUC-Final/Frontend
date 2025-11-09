@@ -90,7 +90,7 @@ export default function LoginPage() {
     try {
       setLoading(true);
       const port = import.meta.env.VITE_PORT;
-      const response = await axios.post(`https://backend-a2qq.onrender.com/api/login`, {
+      const response = await axios.post(`http://localhost:${port}/api/login`, {
         email: String(email || "")
           .trim()
           .toLowerCase(),
@@ -106,7 +106,7 @@ export default function LoginPage() {
       );
 
       const res = await axios.get(
-        `https://backend-a2qq.onrender.com/api/carts/products/${user.user_id}`
+        `http://localhost:${port}/api/carts/products/${user.user_id}`
       );
 
       dispatch(

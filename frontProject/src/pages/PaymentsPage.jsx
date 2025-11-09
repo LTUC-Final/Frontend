@@ -6,18 +6,13 @@ import { useSelector } from "react-redux";
 export default function PaymentsPage() {
   const [payments, setPayments] = useState([]);
   const port = import.meta.env.VITE_PORT;
-   const CusData = useSelector((state) => state.UserInfo);
-
-  const token = CusData.token;
-
   const { user } = useSelector((state) => state.UserInfo);
 
   useEffect(() => {
     const fetchPayments = async () => {
       try {
         const { data } = await axios.get(
-          `https://backend-a2qq.onrender.com/history/${user.user_id}`
-
+          `http://localhost:${port}/history/${user.user_id}`
         );
         setPayments(data);
       } catch (error) {

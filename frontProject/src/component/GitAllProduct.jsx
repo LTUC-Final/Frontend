@@ -17,9 +17,6 @@ export default function GitAllProduct() {
   const { AddToCart } = useAddToCart();
   const number = 0;
 
-  const token = CusData.token;
-
-
   console.log(selectore);
   console.log(selectore);
 
@@ -42,7 +39,7 @@ export default function GitAllProduct() {
     const feactData = async () => {
       try {
         let res = await axios.get(
-          `https://backend-a2qq.onrender.com/api/ShowCardInUserDashboard/${CusData.user.user_id}`
+          `http://localhost:${port}/api/ShowCardInUserDashboard/${CusData.user.user_id}`
         );
         setCards(res.data);
       } catch (error) {
@@ -104,7 +101,7 @@ export default function GitAllProduct() {
       ? card.image
       : card.image.startsWith("http")
       ? card.image
-      : `https://backend-a2qq.onrender.com${card.image}`
+      : `http://localhost:${port}${card.image}`
     : defaultImg
 }
 
