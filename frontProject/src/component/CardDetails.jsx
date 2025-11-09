@@ -15,7 +15,7 @@ export default function CardDeatils() {
     const HandelReviews = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:${port}/api/ReviewsProduct/${card.product_id}`
+          `https://backend-a2qq.onrender.com/api/ReviewsProduct/${card.product_id}`
         );
         setCardRev(res.data);
         console.log("vvvvvvvvvvvvvvvvvvvvvvvvvvvvv");
