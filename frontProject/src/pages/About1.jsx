@@ -104,7 +104,7 @@ export default function About1() {
   return (
     <main className="min-h-screen  bg-[#FFF6E9] overflow-hidden">
       {/* ---------------- HERO SECTION ---------------- */}
-      <section className="relative overflow-hidden pt-12 pb-32 md:pt-12 md:pb-40 bg-[#102E50] ">
+      <section className="relative overflow-hidden pt-12 pb-32 md:pt-12 md:pb-40 bg-[#102E50]">
         <div
           className="absolute inset-0 opacity-15"
           style={{
@@ -117,6 +117,7 @@ export default function About1() {
           <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-gradient-to-br from-[#F5C45E] to-[#E78B48] blur-3xl" />
           <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-gradient-to-tr from-[#102E50] to-[#E78B48] blur-3xl" />
         </div>
+
         <div
           className="absolute inset-0 opacity-5"
           style={{
@@ -125,43 +126,43 @@ export default function About1() {
             backgroundSize: "40px 40px",
           }}
         />
+
         <div className="relative max-w-7xl mx-auto px-6 md:px-8">
           <motion.div
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, amount: 0.5 }}
             variants={fadeStagger}
-            className="space-y-8 text-center"
+            className="flex flex-col md:flex-row items-center justify-between gap-12"
           >
-            <motion.h1
-              variants={fadeUp}
-              className="text-5xl md:text-6xl lg:text-7xl font-bold text-[#FFF6E9] leading-tight tracking-tight"
-            >
-              Every Idea Deserves{" "}
-              <span className="bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A] bg-clip-text text-transparent ">
-                a Stage
-              </span>
-            </motion.h1>
-            <motion.p
-              variants={fadeUp}
-              className="max-w-2xl mx-auto text-lg md:text-xl text-[#E8ECF1] leading-relaxed opacity-90"
-            >
-              Bidaya is home to Jordanian creators and small businesses. We
-              connect new ideas with real customers, turning first beginnings
-              into success stories.
-            </motion.p>
-
-            {/* <motion.div variants={scaleIn} className="mt-2 mx-auto max-w-2xl"> */}
             <motion.div
               variants={scaleIn}
-              className="mt-6 mx-auto max-w-xs sm:max-w-sm md:max-w-md"
+              className="flex-1 flex justify-center md:justify-start"
             >
               <img
                 src={imag1}
                 alt="Local creators and entrepreneurs collaborating"
-                // className="w-full max-w-xs sm:max-w-sm md:max-w-md h-auto mx-auto rounded-2xl shadow-2xl"
-                className="w-full max-w-xs sm:max-w-sm md:max-w-lg h-auto max-h-90 mx-auto rounded-2xl  object-cover"
+                className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg h-auto rounded-2xl shadow-2xl object-cover"
               />
+            </motion.div>
+
+            <motion.div
+              variants={fadeUp}
+              className="flex-1 text-center md:text-right space-y-6 "
+            >
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-[#FFF6E9] leading-tight tracking-tight text-left " >
+                Every Idea Deserves{" "}
+                <span className="bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A] bg-clip-text text-transparent">
+                  a Stage
+                </span>
+              </h1>
+
+              <p className="max-w-xl text-lg md:text-xl text-[#E8ECF1] leading-relaxed opacity-90 text-left">
+                {" "}
+                Bidaya is home to Jordanian creators and small businesses. We
+                connect new ideas with real customers, turning first beginnings
+                into success stories.
+              </p>
             </motion.div>
           </motion.div>
         </div>
@@ -357,7 +358,7 @@ export default function About1() {
                 creativity and innovation
               </p>
             </motion.div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6  ">
               {team.map((member, idx) => (
                 <motion.a
                   key={idx}
@@ -376,7 +377,7 @@ export default function About1() {
                             ? member.imge
                             : `https://ui-avatars.com/api/?name=${encodeURIComponent(
                                 member.name
-                              )}&background=102E50&color=FFF6E9`
+                              )}&background=1A3D64&color=FFF6E9`
                         }
                         alt={member.name}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"

@@ -92,7 +92,7 @@ const handleMouseLeave = useCallback(() => {
 
   const navItems = [
     { name: "Home", href: "/mainDashBoard" },
-    { name: "About", href: "/About" },
+    { name: "About", href: "/About1" },
     { name: "My Profile", href: `/profile/${userId}`, position: "right" },
     { name: "Dashboard", href: "/providerDashboard", roles: ["provider"] },
     { name: "Dashboard", href: "/userDashboard", roles: ["customer"] },
