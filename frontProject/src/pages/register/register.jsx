@@ -155,7 +155,7 @@ export default function Register() {
       const port = import.meta.env.VITE_PORT;
       const normalizedPhone = normalizePhoneJordan(phone);
 
-      const res = await axios.post(`http://localhost:${port}/api/register`, {
+      const res = await axios.post(`https://backend-a2qq.onrender.com/api/register`, {
         firstname: squeezeSpaces(firstname),
         lastname: squeezeSpaces(lastname),
         email: String(email || "").trim().toLowerCase(),
