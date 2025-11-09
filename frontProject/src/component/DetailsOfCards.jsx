@@ -26,6 +26,8 @@ export default function DetailsOfCards({ Id }) {
         console.error(error);
       }
     };
+    console.log("hussam");
+    
 
     gitdetails();
   }, [Id, port]);
