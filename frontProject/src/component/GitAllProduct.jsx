@@ -39,7 +39,7 @@ export default function GitAllProduct() {
     const feactData = async () => {
       try {
         let res = await axios.get(
-          `http://localhost:${port}/api/ShowCardInUserDashboard/${CusData.user.user_id}`
+          `https://backend-a2qq.onrender.com/api/ShowCardInUserDashboard/${CusData.user.user_id}`
         );
         setCards(res.data);
       } catch (error) {
