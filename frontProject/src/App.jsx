@@ -26,6 +26,8 @@ import { useSelector } from "react-redux";
 import ChatBoot from "./component/chatboot/chatboot";
 import LiveChat from "./component/LiveChat/LiveChat";
 import MessagesSlice from "./component/LiveChat/MessagesSlice";
+import MessagesLayout from "./component/LiveChat/MessagesLayout";
+
 // import { CountRequest } from "./contexts/countRequest";
 import ProtectedRoute from "./component/ProdectRoute";
 import { CountRequestProvider } from "./contexts/CountRequestProvider";
@@ -80,9 +82,18 @@ function App() {
 
             <Route path="/register" element={<Register />} />
 
+            {/* <Route path="/forget" element={<Forget />} />
+              <Route path="/verify_otp" element={<VerifyOtp />} />
+              <Route path="/reset_password" element={<ResetPassword />} /> */}
+
             <Route element={<ProtectedRoute />}>
               <Route path="/profile/:user_id" element={<Profile />} />
-              <Route path="/LiveChat/:user_id" element={<LiveChat />} />
+              {/* <Route path="/LiveChat/:user_id" element={<LiveChat />} /> */}
+              <Route element={<MessagesLayout />}>
+  <Route path="/Messages" element={<></>} />
+  <Route path="/LiveChat/:user_id" element={<LiveChat />} />
+</Route>
+
               <Route
                 path="/providerDashboard"
                 element={<ProductForm></ProductForm>}
@@ -93,7 +104,8 @@ function App() {
               <Route path="/favorite" element={<WishList />} />
               <Route path="/productdatails" element={<CardDeatils />} />
               <Route path="/userDashboard" element={<GitAllProduct />} />
-              <Route path="/Messages" element={<MessagesSlice />} />
+              {/* <Route path="/Messages" element={<MessagesSlice />} /> */}
+              
               <Route
                 path="/cart"
                 element={
@@ -127,9 +139,6 @@ function App() {
                 element={<OrdersManagementCustomer></OrdersManagementCustomer>}
               ></Route>
               <Route path="*" element={<NotFoundPage></NotFoundPage>}></Route>
-              {/* <Route path="/forget" element={<Forget />} />
-          <Route path="/verify_otp" element={<VerifyOtp />} />
-          <Route path="/reset_password" element={<ResetPassword />} /> */}
               <Route path="/About" element={<About />} />{" "}
               <Route path="/About1" element={<About1 />} />{" "}
             </Route>

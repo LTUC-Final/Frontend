@@ -1,0 +1,90 @@
+{
+  "arts": [
+    "/dashboardImages/Arts & Creativity/Arts & Creativity1.jpg",
+    "/dashboardImages/Arts & Creativity/Arts & Creativity2.jpg",
+    "/dashboardImages/Arts & Creativity/Arts & Creativity3.jpg",
+    "/dashboardImages/Arts & Creativity/Arts & Creativity4.jpg",
+    "/dashboardImages/Arts & Creativity/Arts & Creativity5.jpeg",
+    "/dashboardImages/Arts & Creativity/Arts & Creativity6.jpg",
+    "/dashboardImages/Arts & Creativity/Arts & Creativity7.jpg",
+    "/dashboardImages/Arts & Creativity/Arts & Creativity8.jpg",
+    "/dashboardImages/Arts & Creativity/Arts & Creativity9.jpg",
+    "/dashboardImages/Arts & Creativity/Arts & Creativity10.jpg",
+    "/dashboardImages/Arts & Creativity/Arts & Creativity11.jpg",
+    "/dashboardImages/Arts & Creativity/Arts & Creativity12.jpg"
+  ],
+  "beauty": [
+    "/dashboardImages/Beauty & Style/Beauty & Style1.webp",
+    "/dashboardImages/Beauty & Style/Beauty & Style2.webp",
+    "/dashboardImages/Beauty & Style/Beauty & Style3.webp",
+    "/dashboardImages/Beauty & Style/Beauty & Style4.jpeg",
+    "/dashboardImages/Beauty & Style/Beauty & Style5.jpeg",
+    "/dashboardImages/Beauty & Style/Beauty & Style6.jpeg"
+  ],
+  "events": [
+    "/dashboardImages/Events & Celebrations/Events & Celebrations1.jpg",
+    "/dashboardImages/Events & Celebrations/Events & Celebrations2.jpg",
+    "/dashboardImages/Events & Celebrations/Events & Celebrations3.jpg",
+    "/dashboardImages/Events & Celebrations/Events & Celebrations4.jpg",
+    "/dashboardImages/Events & Celebrations/Events & Celebrations5.jpg",
+    "/dashboardImages/Events & Celebrations/Events & Celebrations6.jpg",
+    "/dashboardImages/Events & Celebrations/Events & Celebrations7.jpg",
+    "/dashboardImages/Events & Celebrations/Events & Celebrations8.jpg",
+    "/dashboardImages/Events & Celebrations/Events & Celebrations9.jpg",
+    "/dashboardImages/Events & Celebrations/Events & Celebrations10.jpg",
+    "/dashboardImages/Events & Celebrations/Events & Celebrations11.webp",
+    "/dashboardImages/Events & Celebrations/Events & Celebrations12.jpg"
+  ],
+  "handmade": [
+    "/dashboardImages/Handmade & Crafts/Handmade & Crafts1.jpg",
+    "/dashboardImages/Handmade & Crafts/Handmade & Crafts2.jpg",
+    "/dashboardImages/Handmade & Crafts/Handmade & Crafts3.jpg",
+    "/dashboardImages/Handmade & Crafts/Handmade & Crafts4.jpg",
+    "/dashboardImages/Handmade & Crafts/Handmade & Crafts5.jpg",
+    "/dashboardImages/Handmade & Crafts/Handmade & Crafts6.jpg",
+    "/dashboardImages/Handmade & Crafts/Handmade & Crafts7.webp",
+    "/dashboardImages/Handmade & Crafts/Handmade & Crafts8.webp",
+    "/dashboardImages/Handmade & Crafts/Handmade & Crafts9.webp",
+    "/dashboardImages/Handmade & Crafts/Handmade & Crafts10.webp",
+    "/dashboardImages/Handmade & Crafts/Handmade & Crafts11.jpg",
+    "/dashboardImages/Handmade & Crafts/Handmade & Crafts12.jpg"
+  ],
+  "learning": [
+    "/dashboardImages/Learning & Coaching/Learning & Coaching1.jpg",
+    "/dashboardImages/Learning & Coaching/Learning & Coaching2.jpg",
+    "/dashboardImages/Learning & Coaching/Learning & Coaching3.jpg",
+    "/dashboardImages/Learning & Coaching/Learning & Coaching4.jpg",
+    "/dashboardImages/Learning & Coaching/Learning & Coaching5.jpg",
+    "/dashboardImages/Learning & Coaching/Learning & Coaching6.jpg",
+    "/dashboardImages/Learning & Coaching/Learning & Coaching7.jpg"
+  ],
+  "local": [
+    "/dashboardImages/Local Services/Local Services1.jpg",
+    "/dashboardImages/Local Services/Local Services2.jpg",
+    "/dashboardImages/Local Services/Local Services3.jpg",
+    "/dashboardImages/Local Services/Local Services4.jpg",
+    "/dashboardImages/Local Services/Local Services5.jpg",
+    "/dashboardImages/Local Services/Local Services6.jpg",
+    "/dashboardImages/Local Services/Local Services7.jpg",
+    "/dashboardImages/Local Services/Local Services8.jpg",
+    "/dashboardImages/Local Services/Local Services9.jpg",
+    "/dashboardImages/Local Services/Local Services10.jpg",
+    "/dashboardImages/Local Services/Local Services11.jpg",
+    "/dashboardImages/Local Services/Local Services12.jpg"
+    
+  ],
+  "traditional": [
+    "/dashboardImages/Traditional & Cultural/Traditional & Cultural1.jpg",
+    "/dashboardImages/Traditional & Cultural/Traditional & Cultural2.jpg",
+    "/dashboardImages/Traditional & Cultural/Traditional & Cultural3.jpg",
+    "/dashboardImages/Traditional & Cultural/Traditional & Cultural4.jpg",
+    "/dashboardImages/Traditional & Cultural/Traditional & Cultural5.jpg",
+    "/dashboardImages/Traditional & Cultural/Traditional & Cultural6.webp",
+    "/dashboardImages/Traditional & Cultural/Traditional & Cultural7.jpg",
+    "/dashboardImages/Traditional & Cultural/Traditional & Cultural8.jpg",
+    "/dashboardImages/Traditional & Cultural/Traditional & Cultural9.jpg",
+    "/dashboardImages/Traditional & Cultural/Traditional & Cultural10.jpeg",
+    "/dashboardImages/Traditional & Cultural/Traditional & Cultural11.jpeg",
+    "/dashboardImages/Traditional & Cultural/Traditional & Cultural12.jpeg"
+  ]
+}
