@@ -242,7 +242,7 @@ export default function WishList() {
   const [cartIds, setCartIds] = useState(new Set());
 
   const port = import.meta.env.VITE_PORT;
-  const apiBase = useMemo(() => `http://localhost:${port}/api`, [port]);
+  const apiBase = useMemo(() => `https://backend-a2qq.onrender.com/api`, [port]);
 
   const withMutedAlerts = useCallback(async (fn) => {
     const prev = window.alert;
