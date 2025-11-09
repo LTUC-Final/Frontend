@@ -98,7 +98,7 @@ function OrdersManagementCustomer() {
     const fetchOrders = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:${port}/getAllOrderInCustomer/${userId}`
+          `https://backend-a2qq.onrender.com/getAllOrderInCustomer/${userId}`
         );
         console.log("this is res", response.data);
         setDataMesg(response.data);
