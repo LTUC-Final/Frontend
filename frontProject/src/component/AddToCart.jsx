@@ -47,7 +47,7 @@ export function useAddToCart() {
 
   const AddToCart = async (card, CusData) => {
     try {
-      const res = await axios.post(`http://localhost:${port}/api/AddCart`, {
+      const res = await axios.post(`https://backend-a2qq.onrender.com/api/AddCart`, {
         customer_id: Number(CusData.user.user_id),
         provider_id: card.provider_id,
         product_id: card.product_id,

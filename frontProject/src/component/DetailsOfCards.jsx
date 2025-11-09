@@ -19,7 +19,7 @@ export default function DetailsOfCards({ Id }) {
     const gitdetails = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:${port}/api/DetailsOfCardInfo/${Id}`
+          `https://backend-a2qq.onrender.com/api/DetailsOfCardInfo/${Id}`
         );
         setDataCard(res.data);
       } catch (error) {

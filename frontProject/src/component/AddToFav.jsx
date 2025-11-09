@@ -5,7 +5,7 @@ export default async function AddTOFav(card, CusData) {
     console.log(card);
 
     try {
-        const res = await axios.post(`http://localhost:${port}/api/addfav`, {
+        const res = await axios.post(`https://backend-a2qq.onrender.com/api/addfav`, {
             customer_id: Number(CusData.user.user_id),
             product_id: card.product_id,
         });
