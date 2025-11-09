@@ -6,8 +6,6 @@ import { BrowserRouter } from "react-router-dom";
 import { PersistGate } from "redux-persist/integration/react";
 import App from "./App.jsx";
 import "./index.css";
-// global axios configuration (baseURL + token interceptor)
-import "./api/axiosConfig.js";
 import store, { customPersisor } from "./redux/userInfo/store.js";
 
 createRoot(document.getElementById("root")).render(
