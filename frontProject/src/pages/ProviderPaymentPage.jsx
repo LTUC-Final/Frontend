@@ -250,7 +250,7 @@ export default function ProviderPaymentsPage() {
     const fetchProviderData = async () => {
       try {
         const { data } = await axios.get(
-          `http://localhost:${port}/provider/${user.provider.provider_id}`
+          `https://backend-a2qq.onrender.com/provider/${user.provider.provider_id}`
         );
         setBalance(data.total_balance);
         setPayments(data.payments);
