@@ -94,9 +94,9 @@ export default function EditProfile({ profile, onUpdate, onCancel }) {
       if (profile.role === "provider") {
         payload.bio = form.bio;
         payload.skills = form.skills;
-        endpoint = `http://localhost:${port}/api/provider/updateProviderProfile/${profile.user_id}`;
+        endpoint = `https://backend-a2qq.onrender.com/api/provider/updateProviderProfile/${profile.user_id}`;
       } else {
-        endpoint = `http://localhost:${port}/api/user/updateUserProfile/${profile.user_id}`;
+        endpoint = `https://backend-a2qq.onrender.com/api/user/updateUserProfile/${profile.user_id}`;
       }
 
       const { data: updatedProfile } = await axios.put(endpoint, payload, {

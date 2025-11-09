@@ -61,7 +61,7 @@ export default function AddReview({ providerID, user , onReviewAdded }) {
     setLoading(true);
     try {
       const port = import.meta.env.VITE_PORT;
-      const endpoint = `http://localhost:${port}/api/provider/postReview/${providerID}/${user.user_id}`;
+      const endpoint = `https://backend-a2qq.onrender.com/api/provider/postReview/${providerID}/${user.user_id}`;
       const payload = { rating, review_text: comment };
       const res = await axios.post(endpoint, payload);
 

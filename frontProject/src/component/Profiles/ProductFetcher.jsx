@@ -23,7 +23,7 @@ export default function ProductFetcher({ profile, refreshTrigger, user_id }) {
       setError(null);
       try {
         const port = import.meta.env.VITE_PORT;
-        const endpoint = `http://localhost:${port}/api/provider/getProductsByUser/${profile.user_id}`;
+        const endpoint = `https://backend-a2qq.onrender.com/api/provider/getProductsByUser/${profile.user_id}`;
         const res = await axios.get(endpoint);
         setProduct(res.data);
       } catch (err) {

@@ -71,7 +71,7 @@ export default function EditProduct({ product, productId, onCancel, onUpdate }) 
     }
  
     try {
-      const endpoint = `http://localhost:${port}/api/provider/updateProduct/${productId}`;
+      const endpoint = `https://backend-a2qq.onrender.com/api/provider/updateProduct/${productId}`;
  
       const formData = new FormData();
       Object.keys(form).forEach((key) => formData.append(key, form[key]));

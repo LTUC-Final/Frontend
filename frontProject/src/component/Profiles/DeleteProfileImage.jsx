@@ -37,7 +37,7 @@ export default function DeleteProfileImage({ onDeleted }) {
 
     try {
       const res = await axios.delete(
-        `http://localhost:5000/api/deleteProfileImage/${userId}`
+        `https://backend-a2qq.onrender.com/api/deleteProfileImage/${userId}`
       );
 
       Swal.fire({
