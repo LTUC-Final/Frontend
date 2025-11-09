@@ -94,7 +94,7 @@ export default function CartPage() {
     const fetchData = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:${port}/api/carts/products/${CusData.user.user_id}`
+          `https://backend-a2qq.onrender.com/api/carts/products/${CusData.user.user_id}`
         );
         setCart(res.data.cards);
         console.log("sssssssssssssssssssss");
@@ -180,7 +180,7 @@ export default function CartPage() {
             : item
         )
       );
-      await axios.put(`http://localhost:${port}/updateTheCustomReqAndToOrder`, {
+      await axios.put(`https://backend-a2qq.onrender.com/updateTheCustomReqAndToOrder`, {
         cart_id,
         custom_requirement,
         Prodact_id: product_id,
@@ -207,7 +207,7 @@ export default function CartPage() {
     alert("Approved!");
     try {
       await axios.put(
-        `http://localhost:${port}/changeStatusPayOfProdactAfterApprove`,
+        `https://backend-a2qq.onrender.com/changeStatusPayOfProdactAfterApprove`,
         { cart_id, user_id: customer_id }
       );
       setCart((prevCart) =>
@@ -224,7 +224,7 @@ export default function CartPage() {
     alert("Rejected!");
     try {
       await axios.put(
-        `http://localhost:${port}/changeStatusPayOfProdactAfterRejected/${cart_id}`,
+        `https://backend-a2qq.onrender.com/changeStatusPayOfProdactAfterRejected/${cart_id}`,
         { cart_id, user_id: customer_id }
       );
       setCart((prevCart) => prevCart.filter((p) => p.cart_id !== cart_id));
@@ -237,7 +237,7 @@ export default function CartPage() {
   const deleteItemCart = async (cart_id) => {
     const port = import.meta.env.VITE_PORT;
     try {
-      await axios.delete(`http://localhost:${port}/deleteCard/${cart_id}`);
+      await axios.delete(`https://backend-a2qq.onrender.com/deleteCard/${cart_id}`);
 
       setCart((prevCart) =>
         prevCart.filter((item) => item.cart_id !== cart_id)
@@ -267,10 +267,10 @@ export default function CartPage() {
     setShowCheckout(false);
     try {
       const ress = await axios.post(
-        `http://localhost:${port}/moveApprovedCartToOrders/${CusData.user.user_id}`
+        `https://backend-a2qq.onrender.com/moveApprovedCartToOrders/${CusData.user.user_id}`
       );
       const res = await axios.get(
-        `http://localhost:${port}/api/carts/products/${CusData.user.user_id}`
+        `https://backend-a2qq.onrender.com/api/carts/products/${CusData.user.user_id}`
       );
       dispatch(decrementCartItem({ number: ress.data.length }));
       console.log("ress.data.length");
@@ -292,7 +292,7 @@ export default function CartPage() {
       "Content-Type": "application/json",
     };
     const response = await axios.post(
-      `http://localhost:${port}/api/payments/create-checkout-session`,
+      `https://backend-a2qq.onrender.com/api/payments/create-checkout-session`,
       {
         products: cart,
         email: user.email,
@@ -330,7 +330,7 @@ export default function CartPage() {
 
     try {
       const response = await axios.post(
-        `http://localhost:${port}/api/payments/create-multi-provider-sessions`,
+        `https://backend-a2qq.onrender.com/api/payments/create-multi-provider-sessions`,
         {
           products: cart,
           email: user.email,
@@ -362,7 +362,7 @@ export default function CartPage() {
 
     try {
       const response = await axios.post(
-        `http://localhost:${port}/api/payments/create-multi-provider-sessions`,
+        `https://backend-a2qq.onrender.com/api/payments/create-multi-provider-sessions`,
         {
           products: cart,
           email: user.email,
@@ -406,7 +406,7 @@ export default function CartPage() {
       });
 
       const response = await axios.post(
-        `http://localhost:${port}/api/payments/create-multi-provider-sessions`,
+        `https://backend-a2qq.onrender.com/api/payments/create-multi-provider-sessions`,
         {
           products: cart,
           email: user.email,
@@ -460,7 +460,7 @@ export default function CartPage() {
     );
     try {
       const { data } = await axios.post(
-        `http://localhost:${port}/api/payments/create-checkout-session-all`,
+        `https://backend-a2qq.onrender.com/api/payments/create-checkout-session-all`,
         {
           products: cart,
           email: user.email,

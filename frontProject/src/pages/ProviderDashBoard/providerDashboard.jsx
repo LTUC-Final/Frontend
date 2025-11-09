@@ -29,7 +29,7 @@ export default function ProductForm() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get(`http://localhost:${port}/getAllCategory`);
+        const response = await axios.get(`https://backend-a2qq.onrender.com/getAllCategory`);
         setCategories(response.data);
         if (response.data.length > 0) {
           setFormData((prev) => ({
@@ -82,7 +82,7 @@ export default function ProductForm() {
         if (value !== null) submitData.append(key, value);
       });
 
-      const response = await axios.post(`http://localhost:${port}/postItem`, submitData, {
+      const response = await axios.post(`https://backend-a2qq.onrender.com/postItem`, submitData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
