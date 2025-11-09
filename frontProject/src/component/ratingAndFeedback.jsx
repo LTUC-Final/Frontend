@@ -38,7 +38,7 @@ export default function FeedbackCard({
 
     try {
       const response = await axios.post(
-        `http://localhost:${port}/customerWriteReviewOfProdactOrder`,
+        `https://backend-a2qq.onrender.com/customerWriteReviewOfProdactOrder`,
         {
           product_id: orderInfo.product_id,
           customer_id: orderInfo.customer_id,
