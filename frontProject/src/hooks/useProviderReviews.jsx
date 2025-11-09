@@ -11,7 +11,7 @@ export default function useProviderReviews(providerId, refreshTrigger ,isMyRevie
     async function fetchReviews() {
       try {
         const res = await axios.get(
-          `http://localhost:${port}/api/provider/getProviderReviews/${providerId}`
+          `https://backend-a2qq.onrender.com/api/provider/getProviderReviews/${providerId}`
         );
         setReviews(res.data);
       } catch (error) {
