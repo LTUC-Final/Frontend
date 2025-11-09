@@ -231,7 +231,7 @@ INSTRUCTIONS FOR ASSISTANT:
     try {
       // const reply = await chat(newMessages);
       const reply = await axios.post(
-        `http://localhost:${port}/ai`,
+        `https://backend-a2qq.onrender.com/ai`,
         newMessages
       );
       // console.log(reply);

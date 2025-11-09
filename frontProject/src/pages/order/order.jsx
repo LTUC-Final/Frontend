@@ -187,7 +187,7 @@ function OrdersManagementCustomer() {
   const handleSend = async () => {
     try {
       setLoading(true);
-      const res = await axios.post(`http://localhost:${port}/ai2`, {
+      const res = await axios.post(`https://backend-a2qq.onrender.com/ai2`, {
         input: orders,
       });
 
