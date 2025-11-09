@@ -244,16 +244,13 @@ export default function ProviderPaymentsPage() {
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState("restricted");
   const [refresh, setRefresh] = useState(false);
- 
-
   const port = import.meta.env.VITE_PORT;
 
   useEffect(() => {
     const fetchProviderData = async () => {
       try {
         const { data } = await axios.get(
-          `https://backend-a2qq.onrender.com/provider/${user.provider.provider_id}`
-
+          `http://localhost:${port}/provider/${user.provider.provider_id}`
         );
         setBalance(data.total_balance);
         setPayments(data.payments);
@@ -360,20 +357,17 @@ export default function ProviderPaymentsPage() {
 
       try {
         accountStatus = await axios.get(
-          `https://backend-a2qq.onrender.com/check-account-status/${user.provider.provider_id}`
-
+          `http://localhost:${port}/check-account-status/${user.provider.provider_id}`
         );
       } catch (err) {
         if (err.response && err.response.status === 404) {
           setMessage(" Creating your new Stripe account...");
           await axios.post(
-            `https://backend-a2qq.onrender.com/create-stripe-account/${user.provider.provider_id}`
-
+            `http://localhost:${port}/create-stripe-account/${user.provider.provider_id}`
           );
           setMessage(" Creating onboarding link...");
           const onboard = await axios.get(
-            `https://backend-a2qq.onrender.com/create-account-link/${user.provider.provider_id}`
-
+            `http://localhost:${port}/create-account-link/${user.provider.provider_id}`
           );
 
           setMessage("➡️ Redirecting you to Stripe setup...");
@@ -392,8 +386,7 @@ export default function ProviderPaymentsPage() {
         );
 
         const onboard = await axios.get(
-          `https://backend-a2qq.onrender.com/create-account-link/${user.provider.provider_id}`,
-
+          `http://localhost:${port}/create-account-link/${user.provider.provider_id}`
         );
         window.location.href = onboard.data.url;
 
@@ -401,8 +394,7 @@ export default function ProviderPaymentsPage() {
         await delay(2 * 60 * 1000);
 
         const checkAgain = await axios.get(
-          `https://backend-a2qq.onrender.com/check-account-status/${user.provider.provider_id}`
-
+          `http://localhost:${port}/check-account-status/${user.provider.provider_id}`
         );
 
         if (checkAgain.data.status !== "enabled") {
@@ -415,7 +407,7 @@ export default function ProviderPaymentsPage() {
       if (balance > 0) {
         setMessage(" Transferring funds to your Stripe account...");
         await axios.post(
-          `https://backend-a2qq.onrender.com/transfer-to-provider/${user.provider.provider_id}`,
+          `http://localhost:${port}/transfer-to-provider/${user.provider.provider_id}`,
           { amount: balance }
         );
         setMessage(" Funds transferred successfully!");

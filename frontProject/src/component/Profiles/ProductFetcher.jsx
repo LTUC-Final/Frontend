@@ -1,3 +1,4 @@
+
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -8,10 +9,6 @@ export default function ProductFetcher({ profile, refreshTrigger, user_id }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const uuu = user_id;
-   const CusData = useSelector((state) => state.UserInfo);
-
-  const token = CusData.token;
-
 
   console.log("uuuuuuuuuuuuuu");
   console.log(uuu);
@@ -26,8 +23,7 @@ export default function ProductFetcher({ profile, refreshTrigger, user_id }) {
       setError(null);
       try {
         const port = import.meta.env.VITE_PORT;
-        const endpoint = (`https://backend-a2qq.onrender.com/api/provider/getProductsByUser/${profile.user_id}`)
-;
+        const endpoint = `http://localhost:${port}/api/provider/getProductsByUser/${profile.user_id}`;
         const res = await axios.get(endpoint);
         setProduct(res.data);
       } catch (err) {

@@ -2,7 +2,7 @@
 
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
-import { Minus, Plus, ShoppingCart } from "lucide-react";
+import { Minus, Plus, ShoppingCart, Trash } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { decrementCartItem, setCartItem } from "../../redux/userInfo/userInfo";
@@ -90,14 +90,11 @@ export default function CartPage() {
   const port = import.meta.env.VITE_PORT;
   const dispatch = useDispatch();
 
-  const token = CusData.token;
-
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await axios.get(
-          `https://backend-a2qq.onrender.com/api/carts/products/${CusData.user.user_id}`
+          `http://localhost:${port}/api/carts/products/${CusData.user.user_id}`
         );
         setCart(res.data.cards);
         console.log("sssssssssssssssssssss");
@@ -173,27 +170,25 @@ export default function CartPage() {
         prev.map((item) =>
           item.cart_id === cart_id
             ? {
-              ...item,
-              custom_requirement,
-              provider_response: null,
-              quantityLocked: true,
+                ...item,
+                custom_requirement,
+                provider_response: null,
+                quantityLocked: true,
 
-              // sendedtoprovider: true,
-            }
+                // sendedtoprovider: true,
+              }
             : item
         )
       );
-      await axios.put(`https://backend-a2qq.onrender.com/updateTheCustomReqAndToOrder`, {
+      await axios.put(`http://localhost:${port}/updateTheCustomReqAndToOrder`, {
         cart_id,
         custom_requirement,
         Prodact_id: product_id,
         provider_id,
         quntity: quantity,
         price: cart_price,
-        user_id,}
-
-
-      );
+        user_id,
+      });
       setCart((prev) =>
         prev.map((item) =>
           item.cart_id === cart_id ? { ...item, sendedtoprovider: true } : item
@@ -212,10 +207,8 @@ export default function CartPage() {
     alert("Approved!");
     try {
       await axios.put(
-        `https://backend-a2qq.onrender.com/changeStatusPayOfProdactAfterApprove`,
-        {
-          cart_id, user_id: customer_id}
-
+        `http://localhost:${port}/changeStatusPayOfProdactAfterApprove`,
+        { cart_id, user_id: customer_id }
       );
       setCart((prevCart) =>
         prevCart.map((p) =>
@@ -231,7 +224,7 @@ export default function CartPage() {
     alert("Rejected!");
     try {
       await axios.put(
-        `https://backend-a2qq.onrender.com/changeStatusPayOfProdactAfterRejected/${cart_id}`,
+        `http://localhost:${port}/changeStatusPayOfProdactAfterRejected/${cart_id}`,
         { cart_id, user_id: customer_id }
       );
       setCart((prevCart) => prevCart.filter((p) => p.cart_id !== cart_id));
@@ -244,8 +237,7 @@ export default function CartPage() {
   const deleteItemCart = async (cart_id) => {
     const port = import.meta.env.VITE_PORT;
     try {
-      await axios.delete(`https://backend-a2qq.onrender.com/deleteCard/${cart_id}`
-);
+      await axios.delete(`http://localhost:${port}/deleteCard/${cart_id}`);
 
       setCart((prevCart) =>
         prevCart.filter((item) => item.cart_id !== cart_id)
@@ -275,12 +267,10 @@ export default function CartPage() {
     setShowCheckout(false);
     try {
       const ress = await axios.post(
-        `https://backend-a2qq.onrender.com/moveApprovedCartToOrders/${CusData.user.user_id}`
-
+        `http://localhost:${port}/moveApprovedCartToOrders/${CusData.user.user_id}`
       );
       const res = await axios.get(
-        `https://backend-a2qq.onrender.com/api/carts/products/${CusData.user.user_id}`
-
+        `http://localhost:${port}/api/carts/products/${CusData.user.user_id}`
       );
       dispatch(decrementCartItem({ number: ress.data.length }));
       console.log("ress.data.length");
@@ -302,13 +292,12 @@ export default function CartPage() {
       "Content-Type": "application/json",
     };
     const response = await axios.post(
-      `https://backend-a2qq.onrender.com/api/payments/create-checkout-session`,
+      `http://localhost:${port}/api/payments/create-checkout-session`,
       {
         products: cart,
         email: user.email,
         customer_id: user.user_id,
       }
-
     );
     const session = response.data;
     const resulte = await stripe.redirectToCheckout({ sessionId: session.id });
@@ -341,13 +330,13 @@ export default function CartPage() {
 
     try {
       const response = await axios.post(
-        `https://backend-a2qq.onrender.com/api/payments/create-multi-provider-sessions`,
+        `http://localhost:${port}/api/payments/create-multi-provider-sessions`,
         {
           products: cart,
           email: user.email,
           customer_id: user.user_id,
-        }
-
+        },
+        { headers: { "Content-Type": "application/json" } }
       );
 
       const sessions = response.data.sessions;
@@ -373,13 +362,13 @@ export default function CartPage() {
 
     try {
       const response = await axios.post(
-        `https://backend-a2qq.onrender.com/api/payments/create-multi-provider-sessions`,
+        `http://localhost:${port}/api/payments/create-multi-provider-sessions`,
         {
           products: cart,
           email: user.email,
           customer_id: user.user_id,
-        }
-
+        },
+        { headers: { "Content-Type": "application/json" } }
       );
 
       const sessions = response.data.sessions;
@@ -417,13 +406,13 @@ export default function CartPage() {
       });
 
       const response = await axios.post(
-        `https://backend-a2qq.onrender.com/api/payments/create-multi-provider-sessions`,
+        `http://localhost:${port}/api/payments/create-multi-provider-sessions`,
         {
           products: cart,
           email: user.email,
           customer_id: user.user_id,
-        }
-
+        },
+        { headers: { "Content-Type": "application/json" } }
       );
 
       const sessions = response.data.sessions;
@@ -471,13 +460,13 @@ export default function CartPage() {
     );
     try {
       const { data } = await axios.post(
-        `https://backend-a2qq.onrender.com/api/payments/create-checkout-session-all`,
+        `http://localhost:${port}/api/payments/create-checkout-session-all`,
         {
           products: cart,
           email: user.email,
           customer_id: user.user_id,
-        }
-
+        },
+        { headers: { "Content-Type": "application/json" } }
       );
 
       await stripe.redirectToCheckout({ sessionId: data.id });
@@ -536,7 +525,7 @@ export default function CartPage() {
                           </p>
 
                           {product.provider_response &&
-                            product.status_pay === "Approve" ? (
+                          product.status_pay === "Approve" ? (
                             <div className="px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-[#FFF6E9] border border-[#F5C45E]/50 text-[#102E50]">
                               <span className="text-sm font-semibold">
                                 Provider Message:
@@ -556,7 +545,9 @@ export default function CartPage() {
                           className="absolute top-0 right-0"
                           onClick={() => deleteItemCart(product.cart_id)}
                         >
-                          Delete
+                          {/* Delete */}
+
+                          <Trash />
                         </Button>
 
                         <div className="flex items-center gap-3">
@@ -564,9 +555,9 @@ export default function CartPage() {
                             Quantity:
                           </span>
                           {product.provider_response ||
-                            product.status_pay !== "Approve" ||
-                            product.sendedtoprovider ||
-                            product.quantityLocked ? (
+                          product.status_pay !== "Approve" ||
+                          product.sendedtoprovider ||
+                          product.quantityLocked ? (
                             <span className="w-10 text-center font-semibold text-[#102E50] bg-[#FFF6E9] rounded-lg border border-[#F5C45E]/50 py-1">
                               {product.quantity}
                             </span>
@@ -598,7 +589,7 @@ export default function CartPage() {
                         </div>
 
                         {product.provider_response &&
-                          product.status_pay !== "Approve" ? (
+                        product.status_pay !== "Approve" ? (
                           <div className="space-y-3 sm:space-y-4">
                             <div className="px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-[#FFF6E9] border border-[#F5C45E]/50 text-[#102E50]">
                               <span className="text-sm font-semibold">
@@ -635,25 +626,45 @@ export default function CartPage() {
                           </div>
                         ) : product.custom_requirement &&
                           product.provider_response === null ? (
-                          <p className="inline-flex items-center gap-2 text-[#E78B48] font-semibold">
-                            <span className="h-2 w-2 rounded-full bg-[#E78B48]"></span>
-                            Waiting provider response
-                          </p>
+                          <div className="px-4 sm:px-5 py-3 sm:py-4 rounded-xl bg-gradient-to-r from-[#E78B48]/10 via-[#F5C45E]/10 to-[#E78B48]/5 border border-[#E78B48]/30 shadow-sm backdrop-blur-sm">
+                            <p className="inline-flex items-center gap-2.5 text-[#E78B48] font-semibold text-sm sm:text-[15px]">
+                              <span className="relative flex h-2.5 w-2.5">
+                                <span className="animate-pulse absolute inline-flex h-full w-full rounded-full bg-[#E78B48] opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#E78B48]"></span>
+                              </span>
+                              Waiting provider response...
+                            </p>
+                          </div>
                         ) : product.custom_requirement &&
                           product.provider_response ? (
-                          <p className="inline-flex items-center gap-2 text-[#E78B48] font-semibold">
-                            <span className="h-2 w-2 rounded-full bg-[#F5C45E]"></span>
-                            Request Sent Successfully
-                          </p>
+                          <div className="px-4 sm:px-5 py-3 sm:py-4 rounded-xl bg-gradient-to-r from-[#F5C45E]/15 via-[#E78B48]/10 to-[#F5C45E]/10 border border-[#F5C45E]/40 shadow-sm backdrop-blur-sm">
+                            <p className="inline-flex items-center gap-2.5 text-[#102E50] font-semibold text-sm sm:text-[15px]">
+                              <span className="inline-flex h-2.5 w-2.5 rounded-full bg-[#F5C45E] shadow-lg shadow-[#F5C45E]/50"></span>
+                              Request Sent Successfully
+                            </p>
+                          </div>
                         ) : (
-                          <Button
-                            variant="secondary"
-                            onClick={() =>
-                              toggleResponseProvider(product.cart_id)
-                            }
-                          >
-                            CUSTOM REQURMENT{" "}
-                          </Button>
+                          <div>
+                            {/* <Button
+                              variant="secondary"
+                              onClick={() =>
+                                toggleResponseProvider(product.cart_id)
+                              }
+                            >
+                              Custom Requirement{" "}
+                            </Button> */}
+                            <button
+                              onClick={() =>
+                                toggleResponseProvider(product.cart_id)
+                              }
+                              className="group relative inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl font-bold text-sm sm:text-base text-white bg-gradient-to-r from-[#F5C45E] to-[#E78B48] shadow-lg shadow-[#E78B48]/20 md:hover:shadow-xl md:hover:shadow-[#E78B48]/30 md:hover:scale-105 active:scale-[0.98] transition-all duration-200 ease-out border border-[#F5C45E]/50 md:hover:border-[#E78B48]/70 overflow-hidden"
+                            >
+                              <span className="absolute inset-0 bg-gradient-to-r from-[#E78B48] to-[#F5C45E] opacity-0 group-hover:opacity-10 transition-opacity duration-200"></span>
+                              <span className="relative flex items-center gap-2">
+                                Custom Requirement
+                              </span>
+                            </button>
+                          </div>
                         )}
 
                         {responseProviders[product.cart_id]?.isVisible && (
@@ -675,26 +686,48 @@ export default function CartPage() {
                                 />
                                 {responseProviders[product.cart_id]
                                   ?.content && (
-                                    <div className="flex gap-3">
-                                      <Button
-                                        onClick={() =>
-                                          sendTheCustomerReqAndToOrder({
-                                            cart_id: product.cart_id,
-                                            product_id: product.product_id,
-                                            provider_id: product.provider_id,
-                                            cart_price: product.cart_price,
-                                            custom_requirement:
-                                              responseProviders[product.cart_id]
-                                                ?.content,
-                                            quantity: product.quantity,
-                                            user_id: product.customer_id,
-                                          })
-                                        }
-                                      >
+                                  <div className="flex gap-3">
+                                    {/* <Button
+                                      onClick={() =>
+                                        sendTheCustomerReqAndToOrder({
+                                          cart_id: product.cart_id,
+                                          product_id: product.product_id,
+                                          provider_id: product.provider_id,
+                                          cart_price: product.cart_price,
+                                          custom_requirement:
+                                            responseProviders[product.cart_id]
+                                              ?.content,
+                                          quantity: product.quantity,
+                                          user_id: product.customer_id,
+                                        })
+                                      }
+                                    >
+                                      Send To Provider
+                                    </Button> */}
+                                    <Button
+                                      onClick={() =>
+                                        sendTheCustomerReqAndToOrder({
+                                          cart_id: product.cart_id,
+                                          product_id: product.product_id,
+                                          provider_id: product.provider_id,
+                                          cart_price: product.cart_price,
+                                          custom_requirement:
+                                            responseProviders[product.cart_id]
+                                              ?.content,
+                                          quantity: product.quantity,
+                                          user_id: product.customer_id,
+                                        })
+                                      }
+                                      className="group relative inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl font-bold text-sm sm:text-base text-white bg-gradient-to-r from-[#102E50] to-[#102E50]  md:hover:scale-105 active:scale-[0.98] transition-all duration-200 ease-out border border-[#E78B48]/60 md:hover:border-[#F5C45E]/80 overflow-hidden"
+                                    >
+                                      <span className="absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-20 transition-opacity duration-200"></span>
+                                      <span className="relative flex items-center gap-2">
+                                        {" "}
                                         Send To Provider
-                                      </Button>
-                                    </div>
-                                  )}
+                                      </span>
+                                    </Button>
+                                  </div>
+                                )}
                               </>
                             ) : product.custom_requirement &&
                               product.provider_response ? (
@@ -738,13 +771,17 @@ export default function CartPage() {
                 <div className="border-t border-[#F5C45E]/50 pt-3 space-y-2">
                   <div className="flex justify-between text-sm sm:text-base">
                     <span>Subtotal</span>
-                    <span className="font-semibold">${subtotal}</span>
+                    <span className="font-semibold">
+                      ${subtotal.toFixed(2)}
+                    </span>
                   </div>
                 </div>
                 <div className="border-t border-[#F5C45E]/50 pt-3">
                   <div className="flex justify-between text-lg sm:text-xl font-extrabold">
                     <span>Total</span>
-                    <span className="text-[#E78B48]">${subtotal}</span>
+                    <span className="text-[#E78B48]">
+                      ${subtotal.toFixed(2)}
+                    </span>
                   </div>
                 </div>
                 <Button

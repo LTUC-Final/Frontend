@@ -31,8 +31,7 @@ export default function MainDashBoard1() {
   useEffect(() => {
     const fetchTopOrdered = async () => {
       try {
-        const res = await axios.get(`https://backend-a2qq.onrender.com/api/topordered`
-);
+        const res = await axios.get(`http://localhost:${port}/api/topordered`);
         console.log("res.data.items");
         console.log(res.data.items);
 

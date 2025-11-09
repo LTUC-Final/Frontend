@@ -65,10 +65,6 @@ function OrdersManagementCustomer() {
   const { messagesSuport, sendMessageSupport } = useSupport();
   const { messagesss, sendMessagess, report, formatDateLocal } = useLastDate();
   const [buttonAi, setButtonAi] = useState(false);
-   const CusData = useSelector((state) => state.UserInfo);
-
-  const token = CusData.token;
-
 
   console.log("77777777777777777777777");
   console.log("data", dataMesg);
@@ -102,7 +98,7 @@ function OrdersManagementCustomer() {
     const fetchOrders = async () => {
       try {
         const response = await axios.get(
-          `https://backend-a2qq.onrender.com/getAllOrderInCustomer/${userId}`
+          `http://localhost:${port}/getAllOrderInCustomer/${userId}`
         );
         console.log("this is res", response.data);
         setDataMesg(response.data);
@@ -191,10 +187,9 @@ function OrdersManagementCustomer() {
   const handleSend = async () => {
     try {
       setLoading(true);
-      const res = await axios.post(`https://backend-a2qq.onrender.com/ai2`, {
+      const res = await axios.post(`http://localhost:${port}/ai2`, {
         input: orders,
-      }
-);
+      });
 
       setReply(res.data.result);
       console.log(res.data.result);

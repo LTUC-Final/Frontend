@@ -9,10 +9,6 @@ export default function AddReview({ providerID, user , onReviewAdded }) {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);
-   const CusData = useSelector((state) => state.UserInfo);
-
-  const token = CusData.token;
-
 
   const { reviews, avgRating, setReviews } = useProviderReviews(providerID, 0);
 
@@ -65,10 +61,9 @@ export default function AddReview({ providerID, user , onReviewAdded }) {
     setLoading(true);
     try {
       const port = import.meta.env.VITE_PORT;
-      const endpoint = `https://backend-a2qq.onrender.com/api/provider/postReview/${providerID}/${user.user_id}`;
+      const endpoint = `http://localhost:${port}/api/provider/postReview/${providerID}/${user.user_id}`;
       const payload = { rating, review_text: comment };
-      const res = await axios.post(endpoint, payload
-);
+      const res = await axios.post(endpoint, payload);
 
       // ✅ Add the new review to local state to hide form immediately
       setReviews(prev => [

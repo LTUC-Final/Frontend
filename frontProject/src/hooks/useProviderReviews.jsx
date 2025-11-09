@@ -4,10 +4,6 @@ import { useEffect, useState } from "react";
 export default function useProviderReviews(providerId, refreshTrigger ,isMyReview) {
   const [reviews, setReviews] = useState([]);
   const port = import.meta.env.VITE_PORT;
-   const CusData = useSelector((state) => state.UserInfo);
-
-  const token = CusData.token;
-
   console.log("asdwww",reviews)
   useEffect(() => {
     if (!providerId) return;
@@ -15,8 +11,7 @@ export default function useProviderReviews(providerId, refreshTrigger ,isMyRevie
     async function fetchReviews() {
       try {
         const res = await axios.get(
-          `https://backend-a2qq.onrender.com/api/provider/getProviderReviews/${providerId}`
-
+          `http://localhost:${port}/api/provider/getProviderReviews/${providerId}`
         );
         setReviews(res.data);
       } catch (error) {
