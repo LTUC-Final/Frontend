@@ -25,7 +25,7 @@ export default function EditImage({ userId, onUpdate }) {
     try {
       setIsUploading(true);
       const response = await axios.put(
-        `http://localhost:${port}/api/provider/updateProviderProfile/${userId}`,
+        `https://backend-a2qq.onrender.com/api/provider/updateProviderProfile/${userId}`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
