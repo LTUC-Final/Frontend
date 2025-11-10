@@ -6,6 +6,7 @@ import { Minus, Plus, ShoppingCart, Trash } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { decrementCartItem, setCartItem } from "../../redux/userInfo/userInfo";
+import Swal from "sweetalert2";
 
 function Button({ children, onClick, className = "", variant, size }) {
   let base =
@@ -256,6 +257,15 @@ export default function CartPage() {
       return sum + Number(p.cart_price) * Number(p.quantity);
     }
   }, 0);
+const approvedTotal = cart
+  .filter((item) => item.status_pay === "Approve") 
+  .reduce((sum, item) => {
+    const price = parseFloat(item.cart_price || 0);
+    const quantity = parseInt(item.quantity || 1);
+    return sum + price * quantity;
+  }, 0);
+
+console.log("Total Approved Price:", approvedTotal);
 
   const tax = subtotal * 0.08;
   const total = subtotal + tax;
@@ -422,14 +432,13 @@ export default function CartPage() {
         return;
       }
 
-      // ⚡️ 3. نربط كل Tab بالـURL الصحيح
       sessions.forEach((s, idx) => {
         if (fakeTabs[idx]) {
           fakeTabs[idx].location.href = s.url;
         }
       });
 
-      console.log(`✅ Opened ${sessions.length} Stripe checkout pages`);
+      console.log(` Opened ${sessions.length} Stripe checkout pages`);
     } catch (error) {
       console.error("Error creating Stripe sessions:", error);
       alert("Failed to start payment process");
@@ -459,17 +468,27 @@ export default function CartPage() {
       "pk_test_51SLmeU7XNof7c0LK21QyvjJxb28OZnQ9uOo3leNgWR3PHE7agxDJforXF2no1WQrRg29jAP4K4iMoodJPTL7ClpT00Gbwg0TCH"
     );
     try {
-      const { data } = await axios.post(
-        `http://localhost:${port}/api/payments/create-checkout-session-all`,
-        {
-          products: cart,
-          email: user.email,
-          customer_id: user.user_id,
-        },
-        { headers: { "Content-Type": "application/json" } }
-      );
+      const hasApproved = cart.some((item) => item.status_pay === "Approve");
 
-      await stripe.redirectToCheckout({ sessionId: data.id });
+      if (hasApproved) {
+        const { data } = await axios.post(
+          `http://localhost:${port}/api/payments/create-checkout-session-all`,
+          {
+            products: cart,
+            email: user.email,
+            customer_id: user.user_id,
+          },
+          { headers: { "Content-Type": "application/json" } }
+        );
+        await stripe.redirectToCheckout({ sessionId: data.id });
+      } else {
+    Swal.fire({
+  icon: "info",
+  title: "No Orders",
+  text: "You don't have any approved orders ready for checkout.",
+});
+
+      }
     } catch (error) {
       console.error("Error creating Stripe session:", error);
       alert("Failed to start payment process");
@@ -808,7 +827,7 @@ export default function CartPage() {
                     Total Amount
                   </p>
                   <p className="text-3xl sm:text-4xl font-extrabold text-[#E78B48]">
-                    ${subtotal}
+                    ${approvedTotal}
                   </p>
                 </div>
                 <div className="space-y-2 text-xs sm:text-sm">
