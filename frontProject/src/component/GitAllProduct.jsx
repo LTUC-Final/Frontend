@@ -1358,7 +1358,7 @@ function CategorySelect({ value, onChange, options }) {
   <button
     type="button"
     onClick={() => setOpen((v) => !v)}
-    className="w-40 rounded-xl border border-[#E78B48]/40 bg-[#FFF6E9] text-[#102E50] font-semibold px-4 py-2 pr-10 shadow-sm focus:ring-2 focus:ring-[#F5C45E] focus:border-[#E78B48] transition duration-200 hover:border-[#E78B48] appearance-none cursor-pointer relative flex items-center justify-center text-sm"
+    className="w-40 rounded-xl border border-[#E78B48]/40 bg-[#FFF6E9] text-[#102E50] font-semibold px-4 py-3 pr-10 shadow-sm focus:ring-2 focus:ring-[#F5C45E] focus:border-[#E78B48] transition duration-200 hover:border-[#E78B48] appearance-none cursor-pointer relative flex items-center justify-center text-sm"
   >
     <span className="truncate">{currentLabel}</span>
     <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-[#E78B48]">
@@ -1608,7 +1608,7 @@ export default function GitAllProduct() {
   );
 
   return (
-    <div className="min-h-screen bg-[#FFF6E9] text-[#0f2a47]">
+    <div className="min-h-screen bg-[#FFF6E9] text-[#cb7d2a]">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 pb-8 md:pb-10">
         <div className="sticky top-0 z-20 pt-4 pb-4 bg-[#FFF6E9]/95 backdrop-blur supports-[backdrop-filter]:bg-[#FFF6E9]/80">
           <div className="rounded-[1.6rem] p-[1.2px] bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]">
