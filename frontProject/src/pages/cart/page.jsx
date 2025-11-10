@@ -657,7 +657,7 @@ export default function CartPage() {
                               onClick={() =>
                                 toggleResponseProvider(product.cart_id)
                               }
-                              className="group relative inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl font-bold text-sm sm:text-base text-white bg-gradient-to-r from-[#F5C45E] to-[#E78B48] shadow-lg shadow-[#E78B48]/20 md:hover:shadow-xl md:hover:shadow-[#E78B48]/30 md:hover:scale-105 active:scale-[0.98] transition-all duration-200 ease-out border border-[#F5C45E]/50 md:hover:border-[#E78B48]/70 overflow-hidden"
+                              className="group relative inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-2.5 sm:py-1 rounded-xl   text-sm sm:text-base  text-102E50 bg-gradient-to-r from-[#F5C45E] to-[#E78B48] shadow-lg shadow-[#E78B48]/20 md:hover:shadow-xl md:hover:shadow-[#E78B48]/30 md:hover:scale-105 active:scale-[0.98] transition-all duration-200 ease-out border border-[#F5C45E]/50 md:hover:border-[#E78B48]/70 overflow-hidden"
                             >
                               <span className="absolute inset-0 bg-gradient-to-r from-[#E78B48] to-[#F5C45E] opacity-0 group-hover:opacity-10 transition-opacity duration-200"></span>
                               <span className="relative flex items-center gap-2">
@@ -718,7 +718,7 @@ export default function CartPage() {
                                           user_id: product.customer_id,
                                         })
                                       }
-                                      className="group relative inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl font-bold text-sm sm:text-base text-white bg-gradient-to-r from-[#102E50] to-[#102E50]  md:hover:scale-105 active:scale-[0.98] transition-all duration-200 ease-out border border-[#E78B48]/60 md:hover:border-[#F5C45E]/80 overflow-hidden"
+                                      className="group relative inline-flex items-center justify-center gap-2 px-5 sm:px-6 !py-1 sm:py-3 rounded-xl !font-normal text-sm sm:text-base text-white bg-gradient-to-r from-[#102E50] to-[#102E50]  md:hover:scale-105 active:scale-[0.98] transition-all duration-200 ease-out border border-[#E78B48]/60 md:hover:border-[#F5C45E]/80 overflow-hidden"
                                     >
                                       <span className="absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-20 transition-opacity duration-200"></span>
                                       <span className="relative flex items-center gap-2">

@@ -25,7 +25,6 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import ChatBoot from "./component/chatboot/chatboot";
 import LiveChat from "./component/LiveChat/LiveChat";
-import MessagesSlice from "./component/LiveChat/MessagesSlice";
 import MessagesLayout from "./component/LiveChat/MessagesLayout";
 
 // import { CountRequest } from "./contexts/countRequest";
@@ -34,12 +33,12 @@ import { CountRequestProvider } from "./contexts/CountRequestProvider";
 import About1 from "./pages/About1";
 import CancelPage from "./pages/CancelPage";
 import CartPage from "./pages/cart/page";
+import MainDashBoard1 from "./pages/mainDashBoard/mainDashBoard1";
 import PaymentsPage from "./pages/PaymentsPage";
 import ProductForm from "./pages/ProviderDashBoard/providerDashboard";
 import ProviderPaymentsPage from "./pages/ProviderPaymentPage";
 import OrdersManagementProvider from "./pages/request/pageReq";
 import SuccessPage from "./pages/SuccessPage";
-import MainDashBoard1 from "./pages/mainDashBoard/mainDashBoard1";
 function App() {
   const [cart, setCart] = useState([]);
   const CusData = useSelector((state) => state.UserInfo);
@@ -77,7 +76,7 @@ function App() {
         >
           <Routes>
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/" element={<h1>Alquraan </h1>} />
+            <Route path="/" element={<MainDashBoard />} />
             <Route path="/logout" element={<Logout />} />
 
             <Route path="/register" element={<Register />} />
@@ -90,10 +89,10 @@ function App() {
               <Route path="/profile/:user_id" element={<Profile />} />
               {/* <Route path="/LiveChat/:user_id" element={<LiveChat />} /> */}
               <Route element={<MessagesLayout />}>
-  <Route path="/Messages" element={<></>} />
-  <Route path="/LiveChat/:user_id" element={<LiveChat />} />
-</Route>
-
+                <Route path="/Messages" element={<></>} />
+                <Route path="/LiveChat/:user_id" element={<LiveChat />} />
+              </Route>
+              س
               <Route
                 path="/providerDashboard"
                 element={<ProductForm></ProductForm>}
@@ -105,7 +104,6 @@ function App() {
               <Route path="/productdatails" element={<CardDeatils />} />
               <Route path="/userDashboard" element={<GitAllProduct />} />
               {/* <Route path="/Messages" element={<MessagesSlice />} /> */}
-              
               <Route
                 path="/cart"
                 element={

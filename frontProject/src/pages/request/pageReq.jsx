@@ -2,7 +2,6 @@
 
 import axios from "axios";
 import {
-  Bell,
   Calendar,
   CheckCircle2,
   DollarSign,
@@ -276,73 +275,96 @@ function OrdersManagementProvider() {
                   className="pl-12 pr-4 py-2.5 w-56 lg:w-96 bg-[#FFF6E9] border-2 border-[#F5C45E] text-[#102E50] text-base placeholder-[#102E50]/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E78B48] focus:border-[#E78B48] transition-all"
                 />
               </div>
-              <button className="p-2 hover:bg-[#F5C45E]/10 rounded-lg transition-colors">
-                
-              </button>
+              <button className="p-2 hover:bg-[#F5C45E]/10 rounded-lg transition-colors"></button>
             </div>
           </div>
         </header>
-
-        <div className="bg-white border-b-2 border-[#E78B48] px-6 py-4 shadow-sm">
-          <div className="flex flex-wrap items-center gap-4 max-w-7xl mx-auto">
-            <div className="flex items-center gap-2">
-              <Filter className="h-5 w-5 text-[#E78B48]" />
-              <span className="text-base font-semibold text-[#102E50]">
+        <div className="bg-white border-b-2 border-[#E78B48] px-3 sm:px-4 md:px-6 py-3 sm:py-4 shadow-sm">
+          <div className="max-w-7xl mx-auto flex flex-wrap items-center gap-2 sm:gap-3 md:gap-4 justify-start text-[#102E50]">
+            {/* Filters label */}
+            <div className="flex items-center gap-1 sm:gap-2">
+              <Filter className="h-4 sm:h-5 w-4 sm:w-5 text-[#E78B48]" />
+              <span className="text-sm sm:text-base font-semibold">
                 Filters:
               </span>
             </div>
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-4 py-2 bg-[#FFF6E9] border-2 border-[#102E50] text-[#102E50] text-base font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F5C45E] focus:border-[#F5C45E] transition-all cursor-pointer"
-            >
-              <option value="All">All Status</option>
-              {statuses.map((status) => (
-                <option key={status} value={status}>
-                  {status}
-                </option>
-              ))}
-            </select>
-            <select
-              value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value)}
-              className="px-4 py-2 bg-[#FFF6E9] border-2 border-[#102E50] text-[#102E50] text-base font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F5C45E] focus:border-[#F5C45E] transition-all cursor-pointer"
-            >
-              <option value="All">All Categories</option>
-              {categories.map((category) => (
-                <option key={category} value={category}>
-                  {category}
-                </option>
-              ))}
-            </select>
-            <select
-              value={sortOrder}
-              onChange={(e) => setSortOrder(e.target.value)}
-              className="px-4 py-2 bg-[#FFF6E9] border-2 border-[#102E50] text-[#102E50] text-base font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F5C45E] focus:border-[#F5C45E] transition-all cursor-pointer"
-            >
-              <option value="newest">Newest First</option>
-              <option value="oldest">Oldest First</option>
-            </select>
-            <DownLoadAllOrder order={orders} />
+      {/* Status */}
+<select
+  value={statusFilter}
+  onChange={(e) => setStatusFilter(e.target.value)}
+className="px-2 sm:px-3 py-1.5 bg-[#FFF6E9] border-2 border-[#102E50]
+             text-[10px] sm:text-xs md:text-sm font-medium rounded-md
+             focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-[#F5C45E]
+             focus:border-[#F5C45E] hover:border-[#F5C45E] transition-all 
+             cursor-pointer h-9 sm:h-10 appearance-none bg-no-repeat bg-right
+             pr-8 sm:pr-10 shadow-sm hover:shadow-md
+             text-[#102E50]"
+>
+  <option value="All">All Status</option>
+  {statuses.map((status) => (
+    <option key={status} value={status}>
+      {status}
+    </option>
+  ))}
+</select>
+
+{/* Category */}
+<select
+  value={categoryFilter}
+  onChange={(e) => setCategoryFilter(e.target.value)}
+className="px-2 sm:px-2  py-1.5 bg-[#FFF6E9] border-2 border-[#102E50]
+             text-[10px] sm:text-xs md:text-sm font-medium rounded-md
+             focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-[#F5C45E]
+             focus:border-[#F5C45E] hover:border-[#F5C45E] transition-all 
+             cursor-pointer h-9 sm:h-10 appearance-none bg-no-repeat bg-right
+             pr-8 sm:pr-10 shadow-sm hover:shadow-md
+             text-[#102E50]"
+>
+  <option value="All">All Categories</option>
+  {categories.map((category) => (
+    <option key={category} value={category}>
+      {category}
+    </option>
+  ))}
+</select>
+
+{/* Sort */}
+<select
+  value={sortOrder}
+  onChange={(e) => setSortOrder(e.target.value)}
+  className="px-2 sm:px-2  py-1.5 bg-[#FFF6E9] border-2 border-[#102E50]
+             text-[10px] sm:text-xs md:text-sm font-medium rounded-md
+             focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-[#F5C45E]
+             focus:border-[#F5C45E] hover:border-[#F5C45E] transition-all 
+             cursor-pointer h-9 sm:h-10 appearance-none bg-no-repeat bg-right
+             pr-8 sm:pr-5 shadow-sm hover:shadow-md
+             text-[#102E50]"
+>
+  <option value="newest"  >Newest First</option>
+  <option value="oldest">Oldest First</option>
+</select>
+
+            {/* Download component */}
+            <div className="flex items-center">
+              <DownLoadAllOrder order={orders} />
+            </div>
           </div>
         </div>
 
         <div className="flex-1 overflow-auto p-6 lg:p-8 bg-[#FFF6E9]">
           <div className="max-w-7xl mx-auto space-y-6">
-<div className="w-full flex justify-center mt-6">
-  <button
-    onClick={() => setButtonAi(!buttonAi)}
-    className="w-[500px] flex items-center justify-center gap-3 py-4
+            <div className="w-full flex justify-center mt-6">
+              <button
+                onClick={() => setButtonAi(!buttonAi)}
+                className="w-[500px] flex items-center justify-center gap-3 py-4
     bg-[#F5C45E] text-[#102E50] text-lg font-semibold rounded-xl
     shadow-sm hover:bg-[#E78B48] hover:text-[#FFF6E9] transition-all duration-200
     focus:outline-none focus:ring-2 focus:ring-[#E78B48] focus:ring-offset-2"
-  >
-    <Sparkles className="h-6 w-6" />
-    {buttonAi ? "Hide Analysis" : "Analyze using AI"}
-  </button>
-</div>
- 
-
+              >
+                <Sparkles className="h-6 w-6" />
+                {buttonAi ? "Hide Analysis" : "Analyze using AI"}
+              </button>
+            </div>
 
             {buttonAi && (
               <OrdersSummary
@@ -381,8 +403,9 @@ function OrdersManagementProvider() {
                       </h3>
 
                       <div
-                        className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold ${statusClasses[order.status]
-                          }`}
+                        className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold ${
+                          statusClasses[order.status]
+                        }`}
                       >
                         {order.status === "completed" ? (
                           <CheckCircle2 className="w-3.5 h-3.5" />
@@ -391,16 +414,18 @@ function OrdersManagementProvider() {
                           <Loader2 className="w-3.5 h-3.5 animate-spin" />
                         ) : (
                           <div
-                            className={`w-2 h-2 rounded-full ${statusDotClasses[order.status]
-                              }`}
+                            className={`w-2 h-2 rounded-full ${
+                              statusDotClasses[order.status]
+                            }`}
                           />
                         )}
                         <span>{order.status}</span>
                       </div>
 
                       <div
-                        className={`px-3 py-1.5 rounded-full text-xs font-bold ${paymentStatusClasses[order.paymentStatus]
-                          }`}
+                        className={`px-3 py-1.5 rounded-full text-xs font-bold ${
+                          paymentStatusClasses[order.paymentStatus]
+                        }`}
                       >
                         {order.paymentStatus}
                       </div>
@@ -521,15 +546,15 @@ function OrdersManagementProvider() {
 
                     {(order.status === "on_progress" ||
                       order.status === "pending") && (
-                        <div>
-                          <ButtonStatus
-                            onSuccess={fetchOrders}
-                            orderId={order.order_id}
-                            setOrders={setOrders}
-                            port={port}
-                          />
-                        </div>
-                      )}
+                      <div>
+                        <ButtonStatus
+                          onSuccess={fetchOrders}
+                          orderId={order.order_id}
+                          setOrders={setOrders}
+                          port={port}
+                        />
+                      </div>
+                    )}
                   </div>
 
                   <div className="flex lg:flex-col items-center justify-center gap-3 pt-4 lg:pt-0 border-t lg:border-t-0 lg:border-l border-[#F5C45E]/30 lg:pl-5 lg:min-w-[140px]">
@@ -569,16 +594,25 @@ function OrdersManagementProvider() {
 
                           const chatSender = {
                             user_id: user.user_id,
-                            name: `${user.first_name || "User"} ${user.last_name || ""}`,
+                            name: `${user.first_name || "User"} ${
+                              user.last_name || ""
+                            }`,
                           };
 
-                          const receiverIsProvider = order.customer_id === user.user_id;
+                          const receiverIsProvider =
+                            order.customer_id === user.user_id;
 
                           const chatReceiver = {
-                            user_id: receiverIsProvider ? order.provider_user_id : order.customer_id,
+                            user_id: receiverIsProvider
+                              ? order.provider_user_id
+                              : order.customer_id,
                             name: receiverIsProvider
-                              ? `${order.provider_firstname || "Provider"} ${order.provider_lastname || ""}`
-                              : `${order.customer_firstname || "Customer"} ${order.customer_lastname || ""}`,
+                              ? `${order.provider_firstname || "Provider"} ${
+                                  order.provider_lastname || ""
+                                }`
+                              : `${order.customer_firstname || "Customer"} ${
+                                  order.customer_lastname || ""
+                                }`,
                           };
 
                           navigate(`/LiveChat/${chatReceiver.user_id}`, {
