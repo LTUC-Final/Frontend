@@ -624,6 +624,289 @@
 
 
 
+// import axios from "axios";
+// import { useCallback, useEffect, useMemo, useState } from "react";
+// import { useSelector } from "react-redux";
+// import { useNavigate } from "react-router-dom";
+// import Swal from "sweetalert2";
+// import { useAddToCart } from "../../component/AddToCart.jsx";
+// import AddTOFav from "../../component/AddToFav.jsx";
+// import NoImage from "../../assets/NoImage.png";
+
+// export default function WishList() {
+//   const token = useSelector((s) => s.UserInfo.token);
+//   const user = useSelector((s) => s.UserInfo.user);
+//   const userId = user?.user_id;
+//   const isLogged = Boolean(token);
+//   const navigate = useNavigate();
+//   const { AddToCart } = useAddToCart();
+
+//   const [items, setItems] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [cartIds, setCartIds] = useState(new Set());
+//   const [ratios, setRatios] = useState({});
+
+//   const port = import.meta.env.VITE_PORT;
+//   const originBase = useMemo(() => `http://localhost:${port}`, [port]);
+//   const apiBase = useMemo(() => `${originBase}/api`, [originBase]);
+
+//   const withMutedAlerts = useCallback(async (fn) => {
+//     const prev = window.alert;
+//     window.alert = () => {};
+//     try {
+//       return await fn();
+//     } finally {
+//       window.alert = prev;
+//     }
+//   }, []);
+
+//   const withMutedSwal = useCallback(async (fn) => {
+//     const prev = Swal.fire;
+//     Swal.fire = () => Promise.resolve({});
+//     try {
+//       return await fn();
+//     } finally {
+//       Swal.fire = prev;
+//     }
+//   }, []);
+
+//   const toImg = useCallback(
+//     (img) => {
+//       if (!img) return NoImage;
+//       const s = String(img).trim();
+//       if (s.startsWith("http")) return s;
+//       return `${originBase}${s.startsWith("/") ? "" : "/"}${s}`;
+//     },
+//     [originBase]
+//   );
+
+//   const handleImgLoad = (id, e) => {
+//     const nw = e.currentTarget.naturalWidth || 0;
+//     const nh = e.currentTarget.naturalHeight || 0;
+//     if (nw > 0 && nh > 0) {
+//       setRatios((r) => ({ ...r, [id]: `${nw} / ${nh}` }));
+//     }
+//   };
+
+//   const alertError = useCallback(async (message) => {
+//     await Swal.fire({
+//       title: "Error",
+//       text: message,
+//       icon: "error",
+//       confirmButtonText: "OK",
+//       confirmButtonColor: "#BE3D2A",
+//       background: "#FFF6E9",
+//       color: "#102E50",
+//     });
+//   }, []);
+
+//   const alertSuccess = useCallback(async (title, text) => {
+//     await Swal.fire({
+//       title,
+//       text,
+//       icon: "success",
+//       confirmButtonText: "OK",
+//       confirmButtonColor: "#102E50",
+//       background: "#FFF6E9",
+//       color: "#102E50",
+//     });
+//   }, []);
+
+//   const loadCart = useCallback(async () => {
+//     try {
+//       if (!userId) return;
+//       const res = await axios.get(`${apiBase}/carts/products/${userId}`, {
+//         headers: { Authorization: `Bearer ${token}` },
+//       });
+//       const list = Array.isArray(res.data?.cards) ? res.data.cards : [];
+//       setCartIds(new Set(list.map((c) => Number(c.product_id))));
+//     } catch {}
+//   }, [apiBase, token, userId]);
+
+//   const load = useCallback(async () => {
+//     try {
+//       setLoading(true);
+//       const { data } = await axios.get(`${apiBase}/wishlist`, {
+//         headers: { Authorization: `Bearer ${token}` },
+//       });
+//       setItems(Array.isArray(data?.items) ? data.items : []);
+//     } catch (e) {
+//       const m = e?.response?.data?.error || e?.message || "Failed to load wishlist";
+//       await alertError(m);
+//     } finally {
+//       setLoading(false);
+//     }
+//   }, [apiBase, token, alertError]);
+
+//   useEffect(() => {
+//     if (!token || !userId) {
+//       navigate("/login");
+//       return;
+//     }
+//     load();
+//     loadCart();
+//   }, [token, userId, load, loadCart, navigate]);
+
+//   const onToggleFav = async (p) => {
+//     const result = await Swal.fire({
+//       title: "Remove from wishlist?",
+//       text: p.name ? `Remove "${p.name}" from your wishlist?` : "Are you sure?",
+//       icon: "warning",
+//       showCancelButton: true,
+//       confirmButtonText: "Remove",
+//       cancelButtonText: "Cancel",
+//       confirmButtonColor: "#BE3D2A",
+//       cancelButtonColor: "#102E50",
+//       background: "#FFF6E9",
+//       color: "#102E50",
+//     });
+//     if (!result.isConfirmed) return;
+//     const prev = [...items];
+//     setItems((list) => list.filter((x) => x.wishlist_id !== p.wishlist_id));
+//     try {
+//       await withMutedAlerts(() => AddTOFav({ product_id: p.product_id }, { user }));
+//       await alertSuccess("Removed", `${p.name ?? "Item"} removed from wishlist.`);
+//       setTimeout(load, 200);
+//     } catch (e) {
+//       setItems(prev);
+//       const m = e?.response?.data?.error || e?.message || "Failed to toggle favorite";
+//       await alertError(m);
+//     }
+//   };
+
+//   const onAddToCart = async (p) => {
+//     try {
+//       if (p.provider_id == null) return;
+//       await withMutedSwal(() => withMutedAlerts(() => AddToCart(p, { user })));
+//       await loadCart();
+//     } catch {}
+//   };
+
+//   if (!token) return null;
+
+//   if (loading)
+//     return (
+//       <div className="min-h-screen grid place-items-center bg-[#FFF6E9] px-3">
+//         <div className="rounded-2xl px-4 py-3 bg-white shadow ring-1 ring-[#102E50]/10 text-[#102E50]">
+//           Loading…
+//         </div>
+//       </div>
+//     );
+
+//   if (items.length === 0)
+//     return (
+//       <div className="min-h-screen grid place-items-center bg-[#FFF6E9] px-3">
+//         <div className="rounded-2xl px-4 py-3 bg-white shadow ring-1 ring-[#102E50]/10 text-[#102E50]">
+//           Your wishlist is empty.
+//         </div>
+//       </div>
+//     );
+
+//   return (
+//     <div className="min-h-screen bg-[#FFF6E9] px-3 sm:px-4 md:px-6 lg:px-8 py-6 md:py-8">
+//       <div className="mx-auto w-full max-w-7xl">
+//         <div className="mb-4 text-center">
+//           <h1 className="inline-block text-2xl sm:text-3xl font-extrabold text-[#102E50] tracking-tight">
+//             My Wishlist
+//           </h1>
+//           <div className="mt-2 h-1 w-28 sm:w-32 mx-auto rounded-full bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]" />
+//         </div>
+
+//         <div className="mt-6 grid gap-4 sm:gap-5 md:gap-6 lg:gap-7 grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
+//           {items.map((p) => {
+//             const key = p.product_id ?? p.wishlist_id;
+//             const inCart = cartIds.has(Number(p.product_id));
+//             return (
+//               <button
+//                 key={p.product_id}
+//                 onClick={() =>
+//                   isLogged
+//                     ? navigate(`/productdatails?product_id=${p.product_id}`, {
+//                         state: { product_id: p.product_id },
+//                       })
+//                     : navigate("/login")
+//                 }
+//                 className="group rounded-2xl bg-white ring-1 ring-[#102E50]/10 hover:ring-[#F5C45E] shadow-[0_12px_40px_rgba(16,46,80,0.10)] overflow-hidden text-left transition"
+//               >
+//                 <div className="relative w-full pb-[100%] bg-[#0f2a47]/5">
+//                   <img
+//                     src={p.image ? p.image : NoImage}
+//                     alt={p.name || "wishlist item"}
+//                     className="absolute inset-0 w-full h-full object-cover object-center scale-[1.003] transition duration-500 group-hover:scale-[1.015]"
+//                     onLoad={(e) => handleImgLoad(key, e)}
+//                     onError={(e) => (e.currentTarget.src = NoImage)}
+//                     loading="lazy"
+//                     decoding="async"
+//                   />
+//                 </div>
+
+//                 <div className="px-3 py-3 bg-[#F5C45E]/18 ring-1 ring-[#F5C45E]/35 flex items-center gap-3 justify-between">
+//                   <span className="shrink-0 inline-flex items-center rounded-lg bg-white/90 text-[#102E50] ring-1 ring-[#102E50]/10 text-[12px] sm:text-sm font-extrabold px-2.5 py-1.5">
+//                     {Number(p.price).toFixed(2)} JOD
+//                   </span>
+
+//                   <span className="min-w-0 text-[#0f2a47] font-semibold text-[12px] sm:text-sm leading-tight truncate">
+//                     {p.name}
+//                   </span>
+
+//                   <div className="shrink-0 flex items-center gap-2">
+//                     <button
+//                       onClick={async (e) => {
+//                         e.stopPropagation();
+//                         await onToggleFav(p);
+//                       }}
+//                       className="w-8 h-8 rounded-md grid place-items-center bg-[#BE3D2A] text-white shadow hover:shadow-md active:scale-95 transition"
+//                     >
+//                       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+//                         <polyline points="3 6 5 6 21 6" />
+//                         <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+//                         <path d="M10 11v6" />
+//                         <path d="M14 11v6" />
+//                         <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+//                       </svg>
+//                     </button>
+
+//                     <button
+//                       onClick={async (e) => {
+//                         e.stopPropagation();
+//                         await onAddToCart(p);
+//                       }}
+//                       className={`w-8 h-8 rounded-md grid place-items-center shadow hover:shadow-md active:scale-95 transition ${
+//                         inCart
+//                           ? "bg-[#102E50] text-[#FFF6E9]"
+//                           : "bg-white text-[#102E50] ring-1 ring-[#102E50]/30"
+//                       }`}
+//                     >
+//                       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+//                         <circle cx="9" cy="21" r="1" />
+//                         <circle cx="20" cy="21" r="1" />
+//                         <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h7.72a2 2 0 0 0 2-1.61L23 6H6" />
+//                       </svg>
+//                     </button>
+//                   </div>
+//                 </div>
+
+//                 <div className="h-0.5 w-full bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]" />
+//               </button>
+//             );
+//           })}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+
+
+
+
+
+
+
+"Last "
+
+
+
 import axios from "axios";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
@@ -769,7 +1052,7 @@ export default function WishList() {
       setTimeout(load, 200);
     } catch (e) {
       setItems(prev);
-      const m = e?.response?.data?.error || e?.message || "Failed to toggle favorite";
+      const m = e?.response?.data?.error || e?.message || "Failed to toggle wishlist item";
       await alertError(m);
     }
   };
@@ -784,118 +1067,142 @@ export default function WishList() {
 
   if (!token) return null;
 
-  if (loading)
-    return (
-      <div className="min-h-screen grid place-items-center bg-[#FFF6E9] px-3">
-        <div className="rounded-2xl px-4 py-3 bg-white shadow ring-1 ring-[#102E50]/10 text-[#102E50]">
-          Loading…
-        </div>
-      </div>
-    );
-
-  if (items.length === 0)
-    return (
-      <div className="min-h-screen grid place-items-center bg-[#FFF6E9] px-3">
-        <div className="rounded-2xl px-4 py-3 bg-white shadow ring-1 ring-[#102E50]/10 text-[#102E50]">
-          Your wishlist is empty.
-        </div>
-      </div>
-    );
-
   return (
     <div className="min-h-screen bg-[#FFF6E9] px-3 sm:px-4 md:px-6 lg:px-8 py-6 md:py-8">
       <div className="mx-auto w-full max-w-7xl">
-        <div className="mb-4 text-center">
+        {/* <div className="mb-4 text-center">
           <h1 className="inline-block text-2xl sm:text-3xl font-extrabold text-[#102E50] tracking-tight">
             My Wishlist
           </h1>
           <div className="mt-2 h-1 w-28 sm:w-32 mx-auto rounded-full bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]" />
-        </div>
+        </div> */}
 
-        <div className="mt-6 grid gap-4 sm:gap-5 md:gap-6 lg:gap-7 grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
-          {items.map((p) => {
-            const key = p.product_id ?? p.wishlist_id;
-            const inCart = cartIds.has(Number(p.product_id));
-            return (
-              <button
-                key={p.product_id}
-                onClick={() =>
-                  isLogged
-                    ? navigate(`/productdatails?product_id=${p.product_id}`, {
-                        state: { product_id: p.product_id },
-                      })
-                    : navigate("/login")
-                }
-                className="group rounded-2xl bg-white ring-1 ring-[#102E50]/10 hover:ring-[#F5C45E] shadow-[0_12px_40px_rgba(16,46,80,0.10)] overflow-hidden text-left transition"
+
+
+        <div className="mb-4 text-center">
+  <h1 className="inline-block text-2xl sm:text-3xl font-extrabold text-[#102E50] tracking-tight">
+    My Wishlist
+  </h1>
+  <div className="mt-4 h-1 w-32 sm:w-40 mx-auto rounded-full bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]" />
+</div>
+
+
+        {loading ? (
+          <div className="grid place-items-center py-20">
+            <div className="rounded-2xl px-4 py-3 bg-white shadow ring-1 ring-[#102E50]/10 text-[#102E50]">
+              Loading…
+            </div>
+          </div>
+        ) : items.length === 0 ? (
+          <div className="flex items-center justify-center py-16">
+            <div className="w-full max-w-md rounded-2xl bg-white/90 backdrop-blur-md px-6 py-8 text-center ring-1 ring-[#102E50]/10 shadow-[0_20px_60px_rgba(16,46,80,0.12)]">
+              <div className="mx-auto mb-4 h-12 w-12 rounded-full grid place-items-center bg-[#F5C45E]/20 ring-1 ring-[#F5C45E]/40">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#102E50" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-.99-.99a5.5 5.5 0 0 0-7.78 7.78l.99.99L12 21.23l7.78-7.78.99-.99a5.5 5.5 0 0 0 0-7.78z" />
+                </svg>
+              </div>
+              <h2 className="text-xl font-bold text-[#102E50]">Your wishlist is empty</h2>
+              <p className="mt-2 text-sm text-[#102E50]/80">Save items to quickly find what you like.</p>
+              {/* <button
+                onClick={() => navigate("/userDashboard")}
+                className="mt-5 inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold bg-[#102E50] text-[#FFF6E9] ring-1 ring-[#102E50]/10 shadow hover:shadow-md active:scale-95 transition"
               >
-                <div className="relative w-full pb-[100%] bg-[#0f2a47]/5">
-                  <img
-                    src={p.image ? p.image : NoImage}
-                    alt={p.name || "wishlist item"}
-                    className="absolute inset-0 w-full h-full object-cover object-center scale-[1.003] transition duration-500 group-hover:scale-[1.015]"
-                    onLoad={(e) => handleImgLoad(key, e)}
-                    onError={(e) => (e.currentTarget.src = NoImage)}
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </div>
+                Add Your First Item
+              </button> */}
+              <button
+  onClick={() => navigate("/userDashboard")}
+  className="mt-5 inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold bg-[#102E50] text-[#FFF6E9] ring-1 ring-[#102E50]/10 shadow hover:bg-[#d67631] hover:text-[#102E50] hover:ring-[#E78B48]/60 hover:shadow-md active:scale-95 transition-all duration-300"
+>
+  Add Your First Item
+</button>
 
-                <div className="px-3 py-3 bg-[#F5C45E]/18 ring-1 ring-[#F5C45E]/35 flex items-center gap-3 justify-between">
-                  <span className="shrink-0 inline-flex items-center rounded-lg bg-white/90 text-[#102E50] ring-1 ring-[#102E50]/10 text-[12px] sm:text-sm font-extrabold px-2.5 py-1.5">
-                    {Number(p.price).toFixed(2)} JOD
-                  </span>
-
-                  <span className="min-w-0 text-[#0f2a47] font-semibold text-[12px] sm:text-sm leading-tight truncate">
-                    {p.name}
-                  </span>
-
-                  <div className="shrink-0 flex items-center gap-2">
-                    <button
-                      onClick={async (e) => {
-                        e.stopPropagation();
-                        await onToggleFav(p);
-                      }}
-                      className="w-8 h-8 rounded-md grid place-items-center bg-[#BE3D2A] text-white shadow hover:shadow-md active:scale-95 transition"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="3 6 5 6 21 6" />
-                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
-                        <path d="M10 11v6" />
-                        <path d="M14 11v6" />
-                        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
-                      </svg>
-                    </button>
-
-                    <button
-                      onClick={async (e) => {
-                        e.stopPropagation();
-                        await onAddToCart(p);
-                      }}
-                      className={`w-8 h-8 rounded-md grid place-items-center shadow hover:shadow-md active:scale-95 transition ${
-                        inCart
-                          ? "bg-[#102E50] text-[#FFF6E9]"
-                          : "bg-white text-[#102E50] ring-1 ring-[#102E50]/30"
-                      }`}
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <circle cx="9" cy="21" r="1" />
-                        <circle cx="20" cy="21" r="1" />
-                        <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h7.72a2 2 0 0 0 2-1.61L23 6H6" />
-                      </svg>
-                    </button>
+            </div>
+          </div>
+        ) : (
+          <div className="mt-6 grid gap-4 sm:gap-5 md:gap-6 lg:gap-7 grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
+            {items.map((p) => {
+              const key = p.product_id ?? p.wishlist_id;
+              const inCart = cartIds.has(Number(p.product_id));
+              return (
+                <button
+                  key={p.product_id}
+                  onClick={() =>
+                    isLogged
+                      ? navigate(`/productdatails?product_id=${p.product_id}`, {
+                          state: { product_id: p.product_id },
+                        })
+                      : navigate("/login")
+                  }
+                  className="group rounded-2xl bg-white ring-1 ring-[#102E50]/10 hover:ring-[#F5C45E] shadow-[0_12px_40px_rgba(16,46,80,0.10)] overflow-hidden text-left transition"
+                >
+                  <div className="relative w-full pb-[100%] bg-[#0f2a47]/5">
+                    <img
+                      src={p.image ? p.image : NoImage}
+                      alt={p.name || "wishlist item"}
+                      className="absolute inset-0 w-full h-full object-cover object-center scale-[1.003] transition duration-500 group-hover:scale-[1.015]"
+                      onLoad={(e) => handleImgLoad(key, e)}
+                      onError={(e) => (e.currentTarget.src = NoImage)}
+                      loading="lazy"
+                      decoding="async"
+                    />
                   </div>
-                </div>
 
-                <div className="h-0.5 w-full bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]" />
-              </button>
-            );
-          })}
-        </div>
+                  <div className="px-3 py-3 bg-[#F5C45E]/18 ring-1 ring-[#F5C45E]/35 flex items-center gap-3 justify-between">
+                    <span className="shrink-0 inline-flex items-center rounded-lg bg-white/90 text-[#102E50] ring-1 ring-[#102E50]/10 text-[12px] sm:text-sm font-extrabold px-2.5 py-1.5">
+                      {Number(p.price).toFixed(2)} JOD
+                    </span>
+
+                    <span className="min-w-0 text-[#0f2a47] font-semibold text-[12px] sm:text-sm leading-tight truncate">
+                      {p.name}
+                    </span>
+
+                    <div className="shrink-0 flex items-center gap-2">
+                      <button
+                        onClick={async (e) => {
+                          e.stopPropagation();
+                          await onToggleFav(p);
+                        }}
+                        className="w-8 h-8 rounded-md grid place-items-center bg-[#BE3D2A] text-white shadow hover:shadow-md active:scale-95 transition"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="3 6 5 6 21 6" />
+                          <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                          <path d="M10 11v6" />
+                          <path d="M14 11v6" />
+                          <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+                        </svg>
+                      </button>
+
+                      <button
+                        onClick={async (e) => {
+                          e.stopPropagation();
+                          await onAddToCart(p);
+                        }}
+                        className={`w-8 h-8 rounded-md grid place-items-center shadow hover:shadow-md active:scale-95 transition ${
+                          inCart
+                            ? "bg-[#102E50] text-[#FFF6E9]"
+                            : "bg-white text-[#102E50] ring-1 ring-[#102E50]/30"
+                        }`}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <circle cx="9" cy="21" r="1" />
+                          <circle cx="20" cy="21" r="1" />
+                          <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h7.72a2 2 0 0 0 2-1.61L23 6H6" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="h-0.5 w-full bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]" />
+                </button>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );
 }
-
 
 
 

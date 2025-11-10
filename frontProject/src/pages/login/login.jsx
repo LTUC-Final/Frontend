@@ -1,6 +1,11 @@
+
+
+"``"
+
+
 // import axios from "axios";
 // import { useState } from "react";
-// import { useDispatch, useSelector } from "react-redux";
+// import { useDispatch } from "react-redux";
 // import { Link, useNavigate } from "react-router-dom";
 // import Swal from "sweetalert2";
 // import { setCartItem, setUserInfo } from "../../redux/userInfo/userInfo";
@@ -14,6 +19,7 @@
 //   "live.com",
 //   "icloud.com",
 // ]);
+
 
 // function validEmail(emailRaw) {
 //   const email = String(emailRaw || "").trim().toLowerCase();
@@ -35,7 +41,6 @@
 
 //   const navigate = useNavigate();
 //   const dispatch = useDispatch();
-//   const CusData = useSelector((state) => state.UserInfo);
 
 //   function setErr(key, msg) {
 //     setFieldErrors((prev) => ({ ...prev, [key]: msg }));
@@ -86,11 +91,24 @@
 //     try {
 //       setLoading(true);
 //       const port = import.meta.env.VITE_PORT;
+
+//       // 1) Login
 //       const response = await axios.post(`http://localhost:${port}/api/login`, {
 //         email: String(email || "").trim().toLowerCase(),
 //         password,
 //       });
+//       const { user } = response.data;
 
+//       // // خذ user و token مباشرة من نفس الريسبونس
+//       // const { user, token } = response.data;
+
+//       // // خزّنهم بالريدكس
+//       // dispatch(setUserInfo({ user, token }));
+
+//       // // 2) جيب السلة باستخدام user_id من الريسبونس + مرر التوكن بالهيدر
+//       // const cartRes = await axios.get(
+//       //   `http://localhost:${port}/api/carts/products/${user.user_id}`,
+//       //   { headers: { Authorization: `Bearer ${token}` } }
 //       dispatch(
 //         setUserInfo({
 //           user: response.data.user,
@@ -99,14 +117,20 @@
 //       );
 
 //       const res = await axios.get(
-//         `http://localhost:${port}/api/carts/products/${CusData.user.user_id}`
+//         `http://localhost:${port}/api/carts/products/${user.user_id}`
 //       );
 
-//       dispatch(
+
+//         dispatch(
 //         setCartItem({
 //           cartItem: Number(res.data.length),
 //         })
 //       );
+//       // dispatch(
+//       //   setCartItem({
+//       //     cartItem: Number(Array.isArray(cartRes.data) ? cartRes.data.length : cartRes.data?.length || 0),
+//       //   })
+//       // );
 
 //       Swal.fire({
 //         title: response?.data?.message || "Login successful",
@@ -283,12 +307,7 @@
 
 
 
-
-
-
-
-
-
+"test"
 
 import axios from "axios";
 import { useState } from "react";
@@ -306,7 +325,6 @@ const allowedDomains = new Set([
   "live.com",
   "icloud.com",
 ]);
-
 
 function validEmail(emailRaw) {
   const email = String(emailRaw || "").trim().toLowerCase();
@@ -378,56 +396,29 @@ export default function LoginPage() {
     try {
       setLoading(true);
       const port = import.meta.env.VITE_PORT;
-
-      // 1) Login
       const response = await axios.post(`http://localhost:${port}/api/login`, {
         email: String(email || "").trim().toLowerCase(),
         password,
       });
       const { user } = response.data;
-
-      // // خذ user و token مباشرة من نفس الريسبونس
-      // const { user, token } = response.data;
-
-      // // خزّنهم بالريدكس
-      // dispatch(setUserInfo({ user, token }));
-
-      // // 2) جيب السلة باستخدام user_id من الريسبونس + مرر التوكن بالهيدر
-      // const cartRes = await axios.get(
-      //   `http://localhost:${port}/api/carts/products/${user.user_id}`,
-      //   { headers: { Authorization: `Bearer ${token}` } }
       dispatch(
         setUserInfo({
           user: response.data.user,
           token: response.data.token,
         })
       );
-
       const res = await axios.get(
         `http://localhost:${port}/api/carts/products/${user.user_id}`
       );
-
-
-        dispatch(
+      dispatch(
         setCartItem({
           cartItem: Number(res.data.length),
         })
       );
-      // dispatch(
-      //   setCartItem({
-      //     cartItem: Number(Array.isArray(cartRes.data) ? cartRes.data.length : cartRes.data?.length || 0),
-      //   })
-      // );
-
-      Swal.fire({
-        title: response?.data?.message || "Login successful",
-        icon: "success",
-        draggable: true,
-      }).then(() => navigate("/mainDashBoard"));
+      navigate("/mainDashBoard");
     } catch (err) {
       const data = err?.response?.data || {};
       const msg = data?.error || data?.message || "Invalid email or password.";
-
       if (data?.fields) {
         setErr("email", data.fields.email || "");
         setErr("password", data.fields.password || "");
@@ -435,7 +426,6 @@ export default function LoginPage() {
         if (msg.toLowerCase().includes("email")) setErr("email", "Invalid email or password.");
         if (msg.toLowerCase().includes("password")) setErr("password", "Invalid email or password.");
       }
-
       Swal.fire({
         title: "Sign-in failed",
         text: msg,
