@@ -114,10 +114,10 @@ console.log("set messages",messages);
               }`}
             >
               <div className="text-xs font-semibold mb-1">
-                {/* {isSender === msg.senderId
+                {isSender === msg.senderId
                   ? msg.sender_name
-                  : msg.receiver_name} */}
-                  {isSender ? msg.sender_name : msg.receiver_name}
+                  : msg.receiver_name}
+                  {/* {isSender ? msg.sender_name : msg.receiver_name} */}
               </div>
               <div className="text-[15px]">{msg.text}</div>
               <div className="text-[11px] mt-1 opacity-70 text-right">
