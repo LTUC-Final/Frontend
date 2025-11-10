@@ -113,10 +113,7 @@ export default function ActivitiesList({ user_id }) {
                     <img
                       // src={act.image || act.profile_image}
 
-                      src={
-                        act.image
-                          ? act.image:`../src/assets/NoImage.png`
-                      }
+                      src={act.image ? act.image : `../src/assets/NoImage.png`}
                       alt={act.product_name}
                       className="w-20 h-20 rounded-lg object-cover flex-none"
                     />
@@ -146,11 +143,9 @@ export default function ActivitiesList({ user_id }) {
                     <img
                       src={
                         act.profile_image
-                          ? act.profile_image.startsWith("http")
-                            ? act.profile_image
-                            : `http://localhost:${port}${act.profile_image}`
+                          ? act.profile_image
                           : `https://ui-avatars.com/api/?name=${act.firstname}+${act.lastname}&background=102E50&color=fff`
-                      }
+              }
                       alt={`${act.firstname} ${act.lastname}`}
                       className="w-10 h-10 rounded-full object-cover border-2 border-[#F5C45E] shadow-sm"
                     />

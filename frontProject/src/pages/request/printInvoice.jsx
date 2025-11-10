@@ -44,9 +44,7 @@ export default function PrintInvoiceButton({ order }) {
         "Thank you for choosing us – your satisfaction is our priority.",
 
       logo: order.provider_profile_image
-        ? order.provider_profile_image.startsWith("http")
-          ? order.provider_profile_image
-          : `http://localhost:3000${order.provider_profile_image}`
+        ? order.provider_profile_image
         : undefined,
     };
 
