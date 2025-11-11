@@ -1304,7 +1304,7 @@ export default function LiveChat() {
 
   useEffect(() => {
     if (!senderId) return;
-    socketRef.current = io(`https://backend-a2qq.onrender.com`);
+    socketRef.current = io(`http://localhost:${port}`);
     socketRef.current.emit("register", senderId);
     socketRef.current.on("receive_message", (msg) => setMessages((p) => [...p, msg]));
     return () => socketRef.current?.disconnect();
