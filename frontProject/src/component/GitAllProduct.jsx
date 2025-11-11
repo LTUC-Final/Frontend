@@ -1435,13 +1435,7 @@ export default function GitAllProduct() {
       if (!uid) return;
       try {
         setLoading(true);
-<<<<<<< HEAD
         const res = await axios.get(`https://backend-a2qq.onrender.com/api/ShowCardInUserDashboard/${uid}`);
-=======
-        const res = await axios.get(
-          `${apiBase}/api/ShowCardInUserDashboard/${uid}`
-        );
->>>>>>> 1f4dfdf4e2896e97b17ce5ab160ffead4ddce1c8
         setCards(Array.isArray(res.data) ? res.data : []);
       } catch {
         setCards([]);
