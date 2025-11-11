@@ -1423,7 +1423,7 @@ export default function LiveChat() {
   const navigate = useNavigate();
 
   const port = import.meta.env.VITE_PORT;
-  const apiBase = useMemo(() => `http://localhost:${port}`, [port]);
+  const apiBase = useMemo(() => `https://backend-a2qq.onrender.com`, [port]);
 
   const socketRef = useRef(null);
   const messageContainerRef = useRef(null);
@@ -1458,7 +1458,7 @@ export default function LiveChat() {
     if (!sender || !reciver) return;
     const fetchMessages = async () => {
       try {
-        const res = await axios.get(`${apiBase}/api/getmessages`, {
+        const res = await axios.get(`https://backend-a2qq.onrender.com/api/getmessages`, {
           params: { senderId, receiveId: receiverId },
         });
         setMessages(res.data || []);
@@ -1471,7 +1471,7 @@ export default function LiveChat() {
 
   useEffect(() => {
     if (!senderId) return;
-    socketRef.current = io(`http://localhost:${port}`);
+    socketRef.current = io(`https://backend-a2qq.onrender.com`);
     socketRef.current.emit("register", senderId);
     socketRef.current.on("receive_message", (msg) => setMessages((p) => [...p, msg]));
     return () => socketRef.current?.disconnect();
@@ -1512,7 +1512,7 @@ export default function LiveChat() {
     lastOwnSendRef.current = true;
     setMessages((p) => [...p, { ...data, time: new Date() }]);
     try {
-      await axios.post(`${apiBase}/api/send-messages`, data);
+      await axios.post(`$https://backend-a2qq.onrender.com/api/send-messages`, data);
       setTextMessage("");
     } catch {}
     socketRef.current?.emit("send-message", data);

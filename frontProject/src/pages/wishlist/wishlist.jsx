@@ -930,12 +930,8 @@ export default function WishList() {
   const [ratios, setRatios] = useState({});
 
   const port = import.meta.env.VITE_PORT;
-<<<<<<< HEAD
-  const apiBase = useMemo(() => `https://backend-a2qq.onrender.com/api`, [port]);
-=======
-  const originBase = useMemo(() => `http://localhost:${port}`, [port]);
+  const originBase = useMemo(() => `https://backend-a2qq.onrender.com`, [port]);
   const apiBase = useMemo(() => `${originBase}/api`, [originBase]);
->>>>>>> ff43bad37f5da4345a896937122bc05e5590f563
 
   const withMutedAlerts = useCallback(async (fn) => {
     const prev = window.alert;

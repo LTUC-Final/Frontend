@@ -1076,13 +1076,8 @@ export default function MessagesSlice() {
   useEffect(() => {
     const getMessages = async () => {
       try {
-<<<<<<< HEAD
         const res = await axios.get(`https://backend-a2qq.onrender.com/api/Messages`, {
-          params: { userId: user.user.user_id },
-=======
-        const res = await axios.get(`${apiBase}/api/Messages`, {
           params: { userId },
->>>>>>> ff43bad37f5da4345a896937122bc05e5590f563
         });
         const data = Array.isArray(res.data) ? res.data.slice() : [];
         data.sort((a, b) => {

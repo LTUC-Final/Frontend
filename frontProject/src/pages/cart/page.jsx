@@ -468,23 +468,11 @@ console.log("Total Approved Price:", approvedTotal);
       "pk_test_51SLmeU7XNof7c0LK21QyvjJxb28OZnQ9uOo3leNgWR3PHE7agxDJforXF2no1WQrRg29jAP4K4iMoodJPTL7ClpT00Gbwg0TCH"
     );
     try {
-<<<<<<< HEAD
-      const { data } = await axios.post(
-        `https://backend-a2qq.onrender.com/api/payments/create-checkout-session-all`,
-        {
-          products: cart,
-          email: user.email,
-          customer_id: user.user_id,
-        },
-        { headers: { "Content-Type": "application/json" } }
-      );
-=======
       const hasApproved = cart.some((item) => item.status_pay === "Approve");
->>>>>>> ff43bad37f5da4345a896937122bc05e5590f563
 
       if (hasApproved) {
         const { data } = await axios.post(
-          `http://localhost:${port}/api/payments/create-checkout-session-all`,
+          `https://backend-a2qq.onrender.com/api/payments/create-checkout-session-all`,
           {
             products: cart,
             email: user.email,
@@ -688,11 +676,7 @@ console.log("Total Approved Price:", approvedTotal);
                               onClick={() =>
                                 toggleResponseProvider(product.cart_id)
                               }
-<<<<<<< HEAD
-                              className="group relative inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl font-bold text-sm sm:text-base text-white bg-gradient-to-r from-[#F5C45E] to-[#E78B48] shadow-lg shadow-[#E78B48]/20 md:hover:shadow-xl md:hover:shadow-[#E78B48]/30 md:hover:scale-105 active:scale-[0.98] transition-all duration-200 ease-out border border-[#F5C45E]/50 md:hover:border-[#E78B48]/70 overflow-hidden"
-=======
                               className="group relative inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-2.5 sm:py-1 rounded-xl   text-sm sm:text-base  text-102E50 bg-gradient-to-r from-[#F5C45E] to-[#E78B48] shadow-lg shadow-[#E78B48]/20 md:hover:shadow-xl md:hover:shadow-[#E78B48]/30 md:hover:scale-105 active:scale-[0.98] transition-all duration-200 ease-out border border-[#F5C45E]/50 md:hover:border-[#E78B48]/70 overflow-hidden"
->>>>>>> ff43bad37f5da4345a896937122bc05e5590f563
                             >
                               <span className="absolute inset-0 bg-gradient-to-r from-[#E78B48] to-[#F5C45E] opacity-0 group-hover:opacity-10 transition-opacity duration-200"></span>
                               <span className="relative flex items-center gap-2">
@@ -753,11 +737,7 @@ console.log("Total Approved Price:", approvedTotal);
                                           user_id: product.customer_id,
                                         })
                                       }
-<<<<<<< HEAD
-                                      className="group relative inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl font-bold text-sm sm:text-base text-white bg-gradient-to-r from-[#102E50] to-[#102E50]  md:hover:scale-105 active:scale-[0.98] transition-all duration-200 ease-out border border-[#E78B48]/60 md:hover:border-[#F5C45E]/80 overflow-hidden"
-=======
                                       className="group relative inline-flex items-center justify-center gap-2 px-5 sm:px-6 !py-1 sm:py-3 rounded-xl !font-normal text-sm sm:text-base text-white bg-gradient-to-r from-[#102E50] to-[#102E50]  md:hover:scale-105 active:scale-[0.98] transition-all duration-200 ease-out border border-[#E78B48]/60 md:hover:border-[#F5C45E]/80 overflow-hidden"
->>>>>>> ff43bad37f5da4345a896937122bc05e5590f563
                                     >
                                       <span className="absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-20 transition-opacity duration-200"></span>
                                       <span className="relative flex items-center gap-2">

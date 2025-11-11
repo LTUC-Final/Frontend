@@ -915,25 +915,16 @@ export default function MainDashBoard1() {
 
   const apiBase =
     import.meta.env.VITE_API ||
-    `http://localhost:${import.meta.env.VITE_PORT}/api`;
+    `https://backend-a2qq.onrender.com/api`;
 
   const [slideIndex, setSlideIndex] = useState(0);
   const [topOrders, setTopOrders] = useState([]);
   const [loadingTop, setLoadingTop] = useState(true);
 
-<<<<<<< HEAD
-  useEffect(() => {
-    const fetchTopOrdered = async () => {
-      try {
-        const res = await axios.get(`https://backend-a2qq.onrender.com/api/topordered`);
-        console.log("res.data.items");
-        console.log(res.data.items);
-=======
   const apiOrigin = useMemo(() => {
     const m = String(apiBase || "").match(/^(.+?)\/api\/?$/);
     return m ? m[1] : "";
   }, [apiBase]);
->>>>>>> ff43bad37f5da4345a896937122bc05e5590f563
 
   const resolveImage = (u) => {
     if (!u) return "";
