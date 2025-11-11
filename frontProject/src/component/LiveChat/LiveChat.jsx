@@ -1292,7 +1292,9 @@ export default function LiveChat() {
     const fetchMessages = async () => {
       try {
         const res = await axios.get(`https://backend-a2qq.onrender.com/api/getmessages`, 
-          { params: { senderId: sender.user_id || sender , receiveId: reciver.user_id || reciver } }
+          {
+          params: { senderId, receiveId: receiverId },
+        }
         );
         setMessages(res.data || []);
       } catch {}

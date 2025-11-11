@@ -1045,7 +1045,7 @@ export default function MessagesSlice() {
   const navigate = useNavigate();
 
   const userId = user?.user?.user_id;
-  const apiBase = useMemo(() => `http://localhost:${port}`, [port]);
+  const apiBase = useMemo(() => `https://backend-a2qq.onrender.com`, [port]);
   const storageKey = useMemo(() => `bm_read_${userId || "anon"}`, [userId]);
 
   const readFromStorage = () => {
