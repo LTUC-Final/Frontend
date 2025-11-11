@@ -1,22 +1,60 @@
+
+
+
+
 // import axios from "axios";
 // import { useCallback, useEffect, useMemo, useState } from "react";
 // import { useSelector } from "react-redux";
 // import { useNavigate } from "react-router-dom";
 // import Swal from "sweetalert2";
-// import AddToCart from "../../component/AddToCart.jsx";
+// import { useAddToCart } from "../../component/AddToCart.jsx";
 // import AddTOFav from "../../component/AddToFav.jsx";
+// import defaultImg from "../../assets/NoImage.png";
 
 // export default function WishList() {
 //   const token = useSelector((s) => s.UserInfo.token);
 //   const user = useSelector((s) => s.UserInfo.user);
 //   const userId = user?.user_id;
+//   const isLogged = Boolean(token);
 //   const navigate = useNavigate();
+//   const { AddToCart } = useAddToCart();
 
 //   const [items, setItems] = useState([]);
 //   const [loading, setLoading] = useState(true);
+//   const [cartIds, setCartIds] = useState(new Set());
+//   const [ratios, setRatios] = useState({});
 
 //   const port = import.meta.env.VITE_PORT;
-//   const apiBase = useMemo(() => `http://localhost:${port}/api`, [port]);
+//   const originBase = useMemo(() => `http://localhost:${port}`, [port]);
+//   const apiBase = useMemo(() => `${originBase}/api`, [originBase]);
+
+//   const withMutedAlerts = useCallback(async (fn) => {
+//     const prev = window.alert;
+//     window.alert = () => {};
+//     try {
+//       return await fn();
+//     } finally {
+//       window.alert = prev;
+//     }
+//   }, []);
+
+//   const toImg = useCallback(
+//     (img) => {
+//       if (!img) return defaultImg;
+//       const s = String(img).trim();
+//       if (s.startsWith("http")) return s;
+//       return `${originBase}${s.startsWith("/") ? "" : "/"}${s}`;
+//     },
+//     [originBase]
+//   );
+
+//   const handleImgLoad = (id, e) => {
+//     const nw = e.currentTarget.naturalWidth || 0;
+//     const nh = e.currentTarget.naturalHeight || 0;
+//     if (nw > 0 && nh > 0) {
+//       setRatios((r) => ({ ...r, [id]: `${nw} / ${nh}` }));
+//     }
+//   };
 
 //   const alertError = useCallback(async (message) => {
 //     await Swal.fire({
@@ -42,6 +80,17 @@
 //     });
 //   }, []);
 
+//   const loadCart = useCallback(async () => {
+//     try {
+//       if (!userId) return;
+//       const res = await axios.get(`${apiBase}/carts/products/${userId}`, {
+//         headers: { Authorization: `Bearer ${token}` },
+//       });
+//       const list = Array.isArray(res.data?.cards) ? res.data.cards : [];
+//       setCartIds(new Set(list.map((c) => Number(c.product_id))));
+//     } catch {}
+//   }, [apiBase, token, userId]);
+
 //   const load = useCallback(async () => {
 //     try {
 //       setLoading(true);
@@ -50,8 +99,7 @@
 //       });
 //       setItems(Array.isArray(data?.items) ? data.items : []);
 //     } catch (e) {
-//       const m =
-//         e?.response?.data?.error || e?.message || "Failed to load wishlist";
+//       const m = e?.response?.data?.error || e?.message || "Failed to load wishlist";
 //       await alertError(m);
 //     } finally {
 //       setLoading(false);
@@ -64,7 +112,8 @@
 //       return;
 //     }
 //     load();
-//   }, [token, userId, load, navigate]);
+//     loadCart();
+//   }, [token, userId, load, loadCart, navigate]);
 
 //   const onToggleFav = async (p) => {
 //     const result = await Swal.fire({
@@ -72,7 +121,7 @@
 //       text: p.name ? `Remove "${p.name}" from your wishlist?` : "Are you sure?",
 //       icon: "warning",
 //       showCancelButton: true,
-//       confirmButtonText: "Yes, remove",
+//       confirmButtonText: "Remove",
 //       cancelButtonText: "Cancel",
 //       confirmButtonColor: "#BE3D2A",
 //       cancelButtonColor: "#102E50",
@@ -80,21 +129,15 @@
 //       color: "#102E50",
 //     });
 //     if (!result.isConfirmed) return;
-
 //     const prev = [...items];
 //     setItems((list) => list.filter((x) => x.wishlist_id !== p.wishlist_id));
-
 //     try {
-//       await AddTOFav({ product_id: p.product_id }, { user });
-//       await alertSuccess(
-//         "Removed!",
-//         `${p.name ?? "Item"} has been removed from your wishlist.`
-//       );
-//       setTimeout(load, 250);
+//       await withMutedAlerts(() => AddTOFav({ product_id: p.product_id }, { user }));
+//       await alertSuccess("Removed", `${p.name ?? "Item"} removed from wishlist.`);
+//       setTimeout(load, 200);
 //     } catch (e) {
 //       setItems(prev);
-//       const m =
-//         e?.response?.data?.error || e?.message || "Failed to toggle favorite";
+//       const m = e?.response?.data?.error || e?.message || "Failed to toggle favorite";
 //       await alertError(m);
 //     }
 //   };
@@ -102,9 +145,26 @@
 //   const onAddToCart = async (p) => {
 //     try {
 //       if (p.provider_id == null) {
-//         const m = "Missing provider_id for this product";
-//         await alertError(m);
+//         await alertError("Missing provider_id for this product");
 //         return;
+//       }
+//       const inCart = cartIds.has(Number(p.product_id));
+//       if (inCart) {
+//         const result = await Swal.fire({
+//           title: "Already in cart",
+//           text: p.name
+//             ? `"${p.name}" is already in your cart. Do you want to remove it?`
+//             : "This item is already in your cart. Remove it?",
+//           icon: "info",
+//           showCancelButton: true,
+//           confirmButtonText: "Remove from cart",
+//           cancelButtonText: "Keep",
+//           confirmButtonColor: "#BE3D2A",
+//           cancelButtonColor: "#102E50",
+//           background: "#FFF6E9",
+//           color: "#102E50",
+//         });
+//         if (!result.isConfirmed) return;
 //       }
 //       const card = {
 //         provider_id: p.provider_id,
@@ -113,14 +173,11 @@
 //         details_order_user: "",
 //         price: p.price,
 //       };
-//       await AddToCart(card, { user });
-//       await alertSuccess(
-//         "Added to cart!",
-//         `${p.name ?? "Item"} has been added successfully.`
-//       );
+//       await withMutedAlerts(() => AddToCart(p, { user }));
+//       await alertSuccess(inCart ? "Removed from cart" : "Added to cart", inCart ? "Item removed." : "Item added successfully.");
+//       await loadCart();
 //     } catch (e) {
-//       const m =
-//         e?.response?.data?.error || e?.message || "Failed to add to cart";
+//       const m = e?.response?.data?.error || e?.message || "Failed to add to cart";
 //       await alertError(m);
 //     }
 //   };
@@ -129,8 +186,8 @@
 
 //   if (loading)
 //     return (
-//       <div className="min-h-screen grid place-items-center bg-[#FFF6E9] px-4 py-10">
-//         <div className="rounded-2xl px-4 sm:px-6 py-3 sm:py-4 bg-white shadow ring-1 ring-[#102E50]/10 text-[#102E50] text-sm sm:text-base">
+//       <div className="min-h-screen grid place-items-center bg-[#FFF6E9]">
+//         <div className="rounded-2xl px-4 py-3 bg-white shadow ring-1 ring-[#102E50]/10 text-[#102E50]">
 //           Loading…
 //         </div>
 //       </div>
@@ -138,8 +195,8 @@
 
 //   if (items.length === 0)
 //     return (
-//       <div className="min-h-screen grid place-items-center bg-[#FFF6E9] px-4 py-10">
-//         <div className="rounded-2xl px-4 sm:px-6 py-3 sm:py-4 bg-white shadow ring-1 ring-[#102E50]/10 text-[#102E50] text-sm sm:text-base">
+//       <div className="min-h-screen grid place-items-center bg-[#FFF6E9]">
+//         <div className="rounded-2xl px-4 py-3 bg-white shadow ring-1 ring-[#102E50]/10 text-[#102E50]">
 //           Your wishlist is empty.
 //         </div>
 //       </div>
@@ -148,78 +205,707 @@
 //   return (
 //     <div className="min-h-screen bg-[#FFF6E9] px-3 sm:px-4 md:px-6 py-6 md:py-8">
 //       <div className="mx-auto w-full max-w-7xl">
-//         <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#102E50] mb-4 sm:mb-6">
-//           My Wishlist
-//         </h1>
+//         <div className="mb-4 text-center">
+//           <h1 className="inline-block text-2xl sm:text-3xl font-extrabold text-[#102E50] tracking-tight">
+//             My Wishlist
+//           </h1>
+//           <div className="mt-2 h-1 w-32 mx-auto rounded-full bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]" />
+//         </div>
 
-//         <div className="grid gap-3 sm:gap-4 md:gap-5 grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-//           {items.map((p) => (
-//             <div
-//               key={p.wishlist_id}
-//               className="group rounded-xl sm:rounded-2xl bg-white shadow-sm ring-1 ring-[#102E50]/10 hover:ring-[#F5C45E] transition overflow-hidden"
-//             >
-//               <div className="w-full aspect-[4/3] overflow-hidden bg-[#102E50]/5">
-//                 <img
-//                   // src={p.image || "https://via.placeholder.com/800x600?text=No+Image"}
-
-//                   src={
-//                     p.image
-//                       ? p.image.startsWith("http")
-//                         ? p.image
-//                         : `http://localhost:${port}${p.image}`
-//                       : "../../assests/NoImage"
-//                   }
-//                   alt={p.name || "wishlist item"}
-//                   className="w-full h-full object-cover transition duration-300 group-hover:scale-105"
-//                   loading="lazy"
-//                   onError={(e) => {
-//                     e.currentTarget.src =
-//                       "https://via.placeholder.com/800x600?text=No+Image";
-//                   }}
-//                 />
-//               </div>
-
-//               <div className="p-3 sm:p-4">
-//                 <div className="flex items-start justify-between gap-2">
-//                   <div className="min-w-0">
-//                     <div className="font-semibold text-[#102E50] text-sm sm:text-base line-clamp-1">
-//                       {p.name}
-//                     </div>
-//                     <div className="text-xs sm:text-sm text-[#102E50]/70">
-//                       {Number(p.price).toFixed(2)} JOD
-//                     </div>
+//         <div className="mt-6 grid gap-4 sm:gap-5 md:gap-6 grid-cols-1 xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+//           {items.map((p) => {
+//             const key = p.product_id ?? p.wishlist_id;
+//             return (
+//               <button
+//                 key={p.product_id}
+//                 onClick={() =>
+//                   isLogged
+//                     ? navigate(`/productdatails?product_id=${p.product_id}`, {
+//                         state: { product_id: p.product_id }
+//                       })
+//                     : navigate("/login")
+//                 }
+//                 className="group rounded-2xl bg-white ring-1 ring-[#102E50]/10 hover:ring-[#F5C45E] shadow-[0_14px_50px_rgba(16,46,80,0.10)] overflow-hidden text-left transition"
+//               >
+//                 <div className="relative w-full h-60 sm:h-64 md:h-72 bg-[#0f2a47]/5">
+//                   <img
+//                     src={toImg(p.image)}
+//                     alt={p.name || "wishlist item"}
+//                     className="w-full h-full object-cover object-center transition duration-500 group-hover:scale-[1.03]"
+//                     onLoad={(e) => handleImgLoad(key, e)}
+//                     onError={(e) => (e.currentTarget.src = defaultImg)}
+//                     loading="lazy"
+//                     decoding="async"
+//                   />
+//                   <div className="absolute left-3 top-3 inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-[10px] font-bold bg-white/90 text-[#102E50] ring-1 ring-[#102E50]/10">
+//                     <span className="w-1.5 h-1.5 rounded-full bg-[#F5C45E]" />
+//                     Favorite
 //                   </div>
-//                   <span className="shrink-0 rounded-md bg-[#F5C45E] text-[#102E50] text-[10px] sm:text-xs font-semibold px-2 py-0.5 sm:px-2.5 sm:py-1">
-//                     Wish
+//                 </div>
+
+//                 <div className="px-2.5 sm:px-3 py-2 bg-[#F5C45E]/18 ring-1 ring-[#F5C45E]/35 flex items-center gap-2 justify-between">
+//                   <span className="shrink-0 inline-flex items-center rounded-lg bg-white/90 text-[#102E50] ring-1 ring-[#102E50]/10 text-[11px] sm:text-xs font-extrabold px-2 py-1">
+//                     {Number(p.price).toFixed(2)} JOD
 //                   </span>
+
+//                   <span className="min-w-0 text-[#0f2a47] font-semibold text-[11px] sm:text-xs leading-tight truncate">
+//                     {p.name}
+//                   </span>
+
+//                   <div className="shrink-0 flex items-center gap-2">
+//                     <button
+//                       onClick={async (e) => {
+//                         e.stopPropagation();
+//                         await onToggleFav(p);
+//                       }}
+//                       className="w-7 h-7 rounded-md grid place-items-center bg-[#BE3D2A] text-white shadow hover:shadow-md active:scale-95 transition"
+//                       aria-label="Remove"
+//                       title="Remove"
+//                     >
+//                       <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+//                         <polyline points="3 6 5 6 21 6" />
+//                         <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+//                         <path d="M10 11v6" />
+//                         <path d="M14 11v6" />
+//                         <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+//                       </svg>
+//                     </button>
+
+//                     <button
+//                       onClick={async (e) => {
+//                         e.stopPropagation();
+//                         await onAddToCart(p);
+//                       }}
+//                       className="w-7 h-7 rounded-md grid place-items-center bg-[#102E50] text-[#FFF6E9] shadow hover:shadow-md active:scale-95 transition"
+//                       aria-label="Add to Cart"
+//                       title="Add to Cart"
+//                     >
+//                       <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+//                         <circle cx="9" cy="21" r="1" />
+//                         <circle cx="20" cy="21" r="1" />
+//                         <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h7.72a2 2 0 0 0 2-1.61L23 6H6" />
+//                       </svg>
+//                     </button>
+//                   </div>
 //                 </div>
 
-//                 <div className="mt-3 sm:mt-4 flex flex-col xs:flex-row gap-2">
-//                   <button
-//                     onClick={() => onToggleFav(p)}
-//                     className="w-full xs:w-auto px-3 sm:px-4 py-2 rounded-lg sm:rounded-xl bg-[#BE3D2A] text-white text-sm sm:text-base font-semibold shadow hover:shadow-md active:scale-[0.99] transition"
-//                   >
-//                     Remove
-//                   </button>
-//                   <button
-//                     onClick={() => onAddToCart(p)}
-//                     className="w-full xs:w-auto px-3 sm:px-4 py-2 rounded-lg sm:rounded-xl bg-[#102E50] text-[#FFF6E9] text-sm sm:text-base font-semibold shadow hover:shadow-md active:scale-[0.99] transition"
-//                   >
-//                     Add to Cart
-//                   </button>
-//                 </div>
-//               </div>
-
-//               <div className="h-1 w-full bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]" />
-//             </div>
-//           ))}
+//                 <div className="h-0.5 w-full bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]" />
+//               </button>
+//             );
+//           })}
 //         </div>
 //       </div>
 //     </div>
 //   );
 // }
 
-// /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+// import axios from "axios";
+// import { useCallback, useEffect, useMemo, useState } from "react";
+// import { useSelector } from "react-redux";
+// import { useNavigate } from "react-router-dom";
+// import Swal from "sweetalert2";
+// import { useAddToCart } from "../../component/AddToCart.jsx";
+// import AddTOFav from "../../component/AddToFav.jsx";
+// import NoImage from "../../assets/NoImage.png";
+
+// export default function WishList() {
+//   const token = useSelector((s) => s.UserInfo.token);
+//   const user = useSelector((s) => s.UserInfo.user);
+//   const userId = user?.user_id;
+//   const isLogged = Boolean(token);
+//   const navigate = useNavigate();
+//   const { AddToCart } = useAddToCart();
+
+//   const [items, setItems] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [cartIds, setCartIds] = useState(new Set());
+//   const [ratios, setRatios] = useState({});
+
+//   const port = import.meta.env.VITE_PORT;
+//   const originBase = useMemo(() => `http://localhost:${port}`, [port]);
+//   const apiBase = useMemo(() => `${originBase}/api`, [originBase]);
+
+//   const withMutedAlerts = useCallback(async (fn) => {
+//     const prev = window.alert;
+//     window.alert = () => {};
+//     try {
+//       return await fn();
+//     } finally {
+//       window.alert = prev;
+//     }
+//   }, []);
+
+//   const toImg = useCallback(
+//     (img) => {
+//       if (!img) return defaultImg;
+//       const s = String(img).trim();
+//       if (s.startsWith("http")) return s;
+//       return `${originBase}${s.startsWith("/") ? "" : "/"}${s}`;
+//     },
+//     [originBase]
+//   );
+
+//   const handleImgLoad = (id, e) => {
+//     const nw = e.currentTarget.naturalWidth || 0;
+//     const nh = e.currentTarget.naturalHeight || 0;
+//     if (nw > 0 && nh > 0) {
+//       setRatios((r) => ({ ...r, [id]: `${nw} / ${nh}` }));
+//     }
+//   };
+
+//   const alertError = useCallback(async (message) => {
+//     await Swal.fire({
+//       title: "Error",
+//       text: message,
+//       icon: "error",
+//       confirmButtonText: "OK",
+//       confirmButtonColor: "#BE3D2A",
+//       background: "#FFF6E9",
+//       color: "#102E50",
+//     });
+//   }, []);
+
+//   const alertSuccess = useCallback(async (title, text) => {
+//     await Swal.fire({
+//       title,
+//       text,
+//       icon: "success",
+//       confirmButtonText: "OK",
+//       confirmButtonColor: "#102E50",
+//       background: "#FFF6E9",
+//       color: "#102E50",
+//     });
+//   }, []);
+
+//   const loadCart = useCallback(async () => {
+//     try {
+//       if (!userId) return;
+//       const res = await axios.get(`${apiBase}/carts/products/${userId}`, {
+//         headers: { Authorization: `Bearer ${token}` },
+//       });
+//       const list = Array.isArray(res.data?.cards) ? res.data.cards : [];
+//       setCartIds(new Set(list.map((c) => Number(c.product_id))));
+//     } catch {}
+//   }, [apiBase, token, userId]);
+
+//   const load = useCallback(async () => {
+//     try {
+//       setLoading(true);
+//       const { data } = await axios.get(`${apiBase}/wishlist`, {
+//         headers: { Authorization: `Bearer ${token}` },
+//       });
+//       setItems(Array.isArray(data?.items) ? data.items : []);
+//     } catch (e) {
+//       const m = e?.response?.data?.error || e?.message || "Failed to load wishlist";
+//       await alertError(m);
+//     } finally {
+//       setLoading(false);
+//     }
+//   }, [apiBase, token, alertError]);
+
+//   useEffect(() => {
+//     if (!token || !userId) {
+//       navigate("/login");
+//       return;
+//     }
+//     load();
+//     loadCart();
+//   }, [token, userId, load, loadCart, navigate]);
+
+//   const onToggleFav = async (p) => {
+//     const result = await Swal.fire({
+//       title: "Remove from wishlist?",
+//       text: p.name ? `Remove "${p.name}" from your wishlist?` : "Are you sure?",
+//       icon: "warning",
+//       showCancelButton: true,
+//       confirmButtonText: "Remove",
+//       cancelButtonText: "Cancel",
+//       confirmButtonColor: "#BE3D2A",
+//       cancelButtonColor: "#102E50",
+//       background: "#FFF6E9",
+//       color: "#102E50",
+//     });
+//     if (!result.isConfirmed) return;
+//     const prev = [...items];
+//     setItems((list) => list.filter((x) => x.wishlist_id !== p.wishlist_id));
+//     try {
+//       await withMutedAlerts(() => AddTOFav({ product_id: p.product_id }, { user }));
+//       await alertSuccess("Removed", `${p.name ?? "Item"} removed from wishlist.`);
+//       setTimeout(load, 200);
+//     } catch (e) {
+//       setItems(prev);
+//       const m = e?.response?.data?.error || e?.message || "Failed to toggle favorite";
+//       await alertError(m);
+//     }
+//   };
+
+//   const onAddToCart = async (p) => {
+//     try {
+//       if (p.provider_id == null) {
+//         await alertError("Missing provider_id for this product");
+//         return;
+//       }
+//       const inCart = cartIds.has(Number(p.product_id));
+//       if (inCart) {
+//         const result = await Swal.fire({
+//           title: "Already in cart",
+//           text: p.name
+//             ? `"${p.name}" is already in your cart. Do you want to remove it?`
+//             : "This item is already in your cart. Remove it?",
+//           icon: "info",
+//           showCancelButton: true,
+//           confirmButtonText: "Remove from cart",
+//           cancelButtonText: "Keep",
+//           confirmButtonColor: "#BE3D2A",
+//           cancelButtonColor: "#102E50",
+//           background: "#FFF6E9",
+//           color: "#102E50",
+//         });
+//         if (!result.isConfirmed) return;
+//       }
+//       await withMutedAlerts(() => AddToCart(p, { user }));
+//       await alertSuccess(inCart ? "Removed from cart" : "Added to cart", inCart ? "Item removed." : "Item added successfully.");
+//       await loadCart();
+//     } catch (e) {
+//       const m = e?.response?.data?.error || e?.message || "Failed to add to cart";
+//       await alertError(m);
+//     }
+//   };
+
+//   if (!token) return null;
+
+//   if (loading)
+//     return (
+//       <div className="min-h-screen grid place-items-center bg-[#FFF6E9] px-3">
+//         <div className="rounded-2xl px-4 py-3 bg-white shadow ring-1 ring-[#102E50]/10 text-[#102E50]">
+//           Loading…
+//         </div>
+//       </div>
+//     );
+
+//   if (items.length === 0)
+//     return (
+//       <div className="min-h-screen grid place-items-center bg-[#FFF6E9] px-3">
+//         <div className="rounded-2xl px-4 py-3 bg-white shadow ring-1 ring-[#102E50]/10 text-[#102E50]">
+//           Your wishlist is empty.
+//         </div>
+//       </div>
+//     );
+
+//   return (
+//     <div className="min-h-screen bg-[#FFF6E9] px-3 sm:px-4 md:px-6 lg:px-8 py-6 md:py-8">
+//       <div className="mx-auto w-full max-w-7xl">
+//         <div className="mb-4 text-center">
+//           <h1 className="inline-block text-2xl sm:text-3xl font-extrabold text-[#102E50] tracking-tight">
+//             My Wishlist
+//           </h1>
+//           <div className="mt-2 h-1 w-28 sm:w-32 mx-auto rounded-full bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]" />
+//         </div>
+
+//         <div className="mt-6 grid gap-3 sm:gap-4 md:gap-5 lg:gap-6 grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+//           {items.map((p) => {
+//             const key = p.product_id ?? p.wishlist_id;
+//             return (
+//               <button
+//                 key={p.product_id}
+//                 onClick={() =>
+//                   isLogged
+//                     ? navigate(`/productdatails?product_id=${p.product_id}`, {
+//                         state: { product_id: p.product_id },
+//                       })
+//                     : navigate("/login")
+//                 }
+//                 className="group rounded-2xl bg-white ring-1 ring-[#102E50]/10 hover:ring-[#F5C45E] shadow-[0_12px_40px_rgba(16,46,80,0.10)] overflow-hidden text-left transition"
+//               >
+//                 <div className="relative w-full h-56 sm:h-60 md:h-64 bg-[#0f2a47]/5">
+//                   <img
+//                      src={p.image ? p.image : NoImage}
+//                     alt={p.name || "wishlist item"}
+//                     className="w-full h-full object-cover object-center scale-[1.03] transition duration-500 group-hover:scale-[1.06]"
+//                     onLoad={(e) => handleImgLoad(key, e)}
+//                     onError={(e) => (e.currentTarget.src = NoImage)}
+//                     loading="lazy"
+//                     decoding="async"
+//                   />
+//                   <div className="absolute left-3 top-3 inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-[10px] font-bold bg-white/90 text-[#102E50] ring-1 ring-[#102E50]/10">
+//                     <span className="w-1.5 h-1.5 rounded-full bg-[#F5C45E]" />
+//                     Favorite
+//                   </div>
+//                 </div>
+
+//                 <div className="px-2.5 sm:px-3 py-2 bg-[#F5C45E]/18 ring-1 ring-[#F5C45E]/35 flex items-center gap-2 justify-between">
+//                   <span className="shrink-0 inline-flex items-center rounded-lg bg-white/90 text-[#102E50] ring-1 ring-[#102E50]/10 text-[11px] sm:text-xs font-extrabold px-2 py-1">
+//                     {Number(p.price).toFixed(2)} JOD
+//                   </span>
+
+//                   <span className="min-w-0 text-[#0f2a47] font-semibold text-[11px] sm:text-xs leading-tight truncate">
+//                     {p.name}
+//                   </span>
+
+//                   <div className="shrink-0 flex items-center gap-2">
+//                     <button
+//                       onClick={async (e) => {
+//                         e.stopPropagation();
+//                         await onToggleFav(p);
+//                       }}
+//                       className="w-7 h-7 rounded-md grid place-items-center bg-[#BE3D2A] text-white shadow hover:shadow-md active:scale-95 transition"
+//                       aria-label="Remove"
+//                       title="Remove"
+//                     >
+//                       <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+//                         <polyline points="3 6 5 6 21 6" />
+//                         <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+//                         <path d="M10 11v6" />
+//                         <path d="M14 11v6" />
+//                         <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+//                       </svg>
+//                     </button>
+
+//                     <button
+//                       onClick={async (e) => {
+//                         e.stopPropagation();
+//                         await onAddToCart(p);
+//                       }}
+//                       className="w-7 h-7 rounded-md grid place-items-center bg-[#102E50] text-[#FFF6E9] shadow hover:shadow-md active:scale-95 transition"
+//                       aria-label="Add to Cart"
+//                       title="Add to Cart"
+//                     >
+//                       <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+//                         <circle cx="9" cy="21" r="1" />
+//                         <circle cx="20" cy="21" r="1" />
+//                         <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h7.72a2 2 0 0 0 2-1.61L23 6H6" />
+//                       </svg>
+//                     </button>
+//                   </div>
+//                 </div>
+
+//                 <div className="h-0.5 w-full bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]" />
+//               </button>
+//             );
+//           })}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import axios from "axios";
+// import { useCallback, useEffect, useMemo, useState } from "react";
+// import { useSelector } from "react-redux";
+// import { useNavigate } from "react-router-dom";
+// import Swal from "sweetalert2";
+// import { useAddToCart } from "../../component/AddToCart.jsx";
+// import AddTOFav from "../../component/AddToFav.jsx";
+// import NoImage from "../../assets/NoImage.png";
+
+// export default function WishList() {
+//   const token = useSelector((s) => s.UserInfo.token);
+//   const user = useSelector((s) => s.UserInfo.user);
+//   const userId = user?.user_id;
+//   const isLogged = Boolean(token);
+//   const navigate = useNavigate();
+//   const { AddToCart } = useAddToCart();
+
+//   const [items, setItems] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [cartIds, setCartIds] = useState(new Set());
+//   const [ratios, setRatios] = useState({});
+
+//   const port = import.meta.env.VITE_PORT;
+//   const originBase = useMemo(() => `http://localhost:${port}`, [port]);
+//   const apiBase = useMemo(() => `${originBase}/api`, [originBase]);
+
+//   const withMutedAlerts = useCallback(async (fn) => {
+//     const prev = window.alert;
+//     window.alert = () => {};
+//     try {
+//       return await fn();
+//     } finally {
+//       window.alert = prev;
+//     }
+//   }, []);
+
+//   const withMutedSwal = useCallback(async (fn) => {
+//     const prev = Swal.fire;
+//     Swal.fire = () => Promise.resolve({});
+//     try {
+//       return await fn();
+//     } finally {
+//       Swal.fire = prev;
+//     }
+//   }, []);
+
+//   const toImg = useCallback(
+//     (img) => {
+//       if (!img) return NoImage;
+//       const s = String(img).trim();
+//       if (s.startsWith("http")) return s;
+//       return `${originBase}${s.startsWith("/") ? "" : "/"}${s}`;
+//     },
+//     [originBase]
+//   );
+
+//   const handleImgLoad = (id, e) => {
+//     const nw = e.currentTarget.naturalWidth || 0;
+//     const nh = e.currentTarget.naturalHeight || 0;
+//     if (nw > 0 && nh > 0) {
+//       setRatios((r) => ({ ...r, [id]: `${nw} / ${nh}` }));
+//     }
+//   };
+
+//   const alertError = useCallback(async (message) => {
+//     await Swal.fire({
+//       title: "Error",
+//       text: message,
+//       icon: "error",
+//       confirmButtonText: "OK",
+//       confirmButtonColor: "#BE3D2A",
+//       background: "#FFF6E9",
+//       color: "#102E50",
+//     });
+//   }, []);
+
+//   const alertSuccess = useCallback(async (title, text) => {
+//     await Swal.fire({
+//       title,
+//       text,
+//       icon: "success",
+//       confirmButtonText: "OK",
+//       confirmButtonColor: "#102E50",
+//       background: "#FFF6E9",
+//       color: "#102E50",
+//     });
+//   }, []);
+
+//   const loadCart = useCallback(async () => {
+//     try {
+//       if (!userId) return;
+//       const res = await axios.get(`${apiBase}/carts/products/${userId}`, {
+//         headers: { Authorization: `Bearer ${token}` },
+//       });
+//       const list = Array.isArray(res.data?.cards) ? res.data.cards : [];
+//       setCartIds(new Set(list.map((c) => Number(c.product_id))));
+//     } catch {}
+//   }, [apiBase, token, userId]);
+
+//   const load = useCallback(async () => {
+//     try {
+//       setLoading(true);
+//       const { data } = await axios.get(`${apiBase}/wishlist`, {
+//         headers: { Authorization: `Bearer ${token}` },
+//       });
+//       setItems(Array.isArray(data?.items) ? data.items : []);
+//     } catch (e) {
+//       const m = e?.response?.data?.error || e?.message || "Failed to load wishlist";
+//       await alertError(m);
+//     } finally {
+//       setLoading(false);
+//     }
+//   }, [apiBase, token, alertError]);
+
+//   useEffect(() => {
+//     if (!token || !userId) {
+//       navigate("/login");
+//       return;
+//     }
+//     load();
+//     loadCart();
+//   }, [token, userId, load, loadCart, navigate]);
+
+//   const onToggleFav = async (p) => {
+//     const result = await Swal.fire({
+//       title: "Remove from wishlist?",
+//       text: p.name ? `Remove "${p.name}" from your wishlist?` : "Are you sure?",
+//       icon: "warning",
+//       showCancelButton: true,
+//       confirmButtonText: "Remove",
+//       cancelButtonText: "Cancel",
+//       confirmButtonColor: "#BE3D2A",
+//       cancelButtonColor: "#102E50",
+//       background: "#FFF6E9",
+//       color: "#102E50",
+//     });
+//     if (!result.isConfirmed) return;
+//     const prev = [...items];
+//     setItems((list) => list.filter((x) => x.wishlist_id !== p.wishlist_id));
+//     try {
+//       await withMutedAlerts(() => AddTOFav({ product_id: p.product_id }, { user }));
+//       await alertSuccess("Removed", `${p.name ?? "Item"} removed from wishlist.`);
+//       setTimeout(load, 200);
+//     } catch (e) {
+//       setItems(prev);
+//       const m = e?.response?.data?.error || e?.message || "Failed to toggle favorite";
+//       await alertError(m);
+//     }
+//   };
+
+//   const onAddToCart = async (p) => {
+//     try {
+//       if (p.provider_id == null) return;
+//       await withMutedSwal(() => withMutedAlerts(() => AddToCart(p, { user })));
+//       await loadCart();
+//     } catch {}
+//   };
+
+//   if (!token) return null;
+
+//   if (loading)
+//     return (
+//       <div className="min-h-screen grid place-items-center bg-[#FFF6E9] px-3">
+//         <div className="rounded-2xl px-4 py-3 bg-white shadow ring-1 ring-[#102E50]/10 text-[#102E50]">
+//           Loading…
+//         </div>
+//       </div>
+//     );
+
+//   if (items.length === 0)
+//     return (
+//       <div className="min-h-screen grid place-items-center bg-[#FFF6E9] px-3">
+//         <div className="rounded-2xl px-4 py-3 bg-white shadow ring-1 ring-[#102E50]/10 text-[#102E50]">
+//           Your wishlist is empty.
+//         </div>
+//       </div>
+//     );
+
+//   return (
+//     <div className="min-h-screen bg-[#FFF6E9] px-3 sm:px-4 md:px-6 lg:px-8 py-6 md:py-8">
+//       <div className="mx-auto w-full max-w-7xl">
+//         <div className="mb-4 text-center">
+//           <h1 className="inline-block text-2xl sm:text-3xl font-extrabold text-[#102E50] tracking-tight">
+//             My Wishlist
+//           </h1>
+//           <div className="mt-2 h-1 w-28 sm:w-32 mx-auto rounded-full bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]" />
+//         </div>
+
+//         <div className="mt-6 grid gap-4 sm:gap-5 md:gap-6 lg:gap-7 grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
+//           {items.map((p) => {
+//             const key = p.product_id ?? p.wishlist_id;
+//             const inCart = cartIds.has(Number(p.product_id));
+//             return (
+//               <button
+//                 key={p.product_id}
+//                 onClick={() =>
+//                   isLogged
+//                     ? navigate(`/productdatails?product_id=${p.product_id}`, {
+//                         state: { product_id: p.product_id },
+//                       })
+//                     : navigate("/login")
+//                 }
+//                 className="group rounded-2xl bg-white ring-1 ring-[#102E50]/10 hover:ring-[#F5C45E] shadow-[0_12px_40px_rgba(16,46,80,0.10)] overflow-hidden text-left transition"
+//               >
+//                 <div className="relative w-full pb-[100%] bg-[#0f2a47]/5">
+//                   <img
+//                     src={p.image ? p.image : NoImage}
+//                     alt={p.name || "wishlist item"}
+//                     className="absolute inset-0 w-full h-full object-cover object-center scale-[1.003] transition duration-500 group-hover:scale-[1.015]"
+//                     onLoad={(e) => handleImgLoad(key, e)}
+//                     onError={(e) => (e.currentTarget.src = NoImage)}
+//                     loading="lazy"
+//                     decoding="async"
+//                   />
+//                 </div>
+
+//                 <div className="px-3 py-3 bg-[#F5C45E]/18 ring-1 ring-[#F5C45E]/35 flex items-center gap-3 justify-between">
+//                   <span className="shrink-0 inline-flex items-center rounded-lg bg-white/90 text-[#102E50] ring-1 ring-[#102E50]/10 text-[12px] sm:text-sm font-extrabold px-2.5 py-1.5">
+//                     {Number(p.price).toFixed(2)} JOD
+//                   </span>
+
+//                   <span className="min-w-0 text-[#0f2a47] font-semibold text-[12px] sm:text-sm leading-tight truncate">
+//                     {p.name}
+//                   </span>
+
+//                   <div className="shrink-0 flex items-center gap-2">
+//                     <button
+//                       onClick={async (e) => {
+//                         e.stopPropagation();
+//                         await onToggleFav(p);
+//                       }}
+//                       className="w-8 h-8 rounded-md grid place-items-center bg-[#BE3D2A] text-white shadow hover:shadow-md active:scale-95 transition"
+//                     >
+//                       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+//                         <polyline points="3 6 5 6 21 6" />
+//                         <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+//                         <path d="M10 11v6" />
+//                         <path d="M14 11v6" />
+//                         <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+//                       </svg>
+//                     </button>
+
+//                     <button
+//                       onClick={async (e) => {
+//                         e.stopPropagation();
+//                         await onAddToCart(p);
+//                       }}
+//                       className={`w-8 h-8 rounded-md grid place-items-center shadow hover:shadow-md active:scale-95 transition ${
+//                         inCart
+//                           ? "bg-[#102E50] text-[#FFF6E9]"
+//                           : "bg-white text-[#102E50] ring-1 ring-[#102E50]/30"
+//                       }`}
+//                     >
+//                       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+//                         <circle cx="9" cy="21" r="1" />
+//                         <circle cx="20" cy="21" r="1" />
+//                         <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h7.72a2 2 0 0 0 2-1.61L23 6H6" />
+//                       </svg>
+//                     </button>
+//                   </div>
+//                 </div>
+
+//                 <div className="h-0.5 w-full bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]" />
+//               </button>
+//             );
+//           })}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+
+
+
+
+
+
+
+"Last "
+
+
 
 import axios from "axios";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -234,15 +920,18 @@ export default function WishList() {
   const token = useSelector((s) => s.UserInfo.token);
   const user = useSelector((s) => s.UserInfo.user);
   const userId = user?.user_id;
+  const isLogged = Boolean(token);
   const navigate = useNavigate();
   const { AddToCart } = useAddToCart();
 
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [cartIds, setCartIds] = useState(new Set());
+  const [ratios, setRatios] = useState({});
 
   const port = import.meta.env.VITE_PORT;
-  const apiBase = useMemo(() => `https://backend-a2qq.onrender.com/api`, [port]);
+  const originBase = useMemo(() => `https://backend-a2qq.onrender.com`, [port]);
+  const apiBase = useMemo(() => `${originBase}/api`, [originBase]);
 
   const withMutedAlerts = useCallback(async (fn) => {
     const prev = window.alert;
@@ -253,6 +942,34 @@ export default function WishList() {
       window.alert = prev;
     }
   }, []);
+
+  const withMutedSwal = useCallback(async (fn) => {
+    const prev = Swal.fire;
+    Swal.fire = () => Promise.resolve({});
+    try {
+      return await fn();
+    } finally {
+      Swal.fire = prev;
+    }
+  }, []);
+
+  const toImg = useCallback(
+    (img) => {
+      if (!img) return NoImage;
+      const s = String(img).trim();
+      if (s.startsWith("http")) return s;
+      return `${originBase}${s.startsWith("/") ? "" : "/"}${s}`;
+    },
+    [originBase]
+  );
+
+  const handleImgLoad = (id, e) => {
+    const nw = e.currentTarget.naturalWidth || 0;
+    const nh = e.currentTarget.naturalHeight || 0;
+    if (nw > 0 && nh > 0) {
+      setRatios((r) => ({ ...r, [id]: `${nw} / ${nh}` }));
+    }
+  };
 
   const alertError = useCallback(async (message) => {
     await Swal.fire({
@@ -286,9 +1003,7 @@ export default function WishList() {
       });
       const list = Array.isArray(res.data?.cards) ? res.data.cards : [];
       setCartIds(new Set(list.map((c) => Number(c.product_id))));
-    } catch (err) {
-      console.error(err);
-    }
+    } catch {}
   }, [apiBase, token, userId]);
 
   const load = useCallback(async () => {
@@ -299,8 +1014,7 @@ export default function WishList() {
       });
       setItems(Array.isArray(data?.items) ? data.items : []);
     } catch (e) {
-      const m =
-        e?.response?.data?.error || e?.message || "Failed to load wishlist";
+      const m = e?.response?.data?.error || e?.message || "Failed to load wishlist";
       await alertError(m);
     } finally {
       setLoading(false);
@@ -329,200 +1043,180 @@ export default function WishList() {
       background: "#FFF6E9",
       color: "#102E50",
     });
-
     if (!result.isConfirmed) return;
     const prev = [...items];
     setItems((list) => list.filter((x) => x.wishlist_id !== p.wishlist_id));
-
     try {
-      await withMutedAlerts(() =>
-        AddTOFav({ product_id: p.product_id }, { user })
-      );
-      await alertSuccess(
-        "Removed",
-        `${p.name ?? "Item"} removed from wishlist.`
-      );
+      await withMutedAlerts(() => AddTOFav({ product_id: p.product_id }, { user }));
+      await alertSuccess("Removed", `${p.name ?? "Item"} removed from wishlist.`);
       setTimeout(load, 200);
     } catch (e) {
       setItems(prev);
-      const m =
-        e?.response?.data?.error || e?.message || "Failed to toggle favorite";
+      const m = e?.response?.data?.error || e?.message || "Failed to toggle wishlist item";
       await alertError(m);
     }
   };
 
   const onAddToCart = async (p) => {
     try {
-      if (p.provider_id == null) {
-        await alertError("Missing provider_id for this product");
-        return;
-      }
-      const inCart = cartIds.has(Number(p.product_id));
-      if (inCart) {
-        const result = await Swal.fire({
-          title: "Already in cart",
-          text: p.name
-            ? `"${p.name}" is already in your cart. Do you want to remove it?`
-            : "This item is already in your cart. Remove it?",
-          icon: "info",
-          showCancelButton: true,
-          confirmButtonText: "Remove from cart",
-          cancelButtonText: "Keep",
-          confirmButtonColor: "#BE3D2A",
-          cancelButtonColor: "#102E50",
-          background: "#FFF6E9",
-          color: "#102E50",
-        });
-        if (!result.isConfirmed) return;
-        const card = {
-          provider_id: p.provider_id,
-          product_id: p.product_id,
-          quantity: 1,
-          details_order_user: "",
-          price: p.price,
-        };
-        await withMutedAlerts(() => AddToCart(card, { user }));
-        await alertSuccess(
-          "Removed from cart",
-          `${p.name ?? "Item"} removed from your cart.`
-        );
-        await loadCart();
-        return;
-      }
-      const card = {
-        provider_id: p.provider_id,
-        product_id: p.product_id,
-        quantity: 1,
-        details_order_user: "",
-        price: p.price,
-      };
-      await withMutedAlerts(() => AddToCart(card, { user }));
-      await alertSuccess(
-        "Added to cart",
-        `${p.name ?? "Item"} has been added successfully.`
-      );
+      if (p.provider_id == null) return;
+      await withMutedSwal(() => withMutedAlerts(() => AddToCart(p, { user })));
       await loadCart();
-    } catch (e) {
-      const m =
-        e?.response?.data?.error || e?.message || "Failed to add to cart";
-      await alertError(m);
-    }
+    } catch {}
   };
 
   if (!token) return null;
 
-  if (loading)
-    return (
-      <div className="min-h-screen grid place-items-center bg-[#FFF6E9] px-4 py-10">
-        <div className="rounded-2xl px-4 sm:px-6 py-3 sm:py-4 bg-white shadow ring-1 ring-[#102E50]/10 text-[#102E50] text-sm sm:text-base">
-          Loading…
-        </div>
-      </div>
-    );
-
-  if (items.length === 0)
-    return (
-      <div className="min-h-screen grid place-items-center bg-[#FFF6E9] px-4 py-10">
-        <div className="rounded-2xl px-4 sm:px-6 py-3 sm:py-4 bg-white shadow ring-1 ring-[#102E50]/10 text-[#102E50] text-sm sm:text-base">
-          Your wishlist is empty.
-        </div>
-      </div>
-    );
-
   return (
-    <div className="min-h-screen bg-[#FFF6E9] px-3 sm:px-4 md:px-6 py-6 md:py-8">
+    <div className="min-h-screen bg-[#FFF6E9] px-3 sm:px-4 md:px-6 lg:px-8 py-6 md:py-8">
       <div className="mx-auto w-full max-w-7xl">
-        <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#102E50] mb-4 sm:mb-6">
-          My Wishlist
-        </h1>
+        {/* <div className="mb-4 text-center">
+          <h1 className="inline-block text-2xl sm:text-3xl font-extrabold text-[#102E50] tracking-tight">
+            My Wishlist
+          </h1>
+          <div className="mt-2 h-1 w-28 sm:w-32 mx-auto rounded-full bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]" />
+        </div> */}
 
-        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {items.map((p) => (
-            <div
-              key={p.wishlist_id}
-              className="group rounded-2xl bg-white shadow-md ring-1 ring-[#102E50]/10 hover:ring-[#F5C45E] transition overflow-hidden flex flex-col"
-            >
-              <div className="flex-1 min-h-[220px] md:min-h-[260px] lg:min-h-[280px] bg-[#102E50]/5 grid place-items-center">
-                <img
-                  src={p.image ? p.image : NoImage}
-                  alt={p.name || "wishlist item"}
-                  className="max-h-full max-w-full object-contain"
-                  onError={(e) => {
-                    e.currentTarget.src = NoImage;
-                  }}
-                />
-              </div>
 
-              <div className="px-3 py-2">
-                <div className="flex items-end justify-between gap-3">
-                  <div className="min-w-0">
-                    <h3 className="font-semibold text-[#102E50] text-sm sm:text-base leading-tight line-clamp-1">
-                      {p.name}
-                    </h3>
-                    <p className="text-xs sm:text-sm text-[#102E50]/70 leading-snug">
-                      {Number(p.price).toFixed(2)} JOD
-                    </p>
-                  </div>
 
-                  <div className="flex gap-2 shrink-0">
-                    <button
-                      onClick={() => onToggleFav(p)}
-                      className="inline-flex items-center justify-center w-8 h-8 rounded-md bg-[#BE3D2A] text-white shadow hover:shadow-md active:scale-95 transition"
-                      aria-label="Remove"
-                      title="Remove"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <polyline points="3 6 5 6 21 6" />
-                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
-                        <path d="M10 11v6" />
-                        <path d="M14 11v6" />
-                        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
-                      </svg>
-                    </button>
+        <div className="mb-4 text-center">
+  <h1 className="inline-block text-2xl sm:text-3xl font-extrabold text-[#102E50] tracking-tight">
+    My Wishlist
+  </h1>
+  <div className="mt-4 h-1 w-32 sm:w-40 mx-auto rounded-full bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]" />
+</div>
 
-                    <button
-                      onClick={() => onAddToCart(p)}
-                      className="inline-flex items-center justify-center w-8 h-8 rounded-md bg-[#102E50] text-[#FFF6E9] shadow hover:shadow-md active:scale-95 transition"
-                      aria-label="Add to Cart"
-                      title="Add to Cart"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <circle cx="9" cy="21" r="1" />
-                        <circle cx="20" cy="21" r="1" />
-                        <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h7.72a2 2 0 0 0 2-1.61L23 6H6" />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-              </div>
 
-              <div className="h-0.5 w-full bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]" />
+        {loading ? (
+          <div className="grid place-items-center py-20">
+            <div className="rounded-2xl px-4 py-3 bg-white shadow ring-1 ring-[#102E50]/10 text-[#102E50]">
+              Loading…
             </div>
-          ))}
-        </div>
+          </div>
+        ) : items.length === 0 ? (
+          <div className="flex items-center justify-center py-16">
+            <div className="w-full max-w-md rounded-2xl bg-white/90 backdrop-blur-md px-6 py-8 text-center ring-1 ring-[#102E50]/10 shadow-[0_20px_60px_rgba(16,46,80,0.12)]">
+              <div className="mx-auto mb-4 h-12 w-12 rounded-full grid place-items-center bg-[#F5C45E]/20 ring-1 ring-[#F5C45E]/40">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#102E50" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-.99-.99a5.5 5.5 0 0 0-7.78 7.78l.99.99L12 21.23l7.78-7.78.99-.99a5.5 5.5 0 0 0 0-7.78z" />
+                </svg>
+              </div>
+              <h2 className="text-xl font-bold text-[#102E50]">Your wishlist is empty</h2>
+              <p className="mt-2 text-sm text-[#102E50]/80">Save items to quickly find what you like.</p>
+              {/* <button
+                onClick={() => navigate("/userDashboard")}
+                className="mt-5 inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold bg-[#102E50] text-[#FFF6E9] ring-1 ring-[#102E50]/10 shadow hover:shadow-md active:scale-95 transition"
+              >
+                Add Your First Item
+              </button> */}
+              <button
+  onClick={() => navigate("/userDashboard")}
+  className="mt-5 inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold bg-[#102E50] text-[#FFF6E9] ring-1 ring-[#102E50]/10 shadow hover:bg-[#d67631] hover:text-[#102E50] hover:ring-[#E78B48]/60 hover:shadow-md active:scale-95 transition-all duration-300"
+>
+  Add Your First Item
+</button>
+
+            </div>
+          </div>
+        ) : (
+          <div className="mt-6 grid gap-4 sm:gap-5 md:gap-6 lg:gap-7 grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
+            {items.map((p) => {
+              const key = p.product_id ?? p.wishlist_id;
+              const inCart = cartIds.has(Number(p.product_id));
+              return (
+                <button
+                  key={p.product_id}
+                  onClick={() =>
+                    isLogged
+                      ? navigate(`/productdatails?product_id=${p.product_id}`, {
+                          state: { product_id: p.product_id },
+                        })
+                      : navigate("/login")
+                  }
+                  className="group rounded-2xl bg-white ring-1 ring-[#102E50]/10 hover:ring-[#F5C45E] shadow-[0_12px_40px_rgba(16,46,80,0.10)] overflow-hidden text-left transition"
+                >
+                  <div className="relative w-full pb-[100%] bg-[#0f2a47]/5">
+                    <img
+                      src={p.image ? p.image : NoImage}
+                      alt={p.name || "wishlist item"}
+                      className="absolute inset-0 w-full h-full object-cover object-center scale-[1.003] transition duration-500 group-hover:scale-[1.015]"
+                      onLoad={(e) => handleImgLoad(key, e)}
+                      onError={(e) => (e.currentTarget.src = NoImage)}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
+
+                  <div className="px-3 py-3 bg-[#F5C45E]/18 ring-1 ring-[#F5C45E]/35 flex items-center gap-3 justify-between">
+                    <span className="shrink-0 inline-flex items-center rounded-lg bg-white/90 text-[#102E50] ring-1 ring-[#102E50]/10 text-[12px] sm:text-sm font-extrabold px-2.5 py-1.5">
+                      {Number(p.price).toFixed(2)} JOD
+                    </span>
+
+                    <span className="min-w-0 text-[#0f2a47] font-semibold text-[12px] sm:text-sm leading-tight truncate">
+                      {p.name}
+                    </span>
+
+                    <div className="shrink-0 flex items-center gap-2">
+                      <button
+                        onClick={async (e) => {
+                          e.stopPropagation();
+                          await onToggleFav(p);
+                        }}
+                        className="w-8 h-8 rounded-md grid place-items-center bg-[#BE3D2A] text-white shadow hover:shadow-md active:scale-95 transition"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="3 6 5 6 21 6" />
+                          <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                          <path d="M10 11v6" />
+                          <path d="M14 11v6" />
+                          <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+                        </svg>
+                      </button>
+
+                      <button
+                        onClick={async (e) => {
+                          e.stopPropagation();
+                          await onAddToCart(p);
+                        }}
+                        className={`w-8 h-8 rounded-md grid place-items-center shadow hover:shadow-md active:scale-95 transition ${
+                          inCart
+                            ? "bg-[#102E50] text-[#FFF6E9]"
+                            : "bg-white text-[#102E50] ring-1 ring-[#102E50]/30"
+                        }`}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <circle cx="9" cy="21" r="1" />
+                          <circle cx="20" cy="21" r="1" />
+                          <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h7.72a2 2 0 0 0 2-1.61L23 6H6" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="h-0.5 w-full bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]" />
+                </button>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
+<<<<<<< HEAD
 //
+=======
+
+
+
+
+
+
+
+
+
+
+
+
+>>>>>>> ff43bad37f5da4345a896937122bc05e5590f563

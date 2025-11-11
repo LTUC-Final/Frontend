@@ -29,7 +29,6 @@ export default function About() {
     { name: "Adan Aljboor", link: "https://www.linkedin.com/in/adan-aljuboor" },
     { name: "Jawhara Shahaltoukh", link: "https://www.linkedin.com/in/jawhara-shahaltoukh" },
     { name: "Hossam Ibrahim", link: "https://www.linkedin.com/in/hossam-ibrahim" },
-    { name: "Mahmoud Awdehallah", link: "https://www.linkedin.com/in/mahmoud-awdehallah" },
   ];
 
   return (
@@ -55,10 +54,10 @@ export default function About() {
             className="space-y-6"
           >
             <motion.h1 variants={fadeUp} className="text-4xl md:text-5xl font-semibold text-white tracking-tight">
-              About BidayaMart
+              About Bidaya
             </motion.h1>
             <motion.p variants={fadeUp} className="max-w-3xl text-white/90 text-lg leading-8">
-              BidayaMart is a home for new creators in Jordan. It connects people who start with a new product or service
+              Bidaya is a home for new creators in Jordan. It connects people who start with a new product or service
               to real customers. Our goal is to help small beginnings grow into success stories.
             </motion.p>
           </motion.div>

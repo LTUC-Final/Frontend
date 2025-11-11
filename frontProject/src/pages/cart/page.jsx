@@ -6,6 +6,7 @@ import { Minus, Plus, ShoppingCart, Trash } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { decrementCartItem, setCartItem } from "../../redux/userInfo/userInfo";
+import Swal from "sweetalert2";
 
 function Button({ children, onClick, className = "", variant, size }) {
   let base =
@@ -256,6 +257,15 @@ export default function CartPage() {
       return sum + Number(p.cart_price) * Number(p.quantity);
     }
   }, 0);
+const approvedTotal = cart
+  .filter((item) => item.status_pay === "Approve") 
+  .reduce((sum, item) => {
+    const price = parseFloat(item.cart_price || 0);
+    const quantity = parseInt(item.quantity || 1);
+    return sum + price * quantity;
+  }, 0);
+
+console.log("Total Approved Price:", approvedTotal);
 
   const tax = subtotal * 0.08;
   const total = subtotal + tax;
@@ -422,14 +432,13 @@ export default function CartPage() {
         return;
       }
 
-      // ⚡️ 3. نربط كل Tab بالـURL الصحيح
       sessions.forEach((s, idx) => {
         if (fakeTabs[idx]) {
           fakeTabs[idx].location.href = s.url;
         }
       });
 
-      console.log(`✅ Opened ${sessions.length} Stripe checkout pages`);
+      console.log(` Opened ${sessions.length} Stripe checkout pages`);
     } catch (error) {
       console.error("Error creating Stripe sessions:", error);
       alert("Failed to start payment process");
@@ -459,17 +468,27 @@ export default function CartPage() {
       "pk_test_51SLmeU7XNof7c0LK21QyvjJxb28OZnQ9uOo3leNgWR3PHE7agxDJforXF2no1WQrRg29jAP4K4iMoodJPTL7ClpT00Gbwg0TCH"
     );
     try {
-      const { data } = await axios.post(
-        `https://backend-a2qq.onrender.com/api/payments/create-checkout-session-all`,
-        {
-          products: cart,
-          email: user.email,
-          customer_id: user.user_id,
-        },
-        { headers: { "Content-Type": "application/json" } }
-      );
+      const hasApproved = cart.some((item) => item.status_pay === "Approve");
 
-      await stripe.redirectToCheckout({ sessionId: data.id });
+      if (hasApproved) {
+        const { data } = await axios.post(
+          `https://backend-a2qq.onrender.com/api/payments/create-checkout-session-all`,
+          {
+            products: cart,
+            email: user.email,
+            customer_id: user.user_id,
+          },
+          { headers: { "Content-Type": "application/json" } }
+        );
+        await stripe.redirectToCheckout({ sessionId: data.id });
+      } else {
+    Swal.fire({
+  icon: "info",
+  title: "No Orders",
+  text: "You don't have any approved orders ready for checkout.",
+});
+
+      }
     } catch (error) {
       console.error("Error creating Stripe session:", error);
       alert("Failed to start payment process");
@@ -657,7 +676,7 @@ export default function CartPage() {
                               onClick={() =>
                                 toggleResponseProvider(product.cart_id)
                               }
-                              className="group relative inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl font-bold text-sm sm:text-base text-white bg-gradient-to-r from-[#F5C45E] to-[#E78B48] shadow-lg shadow-[#E78B48]/20 md:hover:shadow-xl md:hover:shadow-[#E78B48]/30 md:hover:scale-105 active:scale-[0.98] transition-all duration-200 ease-out border border-[#F5C45E]/50 md:hover:border-[#E78B48]/70 overflow-hidden"
+                              className="group relative inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-2.5 sm:py-1 rounded-xl   text-sm sm:text-base  text-102E50 bg-gradient-to-r from-[#F5C45E] to-[#E78B48] shadow-lg shadow-[#E78B48]/20 md:hover:shadow-xl md:hover:shadow-[#E78B48]/30 md:hover:scale-105 active:scale-[0.98] transition-all duration-200 ease-out border border-[#F5C45E]/50 md:hover:border-[#E78B48]/70 overflow-hidden"
                             >
                               <span className="absolute inset-0 bg-gradient-to-r from-[#E78B48] to-[#F5C45E] opacity-0 group-hover:opacity-10 transition-opacity duration-200"></span>
                               <span className="relative flex items-center gap-2">
@@ -718,7 +737,7 @@ export default function CartPage() {
                                           user_id: product.customer_id,
                                         })
                                       }
-                                      className="group relative inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl font-bold text-sm sm:text-base text-white bg-gradient-to-r from-[#102E50] to-[#102E50]  md:hover:scale-105 active:scale-[0.98] transition-all duration-200 ease-out border border-[#E78B48]/60 md:hover:border-[#F5C45E]/80 overflow-hidden"
+                                      className="group relative inline-flex items-center justify-center gap-2 px-5 sm:px-6 !py-1 sm:py-3 rounded-xl !font-normal text-sm sm:text-base text-white bg-gradient-to-r from-[#102E50] to-[#102E50]  md:hover:scale-105 active:scale-[0.98] transition-all duration-200 ease-out border border-[#E78B48]/60 md:hover:border-[#F5C45E]/80 overflow-hidden"
                                     >
                                       <span className="absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-20 transition-opacity duration-200"></span>
                                       <span className="relative flex items-center gap-2">
@@ -808,7 +827,7 @@ export default function CartPage() {
                     Total Amount
                   </p>
                   <p className="text-3xl sm:text-4xl font-extrabold text-[#E78B48]">
-                    ${subtotal}
+                    ${approvedTotal}
                   </p>
                 </div>
                 <div className="space-y-2 text-xs sm:text-sm">

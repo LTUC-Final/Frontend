@@ -11,10 +11,53 @@ export default async function AddTOFav(card, CusData) {
         });
         console.log("Backend response:", res);   
 
-        alert(res.data);
+       // alert(res.data);
 
     } catch (error) {
         console.log(error);
 
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

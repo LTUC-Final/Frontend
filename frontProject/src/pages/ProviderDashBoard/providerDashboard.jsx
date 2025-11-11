@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ImageIcon, Gem, Wand2 } from "lucide-react";
+import { Gem, ImageIcon, Wand2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
@@ -29,7 +29,13 @@ export default function ProductForm() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
+<<<<<<< HEAD
         const response = await axios.get(`https://backend-a2qq.onrender.com/getAllCategory`);
+=======
+        const response = await axios.get(
+          `http://localhost:${port}/getAllCategory`
+        );
+>>>>>>> ff43bad37f5da4345a896937122bc05e5590f563
         setCategories(response.data);
         if (response.data.length > 0) {
           setFormData((prev) => ({
@@ -82,46 +88,63 @@ export default function ProductForm() {
         if (value !== null) submitData.append(key, value);
       });
 
+<<<<<<< HEAD
       const response = await axios.post(`https://backend-a2qq.onrender.com/postItem`, submitData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+=======
+      const response = await axios.post(
+        `http://localhost:${port}/postItem`,
+        submitData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+>>>>>>> ff43bad37f5da4345a896937122bc05e5590f563
 
       if (response.status === 200) {
-        setFormData((prev) => ({ ...prev, name: "", price: "", description: "", image: null, location: "" }));
+        setFormData((prev) => ({
+          ...prev,
+          name: "",
+          price: "",
+          description: "",
+          image: null,
+          location: "",
+        }));
         setImagePreview(null);
-Swal.fire({
-  title: "Product Posted",
-  text: "Your item has been successfully listed.",
-  icon: "success",
-  background: "#FFF6E9",
-  color: "#102E50",
-  confirmButtonColor: "#F5C45E",
-  confirmButtonText: "OK",
-  customClass: {
-    popup: "swal2-custom-popup",
-    title: "swal2-custom-title",
-    confirmButton: "swal2-custom-confirm",
-  },
-  buttonsStyling: false,
-});
+        Swal.fire({
+          title: "Product Posted",
+          text: "Your item has been successfully listed.",
+          icon: "success",
+          background: "#FFF6E9",
+          color: "#102E50",
+          confirmButtonColor: "#F5C45E",
+          confirmButtonText: "OK",
+          customClass: {
+            popup: "swal2-custom-popup",
+            title: "swal2-custom-title",
+            confirmButton: "swal2-custom-confirm",
+          },
+          buttonsStyling: false,
+        });
       } else throw new Error("Failed to submit");
     } catch (error) {
       console.error("Error submitting form:", error);
-Swal.fire({
-  title: "Error",
-  text: "Failed to add post. Please try again.",
-  icon: "error",
-  background: "#FFF6E9",
-  color: "#102E50",
-  confirmButtonColor: "#BE3D2A",
-  confirmButtonText: "OK",
-  customClass: {
-    popup: "swal2-custom-popup",
-    title: "swal2-custom-title",
-    confirmButton: "swal2-custom-confirm",
-  },
-  buttonsStyling: false,
-});
+      Swal.fire({
+        title: "Error",
+        text: "Failed to add post. Please try again.",
+        icon: "error",
+        background: "#FFF6E9",
+        color: "#102E50",
+        confirmButtonColor: "#BE3D2A",
+        confirmButtonText: "OK",
+        customClass: {
+          popup: "swal2-custom-popup",
+          title: "swal2-custom-title",
+          confirmButton: "swal2-custom-confirm",
+        },
+        buttonsStyling: false,
+      });
     } finally {
       setIsLoading(false);
     }
@@ -133,7 +156,10 @@ Swal.fire({
         {/* Gradient Header */}
         <div
           className="rounded-t-xl p-4 sm:p-6 text-center text-white font-bold text-xl sm:text-2xl"
-          style={{ background: "linear-gradient(90deg, #F5C45E 0%, #E78B48 50%, #BE3D2A 100%)" }}
+          style={{
+            background:
+              "linear-gradient(90deg, #F5C45E 0%, #E78B48 50%, #BE3D2A 100%)",
+          }}
         >
           Add New Product or Service
         </div>
@@ -142,7 +168,9 @@ Swal.fire({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             {/* Type */}
             <div>
-              <label className="block text-sm font-semibold text-[#102E50] uppercase mb-1 sm:mb-2">Type</label>
+              <label className="block text-sm font-semibold text-[#102E50] uppercase mb-1 sm:mb-2">
+                Type
+              </label>
               <select
                 value={formData.type}
                 onChange={(e) => handleInputChange("type", e.target.value)}
@@ -155,7 +183,9 @@ Swal.fire({
 
             {/* Name */}
             <div>
-              <label className="block text-sm font-semibold text-[#102E50] uppercase mb-1 sm:mb-2">Name</label>
+              <label className="block text-sm font-semibold text-[#102E50] uppercase mb-1 sm:mb-2">
+                Name
+              </label>
               <input
                 type="text"
                 value={formData.name}
@@ -168,7 +198,9 @@ Swal.fire({
 
             {/* Price */}
             <div>
-              <label className="block text-sm font-semibold text-[#102E50] uppercase mb-1 sm:mb-2">Price</label>
+              <label className="block text-sm font-semibold text-[#102E50] uppercase mb-1 sm:mb-2">
+                Price
+              </label>
               <input
                 type="number"
                 step="0.01"
@@ -182,22 +214,30 @@ Swal.fire({
 
             {/* Category */}
             <div>
-              <label className="block text-sm font-semibold text-[#102E50] uppercase mb-1 sm:mb-2">Category</label>
+              <label className="block text-sm font-semibold text-[#102E50] uppercase mb-1 sm:mb-2">
+                Category
+              </label>
               <select
                 value={formData.category_id}
-                onChange={(e) => handleInputChange("category_id", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("category_id", e.target.value)
+                }
                 className="w-full border-2 border-[#E78B48] rounded-lg p-2 sm:p-3 focus:outline-none focus:ring-2 focus:ring-[#F5C45E]"
               >
                 <option value="">Select category</option>
                 {categories.map((cat) => (
-                  <option key={cat.category_id} value={cat.category_id}>{cat.name}</option>
+                  <option key={cat.category_id} value={cat.category_id}>
+                    {cat.name}
+                  </option>
                 ))}
               </select>
             </div>
 
             {/* Location */}
             <div className="md:col-span-2">
-              <label className="block text-sm font-semibold text-[#102E50] uppercase mb-1 sm:mb-2">Location</label>
+              <label className="block text-sm font-semibold text-[#102E50] uppercase mb-1 sm:mb-2">
+                Location
+              </label>
               <input
                 type="text"
                 value={formData.location}
@@ -210,16 +250,33 @@ Swal.fire({
 
             {/* Image Upload */}
             <div className="md:col-span-2">
-              <label className="block text-sm font-semibold text-[#102E50] uppercase mb-1 sm:mb-2">Image</label>
+              <label className="block text-sm font-semibold text-[#102E50] uppercase mb-1 sm:mb-2">
+                Image
+              </label>
               <div className="border-2 border-[#E78B48] border-dashed rounded-lg p-4 sm:p-6 bg-[#FFF6E9] text-center hover:bg-[#FFF6E9]/80 transition-colors">
-                <input id="image" type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
-                <label htmlFor="image" className="flex flex-col items-center justify-center cursor-pointer space-y-2">
+                <input
+                  id="image"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="hidden"
+                />
+                <label
+                  htmlFor="image"
+                  className="flex flex-col items-center justify-center cursor-pointer space-y-2"
+                >
                   {imagePreview ? (
-                    <img src={imagePreview} alt="Preview" className="h-28 sm:h-32 w-full object-cover rounded-lg" />
+                    <img
+                      src={imagePreview}
+                      alt="Preview"
+                      className="h-28 sm:h-32 w-full object-cover rounded-lg"
+                    />
                   ) : (
                     <>
                       <ImageIcon className="h-10 w-10 sm:h-12 sm:w-12 text-[#E78B48]" />
-                      <p className="text-sm text-[#102E50]">Click to upload or drag & drop</p>
+                      <p className="text-sm text-[#102E50]">
+                        Click to upload or drag & drop
+                      </p>
                     </>
                   )}
                 </label>
@@ -228,10 +285,14 @@ Swal.fire({
 
             {/* Description */}
             <div className="md:col-span-2">
-              <label className="block text-sm font-semibold text-[#102E50] uppercase mb-1 sm:mb-2">Description</label>
+              <label className="block text-sm font-semibold text-[#102E50] uppercase mb-1 sm:mb-2">
+                Description
+              </label>
               <textarea
                 value={formData.description}
-                onChange={(e) => handleInputChange("description", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("description", e.target.value)
+                }
                 placeholder="Enter description"
                 required
                 className="w-full border-2 border-[#E78B48] rounded-lg p-2 sm:p-3 min-h-[100px] focus:outline-none focus:ring-2 focus:ring-[#F5C45E]"
@@ -241,19 +302,25 @@ Swal.fire({
               <button
                 type="button"
                 className="w-full mt-3 bg-[#FFF6E9] text-[#102E50] hover:bg-[#E78B48] font-semibold px-6 py-3 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2"
-              onClick={handleSuggestion}
-            >
-              <Wand2 className="h-5 w-5 text-[#E78B48]" /> Get AI Suggestions
+                onClick={handleSuggestion}
+              >
+                <Wand2 className="h-5 w-5 text-[#E78B48]" /> Get AI Suggestions
               </button>
 
               {decText.length > 0 && (
                 <div className="mt-4 p-4 sm:p-6 bg-[#FFF6E9] border-2 border-[#F5C45E] rounded-lg shadow-inner">
                   <h4 className="font-semibold text-[#102E50] mb-2 flex items-center gap-2">
-                    <Wand2 className="h-4 w-4 text-[#F5C45E]" /> AI Description Suggestions
+                    <Wand2 className="h-4 w-4 text-[#F5C45E]" /> AI Description
+                    Suggestions
                   </h4>
                   <div className="space-y-2">
                     {decText.map((suggestion, idx) => (
-                      <p key={idx} className="text-[#102E50] pl-4 border-l-2 border-[#E78B48]">{suggestion}</p>
+                      <p
+                        key={idx}
+                        className="text-[#102E50] pl-4 border-l-2 border-[#E78B48]"
+                      >
+                        {suggestion}
+                      </p>
                     ))}
                   </div>
                 </div>
@@ -265,9 +332,9 @@ Swal.fire({
           <button
             type="submit"
             disabled={isLoading}
-             className="mt-6 w-full flex items-center justify-center gap-2 bg-[#102E50] hover:bg-[#0d243d] text-white font-semibold py-3 px-6 rounded-xl shadow-lg transition-transform transform hover:scale-105"
-        >
-          <Gem className="w-5 h-5 text-[#F5C45E]" />
+            className="mt-6 w-full flex items-center justify-center gap-2 bg-[#102E50] hover:bg-[#0d243d] text-white font-semibold py-3 px-6 rounded-xl shadow-lg transition-transform transform hover:scale-105"
+          >
+            <Gem className="w-5 h-5 text-[#F5C45E]" />
             {isLoading ? "Adding Post..." : "Submit"}
           </button>
         </div>
