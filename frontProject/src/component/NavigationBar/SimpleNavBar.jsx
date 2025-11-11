@@ -11,7 +11,7 @@ export default function SimpleNavBar() {
 
   const navItems = [
     {
-      name: "Main Dashboard",
+      name: "Home",
       href: "/mainDashBoard",
       icon: <LayoutDashboard size={20} />,
     },

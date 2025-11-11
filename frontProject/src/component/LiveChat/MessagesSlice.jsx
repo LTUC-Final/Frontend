@@ -42,12 +42,11 @@
 //             }
 //             className="flex items-center p-3 rounded-lg hover:bg-gray-200 cursor-pointer"
 //           >
-            
+
 //             <div className="w-12 h-12 rounded-full bg-green-500 text-white flex items-center justify-center font-bold mr-3">
 //               {chatReciver.name?.charAt(0)}
 //             </div>
 
-            
 //             <div className="flex flex-col w-full">
 //               <div className="flex justify-between items-center">
 //                 <span className="font-semibold text-gray-800">
@@ -68,8 +67,6 @@
 //     </div>
 //   );
 // }
-
-
 
 // import { useState, useEffect } from "react";
 // import axios from "axios";
@@ -165,10 +162,6 @@
 //     </div>
 //   );
 // }
-
-
-
-
 
 // import { useState, useEffect } from "react";
 // import axios from "axios";
@@ -314,9 +307,6 @@
 //     </div>
 //   );
 // }
-
-
-
 
 // import { useState, useEffect, useMemo } from "react";
 // import axios from "axios";
@@ -482,11 +472,6 @@
 //   );
 // }
 
-
-
-
-
-
 // import { useState, useEffect, useMemo } from "react";
 // import axios from "axios";
 // import { useSelector } from "react-redux";
@@ -642,11 +627,6 @@
 //     </div>
 //   );
 // }
-
-
-
-
-
 
 // import { useState, useEffect, useMemo } from "react";
 // import axios from "axios";
@@ -829,11 +809,6 @@
 //     </div>
 //   );
 // }
-
-
-
-
-
 
 // import { useState, useEffect, useMemo } from "react";
 // import axios from "axios";
@@ -1024,18 +999,8 @@
 //   );
 // }
 
-
-
-
-
-
-
-
-
-
-
-import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
+import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -1116,7 +1081,9 @@ export default function MessagesSlice() {
     const isIncoming = msg.sender_id !== user.user.user_id;
     const hasIsRead = Object.prototype.hasOwnProperty.call(msg, "is_read");
     const isUnreadLocal = isIncoming && !locallyRead.has(msg.message_id);
-    const isUnread = hasIsRead ? (isIncoming && !msg.is_read && isUnreadLocal) : isUnreadLocal;
+    const isUnread = hasIsRead
+      ? isIncoming && !msg.is_read && isUnreadLocal
+      : isUnreadLocal;
     const chatSender = user.user;
     const chatReciver = isIncoming
       ? { user_id: msg.sender_id, name: msg.sender_name }
@@ -1143,7 +1110,7 @@ export default function MessagesSlice() {
                     "px-3 py-1.5 rounded-xl text-xs font-semibold transition ring-1",
                     tab === "all"
                       ? "bg-[#F5C45E] text-[#102E50] ring-[#F5C45E]/70"
-                      : "bg-[#FFFDF6] text-[#102E50] ring-[#102E50]/10 hover:bg-[#F5C45E]/15"
+                      : "bg-[#FFFDF6] text-[#102E50] ring-[#102E50]/10 hover:bg-[#F5C45E]/15",
                   ].join(" ")}
                 >
                   All
@@ -1154,7 +1121,7 @@ export default function MessagesSlice() {
                     "px-3 py-1.5 rounded-xl text-xs font-semibold transition ring-1",
                     tab === "unread"
                       ? "bg-[#F5C45E] text-[#102E50] ring-[#F5C45E]/70"
-                      : "bg-[#FFFDF6] text-[#102E50] ring-[#102E50]/10 hover:bg-[#F5C45E]/15"
+                      : "bg-[#FFFDF6] text-[#102E50] ring-[#102E50]/10 hover:bg-[#F5C45E]/15",
                   ].join(" ")}
                 >
                   Unread
@@ -1178,66 +1145,75 @@ export default function MessagesSlice() {
         ) : (
           <div className="rounded-2xl overflow-hidden bg-[#FFFDF6] ring-1 ring-[#102E50]/10 shadow-[0_18px_40px_rgba(16,46,80,0.06)]">
             <div className="max-h-[72vh] overflow-y-auto">
-              {list.map(({ msg, isIncoming, isUnread, chatSender, chatReciver }, idx) => (
-                <div key={msg.message_id}>
-                  <button
-                    onClick={() => handleOpenChat(chatReciver, chatSender, msg)}
-                    className={[
-                      "group w-full text-left flex items-center gap-3 sm:gap-4 p-3 sm:p-4 transition",
-                      isUnread ? "bg-[#F5C45E]/10" : "from-[#F5C45E]",
-                      "hover:bg-[#F5C45E]/15"
-                    ].join(" ")}
-                  >
-                    <div className="relative shrink-0">
-                      <div className="w-12 h-12 rounded-full text-white flex items-center justify-center font-extrabold shadow-sm bg-gradient-to-br from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]">
-                        {(chatReciver.name || "").charAt(0).toUpperCase()}
-                      </div>
-                      {isUnread && (
-                        <span className="absolute -right-1 -top-1 w-3.5 h-3.5 rounded-full bg-[#F5C45E] ring-2 ring-white animate-pulse" />
-                      )}
-                    </div>
-
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between gap-3">
-                        <span className="font-extrabold text-[#102E50] truncate inline-block">
-                          {chatReciver.name}
-                        </span>
-                        <div className="flex items-center gap-2 shrink-0">
-                          {isUnread ? (
-                            <span className="text-[10px] sm:text-[11px] px-2 py-0.5 rounded-full bg-[#F5C45E] text-white font-bold">
-                              NEW
-                            </span>
-                          ) : (
-                            <span className="text-[10px] sm:text-[11px] px-2 py-0.5 rounded-full bg-[#F5C45E]/25 text-[#102E50] font-bold">
-                              Seen
-                            </span>
-                          )}
-                          <span className="text-[11px] sm:text-xs text-[#102E50]/70">
-                            {new Date(msg.created_at).toLocaleTimeString([], {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            })}
-                          </span>
+              {list.map(
+                (
+                  { msg, isIncoming, isUnread, chatSender, chatReciver },
+                  idx
+                ) => (
+                  <div key={msg.message_id}>
+                    <button
+                      onClick={() =>
+                        handleOpenChat(chatReciver, chatSender, msg)
+                      }
+                      className={[
+                        "group w-full text-left flex items-center gap-3 sm:gap-4 p-3 sm:p-4 transition",
+                        isUnread ? "bg-[#F5C45E]/10" : "from-[#F5C45E]",
+                        "hover:bg-[#F5C45E]/15",
+                      ].join(" ")}
+                    >
+                      <div className="relative shrink-0">
+                        <div className="w-12 h-12 rounded-full text-white flex items-center justify-center font-extrabold shadow-sm bg-gradient-to-br from-[#F5C45E] via-[#E78B48] to-[#BE3D2A]">
+                          {(chatReciver.name || "").charAt(0).toUpperCase()}
                         </div>
+                        {isUnread && (
+                          <span className="absolute -right-1 -top-1 w-3.5 h-3.5 rounded-full bg-[#F5C45E] ring-2 ring-white animate-pulse" />
+                        )}
                       </div>
 
-                      <p
-                        className={[
-                          "mt-1 text-sm truncate",
-                          isUnread ? "text-[#102E50] font-semibold" : "text-[#102E50]/80"
-                        ].join(" ")}
-                      >
-                        {isIncoming ? "" : "You: "}
-                        {msg.text}
-                      </p>
-                    </div>
-                  </button>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-3">
+                          <span className="font-extrabold text-[#102E50] truncate inline-block">
+                            {chatReciver.name}
+                          </span>
+                          <div className="flex items-center gap-2 shrink-0">
+                            {isUnread ? (
+                              <span className="text-[10px] sm:text-[11px] px-2 py-0.5 rounded-full bg-[#F5C45E] text-white font-bold">
+                                NEW
+                              </span>
+                            ) : (
+                              <span className="text-[10px] sm:text-[11px] px-2 py-0.5 rounded-full bg-[#F5C45E]/25 text-[#102E50] font-bold">
+                                Seen
+                              </span>
+                            )}
+                            <span className="text-[11px] sm:text-xs text-[#102E50]/70">
+                              {new Date(msg.created_at).toLocaleTimeString([], {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}
+                            </span>
+                          </div>
+                        </div>
 
-                  {idx !== list.length - 1 && (
-                    <div className="h-[1px] bg-[#102E50]/10 mx-4" />
-                  )}
-                </div>
-              ))}
+                        <p
+                          className={[
+                            "mt-1 text-sm truncate",
+                            isUnread
+                              ? "text-[#102E50] font-semibold"
+                              : "text-[#102E50]/80",
+                          ].join(" ")}
+                        >
+                          {isIncoming ? "" : "You: "}
+                          {msg.text}
+                        </p>
+                      </div>
+                    </button>
+
+                    {idx !== list.length - 1 && (
+                      <div className="h-[1px] bg-[#102E50]/10 mx-4" />
+                    )}
+                  </div>
+                )
+              )}
             </div>
           </div>
         )}
