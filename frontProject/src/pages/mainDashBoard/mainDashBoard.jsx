@@ -1445,8 +1445,3 @@ export default function MainDashBoard1() {
   );
 }
 
-<<<<<<< HEAD
-
-//----
-=======
->>>>>>> ff43bad37f5da4345a896937122bc05e5590f563

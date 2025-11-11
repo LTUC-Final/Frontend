@@ -1429,22 +1429,13 @@ export default function GitAllProduct() {
     const run = async () => {
       if (!uid) return;
       try {
-<<<<<<< HEAD
-        let res = await axios.get(
-          `https://backend-a2qq.onrender.com/api/ShowCardInUserDashboard/${CusData.user.user_id}`
-        );
-        setCards(res.data);
-      } catch (error) {
-        console.log(error);
-=======
         setLoading(true);
-        const res = await axios.get(`${apiBase}/api/ShowCardInUserDashboard/${uid}`);
+        const res = await axios.get(`https://backend-a2qq.onrender.com/api/ShowCardInUserDashboard/${uid}`);
         setCards(Array.isArray(res.data) ? res.data : []);
       } catch {
         setCards([]);
       } finally {
         setLoading(false);
->>>>>>> ff43bad37f5da4345a896937122bc05e5590f563
       }
     };
     run();
@@ -1822,9 +1813,6 @@ export default function GitAllProduct() {
       </div>
     </div>
   );
-<<<<<<< HEAD
-}
-=======
 }
 
 
@@ -1842,4 +1830,3 @@ export default function GitAllProduct() {
 
 
 
->>>>>>> ff43bad37f5da4345a896937122bc05e5590f563
