@@ -1291,9 +1291,9 @@ export default function LiveChat() {
     if (!sender || !reciver) return;
     const fetchMessages = async () => {
       try {
-        const res = await axios.get(`https://backend-a2qq.onrender.com/api/getmessages`, {
-          params: { senderId, receiveId: receiverId },
-        });
+        const res = await axios.get(`https://backend-a2qq.onrender.com/api/getmessages`, 
+          { params: { senderId: sender.user_id || sender , receiveId: reciver.user_id || reciver } }
+        );
         setMessages(res.data || []);
       } catch {}
     };
@@ -1304,7 +1304,7 @@ export default function LiveChat() {
 
   useEffect(() => {
     if (!senderId) return;
-    socketRef.current = io(`http://localhost:${port}`);
+    socketRef.current = io(`https://backend-a2qq.onrender.com`);
     socketRef.current.emit("register", senderId);
     socketRef.current.on("receive_message", (msg) => setMessages((p) => [...p, msg]));
     return () => socketRef.current?.disconnect();
