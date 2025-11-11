@@ -28,7 +28,7 @@ export default function ChatBox({ isOpen, setIsOpen }) {
       <div className="bg-[#FFF6E9] rounded-2xl h-full flex flex-col shadow-2xl overflow-hidden border border-[#F5C45E]/40">
         {/* Header */}
         <div className="flex justify-between items-center p-3 bg-[#102E50] text-white">
-          <h3 className="text-base font-semibold tracking-wide">Quraan AI</h3>
+          <h3 className="text-base font-semibold tracking-wide">Assistant AI</h3>
           <button
             className="hover:text-[#F5C45E] transition"
             onClick={() => setIsOpen(false)}
