@@ -105,11 +105,7 @@ export default function About1() {
   return (
     <main className="min-h-screen  bg-[#FFF6E9] overflow-hidden">
       {/* ---------------- HERO SECTION ---------------- */}
-<<<<<<< HEAD
-      <section className="relative overflow-hidden pt-12 pb-32 md:pt-12 md:pb-40 bg-[#102E50] ">
-=======
       <section className="relative overflow-hidden pt-12 pb-32 md:pt-12 md:pb-40 bg-[#102E50]">
->>>>>>> ff43bad37f5da4345a896937122bc05e5590f563
         <div
           className="absolute inset-0 opacity-15"
           style={{
@@ -140,36 +136,6 @@ export default function About1() {
             variants={fadeStagger}
             className="flex flex-col md:flex-row items-center justify-between gap-12"
           >
-<<<<<<< HEAD
-            <motion.h1
-              variants={fadeUp}
-              className="text-5xl md:text-6xl lg:text-7xl font-bold text-[#FFF6E9] leading-tight tracking-tight"
-            >
-              Every Idea Deserves{" "}
-              <span className="bg-gradient-to-r from-[#F5C45E] via-[#E78B48] to-[#BE3D2A] bg-clip-text text-transparent ">
-                a Stage
-              </span>
-            </motion.h1>
-            <motion.p
-              variants={fadeUp}
-              className="max-w-2xl mx-auto text-lg md:text-xl text-[#E8ECF1] leading-relaxed opacity-90"
-            >
-              Bidaya is home to Jordanian creators and small businesses. We
-              connect new ideas with real customers, turning first beginnings
-              into success stories.
-            </motion.p>
-
-            {/* <motion.div variants={scaleIn} className="mt-2 mx-auto max-w-2xl"> */}
-            <motion.div
-              variants={scaleIn}
-              className="mt-6 mx-auto max-w-xs sm:max-w-sm md:max-w-md"
-            >
-              <img
-                src={imag1}
-                alt="Local creators and entrepreneurs collaborating"
-                // className="w-full max-w-xs sm:max-w-sm md:max-w-md h-auto mx-auto rounded-2xl shadow-2xl"
-                className="w-full max-w-xs sm:max-w-sm md:max-w-lg h-auto max-h-90 mx-auto rounded-2xl  object-cover"
-=======
             <motion.div
               variants={scaleIn}
               className="flex-1 flex justify-center md:justify-start"
@@ -178,7 +144,6 @@ export default function About1() {
                 src={imag1}
                 alt="Local creators and entrepreneurs collaborating"
                 className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg h-auto rounded-2xl shadow-2xl object-cover"
->>>>>>> ff43bad37f5da4345a896937122bc05e5590f563
               />
             </motion.div>
 
@@ -413,11 +378,7 @@ export default function About1() {
                             ? member.imge
                             : `https://ui-avatars.com/api/?name=${encodeURIComponent(
                                 member.name
-<<<<<<< HEAD
-                              )}&background=102E50&color=FFF6E9`
-=======
                               )}&background=1A3D64&color=FFF6E9`
->>>>>>> ff43bad37f5da4345a896937122bc05e5590f563
                         }
                         alt={member.name}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"

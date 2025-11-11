@@ -1204,9 +1204,6 @@ export default function WishList() {
   );
 }
 
-<<<<<<< HEAD
-//
-=======
 
 
 
@@ -1219,4 +1216,3 @@ export default function WishList() {
 
 
 
->>>>>>> ff43bad37f5da4345a896937122bc05e5590f563
