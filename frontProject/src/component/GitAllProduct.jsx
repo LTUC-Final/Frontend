@@ -1,4 +1,4 @@
-"اول كود"
+"اول كود";
 
 // import axios from "axios";
 // import { useEffect, useMemo, useState, useCallback } from "react";
@@ -417,11 +417,8 @@
 //   );
 // }
 
-
-
-
-"مع هوفر للكبسه ايموجيز فوق "
-"حجم صغير"
+"مع هوفر للكبسه ايموجيز فوق ";
+"حجم صغير";
 
 // import axios from "axios";
 // import { useEffect, useMemo, useState, useCallback } from "react";
@@ -857,9 +854,7 @@
 //   );
 // }
 
-
-
-"ايموجيز تحت صغار "
+"ايموجيز تحت صغار ";
 
 // import axios from "axios";
 // import { useEffect, useMemo, useState, useCallback } from "react";
@@ -1286,11 +1281,10 @@
 //   );
 // }
 
-
-"ـــ"
+"ـــ";
 
 import axios from "axios";
-import { useEffect, useMemo, useState, useCallback, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import defaultImg from "../assets/NoImage.png";
@@ -1313,7 +1307,6 @@ function CategorySelect({ value, onChange, options }) {
   const currentLabel = value || "All";
 
   return (
-
     // <div ref={ref} className="relative">
     //   <button
     //     type="button"
@@ -1355,49 +1348,61 @@ function CategorySelect({ value, onChange, options }) {
     // </div>
 
     <div ref={ref} className="relative">
-  <button
-    type="button"
-    onClick={() => setOpen((v) => !v)}
-    className="w-40 rounded-xl border border-[#E78B48]/40 bg-[#FFF6E9] text-[#102E50] font-semibold px-4 py-3 pr-10 shadow-sm focus:ring-2 focus:ring-[#F5C45E] focus:border-[#E78B48] transition duration-200 hover:border-[#E78B48] appearance-none cursor-pointer relative flex items-center justify-center text-sm"
-  >
-    <span className="truncate">{currentLabel}</span>
-    <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-[#E78B48]">
-      <svg viewBox="0 0 20 20" className="w-4 h-4" fill="currentColor" aria-hidden="true">
-        <path d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.17l3.71-2.94a.75.75 0 0 1 1.04 1.08l-4.25 3.37a.75.75 0 0 1-.94 0L5.21 8.31a.75.75 0 0 1 .02-1.1z"/>
-      </svg>
-    </span>
-  </button>
-
-  {open && (
-    <div className="absolute left-1/2 -translate-x-1/2 z-30 mt-2 w-60 rounded-xl bg-white shadow-lg ring-1 ring-black/5 overflow-hidden">
-      <ul className="divide-y divide-[#102E50]/10">
-        <li>
-          <button
-            className={`w-full text-left px-4 py-2.5 text-[#102E50] hover:bg-[#FFF6E9] ${value === "" ? "font-bold" : ""} text-sm`}
-            onClick={() => { onChange(""); setOpen(false); }}
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="w-40 rounded-xl border border-[#E78B48]/40 bg-[#FFF6E9] text-[#102E50] font-semibold px-4 py-3 pr-10 shadow-sm focus:ring-2 focus:ring-[#F5C45E] focus:border-[#E78B48] transition duration-200 hover:border-[#E78B48] appearance-none cursor-pointer relative flex items-center justify-center text-sm"
+      >
+        <span className="truncate">{currentLabel}</span>
+        <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-[#E78B48]">
+          <svg
+            viewBox="0 0 20 20"
+            className="w-4 h-4"
+            fill="currentColor"
+            aria-hidden="true"
           >
-            ✓ All
-          </button>
-        </li>
-        {options.map((opt, i) => (
-          <li key={i}>
-            <button
-              className={`w-full text-left px-4 py-2.5 text-[#102E50] hover:bg-[#FFF6E9] ${value === opt ? "font-bold" : ""} text-sm`}
-              onClick={() => { onChange(opt); setOpen(false); }}
-            >
-              {opt}
-            </button>
-          </li>
-        ))}
-      </ul>
-    </div>
-  )}
-</div>
+            <path d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.17l3.71-2.94a.75.75 0 0 1 1.04 1.08l-4.25 3.37a.75.75 0 0 1-.94 0L5.21 8.31a.75.75 0 0 1 .02-1.1z" />
+          </svg>
+        </span>
+      </button>
 
+      {open && (
+        <div className="absolute left-1/2 -translate-x-1/2 z-30 mt-2 w-60 rounded-xl bg-white shadow-lg ring-1 ring-black/5 overflow-hidden">
+          <ul className="divide-y divide-[#102E50]/10">
+            <li>
+              <button
+                className={`w-full text-left px-4 py-2.5 text-[#102E50] hover:bg-[#FFF6E9] ${
+                  value === "" ? "font-bold" : ""
+                } text-sm`}
+                onClick={() => {
+                  onChange("");
+                  setOpen(false);
+                }}
+              >
+                ✓ All
+              </button>
+            </li>
+            {options.map((opt, i) => (
+              <li key={i}>
+                <button
+                  className={`w-full text-left px-4 py-2.5 text-[#102E50] hover:bg-[#FFF6E9] ${
+                    value === opt ? "font-bold" : ""
+                  } text-sm`}
+                  onClick={() => {
+                    onChange(opt);
+                    setOpen(false);
+                  }}
+                >
+                  {opt}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
   );
 }
-
-
 
 export default function GitAllProduct() {
   const navigate = useNavigate();
@@ -1430,7 +1435,9 @@ export default function GitAllProduct() {
       if (!uid) return;
       try {
         setLoading(true);
-        const res = await axios.get(`${apiBase}/api/ShowCardInUserDashboard/${uid}`);
+        const res = await axios.get(
+          `${apiBase}/api/ShowCardInUserDashboard/${uid}`
+        );
         setCards(Array.isArray(res.data) ? res.data : []);
       } catch {
         setCards([]);
@@ -1444,9 +1451,12 @@ export default function GitAllProduct() {
   const loadFavs = useCallback(async () => {
     try {
       if (!token) return;
-      const { data } = await axios.get(`${apiBase}/api/wishlist`.replace("/api/api", "/api"), {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const { data } = await axios.get(
+        `${apiBase}/api/wishlist`.replace("/api/api", "/api"),
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       const list = Array.isArray(data?.items) ? data.items : [];
       setFavIds(new Set(list.map((x) => Number(x.product_id))));
     } catch {}
@@ -1455,9 +1465,12 @@ export default function GitAllProduct() {
   const loadCartIds = useCallback(async () => {
     try {
       if (!uid || !token) return;
-      const res = await axios.get(`${apiBase}/api/carts/products/${uid}`.replace("/api/api", "/api"), {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await axios.get(
+        `${apiBase}/api/carts/products/${uid}`.replace("/api/api", "/api"),
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       const list = Array.isArray(res.data?.cards) ? res.data.cards : [];
       setCartIds(new Set(list.map((c) => Number(c.product_id))));
     } catch {}
@@ -1481,7 +1494,10 @@ export default function GitAllProduct() {
     };
   }, []);
 
-  const categories = useMemo(() => [...new Set(cards.map((c) => c?.category_name).filter(Boolean))], [cards]);
+  const categories = useMemo(
+    () => [...new Set(cards.map((c) => c?.category_name).filter(Boolean))],
+    [cards]
+  );
 
   const toImg = useCallback(
     (img) => {
@@ -1493,18 +1509,28 @@ export default function GitAllProduct() {
     [apiBase]
   );
 
-  const money = useMemo(() => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }), []);
+  const money = useMemo(
+    () =>
+      new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }),
+    []
+  );
 
   const filtered = cards.filter((card) => {
-    const byName = (card?.name || "").toLowerCase().includes(debouncedSearch.toLowerCase());
-    const byCat = !selectore || (card?.category_name || "").toLowerCase() === String(selectore).toLowerCase();
+    const byName = (card?.name || "")
+      .toLowerCase()
+      .includes(debouncedSearch.toLowerCase());
+    const byCat =
+      !selectore ||
+      (card?.category_name || "").toLowerCase() ===
+        String(selectore).toLowerCase();
     return byName && byCat;
   });
 
   const field =
     "h-11 sm:h-12 px-4 rounded-xl border border-[#102E50]/20 bg-[#FFF6E9] text-[#102E50] placeholder-[#102E50]/50 text-sm shadow-sm outline-none focus:ring-2 focus:ring-[#E78B48] focus:border-[#E78B48] transition-all duration-200";
 
-  const iconBtnBase = "w-7 h-7 rounded-md grid place-items-center shadow hover:shadow-md active:scale-95 transition";
+  const iconBtnBase =
+    "w-7 h-7 rounded-md grid place-items-center shadow hover:shadow-md active:scale-95 transition";
   const heartInactive = "bg-white ring-1 ring-[#BE3D2A]/30 text-[#BE3D2A]";
   const heartActive = "bg-[#BE3D2A] text-white";
   const cartInactive = "bg-white ring-1 ring-[#102E50]/30 text-[#102E50]";
@@ -1571,8 +1597,14 @@ export default function GitAllProduct() {
       const optimistic = cards.map((c) => {
         if (Number(c.product_id) !== Number(product_id)) return c;
         const prevSelected = c.selectedReaction || null;
-        const counts = { love: 0, support: 0, proud: 0, ...(c.reaction_counts || {}) };
-        if (prevSelected && counts[prevSelected] > 0) counts[prevSelected] = Number(counts[prevSelected]) - 1;
+        const counts = {
+          love: 0,
+          support: 0,
+          proud: 0,
+          ...(c.reaction_counts || {}),
+        };
+        if (prevSelected && counts[prevSelected] > 0)
+          counts[prevSelected] = Number(counts[prevSelected]) - 1;
         let newSelected = reactionKey;
         if (prevSelected === reactionKey) {
           newSelected = null;
@@ -1595,7 +1627,12 @@ export default function GitAllProduct() {
           setCards((curr) =>
             curr.map((c) =>
               Number(c.product_id) === Number(product_id)
-                ? { ...c, reaction_counts: data.reactionCounts, selectedReaction: data.selectedReaction ?? c.selectedReaction }
+                ? {
+                    ...c,
+                    reaction_counts: data.reactionCounts,
+                    selectedReaction:
+                      data.selectedReaction ?? c.selectedReaction,
+                  }
                 : c
             )
           );
@@ -1617,8 +1654,13 @@ export default function GitAllProduct() {
                 <div className="flex flex-col md:flex-row gap-3 md:gap-4">
                   <div className="flex-1 relative">
                     <span className="absolute inset-y-0 left-3 flex items-center text-[#102E50]/50 pointer-events-none">
-                      <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor" aria-hidden="true">
-                        <path d="M15.5 14h-.79l-.28-.27A6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79L19 20.49 20.49 19 15.5 14ZM9.5 14A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14Z"/>
+                      <svg
+                        viewBox="0 0 24 24"
+                        className="w-5 h-5"
+                        fill="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path d="M15.5 14h-.79l-.28-.27A6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79L19 20.49 20.49 19 15.5 14ZM9.5 14A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14Z" />
                       </svg>
                     </span>
                     <input
@@ -1630,8 +1672,14 @@ export default function GitAllProduct() {
                   </div>
 
                   <div className="flex items-center gap-2 sm:gap-3">
-                    <span className="text-sm font-semibold text-[#102E50]">Category</span>
-                    <CategorySelect value={selectore} onChange={setSelectore} options={categories} />
+                    <span className="text-sm font-semibold text-[#102E50]">
+                      Category
+                    </span>
+                    <CategorySelect
+                      value={selectore}
+                      onChange={setSelectore}
+                      options={categories}
+                    />
                   </div>
                 </div>
               </div>
@@ -1655,13 +1703,17 @@ export default function GitAllProduct() {
                     tabIndex={0}
                     onClick={() =>
                       isLogged
-                        ? navigate(`/productdatails?product_id=${pid}`, { state: { product_id: pid } })
+                        ? navigate(`/productdatails?product_id=${pid}`, {
+                            state: { product_id: pid },
+                          })
                         : navigate("/login")
                     }
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
                         isLogged
-                          ? navigate(`/productdatails?product_id=${pid}`, { state: { product_id: pid } })
+                          ? navigate(`/productdatails?product_id=${pid}`, {
+                              state: { product_id: pid },
+                            })
                           : navigate("/login");
                       }
                     }}
@@ -1680,11 +1732,16 @@ export default function GitAllProduct() {
                       </span>
 
                       {role === "customer" && (
-                        <div className="absolute top-2 right-2" onClick={(e) => e.stopPropagation()}>
+                        <div
+                          className="absolute top-2 right-2"
+                          onClick={(e) => e.stopPropagation()}
+                        >
                           <div className="relative group">
                             <button
                               type="button"
-                              onClick={() => setOpenReac(openReac === pid ? null : pid)}
+                              onClick={() =>
+                                setOpenReac(openReac === pid ? null : pid)
+                              }
                               className="w-7 h-7 rounded-md grid place-items-center shadow hover:shadow-md active:scale-95 transition bg-white ring-1 ring-[#F5C45E]/50 text-[#0f2a47] relative"
                               aria-expanded={openReac === pid}
                             >
@@ -1723,7 +1780,9 @@ export default function GitAllProduct() {
                                     Love
                                   </span>
                                 </span>
-                                <span className="text-[10px] font-bold leading-none">{card.reaction_counts?.love || 0}</span>
+                                <span className="text-[10px] font-bold leading-none">
+                                  {card.reaction_counts?.love || 0}
+                                </span>
                               </button>
 
                               <button
@@ -1744,7 +1803,9 @@ export default function GitAllProduct() {
                                     Support
                                   </span>
                                 </span>
-                                <span className="text-[10px] font-bold leading-none">{card.reaction_counts?.support || 0}</span>
+                                <span className="text-[10px] font-bold leading-none">
+                                  {card.reaction_counts?.support || 0}
+                                </span>
                               </button>
 
                               <button
@@ -1765,7 +1826,9 @@ export default function GitAllProduct() {
                                     Proud
                                   </span>
                                 </span>
-                                <span className="text-[10px] font-bold leading-none">{card.reaction_counts?.proud || 0}</span>
+                                <span className="text-[10px] font-bold leading-none">
+                                  {card.reaction_counts?.proud || 0}
+                                </span>
                               </button>
                             </div>
                           )}
@@ -1777,14 +1840,29 @@ export default function GitAllProduct() {
                       <span className="inline-flex items-center rounded-lg bg-white/90 text-[#102E50] ring-1 ring-[#102E50]/10 text-xs font-extrabold px-2 py-1">
                         {money.format(card?.price || 0)}
                       </span>
-                      <span className="text-[#0f2a47] font-semibold text-xs truncate">{card?.name}</span>
+                      <span className="text-[#0f2a47] font-semibold text-xs truncate">
+                        {card?.name}
+                      </span>
                       {role === "customer" && (
-                        <div className="relative flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                        <div
+                          className="relative flex items-center gap-2"
+                          onClick={(e) => e.stopPropagation()}
+                        >
                           <span
                             onClick={async () => await toggleCart(card, inCart)}
-                            className={`${iconBtnBase} ${inCart ? cartActive : cartInactive}`}
+                            className={`${iconBtnBase} ${
+                              inCart ? cartActive : cartInactive
+                            }`}
                           >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="13"
+                              height="13"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                            >
                               <circle cx="9" cy="21" r="1" />
                               <circle cx="20" cy="21" r="1" />
                               <path d="M1 1h4l2.68 12.39a2 2 0 002 1.61h7.72a2 2 0 002-1.61L23 6H6" />
@@ -1792,10 +1870,18 @@ export default function GitAllProduct() {
                           </span>
 
                           <span
-                            onClick={async () => await toggleFavorite(card, isFav)}
-                            className={`${iconBtnBase} ${isFav ? heartActive : heartInactive}`}
+                            onClick={async () =>
+                              await toggleFavorite(card, isFav)
+                            }
+                            className={`${iconBtnBase} ${
+                              isFav ? heartActive : heartInactive
+                            }`}
                           >
-                            <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="currentColor">
+                            <svg
+                              viewBox="0 0 24 24"
+                              className="w-3.5 h-3.5"
+                              fill="currentColor"
+                            >
                               <path d="M12 21s-6.72-4.32-9.33-7.38A5.5 5.5 0 0112 5.24a5.5 5.5 0 019.33 8.38C18.72 16.68 12 21 12 21Z" />
                             </svg>
                           </span>
@@ -1814,19 +1900,4 @@ export default function GitAllProduct() {
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//gh

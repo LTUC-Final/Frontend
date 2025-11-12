@@ -30,13 +30,18 @@ export default function CardDeatils() {
   }, [card.product_id, port]);
 
   return (
+    <div className="min-h-screen bg-[#FFF6E9]">
     <div className="max-w-5xl mx-auto p-6">
       <DetailsOfCards Id={card.product_id} />
 
       <div className="mt-10 border-b-2 border-[#F5C45E] pb-3 mb-8">
-        <h2 className="text-2xl font-extrabold text-[#102E50] tracking-tight mb-1">
+        {/* <h2 className="text-2xl font-extrabold text-[#102E50] tracking-tight mb-1">
           Customer Reviews
-        </h2>
+        </h2> */}
+        <h2 className="text-2xl font-extrabold bg-gradient-to-r from-[#102E50] via-[#E78B48] to-[#F5C45E] bg-clip-text text-transparent tracking-tight mb-1 text-center">
+  Customer Reviews
+</h2>
+
         <p className="text-sm text-[#102E50] font-semibold">
           {cardRev.length} review{cardRev.length !== 1 ? "s" : ""}
         </p>
@@ -47,13 +52,20 @@ export default function CardDeatils() {
           No reviews yet for this product.
         </p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-6">
+        // <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-6">
+        <div className="flex flex-wrap justify-center gap-6 px-6">
+
           {cardRev.map((review, idx) => (
             <div
               key={idx}
-              className="bg-[#FFF6E9] p-6 rounded-xl shadow-md hover:shadow-lg transition duration-300 flex flex-col gap-4 border border-[#F5C45E]
-"
-            >
+//               className="bg-[#FFF6E9] p-6 rounded-xl shadow-md hover:shadow-lg transition duration-300 flex flex-col gap-4 border border-[#F5C45E]
+// "
+    
+className="bg-gradient-to-br from-[#F5C45E]/20 via-[#E78B48]/20 to-[#BE3D2A]/20 
+  p-6 rounded-xl shadow-md hover:shadow-lg transition duration-300 
+  flex flex-col gap-4 border border-[#F5C45E] text-center 
+  w-64 sm:w-72 md:w-80 h-44"
+  >
               <div className="flex items-center gap-4">
                 <img
                   src={
@@ -87,6 +99,6 @@ export default function CardDeatils() {
           ))}
         </div>
       )}
-    </div>
+    </div> </div>
   );
 }

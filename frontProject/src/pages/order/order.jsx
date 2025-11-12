@@ -290,18 +290,32 @@ function OrdersManagementCustomer() {
               </span>
             </div>
 
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-4 py-2 bg-[#FFF6E9] border-2 border-[#102E50] text-[#102E50] text-base font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F5C45E] focus:border-[#F5C45E] transition-all cursor-pointer"
-            >
-              <option value="All">All Status</option>
-              {statuses.map((status) => (
-                <option key={status} value={status}>
-                  {status}
-                </option>
-              ))}
-            </select>
+        <select
+  value={statusFilter}
+  onChange={(e) => setStatusFilter(e.target.value)}
+  className="
+  appearance-none cursor-pointer
+  px-4 py-2
+  bg-white
+  border-2 border-[#102E50]
+  text-[#102E50] text-base font-medium
+  rounded-lg shadow-sm
+  transition-all
+  hover:bg-[#FFF6E9]
+  focus:outline-none
+  focus:ring-2 focus:ring-[#F5C45E]
+  focus:border-[#F5C45E]
+"
+
+>
+  <option value="All">All Status</option>
+  {statuses.map((status) => (
+    <option key={status} value={status}>
+      {status}
+    </option>
+  ))}
+</select>
+
 
             <select
               value={categoryFilter}

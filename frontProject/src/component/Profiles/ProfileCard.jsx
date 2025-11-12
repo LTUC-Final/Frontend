@@ -37,7 +37,7 @@ export default function ProfileCard({ data, refreshTrigger, user_id }) {
 
   if (!profile) {
     return (
-      <div className="[font-family:'Quicksand',sans-serif] flex flex-col items-center py-10 px-4 mt-16">
+      <div className="[font-family:'Quicksand',sans-serif] flex flex-col items-center py-10 px-4 mt-8 mb-0">
         <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-xl text-center">
           <p className="text-gray-500">No profile data available</p>
         </div>
@@ -48,8 +48,8 @@ export default function ProfileCard({ data, refreshTrigger, user_id }) {
   console.log("info user", user);
 
   return (
-    <div className="[font-family:'Quicksand',sans-serif] flex flex-col items-center py-10 px-4 sm:px-6 lg:px-8">
-      <div className="relative w-full max-w-4xl flex flex-col items-center mt-40">
+    <div className="[font-family:'Quicksand',sans-serif] flex flex-col items-center py-6 px-4 sm:px-6 lg:px-8 mt-25 mb-0">
+      <div className="relative w-full max-w-4xl flex flex-col items-center mt-10">
         {/* Profile Image */}
         <div className="absolute -top-24 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center">
           <div className="relative w-40 h-40 sm:w-48 sm:h-48 mt-4 group">

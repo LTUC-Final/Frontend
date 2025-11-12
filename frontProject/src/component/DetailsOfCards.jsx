@@ -42,8 +42,8 @@ export default function DetailsOfCards({ Id }) {
   console.log("img", dataCard);
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-6 mt-6">
-      <div className="rounded-3xl shadow-2xl overflow-hidden border-[3px] border-[#102E50] bg-[#FFF6E9] transition-all duration-500">
+<div className="max-w-3xl mx-auto px-3 py-4 mt-6">
+<div className="rounded-xl shadow-xl overflow-hidden border-[3px] border-[#102E50]/80 bg-[#FFF6E9] transition-all duration-500">
         <div
           className="h-2 w-full"
           style={{
@@ -52,7 +52,7 @@ export default function DetailsOfCards({ Id }) {
           }}
         />
 
-        <div className="flex flex-col md:flex-row gap-6 md:gap-10 p-4 sm:p-6 md:p-8">
+<div className="flex flex-col md:flex-row gap-4 md:gap-6 p-4 sm:p-5">
           <div className="relative w-full md:w-1/2">
             <img
               // src={dataCard.image|| defaultImg}
@@ -77,7 +77,7 @@ export default function DetailsOfCards({ Id }) {
               {dataCard.name}
             </h2>
 
-            <p className="text-sm sm:text-base text-[#3f4c5c] leading-relaxed mb-4">
+            <p className="text-sm sm:text-base text-[#102E50] leading-relaxed mb-4">
               {dataCard.description}
             </p>
 
@@ -101,7 +101,7 @@ export default function DetailsOfCards({ Id }) {
                   className="flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3 bg-[#BE3D2A] text-white rounded-xl hover:bg-[#a53020] shadow-md transition-transform duration-300 hover:scale-105"
                 >
                   <Heart className="w-5 h-5" />
-                  Favorite
+        
                 </button>
 
                 <button
@@ -109,7 +109,7 @@ export default function DetailsOfCards({ Id }) {
                   className="flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3 bg-[#102E50] text-white rounded-xl hover:bg-[#0b223c] shadow-md transition-transform duration-300 hover:scale-105"
                 >
                   <ShoppingCart className="w-5 h-5" />
-                  Add to Cart
+                
                 </button>
               </div>
             )}

@@ -8,21 +8,22 @@ const REACTIONS = [
     type: "love",
     label: "Love",
     icon: Heart,
-    gradient: "from-red-400 to-pink-500",
+    gradient: "from-red-300 to-pink-400",
   },
   {
     type: "support",
     label: "Support",
     icon: Handshake,
-    gradient: "from-green-400 to-emerald-500",
+    gradient: "from-green-300 to-emerald-400",
   },
   {
     type: "proud",
     label: "Proud",
     icon: Award,
-    gradient: "from-yellow-400 to-amber-500",
+    gradient: "from-yellow-300 to-amber-400",
   },
 ];
+
 
 function getReactionConfig(type) {
   return REACTIONS.find((r) => r.type === type) || REACTIONS[0];
@@ -59,7 +60,8 @@ export default function ActivitiesList({ user_id }) {
   }, [user_id, port]);
 
   return (
-    <section className="space-y-4">
+    
+    <section className="space-y-4 mt-15">
       {activities.length > 0 ? (
         <div className="relative flex items-center">
           <div className="flex-grow border-t-2 border-[#E78B48]"></div>

@@ -118,7 +118,7 @@ button:focus-visible {
   border-radius: 2rem;
   pointer-events: none;
 } */
-@keyframes colorPulse {
+/* @keyframes colorPulse {
   0% {
     background: radial-gradient(circle at center, #E78B48 0%, transparent 80%);
   }
@@ -131,11 +131,30 @@ button:focus-visible {
 }
 
 .bg-pulsing-circle {
-  animation: colorPulse 4s ease-in-out infinite;
+  animation: colorPulse 10s ease-in-out infinite;
+  border-radius: 2rem;
+  pointer-events: none;
+} */
+@keyframes colorPulse {
+  0% {
+    background: radial-gradient(circle at center, #e78b48 0%, transparent 70%);
+  }
+  33% {
+    background: radial-gradient(circle at center, #e78b48 0%, #f5a25e 50%, transparent 70%);
+  }
+  66% {
+    background: radial-gradient(circle at center, #f59f59 0%, transparent 70%);
+  }
+  100% {
+    background: radial-gradient(circle at center, #f78f46 0%, transparent 70%);
+  }
+}
+
+.bg-pulsing-circle {
+  animation: colorPulse 10s ease-in-out infinite;
   border-radius: 2rem;
   pointer-events: none;
 }
-
 /* SweetAlert2 Custom Styling */
 .swal2-custom-popup {
   border: 2px solid #F5C45E;
@@ -187,3 +206,15 @@ body {
   max-width: 100%;
   height: auto;
 } */
+/* Custom dropdown option styling */
+select option {
+  background: #ffffff;
+  color: #102E50;
+}
+
+select option:hover,
+select option:focus,
+select option:checked {
+  background: #FFF6E9 !important;
+  color: #102E50;
+}

@@ -141,8 +141,9 @@ export default function ProductForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="my-8 px-4 sm:px-6 lg:px-8">
-      <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-xl border border-[#E78B48] max-w-4xl mx-auto">
+     <div className="min-h-screen bg-[#FFF6E9]">
+<form onSubmit={handleSubmit} className="pt-8 px-4 sm:px-6 lg:px-8">
+      <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-xl border border-[#E78B48] max-w-2xl mx-auto mt-5 ">
         {/* Gradient Header */}
         <div
           className="rounded-t-xl p-4 sm:p-6 text-center text-white font-bold text-xl sm:text-2xl"
@@ -154,7 +155,8 @@ export default function ProductForm() {
           Add New Product or Service
         </div>
 
-        <div className="p-4 sm:p-6 space-y-6">
+        <div className="p-3 sm:p-4 space-y-3">
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             {/* Type */}
             <div>
@@ -241,7 +243,7 @@ export default function ProductForm() {
             {/* Image Upload */}
             <div className="md:col-span-2">
               <label className="block text-sm font-semibold text-[#102E50] uppercase mb-1 sm:mb-2">
-                Image
+             
               </label>
               <div className="border-2 border-[#E78B48] border-dashed rounded-lg p-4 sm:p-6 bg-[#FFF6E9] text-center hover:bg-[#FFF6E9]/80 transition-colors">
                 <input
@@ -265,7 +267,7 @@ export default function ProductForm() {
                     <>
                       <ImageIcon className="h-10 w-10 sm:h-12 sm:w-12 text-[#E78B48]" />
                       <p className="text-sm text-[#102E50]">
-                        Click to upload or drag & drop
+                        Click to upload or drag & drop an image
                       </p>
                     </>
                   )}
@@ -329,6 +331,8 @@ export default function ProductForm() {
           </button>
         </div>
       </div>
+      
     </form>
+    </div>
   );
 }
