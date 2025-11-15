@@ -741,7 +741,7 @@ export default function ReactionPicker({
       console.error("Reaction error:", error);
     }
   };
-
+console.log("sadasd")
   const handleReaction = async (type) => {
     setIsAnimating(true);
     await onReact(product_id, type);
