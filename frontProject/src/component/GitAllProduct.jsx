@@ -1414,7 +1414,7 @@ export default function GitAllProduct() {
   const isLogged = Boolean(token);
 
   const port = import.meta.env.VITE_PORT;
-  const apiBase = useMemo(() => `http://localhost:${port}`, [port]);
+  const apiBase = useMemo(() => `https://backend-a2qq.onrender.com`);
 
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
