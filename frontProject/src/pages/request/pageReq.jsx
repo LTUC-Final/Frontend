@@ -24,6 +24,8 @@ import ApprovalForm from "./approvalForm";
 import ButtonStatus from "./ButtonStatues";
 import DownLoadAllOrder from "./downLoadAllOrders";
 import PrintInvoiceButton from "./printInvoice";
+import Select1 from "./Select1";
+
 
 const statusClasses = {
   pending: "text-[#E78B48] bg-[#FFF6E9] border-2 border-[#E78B48]",
@@ -279,16 +281,16 @@ function OrdersManagementProvider() {
             </div>
           </div>
         </header>
-        <div className="bg-white border-b-2 border-[#E78B48] px-3 sm:px-4 md:px-6 py-3 sm:py-4 shadow-sm">
+        {/* <div className="bg-white border-b-2 border-[#E78B48] px-3 sm:px-4 md:px-6 py-3 sm:py-4 shadow-sm">
           <div className="max-w-7xl mx-auto flex flex-wrap items-center gap-2 sm:gap-3 md:gap-4 justify-start text-[#102E50]">
-            {/* Filters label */}
+         
             <div className="flex items-center gap-1 sm:gap-2">
               <Filter className="h-4 sm:h-5 w-4 sm:w-5 text-[#E78B48]" />
               <span className="text-sm sm:text-base font-semibold">
                 Filters:
               </span>
             </div>
-      {/* Status */}
+
 <select
   value={statusFilter}
   onChange={(e) => setStatusFilter(e.target.value)}
@@ -308,7 +310,7 @@ className="px-2 sm:px-3 py-1.5 bg-[#FFF6E9] border-2 border-[#102E50]
   ))}
 </select>
 
-{/* Category */}
+
 <select
   value={categoryFilter}
   onChange={(e) => setCategoryFilter(e.target.value)}
@@ -328,7 +330,7 @@ className="px-2 sm:px-2  py-1.5 bg-[#FFF6E9] border-2 border-[#102E50]
   ))}
 </select>
 
-{/* Sort */}
+
 <select
   value={sortOrder}
   onChange={(e) => setSortOrder(e.target.value)}
@@ -344,12 +346,90 @@ className="px-2 sm:px-2  py-1.5 bg-[#FFF6E9] border-2 border-[#102E50]
   <option value="oldest">Oldest First</option>
 </select>
 
-            {/* Download component */}
+        
             <div className="flex items-center">
               <DownLoadAllOrder order={orders} />
             </div>
           </div>
-        </div>
+        </div> */}
+
+  {/* <div className="bg-white border-b-2 border-[#E78B48] px-3 sm:px-4 md:px-6 py-3 sm:py-4 shadow-sm">
+  <div className="max-w-7xl mx-auto flex items-center justify-between gap-4 flex-wrap">
+
+  
+    <div className="flex items-center flex-wrap gap-2 sm:gap-3 md:gap-4">
+   
+      <div className="flex items-center gap-1 sm:gap-2">
+        <Filter className="h-4 sm:h-5 w-4 sm:w-5 text-[#E78B48]" />
+        <span className="text-sm sm:text-base font-semibold">Filters:</span>
+      </div>
+
+   
+      <Select1 options={["All", ...categories]}
+  value={categoryFilter}
+  onChange={setCategoryFilter}/>
+      
+   
+      
+      <Select1  options={["All", ...statuses]}
+  value={statusFilter}
+  onChange={setStatusFilter}/>
+
+     
+      
+      <Select1 options={["Newest First", "Oldest First"]}
+  value={sortOrder === "newest" ? "Newest First" : "Oldest First"}
+  onChange={(val) => setSortOrder(val === "Newest First" ? "newest" : "oldest")} />
+    </div>
+
+   
+    <div className="flex items-center ml-auto">
+      <DownLoadAllOrder order={orders} />
+    </div>
+
+  </div>
+</div> */}
+<div className="bg-white border-b-2 border-[#E78B48] px-3 sm:px-4 md:px-6 py-3 sm:py-4 shadow-sm">
+  <div className="max-w-7xl mx-auto flex items-center justify-between">
+
+    {/* LEFT SIDE → Filters */}
+    <div className="flex items-center gap-4 flex-wrap sm:flex-nowrap">
+      {/* Filters Label */}
+      <div className="flex items-center gap-2">
+        <Filter className="h-5 w-5 text-[#E78B48]" />
+        <span className="text-base font-semibold">Filters:</span>
+      </div>
+
+      {/* CATEGORY */}
+      <div className="flex-shrink-0">
+        <Select1 options={["All", ...categories]} value={categoryFilter} onChange={setCategoryFilter} />
+      </div>
+
+      {/* STATUS */}
+      <div className="flex-shrink-0">
+        <Select1 options={["All", ...statuses]} value={statusFilter} onChange={setStatusFilter} />
+      </div>
+
+      {/* SORT */}
+      <div className="flex-shrink-0">
+        <Select1 
+          options={["Newest First", "Oldest First"]}
+          value={sortOrder === "newest" ? "Newest First" : "Oldest First"}
+          onChange={(val) => setSortOrder(val === "Newest First" ? "newest" : "oldest")}
+        />
+      </div>
+    </div>
+
+    {/* RIGHT SIDE → Download Button */}
+    <div className="flex items-center flex-shrink-0">
+      <DownLoadAllOrder order={orders} />
+    </div>
+
+  </div>
+</div>
+
+
+
 
         <div className="flex-1 overflow-auto p-6 lg:p-8 bg-[#FFF6E9]">
           <div className="max-w-7xl mx-auto space-y-6">

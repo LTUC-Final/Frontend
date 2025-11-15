@@ -23,6 +23,7 @@ import useSummary from "../../hooks/useAnaliasisOrder";
 import useLastDate from "../../hooks/useLastDate";
 import useSupport from "../../hooks/useSupport";
 import OrdersSummary from "./aiComponent";
+import Select3 from "./Select3";
 
 const statusClasses = {
   pending: "text-[#E78B48] bg-[#FFF6E9] border-2 border-[#E78B48]",
@@ -290,7 +291,7 @@ function OrdersManagementCustomer() {
               </span>
             </div>
 
-        <select
+        {/* <select
   value={statusFilter}
   onChange={(e) => setStatusFilter(e.target.value)}
   className="
@@ -314,10 +315,17 @@ function OrdersManagementCustomer() {
       {status}
     </option>
   ))}
-</select>
+</select> */}
+<Select3
+  value={statusFilter}
+  onChange={setStatusFilter}
+  options={["All", ...statuses]}
+  placeholder="All Status"
+/>
 
 
-            <select
+
+            {/* <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
               className="px-4 py-2 bg-[#FFF6E9] border-2 border-[#102E50] text-[#102E50] text-base font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F5C45E] focus:border-[#F5C45E] transition-all cursor-pointer"
@@ -328,15 +336,34 @@ function OrdersManagementCustomer() {
                   {category}
                 </option>
               ))}
-            </select>
-            <select
+            </select> */}
+<Select3
+  value={categoryFilter}
+  onChange={setCategoryFilter}
+  options={["All", ...categories]}
+  placeholder="All Categories"
+/>
+
+
+            {/* <select
               value={sortOrder}
               onChange={(e) => setSortOrder(e.target.value)}
               className="px-4 py-2 bg-[#FFF6E9] border-2 border-[#102E50] text-[#102E50] text-base font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F5C45E] focus:border-[#F5C45E] transition-all cursor-pointer"
             >
               <option value="newest">Newest First</option>
               <option value="oldest">Oldest First</option>
-            </select>
+            </select> */}
+
+            <Select3
+  value={sortOrder}
+  onChange={setSortOrder}
+  options={[
+    { id: "newest", name: "Newest First" },
+    { id: "oldest", name: "Oldest First" },
+  ]}
+  placeholder="Sort By"
+/>
+
           </div>
         </div>
 

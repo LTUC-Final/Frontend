@@ -102,12 +102,12 @@ export default function AddReview({ providerID, user , onReviewAdded }) {
 
   return (
     <>
-      <div className="mb-6 text-center">
-        <h3 className="text-lg font-semibold text-[#102E50]">Average Rating</h3>
-        <p className="text-[#E78B48] font-bold text-xl">
+      {/* <div className="mb-6 text-center"> */}
+        {/* <h3 className="text-lg font-semibold text-[#102E50]">Average Rating</h3> */}
+        {/* <p className="text-[#E78B48] font-bold text-xl">
           {avgRating ? avgRating.toFixed(1) : "No reviews yet"}
-        </p>
-      </div>
+        </p> */}
+      {/* </div> */}
 
       {!alreadyReviewed ? (
         <form

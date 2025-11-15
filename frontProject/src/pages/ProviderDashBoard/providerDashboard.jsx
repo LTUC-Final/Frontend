@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import useSuggestions from "../../hooks/SuggestionsInputdesc";
-
+import Select2 from "./Select2";
 export default function ProductForm() {
   const { user } = useSelector((state) => state.UserInfo);
   const { decText, SuggestionsInputdesc } = useSuggestions();
@@ -163,14 +163,20 @@ export default function ProductForm() {
               <label className="block text-sm font-semibold text-[#102E50] uppercase mb-1 sm:mb-2">
                 Type
               </label>
-              <select
+              <Select2
+  value={formData.type}
+  onChange={(val) => handleInputChange("type", val)}
+  options={["product", "service"]}
+  placeholder="Select Type"
+/>
+              {/* <select
                 value={formData.type}
                 onChange={(e) => handleInputChange("type", e.target.value)}
                 className="w-full border-2 border-[#E78B48] rounded-lg p-2 sm:p-3 focus:outline-none focus:ring-2 focus:ring-[#F5C45E]"
               >
                 <option value="product">Product</option>
                 <option value="service">Service</option>
-              </select>
+              </select> */}
             </div>
 
             {/* Name */}
@@ -209,7 +215,7 @@ export default function ProductForm() {
               <label className="block text-sm font-semibold text-[#102E50] uppercase mb-1 sm:mb-2">
                 Category
               </label>
-              <select
+              {/* <select
                 value={formData.category_id}
                 onChange={(e) =>
                   handleInputChange("category_id", e.target.value)
@@ -222,7 +228,20 @@ export default function ProductForm() {
                     {cat.name}
                   </option>
                 ))}
-              </select>
+              </select> */}
+              {/* <Select2
+  value={categories.find(cat => cat.category_id === formData.category_id) || null}
+  onChange={(cat) => handleInputChange("category_id", cat.id)}
+  options={categories.map(cat => ({ id: cat.category_id, name: cat.name }))}
+  placeholder="Select Category"
+/> */}
+<Select2
+  value={formData.category_id} // just the ID
+  onChange={(cat) => handleInputChange("category_id", cat.id)} // pass ID
+  options={categories.map(cat => ({ id: cat.category_id, name: cat.name }))}
+  placeholder="Select Category"
+/>
+
             </div>
 
             {/* Location */}

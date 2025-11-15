@@ -212,9 +212,9 @@ select option {
   color: #102E50;
 }
 
+
 select option:hover,
-select option:focus,
 select option:checked {
-  background: #FFF6E9 !important;
+  background-color: #FFF6E9;
   color: #102E50;
 }
