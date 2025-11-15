@@ -15,6 +15,11 @@ html, body, #root {
   display: flex;
   flex-direction: column;
 }
+select option:hover,
+select option:checked {
+  background-color: #FFF6E9;
+  color: #102E50;
+}
 
 body {
   display: flex;

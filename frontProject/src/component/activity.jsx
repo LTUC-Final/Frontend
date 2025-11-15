@@ -2,33 +2,36 @@ import axios from "axios";
 import { Award, Handshake, Heart } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const REACTIONS = [
   {
     type: "love",
     label: "Love",
     icon: Heart,
-    gradient: "from-red-400 to-pink-500",
+    gradient: "from-red-300 to-pink-400",
   },
   {
     type: "support",
     label: "Support",
     icon: Handshake,
-    gradient: "from-green-400 to-emerald-500",
+    gradient: "from-green-300 to-emerald-400",
   },
   {
     type: "proud",
     label: "Proud",
     icon: Award,
-    gradient: "from-yellow-400 to-amber-500",
+    gradient: "from-yellow-300 to-amber-400",
   },
 ];
+
 
 function getReactionConfig(type) {
   return REACTIONS.find((r) => r.type === type) || REACTIONS[0];
 }
 
 export default function ActivitiesList({ user_id }) {
+   const navigate = useNavigate();
   const port = import.meta.env.VITE_PORT;
   const { user } = useSelector((state) => state.UserInfo);
   const userId = user?.user_id;
@@ -59,7 +62,8 @@ export default function ActivitiesList({ user_id }) {
   }, [user_id, port]);
 
   return (
-    <section className="space-y-4">
+    
+    <section className="space-y-4 mt-15">
       {activities.length > 0 ? (
         <div className="relative flex items-center">
           <div className="flex-grow border-t-2 border-[#E78B48]"></div>
@@ -90,7 +94,12 @@ export default function ActivitiesList({ user_id }) {
                 {/* Top gradient bar */}
                 <div className={`h-1.5 bg-gradient-to-r ${rc.gradient}`} />
                 {/* Card content */}
-                <div className="p-5 space-y-4">
+                <div className="p-5 space-y-4"
+             onClick={() => {
+  navigate(`/productdatails`, { state: act });
+  window.scrollTo(0, 0);
+}}
+>
                   {/* Description text
                   <div className="bg-[#FFF6E9] rounded-lg p-3 border border-[#F5C45E]/30">
                     <p className="text-sm text-[#102E50] leading-relaxed">

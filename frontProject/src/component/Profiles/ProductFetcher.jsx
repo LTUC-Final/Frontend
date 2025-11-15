@@ -62,7 +62,7 @@ export default function ProductFetcher({ profile, refreshTrigger, user_id }) {
         </div>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mt-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {product.map((p) => (
           <ProductCard
             key={p.product_id}

@@ -34,7 +34,7 @@ export default function ProductCard({
   return (
     <div className="flex justify-center px-4">
       <div
-        className="relative rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 w-full max-w-md overflow-hidden font-['Quicksand',sans-serif] m-2"
+        className="relative rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 w-full max-w-md overflow-hidden font-['Quicksand',sans-serif] "
         style={{
           backgroundColor: "#FFF6E9",
           border: "3px solid #102E50",
@@ -94,6 +94,10 @@ export default function ProductCard({
                   src={getImageUrl(currentProduct.image) || "/placeholder.svg"}
                   alt={currentProduct?.name || "Default Product"}
                   className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                  onClick={() => {
+              navigate(`/productdatails`, { state: product });
+              window.scrollTo(0, 0);
+            }}
                 />
                 <div
                   className="absolute top-3 right-3 px-3 py-1.5 rounded-full shadow-lg font-bold text-sm"
@@ -149,7 +153,7 @@ export default function ProductCard({
           )}
         </div>
 
-        <div className="px-4 sm:px-5 pb-5">
+        {/* <div className="px-4 sm:px-5 pb-5">
           <button
             className="w-full py-3 rounded-xl font-bold text-base transition-all duration-300 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
             style={{
@@ -163,7 +167,7 @@ export default function ProductCard({
           >
             View Details
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );
