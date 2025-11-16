@@ -67,11 +67,11 @@ export function useAddToCart() {
 
       if (res.data === "Product added to cart") {
         dispatch(incrementCartItem());
-        Swal.fire({
-          title: res.data,
-          icon: "success",
-          draggable: true,
-        });
+        // Swal.fire({
+        //   title: res.data,
+        //   icon: "success",
+        //   draggable: true,
+        // });
       } else if (
         res.data === "You cannot delete it because it was sent to the provider"
       ) {
@@ -82,11 +82,11 @@ export function useAddToCart() {
         });
       } else {
         dispatch(decrementCartItem({ number: 1 }));
-        Swal.fire({
-          title: res.data,
-          icon: "error",
-          draggable: true,
-        });
+        // Swal.fire({
+        //   title: res.data,
+        //   icon: "error",
+        //   draggable: true,
+        // });
       }
 
       // alert(res.data);
