@@ -26,23 +26,21 @@ import OrdersSummary from "./aiComponent";
 
 const statusClasses = {
   pending: "text-[#E78B48] bg-[#FFF6E9] border-2 border-[#E78B48]",
-  "In Progress":
-    "text-[#E78B48] bg-[#FFF6E9] border-2 border-[#E78B48] shadow-md animate-pulse-subtle",
+  "In Progress": "text-[#102E50] bg-[#F5C45E]/20 border-2 border-[#102E50]",
   "Ready for Delivery": "text-[#F5C45E] bg-[#102E50] border-2 border-[#F5C45E]",
   completed: "text-[#F5C45E] bg-[#102E50] border-2 border-[#F5C45E] shadow-lg",
   awaiting_approval: "text-[#E78B48] bg-[#FFF6E9] border-2 border-[#E78B48]",
-  on_progress:
-    "text-[#E78B48] bg-[#FFF6E9] border-2 border-[#E78B48] shadow-md animate-pulse-subtle",
+  on_progress: "text-[#102E50] bg-[#F5C45E]/30 border-2 border-[#102E50]",
   rejected: "text-[#BE3D2A] bg-[#FFF6E9] border-2 border-[#BE3D2A]",
 };
 
 const statusDotClasses = {
   pending: "bg-[#E78B48]",
-  "In Progress": "bg-[#E78B48] animate-pulse",
+  "In Progress": "bg-[#102E50]",
   "Ready for Delivery": "bg-[#F5C45E]",
   completed: "bg-[#F5C45E]",
   awaiting_approval: "bg-[#E78B48]",
-  on_progress: "bg-[#E78B48] animate-pulse",
+  on_progress: "bg-[#102E50]",
   rejected: "bg-[#BE3D2A]",
 };
 
@@ -51,7 +49,6 @@ const paymentStatusClasses = {
   "Partially Paid": "text-[#E78B48] bg-[#FFF6E9] border border-[#E78B48]",
   Unpaid: "text-[#BE3D2A] bg-[#FFF6E9] border border-[#BE3D2A]",
 };
-
 function OrdersManagementCustomer() {
   const [searchTerm, setSearchTerm] = useState("");
   const [dataMesg, setDataMesg] = useState([]);
@@ -465,21 +462,20 @@ function OrdersManagementCustomer() {
                     {order.status === "completed" &&
                       order.viewFedbackPost &&
                       !order.add_customer_review && (
-                        <FeedbackCard
-                          orderInfo={order}
-                          onSubmit={() => {
-                            setOrders((prev) =>
-                              prev.map((o) =>
-                                o.order_id === order.order_id
-                                  ? {
-                                      ...o,
-                                      viewFedbackPost: false,
-                                    }
-                                  : o
-                              )
-                            );
-                          }}
-                        />
+                        <div className="mt-6 w-full flex justify-center">
+                          <FeedbackCard
+                            orderInfo={order}
+                            onSubmit={() => {
+                              setOrders((prev) =>
+                                prev.map((o) =>
+                                  o.order_id === order.order_id
+                                    ? { ...o, viewFedbackPost: false }
+                                    : o
+                                )
+                              );
+                            }}
+                          />
+                        </div>
                       )}
                   </div>
 

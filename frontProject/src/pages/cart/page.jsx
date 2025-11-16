@@ -5,8 +5,8 @@ import axios from "axios";
 import { Minus, Plus, ShoppingCart, Trash } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { decrementCartItem, setCartItem } from "../../redux/userInfo/userInfo";
 import Swal from "sweetalert2";
+import { decrementCartItem, setCartItem } from "../../redux/userInfo/userInfo";
 
 function Button({ children, onClick, className = "", variant, size }) {
   let base =
@@ -205,7 +205,11 @@ export default function CartPage() {
   }
 
   const handleApprove = async (cart_id, customer_id) => {
-    alert("Approved!");
+    Swal.fire({
+      title: "Approved!",
+      icon: "success",
+      draggable: true,
+    });
     try {
       await axios.put(
         `https://backend-a2qq.onrender.com/changeStatusPayOfProdactAfterApprove`,
@@ -222,7 +226,11 @@ export default function CartPage() {
   };
 
   const handleReject = async (cart_id, customer_id) => {
-    alert("Rejected!");
+    Swal.fire({
+      title: "Rejected!",
+      icon: "error",
+      draggable: true,
+    });
     try {
       await axios.put(
         `https://backend-a2qq.onrender.com/changeStatusPayOfProdactAfterRejected/${cart_id}`,
@@ -257,15 +265,15 @@ export default function CartPage() {
       return sum + Number(p.cart_price) * Number(p.quantity);
     }
   }, 0);
-const approvedTotal = cart
-  .filter((item) => item.status_pay === "Approve") 
-  .reduce((sum, item) => {
-    const price = parseFloat(item.cart_price || 0);
-    const quantity = parseInt(item.quantity || 1);
-    return sum + price * quantity;
-  }, 0);
+  const approvedTotal = cart
+    .filter((item) => item.status_pay === "Approve")
+    .reduce((sum, item) => {
+      const price = parseFloat(item.cart_price || 0);
+      const quantity = parseInt(item.quantity || 1);
+      return sum + price * quantity;
+    }, 0);
 
-console.log("Total Approved Price:", approvedTotal);
+  console.log("Total Approved Price:", approvedTotal);
 
   const tax = subtotal * 0.08;
   const total = subtotal + tax;
@@ -482,12 +490,11 @@ console.log("Total Approved Price:", approvedTotal);
         );
         await stripe.redirectToCheckout({ sessionId: data.id });
       } else {
-    Swal.fire({
-  icon: "info",
-  title: "No Orders",
-  text: "You don't have any approved orders ready for checkout.",
-});
-
+        Swal.fire({
+          icon: "info",
+          title: "No Orders",
+          text: "You don't have any approved orders ready for checkout.",
+        });
       }
     } catch (error) {
       console.error("Error creating Stripe session:", error);
